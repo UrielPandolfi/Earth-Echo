@@ -15,7 +15,9 @@ from earth_echo.catalog.validate import normalize_capability, validate_catalog
 from earth_echo.catalog.views import PhenomenonList, PhenomenonView, SourceList, CatalogSourceView, VariableList
 from earth_echo.connectors.smap_metadata import load_smap_asset
 from earth_echo.connectors.usgs_comcat import load_usgs_asset, load_usgs_observation
-from earth_echo.contracts.api_models import HealthResponse, ProviderReport, ProviderStatus
+from earth_echo.contracts.api_models import HealthResponse, ProviderReport, ProviderStatus, ReadyResponse
+from earth_echo.ops.readiness import local_readiness
+from earth_echo.paths import repo_root
 from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQueryResult
 from earth_echo.ingest.d15_sst import default_store
 from earth_echo.queries.real_sst import RealSourceView, SstField, d01_blocked, d15_field, d15_view
@@ -59,6 +61,11 @@ def _routes() -> APIRouter:
             time=datetime.now(timezone.utc),
             checks=["process"],
         )
+
+    @router.get("/ready", response_model=ReadyResponse)
+    def ready() -> ReadyResponse:
+        assistant = "configured" if configured_provider(get_settings()) is not None else "unavailable"
+        return local_readiness(repo_root(), assistant)
 
     @router.get("/providers", response_model=ProviderReport)
     def providers() -> ProviderReport:

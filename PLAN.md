@@ -13,7 +13,7 @@ Diez fases. El estado real está en `PROGRESS.md`. Los criterios siguientes son 
 | 07 | Más capas, capacidades y volumen | Completada con matriz, sismos, Kp y una carga sintética |
 | 08 | Pronósticos y prueba histórica reproducible | Completada con Kp importado y un experimento de SST sin habilidad extra |
 | 09 | Asistente con herramientas | Completada con herramientas; la inferencia de Qwen queda pendiente |
-| 10 | Pruebas, rendimiento, operación y entrega | Pendiente |
+| 10 | Pruebas, rendimiento, operación y entrega | Cerrada en local, con límites explícitos |
 
 ## Criterios por fase
 

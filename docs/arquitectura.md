@@ -85,8 +85,8 @@ La pantalla de entrada es `ObservatoryApp`. El adaptador `mountGlobe` sigue sien
 
 El PNG mide 1672×941. El layout usa 17,1 % para filtros, el resto central para el globo y 26,1 % para el inspector, con barra superior de 48 px y franja temporal de 78 px. Esas relaciones salen de la imagen, no de una grilla genérica.
 
-El escenario Amazonía central vive en `apps/web/src/demo/scenario.ts`. Los conteos de la barra central son la suma de los tipos de información activos de ese archivo. El «31 fenómenos» sale de `GET /catalog/phenomena` y, si la API no responde, se muestra no disponible. La búsqueda, la agrupación en el globo y el análisis completo quedan explícitamente pendientes. No se conectó ningún proveedor científico.
+El escenario Amazonía central vive en `apps/web/src/demo/scenario.ts`. Los conteos de la barra central son la suma de los tipos de información activos de ese archivo. El «31 fenómenos» sale de `GET /catalog/phenomena` y, si la API no responde, se muestra no disponible. Ese cierre de la fase 02 no incluía búsqueda ni datos reales. La entrega actual está en `docs/entrega.md`.
 
 ## Lo que esta fase no incorpora
 
-PostgreSQL, PostGIS, Redis, colas, cuentas de Copernicus y el runtime de Qwen. No son un problema de instalación de la pantalla local: son trabajo de fases posteriores o accesos científicos todavía cerrados.
+PostgreSQL, PostGIS, Redis, colas, cuentas de Copernicus y el runtime de Qwen. Siguen fuera de esta entrega. `GET /health` solo dice que el proceso vive. `GET /ready` mira los archivos locales y deja `providers_updated` en `not_checked`.

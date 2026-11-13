@@ -261,6 +261,16 @@ export interface Quality {
   summary?: string | null;
 }
 
+export interface ReadyResponse {
+  schema_version: "1.0";
+  process: "ok";
+  query_stores: "ready" | "incomplete";
+  providers_updated: "not_checked";
+  assistant: "unavailable" | "configured";
+  stores: StoreCheck[];
+  note: string;
+}
+
 export interface RecordedHttpCheck {
   source: string;
   url: string;
@@ -331,6 +341,12 @@ export interface StatusCount {
   count: number;
 }
 
+export interface StoreCheck {
+  name: string;
+  path: string;
+  present: boolean;
+}
+
 export interface UnavailableResult {
   schema_version: "1.0";
   status: "unavailable";
@@ -366,6 +382,7 @@ export interface VerticalPosition {
 
 export interface ContractBundle {
   health: HealthResponse;
+  ready: ReadyResponse;
   providers: ProviderReport;
   sources: SourceList;
   phenomena: PhenomenonList;

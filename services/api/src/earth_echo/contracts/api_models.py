@@ -18,6 +18,22 @@ class HealthResponse(ApiModel):
     checks: list[Literal["process"]]
 
 
+class StoreCheck(ApiModel):
+    name: str
+    path: str
+    present: bool
+
+
+class ReadyResponse(ApiModel):
+    schema_version: Literal["1.0"]
+    process: Literal["ok"]
+    query_stores: Literal["ready", "incomplete"]
+    providers_updated: Literal["not_checked"]
+    assistant: Literal["unavailable", "configured"]
+    stores: list[StoreCheck]
+    note: str
+
+
 class ProviderStatus(ApiModel):
     source_id: CatalogSourceId
     name: str

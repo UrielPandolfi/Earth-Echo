@@ -1617,6 +1617,64 @@
       "title": "Quality",
       "type": "object"
     },
+    "ReadyResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "process": {
+          "const": "ok",
+          "title": "Process",
+          "type": "string"
+        },
+        "query_stores": {
+          "enum": [
+            "ready",
+            "incomplete"
+          ],
+          "title": "Query Stores",
+          "type": "string"
+        },
+        "providers_updated": {
+          "const": "not_checked",
+          "title": "Providers Updated",
+          "type": "string"
+        },
+        "assistant": {
+          "enum": [
+            "unavailable",
+            "configured"
+          ],
+          "title": "Assistant",
+          "type": "string"
+        },
+        "stores": {
+          "items": {
+            "$ref": "#/$defs/StoreCheck"
+          },
+          "title": "Stores",
+          "type": "array"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "process",
+        "query_stores",
+        "providers_updated",
+        "assistant",
+        "stores",
+        "note"
+      ],
+      "title": "ReadyResponse",
+      "type": "object"
+    },
     "RecordedHttpCheck": {
       "additionalProperties": false,
       "properties": {
@@ -2164,6 +2222,30 @@
       "title": "StatusCount",
       "type": "object"
     },
+    "StoreCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "present": {
+          "title": "Present",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "path",
+        "present"
+      ],
+      "title": "StoreCheck",
+      "type": "object"
+    },
     "UnavailableResult": {
       "additionalProperties": false,
       "properties": {
@@ -2382,6 +2464,9 @@
     "health": {
       "$ref": "#/$defs/HealthResponse"
     },
+    "ready": {
+      "$ref": "#/$defs/ReadyResponse"
+    },
     "providers": {
       "$ref": "#/$defs/ProviderReport"
     },
@@ -2412,6 +2497,7 @@
   },
   "required": [
     "health",
+    "ready",
     "providers",
     "sources",
     "phenomena",

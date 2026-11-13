@@ -258,6 +258,36 @@ En `.env`, del lado del servidor: `EARTH_ECHO_LLM_BASE_URL`, `EARTH_ECHO_LLM_MOD
 - `GET /v1/assistant/status` responde `unavailable` mientras las variables estén vacías.
 - El panel se abre sobre el mapa sin cambiar la grilla. Cerrar lo devuelve al observatorio.
 
-## Siguiente paso
+## Fase 10 — entrega local cerrada
 
-Fase 10: pruebas de cierre, operación y entrega, sin declarar ejecutada una inferencia que este equipo no corrió.
+La aplicación arranca con `npm run dev:api` y `npm run dev:web`. Después de reiniciar la API, `GET /health` sigue siendo solo el proceso, `GET /ready` encontró los cinco archivos locales y `GET /v1/sources/D15` respondió 200. `providers_updated` queda `not_checked`. El asistente sigue `unavailable` y el mapa abre igual.
+
+### Recorridos
+
+- DEMO en 1672×941, 1920×1080 y 1366×768: filtros, ficha «Déficit de humedad», pestaña Datos y el instante +7 días, que deja la observación fuera del mapa sin borrarla.
+- REAL, tendencia, replay y asistente quedaron comprobados en las fases 05 a 09 y siguen en los mismos endpoints. Esta fase no los reclasificó.
+
+### Comprobaciones
+
+- `uv run --directory services/api pytest`: 58 pruebas.
+- `npm --prefix apps/web test`: 19 pruebas. `npx tsc --noEmit` sin error.
+- `npm --prefix apps/web run build`: el paquete principal pesa 4,5 MB (1,2 MB gzip) por Cesium.
+- `contracts:check` coincide.
+- Una copia de `data/real/feeds/d28-kp.json` se restauró en un directorio temporal con el mismo SHA-256. El archivo vivo no se tocó.
+- El agrupado de 1 000 y 10 000 puntos sigue dentro del tope de la prueba. No se midieron cuadros por segundo. El equipo sigue siendo el Ryzen 7 5700 con Windows 10.
+
+### Límites que quedan
+
+- D01, D02 y GloFAS siguen sin credencial. Qwen no está instalado. No hay planificador ni Postgres.
+- El experimento de SST no está validado.
+- La composición se parece al PNG. La densidad de señales, el huracán y los conteos de la imagen no son datos de esta entrega.
+
+La matriz, el guion y la copia están en `docs/entrega.md`.
+
+## Backlog
+
+1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
+2. Un Qwen local pequeño, solo para parafrasear herramientas, si se quiere texto de modelo.
+3. Una cuenta CDS si se va a leer caudal, sin convertirlo en profundidad de inundación.
+4. Mantener el experimento de SST como experimental hasta que supere a la persistencia en una prueba nueva.
+

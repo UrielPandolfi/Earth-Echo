@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 
 from earth_echo.api.app import create_app
 from earth_echo.catalog.load import load_catalog
+from earth_echo.ops.readiness import local_readiness
 from earth_echo.queries.real_sst import freshness_for
 from earth_echo.settings import get_settings
 
@@ -17,6 +18,19 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     monkeypatch.delenv("EARTH_ECHO_MAX_BODY_BYTES", raising=False)
     get_settings.cache_clear()
     return TestClient(create_app())
+
+
+def test_ready_checks_local_files_without_calling_providers(client: TestClient, tmp_path) -> None:
+    missing = local_readiness(tmp_path, "unavailable")
+    assert missing.query_stores == "incomplete"
+    assert missing.providers_updated == "not_checked"
+    assert all(item.present is False for item in missing.stores)
+    body = client.get("/ready").json()
+    assert body["query_stores"] == "ready"
+    assert body["providers_updated"] == "not_checked"
+    assert body["assistant"] == "unavailable"
+    assert "sano" not in body["note"]
+    assert "healthy" not in json.dumps(body).lower()
 
 
 def test_health_is_only_the_process(client: TestClient) -> None:
