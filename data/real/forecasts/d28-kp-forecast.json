@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0",
+  "source_id": "D28",
+  "kind": "imported_forecast",
+  "product": "noaa-planetary-k-index-forecast",
+  "issued_at": "2026-11-13T07:56:50Z",
+  "initialization_time": "2026-11-13T07:56:50Z",
+  "initialization_note": "El archivo no trae la hora de inicialización del modelo. La emisión guardada es el momento en que se archivó esta corrida.",
+  "unit": "Kp",
+  "probability": "absent",
+  "validated_for_use": false,
+  "capability_status": "source_connected",
+  "query": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json",
+  "note": "Cantidad prevista del índice Kp. No es una probabilidad de tormenta ni un aviso local. Las filas observed y estimated no se publican como pronóstico.",
+  "steps": [
+    {
+      "valid_start": "2026-11-14T00:00:00Z",
+      "valid_end": "2026-11-14T03:00:00Z",
+      "lead_time_hours": 16.052777777777777,
+      "kp": 1.67
+    },
+    {
+      "valid_start": "2026-11-14T03:00:00Z",
+      "valid_end": "2026-11-14T06:00:00Z",
+      "lead_time_hours": 19.052777777777777,
+      "kp": 1.67
+    },
+    {
+      "valid_start": "2026-11-14T06:00:00Z",
+      "valid_end": "2026-11-14T09:00:00Z",
+      "lead_time_hours": 22.052777777777777,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-14T09:00:00Z",
+      "valid_end": "2026-11-14T12:00:00Z",
+      "lead_time_hours": 25.052777777777777,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-14T12:00:00Z",
+      "valid_end": "2026-11-14T15:00:00Z",
+      "lead_time_hours": 28.052777777777777,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-14T15:00:00Z",
+      "valid_end": "2026-11-14T18:00:00Z",
+      "lead_time_hours": 31.052777777777777,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-14T18:00:00Z",
+      "valid_end": "2026-11-14T21:00:00Z",
+      "lead_time_hours": 34.05277777777778,
+      "kp": 1.67
+    },
+    {
+      "valid_start": "2026-11-14T21:00:00Z",
+      "valid_end": "2026-11-15T00:00:00Z",
+      "lead_time_hours": 37.05277777777778,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-15T00:00:00Z",
+      "valid_end": "2026-11-15T03:00:00Z",
+      "lead_time_hours": 40.05277777777778,
+      "kp": 1.67
+    },
+    {
+      "valid_start": "2026-11-15T03:00:00Z",
+      "valid_end": "2026-11-15T06:00:00Z",
+      "lead_time_hours": 43.05277777777778,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-15T06:00:00Z",
+      "valid_end": "2026-11-15T09:00:00Z",
+      "lead_time_hours": 46.05277777777778,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-15T09:00:00Z",
+      "valid_end": "2026-11-15T12:00:00Z",
+      "lead_time_hours": 49.05277777777778,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-15T12:00:00Z",
+      "valid_end": "2026-11-15T15:00:00Z",
+      "lead_time_hours": 52.05277777777778,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-15T15:00:00Z",
+      "valid_end": "2026-11-15T18:00:00Z",
+      "lead_time_hours": 55.05277777777778,
+      "kp": 1.33
+    },
+    {
+      "valid_start": "2026-11-15T18:00:00Z",
+      "valid_end": "2026-11-15T21:00:00Z",
+      "lead_time_hours": 58.05277777777778,
+      "kp": 1.67
+    },
+    {
+      "valid_start": "2026-11-15T21:00:00Z",
+      "valid_end": "2026-11-16T00:00:00Z",
+      "lead_time_hours": 61.05277777777778,
+      "kp": 1.67
+    },
+    {
+      "valid_start": "2026-11-16T00:00:00Z",
+      "valid_end": "2026-11-16T03:00:00Z",
+      "lead_time_hours": 64.05277777777778,
+      "kp": 3.33
+    }
+  ]
+}

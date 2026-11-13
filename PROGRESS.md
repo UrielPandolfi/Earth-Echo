@@ -206,6 +206,36 @@ No se marcaron los 31 fenómenos como operativos. La matriz separa observación,
 - `GET /v1/capabilities` devolvió 31 fenómenos y cero pronósticos conectados.
 - En http://127.0.0.1:5173/ el modo REAL mostró «1 agregado SST · 15 sismos», el Kp y, en Histórico, la matriz.
 
+## Fase 08 — completada sin habilidad predictiva demostrada
+
+Hay dos caminos distintos. Ninguno queda validado para uso operativo.
+
+### Pronóstico importado
+
+- Producto SWPC `noaa-planetary-k-index-forecast`, archivado el 2026-11-13T07:56:50Z.
+- 17 pasos `predicted` de Kp, válidos desde 2026-11-14T00:00:00Z hasta 2026-11-16T03:00:00Z. Cada paso dura 3 horas.
+- El archivo no trae la inicialización del modelo. La emisión guardada es el momento del archivo.
+- Las filas `observed` y `estimated` no se publican como pronóstico. El Kp no se convierte en probabilidad ni en aviso local.
+- F29, pronóstico, queda `partial`.
+
+### Experimento propio
+
+- Objetivo, fijado antes de puntuar: anomalía de SST del mes siguiente, en °C, en el Caribe occidental.
+- Referencias: persistencia del mes de emisión y climatología de anomalía cero. La normal sigue siendo 2014-2021 y no usa la prueba.
+- Análogos: 3 julios, o el mes calendario del desenlace, elegidos por la distancia del antecedente. Un vecino entra solo si su desenlace es anterior al mes de emisión.
+- Prueba: 2022-01 a 2025-11. 47 casos puntuados y 0 excluidos. Evento fijado: anomalía mayor que 0,3 °C. Frecuencia 0,60.
+- Error absoluto medio: análogo 0,404 °C, persistencia 0,214 °C, climatología 0,578 °C. Sesgo del análogo −0,258 °C.
+- Falsas alarmas del análogo: 1. Omisiones: 15. La persistencia tuvo 2 falsas alarmas y 2 omisiones.
+- No se demostró un error menor que las dos referencias. El experimento queda experimental y no validado.
+- La serie no trae `available_at`. El corte oculta meses futuros en las entradas, pero esto no es un replay operativo.
+- En la interfaz, junio de 2024 se guardó primero (análogo 0,562 °C, sin desenlace) y después se reveló el desenlace 1,110 °C, con error −0,548 °C.
+
+### Evidencia
+
+- `uv run --directory services/api pytest`: 43 pruebas.
+- `npm --prefix apps/web test`: 18 pruebas. `npx tsc --noEmit` sin error.
+- En http://127.0.0.1:5173/, modo REAL y Tendencias, se vieron el Kp importado, los tres errores y el desenlace revelado.
+
 ## Siguiente paso
 
-Fase 08: pronósticos con una prueba temporal que no use el futuro, sin convertir estos sismos ni el Kp en una predicción.
+Fase 09: explicaciones a partir de estos resultados ya calculados, sin usar un modelo de lenguaje para inventar el número ni para validar el experimento.

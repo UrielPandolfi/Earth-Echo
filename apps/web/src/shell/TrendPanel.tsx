@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import type { DataMode } from "./observatoryState";
+import { ForecastReplay } from "./ForecastReplay";
 import { TrendChart } from "./TrendChart";
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
@@ -130,6 +131,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis }: TrendPanelProps) 
           </div>
         </dl>
         <p className="fine">Método {view.method_id}. Ejecución {view.execution_id}.</p>
+        <ForecastReplay />
       </div>
       <footer className="inspector-foot">
         <button type="button" className="analysis" onClick={() => onAnalysis(true)}>

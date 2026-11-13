@@ -1,5 +1,6 @@
 """API mínima: salud, catálogo, muestras y consultas con modo explícito."""
 
+import json
 from datetime import datetime, timezone
 from typing import Annotated, Literal
 
@@ -19,6 +20,7 @@ from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQ
 from earth_echo.ingest.d15_sst import default_store
 from earth_echo.queries.real_sst import RealSourceView, SstField, d01_blocked, d15_field, d15_view
 from earth_echo.catalog.capabilities import CapabilityMatrix, capability_matrix
+from earth_echo.queries.forecasts import calculate_replay, experiment_report, forecast_dir, reveal_replay
 from earth_echo.queries.layers import KpLayer, QuakeLayer, kp_layer, quake_layer
 from earth_echo.queries.trend import TrendView, trend_csv, trend_view
 from earth_echo.queries.signals import query_signals
@@ -258,5 +260,30 @@ def _scale_routes() -> APIRouter:
     @router.get("/layers/d28-kp", response_model=KpLayer)
     def kp() -> KpLayer:
         return kp_layer()
+
+    @router.get("/forecasts/d28-kp")
+    def kp_forecast() -> dict:
+        path = forecast_dir() / "d28-kp-forecast.json"
+        if not path.is_file():
+            raise HTTPException(status_code=404, detail="No hay un pronóstico de Kp archivado.")
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    @router.get("/experiments/sst-anomaly")
+    def sst_experiment() -> dict:
+        return experiment_report()
+
+    @router.post("/experiments/sst-anomaly/replay")
+    def sst_replay(
+        year: Annotated[int, Query(ge=2022, le=2025)],
+        month: Annotated[int, Query(ge=1, le=12)],
+    ) -> dict:
+        return calculate_replay((year, month))
+
+    @router.post("/experiments/sst-anomaly/reveal")
+    def sst_reveal(
+        year: Annotated[int, Query(ge=2022, le=2025)],
+        month: Annotated[int, Query(ge=1, le=12)],
+    ) -> dict:
+        return reveal_replay((year, month))
 
     return router

@@ -81,7 +81,10 @@ _OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
             "connected",
             "Hay índice Kp planetario de SWPC. Una señal solar no fija la intensidad geomagnética local.",
         ),
-        "forecast": ("specified", "Los avisos y pronósticos de SWPC no están ingeridos."),
+        "forecast": (
+            "partial",
+            "Hay un Kp previsto importado de SWPC, con emisión y validez. No está validado y no es un aviso local.",
+        ),
     },
     "F31": {
         "observation": ("research", "No hay transporte de la AMOC conectado."),
