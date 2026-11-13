@@ -27,11 +27,17 @@ Cesium 1.147 declara `node >= 22.17.0`. Con Node 22.14.0 npm avisó y el paquete
 - `data/operational`: estado de integración y hashes de las referencias.
 - La ciencia todavía no tiene módulo. No hay detectores vacíos. Cuando exista un cálculo, irá en `services/api/src/earth_echo/science` y no en React.
 
-## Imágenes del globo
+## Globo
 
-CesiumJS, licencia Apache-2.0, no es lo mismo que Cesium ion. La imaginería y el terreno por defecto de ion piden cuenta y token. Esta fase usa `Assets/Textures/NaturalEarthII`, servido desde el propio paquete, y `EllipsoidTerrainProvider`. El crédito visible dice «Natural Earth». El logo de Cesium ion que muestra el widget es la atribución del visor, no una sesión de ion: en la prueba no hubo pedidos a `cesium.com`.
+Sigue habiendo un solo motor, CesiumJS, sobre el elipsoide WGS84. No hay terreno 3D ni exageración vertical: el acceso al terreno de Cesium ion pide token. `CESIUM_ION_TOKEN` sigue fuera del bundle.
 
-`CESIUM_ION_TOKEN` queda reservado y no entra al bundle. La fase 03 puede elegir otra base, por ejemplo NASA GIBS (D36), sin montar un segundo motor.
+La base visual preferida es NASA GIBS (D36), capa estática Blue Marble Shaded Relief and Bathymetry, teselas Web Mercator públicas hasta el nivel 8. No es una observación del día. Si GIBS falla, queda Natural Earth II, incluido en CesiumJS y de dominio público. No hay una textura de nubes: una capa fija parecería meteorología actual.
+
+`lightingMode` en `apps/web/src/globe/geography.ts` vale `presentation`: el globo se ve iluminado de frente y la atmósfera es moderada. No sigue al sol. El encuadre `americasPreset` mira longitud −64° y latitud −14° desde 13 200 km, con norte arriba. La cámara no baja de 250 km ni se aleja más de 28 000 km, y no se inclina por debajo del horizonte. No hay giro automático. `prefers-reduced-motion` anula la animación de vuelo. Un clic interrumpe el vuelo anterior.
+
+`focusRegion` recibe una extensión en grados, con `crossesAntimeridian`. La conversión a la cámara está en `frameExtent`, sin Cesium. Los rótulos HTML se proyectan en cada frame y se ocultan si quedan detrás del planeta, fuera del área o encima de otro rótulo. Un arrastre no selecciona.
+
+La fase 04 agrega, actualiza y quita señales con `addSignal`, `updateSignal` y `removeSignal` sobre el mismo visor. Cada señal lleva `id`, título, longitud, latitud, prioridad y una nota. `focusRegion` y `restoreView` sirven para encuadrar. Un cambio de filtro no debe recrear el `Viewer`: el efecto de `GlobeStage` solo depende de la fábrica.
 
 ## Tiempo
 

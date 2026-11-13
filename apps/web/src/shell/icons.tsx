@@ -18,7 +18,8 @@ export type IconName =
   | "plus"
   | "minus"
   | "chevron"
-  | "layers";
+  | "layers"
+  | "home";
 
 const paths: Record<IconName, ReactNode> = {
   rain: (
@@ -81,6 +82,12 @@ const paths: Record<IconName, ReactNode> = {
   minus: <path d="M3.5 8h9" />,
   chevron: <path d="M4.5 6.2 8 9.8l3.5-3.6" />,
   layers: <path d="M2.5 6.2 8 3.4l5.5 2.8L8 9zM3.2 9.2 8 12l4.8-2.8" />,
+  home: (
+    <>
+      <path d="M2.8 7.6 8 3.2l5.2 4.4" />
+      <path d="M4.4 7.2V13h7.2V7.2" />
+    </>
+  ),
 };
 
 export function Icon({ name }: { name: IconName }) {

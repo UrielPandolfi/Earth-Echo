@@ -3,6 +3,7 @@ import { GlobeStage } from "../globe/GlobeStage";
 import type { GlobeFactory, GlobeHandle } from "../globe/lifecycle";
 import { formatCount, signalDisplayCount } from "../demo/queries";
 import type { ObservatoryState, Section } from "./observatoryState";
+import { amazoniaFrame } from "../globe/geography";
 import { Icon, SymbolMark } from "./icons";
 
 interface GlobeColumnProps {
@@ -51,6 +52,14 @@ export function GlobeColumn({ state, createGlobe, catalogTotal, catalogState }: 
           <button type="button" onClick={() => controls?.zoomOut?.()} disabled={!cameraReady} title={cameraReady ? "Alejar" : "La cámara no está disponible"}>
             <Icon name="minus" />
             <span className="sr-only">Alejar</span>
+          </button>
+          <button type="button" onClick={() => controls?.restoreView?.()} disabled={!controls?.restoreView} title="Volver a la vista de América">
+            <Icon name="home" />
+            <span className="sr-only">Vista inicial</span>
+          </button>
+          <button type="button" onClick={() => controls?.focusRegion?.(amazoniaFrame)} disabled={!controls?.focusRegion} title="Encuadrar la extensión técnica de Amazonía">
+            <Icon name="layers" />
+            <span className="sr-only">Encuadrar región</span>
           </button>
         </div>
       </div>

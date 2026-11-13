@@ -1,8 +1,29 @@
+import type { FrameResult, GeoExtent, PlacedMarker } from "./geography";
+import type { GlobeStatus } from "./createCesiumGlobe";
+
+export interface GlobeMarker {
+  id: string;
+  title: string;
+  longitude: number;
+  latitude: number;
+  priority: number;
+  note: string;
+}
+
 export interface GlobeHandle {
   destroy: () => void;
   zoomIn?: () => void;
   zoomOut?: () => void;
   resize?: () => void;
+  restoreView?: () => void;
+  focusRegion?: (extent: GeoExtent) => FrameResult;
+  addSignal?: (signal: GlobeMarker) => void;
+  updateSignal?: (id: string, signal: Partial<GlobeMarker> & { id: string }) => void;
+  removeSignal?: (id: string) => void;
+  setOverlayListener?: (listener: ((markers: PlacedMarker[]) => void) | null) => void;
+  setStatusListener?: (listener: ((status: GlobeStatus) => void) | null) => void;
+  setSelectionListener?: (listener: ((selection: string | null) => void) | null) => void;
+  selectMarker?: (id: string | null) => void;
 }
 
 export type GlobeFactory = (container: HTMLElement) => GlobeHandle;
@@ -35,6 +56,15 @@ export function mountGlobe(container: HTMLElement, createGlobe: GlobeFactory): G
     zoomIn: () => handle.zoomIn?.(),
     zoomOut: () => handle.zoomOut?.(),
     resize: () => handle.resize?.(),
+    restoreView: () => handle.restoreView?.(),
+    focusRegion: (extent) => handle.focusRegion?.(extent) ?? { status: "unavailable", reason: "Este motor no encuadra regiones." },
+    addSignal: (signal) => handle.addSignal?.(signal),
+    updateSignal: (id, signal) => handle.updateSignal?.(id, signal),
+    removeSignal: (id) => handle.removeSignal?.(id),
+    setOverlayListener: (listener) => handle.setOverlayListener?.(listener),
+    setStatusListener: (listener) => handle.setStatusListener?.(listener),
+    setSelectionListener: (listener) => handle.setSelectionListener?.(listener),
+    selectMarker: (id) => handle.selectMarker?.(id),
   };
   container.dataset.earthEchoGlobe = "live";
   active.add(handle);

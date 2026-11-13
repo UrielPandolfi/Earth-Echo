@@ -62,6 +62,32 @@ La pantalla principal reemplazó a la prueba técnica. Conserva el visor de la f
 - La serie del inspector es sintética y está marcada como demo. No es SMAP ni GLDAS.
 - Los iconos son un juego propio de trazos, no una copia del set de la imagen.
 
+## Fase 03 — completada
+
+El área central sigue en CesiumJS. La Tierra visible usa NASA GIBS cuando responde y Natural Earth II si no.
+
+### Hecho
+
+- Base Blue Marble de GIBS, con crédito en pantalla, y respaldo local sin token.
+- Iluminación de presentación, atmósfera contenida, sin sol, luna ni nubes estáticas.
+- Encuadre de América, zoom, vista inicial y `focusRegion` para extensiones, incluida la que cruza el antimeridiano.
+- Límites de altura e inclinación. El arrastre no selecciona. Los rótulos de atrás no se muestran.
+- Tres marcas técnicas, no científicas. La fase 04 puede usar `addSignal`, `updateSignal` y `removeSignal`.
+
+### Evidencia
+
+- `npm --prefix apps/web test`: 12 pruebas, incluidas el antimeridiano, la cara oculta y el clic frente al arrastre.
+- `npx tsc --noEmit` en `apps/web` terminó sin error.
+- En http://127.0.0.1:5173/ el globo mostró América del Sur al centro, el norte arriba y el Atlántico al este. Se cargaron teselas de `gibs.earthdata.nasa.gov` y ninguna de `cesium.com`.
+- Encuadrar acercó el norte de Sudamérica. Vista inicial volvió al preset. Tras cambiar a 1366×768 siguió habiendo un visor y el rótulo visible.
+- El clic en «Ancla técnica» mostró `tech-amazonia-anchor` y aclaró que no es una medición.
+
+### Limitaciones
+
+- El relieve 3D no está: haría falta Cesium ion o un terreno propio.
+- Blue Marble es una imagen fija, no el estado de hoy. GIBS puede no responder y entonces se ve Natural Earth II.
+- Las señales ambientales sobre el globo siguen para la fase 04.
+
 ## Siguiente paso
 
-Fase 03: acercar el globo a la referencia dentro de esta interfaz, sin reemplazar el adaptador ni pintar señales todavía. Earthdata sigue faltando para el HDF de D02.
+Fase 04: exploración demo sobre este visor, usando `addSignal` y `focusRegion`, sin conectar proveedores reales. Earthdata sigue faltando para el HDF de D02.
