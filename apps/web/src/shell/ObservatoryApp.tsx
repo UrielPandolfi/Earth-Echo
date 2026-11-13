@@ -317,7 +317,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 },
               ]
             : []),
-          ...(activeProduct?.representation === 'points' ? (activeProduct.samples ?? []).flatMap(s => s.longitude === null || s.longitude === undefined || s.latitude === null || s.latitude === undefined ? [] : [{
+          ...(activeProduct?.representation === 'points' || activeProduct?.representation === 'tracks' ? (activeProduct.samples ?? []).filter(s=>activeProduct.representation!=='tracks' || activeProduct.tracks?.some(t=>t.sample_ids[t.sample_ids.length-1]===s.id)).flatMap(s => s.longitude === null || s.longitude === undefined || s.latitude === null || s.latitude === undefined ? [] : [{
             id:`product-point:${s.id}`,title:s.attributes?.nombre ?? s.id,longitude:s.longitude,latitude:s.latitude,priority:1,note:s.quality,symbol:activeProduct.kind === 'static_context' ? 'context' as const : 'observation' as const,
           }]) : []),
           ...(state.realQuakes
@@ -386,6 +386,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           groupCount={state.dataMode === "real" ? shownMarkers.filter(m=>m.symbol==='cluster').length : grouped.clusters.length}
           markers={shownMarkers}
           field={shownField}
+          tracks={state.dataMode==='real' ? activeProduct?.tracks : undefined}
           fieldCredit={
             state.dataMode === "real"
               ? activeProduct ? `${activeProduct.attribution} · ${activeProduct.variable}` : "NOAA Coral Reef Watch · CoralTemp v3.1 · SST"
@@ -435,7 +436,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
-      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} selectedId={state.realSelectedId?.replace('product-point:','') ?? null}/> : state.dataMode === "real" ? (
+      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} selectedId={state.realSelectedId?.replace('product-point:','') ?? null} onTrackFocus={track=>{
+        dispatch({type:'real-select',id:`product-point:${track.sample_ids[track.sample_ids.length-1]}`});
+        setFrameRequest({west:track.extent.west,east:track.extent.east,south:track.extent.south,north:track.extent.north,crossesAntimeridian:track.extent.crosses_antimeridian});
+      }}/> : state.dataMode === "real" ? (
         <RealInspector
           view={realView}
           error={realError}

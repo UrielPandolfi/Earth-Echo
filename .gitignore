@@ -24,6 +24,7 @@ __pycache__/
 *.nc
 !data/samples/d15-crw/*.nc
 !data/real/d15/assets/*.nc
+!data/samples/integrations/ibtracs-excerpt.nc
 *.grib
 *.grib2
 *.tif

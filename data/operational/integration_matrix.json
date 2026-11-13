@@ -403,7 +403,7 @@
     "evidence": [
       "/v1/products/d30-dem-pampa"
     ],
-    "blocker_or_next_step": "Contexto estático de superficie, sin fecha de adquisición por píxel disponible en este COG. No es terreno desnudo, nivel del agua ni modelo hidráulico. La edición DGED no está codificada: se identifica archivo por ETag y SHA-256.",
+    "blocker_or_next_step": "Contexto estático de superficie; alturas ortométricas EGM2008 según Product Handbook 5.0 de Copernicus DEM (https://dataspace.copernicus.eu/sites/default/files/media/files/2024-06/geo1988-copernicusdem-spe-002_producthandbook_i5.0.pdf). Sin fecha de adquisición por píxel en este COG. No es terreno desnudo, altura elipsoidal, nivel del agua ni modelo hidráulico. Distribuidor identifica colección 2021; la edición DGED no está codificada en la tesela: se identifica archivo por ETag y SHA-256.",
     "limits": "Es DSM, incluye vegetación y construcciones. No sustituye un modelo de terreno urbano o una topografía hidráulica de alta precisión."
   },
   {
@@ -606,9 +606,11 @@
       "Dataset histórico"
     ],
     "official_url": "https://www.ncei.noaa.gov/products/international-best-track-archive",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Best tracks históricos, versión y agencia pendientes",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d47-cyclone-tracks"
+    ],
+    "blocker_or_next_step": "Historia compilada, incluida posición provisional. No es trayectoria futura ni archivo de pronósticos emitidos. Viento WMO en nudos sin armonizar promedios 1/3/10 minutos; cada registro conserva agencia, IFLAG, tipo y presión mb. Faltantes nativos siguen null. Se dibujan centros publicados, con cortes de visualización al antimeridiano; sin inventar observaciones en los bordes.",
     "limits": "No contiene todos los pronósticos emitidos originalmente. No reemplaza un archivo histórico de forecasts para validar anticipación."
   },
   {

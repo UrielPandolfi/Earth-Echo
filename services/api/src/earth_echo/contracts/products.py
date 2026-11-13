@@ -3,6 +3,7 @@ import math
 from typing import Literal
 from pydantic import Field, model_validator
 from earth_echo.contracts.types import ApiModel, CatalogSourceId, UtcDateTime
+from earth_echo.contracts.geometry import GeoMultiLineString,GeographicExtent
 
 class ScientificGrid(ApiModel):
     width: int = Field(gt=0, le=4096)
@@ -56,6 +57,14 @@ class ProductSample(ApiModel):
             raise ValueError('A probability needs its definition')
         return self
 
+class ProductTrack(ApiModel):
+    id: str
+    name: str
+    geometry: GeoMultiLineString
+    extent: GeographicExtent
+    sample_ids: list[str] = Field(min_length=2)
+    quality: str
+
 class Verification(ApiModel):
     method: str
     original_url: str
@@ -76,7 +85,7 @@ class ScientificProduct(ApiModel):
     unit: str
     native_unit: str
     kind: Literal['observation', 'indicator', 'forecast', 'historical', 'static_context', 'orbital_assessment']
-    representation: Literal['field', 'points', 'planetary', 'table', 'regions']
+    representation: Literal['field', 'points', 'planetary', 'table', 'regions', 'tracks']
     observed_at: UtcDateTime | None = None
     observation_end: UtcDateTime | None = None
     initialized_at: UtcDateTime | None = None
@@ -101,6 +110,7 @@ class ScientificProduct(ApiModel):
     validated_for_use: Literal[False] = False
     grid: ScientificGrid | None = None
     samples: list[ProductSample] = Field(default_factory=list)
+    tracks: list[ProductTrack] = Field(default_factory=list)
     verification: Verification
 
 class ProductList(ApiModel):

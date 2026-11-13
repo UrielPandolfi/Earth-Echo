@@ -1,15 +1,27 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-13T22:53:40Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-06T22%3A53%3A40Z&endtime=2026-11-13T22%3A53%3A40Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "390cec51bdd6521010569d335fdbb514e736ae1e7fb2bf4014d36b606fb54568",
-  "byte_size": 80978,
-  "raw_file": "assets\\d21-events\\390cec51bdd6521010569d335fdbb514e736ae1e7fb2bf4014d36b606fb54568.json",
+  "retrieved_at": "2026-11-13T23:53:50Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-06T23%3A53%3A50Z&endtime=2026-11-13T23%3A53%3A50Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "b038be57e39b4d3716c81982c7a117b9fabc2a88854250a297781bb408f46951",
+  "byte_size": 82407,
+  "raw_file": "assets\\d21-events\\b038be57e39b4d3716c81982c7a117b9fabc2a88854250a297781bb408f46951.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty56",
+      "longitude": 149.92,
+      "latitude": -1.5038,
+      "depth_km": 10.0,
+      "magnitude": 5.1,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-13T23:50:28.040000Z",
+      "time": "2026-11-13T23:30:38Z",
+      "place": "153 km NW of Kavieng, Papua New Guinea"
+    },
     {
       "id": "us7000ty4w",
       "longitude": -178.6351,
@@ -21,6 +33,18 @@
       "updated_at": "2026-11-13T22:49:17.040000Z",
       "time": "2026-11-13T22:10:42Z",
       "place": "south of the Kermadec Islands"
+    },
+    {
+      "id": "us7000ty4n",
+      "longitude": -89.4564,
+      "latitude": 13.2186,
+      "depth_km": 59.125,
+      "magnitude": 4.6,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-13T23:26:31.996000Z",
+      "time": "2026-11-13T21:19:55Z",
+      "place": "33 km SSW of La Libertad, El Salvador"
     },
     {
       "id": "us7000ty43",

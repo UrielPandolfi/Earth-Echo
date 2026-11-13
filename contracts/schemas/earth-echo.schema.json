@@ -1559,6 +1559,47 @@
       "title": "ProductSample",
       "type": "object"
     },
+    "ProductTrack": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "geometry": {
+          "$ref": "#/$defs/GeoMultiLineString"
+        },
+        "extent": {
+          "$ref": "#/$defs/GeographicExtent"
+        },
+        "sample_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Sample Ids",
+          "type": "array"
+        },
+        "quality": {
+          "title": "Quality",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "geometry",
+        "extent",
+        "sample_ids",
+        "quality"
+      ],
+      "title": "ProductTrack",
+      "type": "object"
+    },
     "Provenance": {
       "additionalProperties": false,
       "properties": {
@@ -2268,7 +2309,8 @@
             "points",
             "planetary",
             "table",
-            "regions"
+            "regions",
+            "tracks"
           ],
           "title": "Representation",
           "type": "string"
@@ -2457,6 +2499,13 @@
             "$ref": "#/$defs/ProductSample"
           },
           "title": "Samples",
+          "type": "array"
+        },
+        "tracks": {
+          "items": {
+            "$ref": "#/$defs/ProductTrack"
+          },
+          "title": "Tracks",
           "type": "array"
         },
         "verification": {

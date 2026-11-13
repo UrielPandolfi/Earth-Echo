@@ -329,6 +329,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Consulta de apertura reducida de 14.686.191 a 51.478 bytes mediante `summaries=true`; detalle bajo demanda. Leyenda y encuadre explícito conservados. Se corrigió orden de hooks al pasar entre una ficha sísmica y SST. Inspector accesible a 1100×720, ancho documental 1100 sin desborde. Capturas REAL de MHW, LHASA y ventana reducida en `docs/integraciones/`.
 - Comprobación: 72 pruebas API, 20 web, contratos generados y build de producción. No se promociona ningún modelo por estas pruebas. Sigue IBTrACS; accesos autenticados pendientes afectan solo sus productos.
 
+## Incremento 11E — trayectorias históricas de ciclones
+
+- D47 IBTrACS v04r01: muestra inicial ACTIVE de 139 posiciones/3 sistemas, cotejada entre CSV y NetCDF. Ampliación posterior al original `last3years` de 1.508.639 bytes; consulta local de sistemas con última posición en los últimos 30 días: 15 trayectorias y 783 posiciones. El original conservado permite acceder a los valores científicos de tres años, sin cargar toda la historia en el globo.
+- UTC y coordenadas nativas, longitudes normalizadas a WGS84 y original conservado por registro. Viento WMO en nudos, agencia y períodos sin armonizar; `IFLAG`, presión, naturaleza y estado provisional permanecen accesibles. En registros provisionales el viento WMO puede faltar: no se reemplaza por el viento de otra agencia ni por cero.
+- Contrato de trayectorias reutiliza `GeoMultiLineString` y extensión con `crosses_antimeridian`. OLANA cruza realmente el antimeridiano: dos partes sin saltos mayores de 180°. Solo se interpola el borde para dibujar, sin inventar una observación o tiempo. El inspector conserva selección y permite encuadre explícito de cada sistema; cámara amplia al entrar en REAL.
+- 16 fuentes con datos, 28 productos nuevos y 22 campos. Actualización IBTrACS diaria instalada en el mismo worker. Segunda ingestión `unchanged`, una sola revisión; ninguna probabilidad o trayectoria futura derivada de estos best tracks.
+- 76 pruebas API pasaron, contratos generados y build de producción. Fixture numérico pequeño extraído de cuatro sistemas reales y CSV original conservados para verificar calidad, faltantes y cruces. Captura auténtica `real-ibtracs-antimeridiano-1672x941.jpg`.
+- Continúa GDACS: API SEARCH respondió vacía; RSS público sí entregó registros. Un enlace CAP de inundación devolvió HTML; CAP de ciclón entregó geometría real. Esa diferencia no se oculta ni se convierte en área inventada.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

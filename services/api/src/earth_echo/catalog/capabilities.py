@@ -131,6 +131,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F25',{})['indicator'] = ('partial','Nowcast LHASA p_landslide de Columbia Británica, malla nativa de ~1 km, versión de archivo trazable. No es deslizamiento observado ni falla garantizada de una ladera.')
     if any(p.source_id=='D16' for p in products):
         overrides_by_id.setdefault('F18',{})['forecast'] = ('partial','Probabilidades mensuales NMME de NOAA PSL sobre umbral p90, producto externo experimental con tendencia retenida y ventanas mensuales. Habilidad desigual; sin daño biológico confirmado.')
+    if 'd47-cyclone-tracks' in available:
+        overrides_by_id.setdefault('F04',{})['observation'] = ('partial','Trayectorias históricas/provisionales IBTrACS de sistemas con posición en los últimos 30 días. Conservan agencia, viento nativo y calidad. No hay trayectoria futura ni validación de forecasts emitidos.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

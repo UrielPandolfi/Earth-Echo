@@ -7,6 +7,8 @@ import {
   EllipsoidalOccluder,
   EllipsoidTerrainProvider,
   ImageryLayer,
+  Material,
+  PolylineCollection,
   Math as CesiumMath,
   Rectangle,
   SceneTransforms,
@@ -95,6 +97,8 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
   const scene = viewer.scene;
   const billboards = new BillboardCollection({ scene });
   scene.primitives.add(billboards);
+  const paths = new PolylineCollection();
+  scene.primitives.add(paths);
   const globe = scene.globe;
   const camera = viewer.camera;
   const controller = scene.screenSpaceCameraController;
@@ -414,6 +418,17 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     },
     setField(field, credit) {
       paintField(field, credit ?? "Campo ilustrativo DEMO");
+    },
+    setTracks(tracks) {
+      paths.removeAll();
+      for (const track of tracks) {
+        for (const part of track.geometry.coordinates) {
+          paths.add({positions: part.map(p=>Cartesian3.fromDegrees(p[0],p[1],2000)),width:3,
+            material:Material.fromType('Color',{color:Color.fromCssColorString('#e7bf74')}),
+            id:`product-point:${track.sample_ids[track.sample_ids.length-1]}`});
+        }
+      }
+      scene.requestRender();
     },
     setCameraListener(listener) {
       cameraListener = listener;

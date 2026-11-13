@@ -251,6 +251,15 @@ export interface ProductSample {
   attributes?: Record<string, string | null>;
 }
 
+export interface ProductTrack {
+  id: string;
+  name: string;
+  geometry: GeoMultiLineString;
+  extent: GeographicExtent;
+  sample_ids: string[];
+  quality: string;
+}
+
 export interface Provenance {
   source_ids: string[];
   asset_ids?: string[];
@@ -361,7 +370,7 @@ export interface ScientificProduct {
   unit: string;
   native_unit: string;
   kind: "observation" | "indicator" | "forecast" | "historical" | "static_context" | "orbital_assessment";
-  representation: "field" | "points" | "planetary" | "table" | "regions";
+  representation: "field" | "points" | "planetary" | "table" | "regions" | "tracks";
   observed_at?: string | null;
   observation_end?: string | null;
   initialized_at?: string | null;
@@ -386,6 +395,7 @@ export interface ScientificProduct {
   validated_for_use?: false;
   grid?: ScientificGrid | null;
   samples?: ProductSample[];
+  tracks?: ProductTrack[];
   verification: Verification;
 }
 

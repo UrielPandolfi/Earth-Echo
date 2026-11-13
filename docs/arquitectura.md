@@ -26,6 +26,8 @@ La identidad de revisión incluye metadatos científicos y método, además del 
 
 En Windows, `ops/windows/install-refresh.ps1` registra e inicia una tarea local al iniciar sesión, con el Python del proyecto y sin ventana. Comparte el lock con la API; no se solapan descargas. Estado efímero y heartbeat permanecen fuera de Git. Instalación, parada y recuperación se describen en `docs/actualizacion.md`.
 
+Las trayectorias importadas reutilizan GeoJSON y extensión existentes, con tiempos/calidad en registros vinculados. IBTrACS conserva centros, agencia y período nativo del viento sin armonización. Se cortan las líneas al antimeridiano; los vértices de borde son solo dibujo. La colección de polilíneas vive dentro del mismo adaptador Cesium, sin otro visor. La cámara cambia solo por acción explícita y el inspector sirve también para seleccionar los sistemas.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

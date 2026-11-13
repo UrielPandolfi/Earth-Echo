@@ -1,4 +1,4 @@
-import type { ProductList, ScientificProduct } from '../domain/generated';
+import type { ProductList, ScientificProduct,ProductTrack } from '../domain/generated';
 import { AnomalyChart } from '../shell/AnomalyChart';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
@@ -30,7 +30,7 @@ export function ProductsPanel({ data, selected, activeProduct, onSelect, onFocus
     </div></aside>;
 }
 
-export function ProductInspector({ product, selectedId }: { product: ScientificProduct; selectedId: string | null }) {
+export function ProductInspector({ product, selectedId,onTrackFocus }: { product: ScientificProduct; selectedId: string | null; onTrackFocus?: (track:ProductTrack)=>void }) {
   const p = product;
   const samples = p.samples ?? [];
   const selected = samples.find(s=>s.id===selectedId);
@@ -40,6 +40,7 @@ export function ProductInspector({ product, selectedId }: { product: ScientificP
   const high = present.length ? Math.max(...present) : 1;
   return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {p.kind}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? `Recuperado ${p.retrieved_at}`} UTC</p></header>
     <div className="inspector-body"><p>{p.limitation}</p>
+      {!!p.tracks?.length && <section><h3>{p.tracks.length} trayectorias históricas</h3><p className="fine">Línea dorada: centros publicados, no trayectoria futura. Seleccioná un sistema para encuadrarlo.</p><div className="product-table">{p.tracks.map(t=><button key={t.id} type="button" className="wide-toggle" onClick={()=>onTrackFocus?.(t)}>Encuadrar {t.name} · {t.sample_ids.length} posiciones</button>)}</div></section>}
       {selected && <section><h3>{selected.attributes?.nombre ?? selected.id}</h3><p>{selected.value ?? 'Ausente'} {p.unit}</p><p>{selected.latitude}°, {selected.longitude}° WGS84</p><p className="fine">{Object.entries(selected.attributes ?? {}).map(([k,v])=>`${k}: ${v ?? 'ausente'}`).join(' · ')}</p><p className="fine">{selected.quality}</p></section>}
       {chartSamples.length > 0 && <AnomalyChart points={chartSamples.map(s=>({label:s.time?.slice(0,10) ?? s.id,kind:p.kind==='forecast'?'forecast':'observed',value:s.value ?? null}))} domain={{min:low-.1,max:high+.1,ticks:[high,(low+high)/2,low]}} caption={`${p.variable} · ${p.unit}; últimos ${chartSamples.length} registros. UTC; los huecos siguen ausentes.`}/>}
       <dl className="facts"><div><dt>Variable</dt><dd>{p.variable} · {p.unit}</dd></div><div><dt>Producto</dt><dd>{p.collection_id} · {p.product_version}</dd></div>

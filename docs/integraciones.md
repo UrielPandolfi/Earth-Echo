@@ -33,7 +33,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D27 | NOAA Tsunami Warning Centers | Pronóstico o producto científico existente | /v1/products/d27-tsunami-messages | Mensajes oficiales con emisor, estado, actualización/cancelación y expiración. Un mensaje informativo no confirma tsunami. No se infiere llegada ni área afectada desde el epicentro. Geometrías CAP originales preservadas en cada mensaje. |
 | D28 | NOAA SWPC | Fuente de observaciones; Pronóstico o producto científico existente | /v1/layers/d28-kp, /v1/forecasts/d28-kp | Consultar producto real; descubrimiento no cuenta como integración |
 | D29 | NASA JPL CNEOS | Pronóstico o producto científico existente | /v1/products/d29-sentry | No incluye objetos no descubiertos. Un acercamiento no es un impacto; las evaluaciones pueden retirarse o cambiar. No se inventa una fecha o lugar de desastre. |
-| D30 | Copernicus DEM | Geometría o contexto estático | /v1/products/d30-dem-pampa | Contexto estático de superficie, sin fecha de adquisición por píxel disponible en este COG. No es terreno desnudo, nivel del agua ni modelo hidráulico. La edición DGED no está codificada: se identifica archivo por ETag y SHA-256. |
+| D30 | Copernicus DEM | Geometría o contexto estático | /v1/products/d30-dem-pampa | Contexto estático de superficie; alturas ortométricas EGM2008 según Product Handbook 5.0 de Copernicus DEM (https://dataspace.copernicus.eu/sites/default/files/media/files/2024-06/geo1988-copernicusdem-spe-002_producthandbook_i5.0.pdf). Sin fecha de adquisición por píxel en este COG. No es terreno desnudo, altura elipsoidal, nivel del agua ni modelo hidráulico. Distribuidor identifica colección 2021; la edición DGED no está codificada en la tesela: se identifica archivo por ETag y SHA-256. |
 | D31 | GEBCO | Geometría o contexto estático | pending | Subconjunto GEBCO y Type Identifier Grid con datum |
 | D32 | HydroATLAS | Geometría o contexto estático | pending | Subconjunto y licencia HydroATLAS; no son caudales |
 | D33 | NASA GRACE asimilado para sequía | Pronóstico o producto científico existente | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
@@ -50,7 +50,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D44 | Estudio de predictibilidad de calor marino | Documentación, método o referencia científica | reference_only | Consultar producto real; descubrimiento no cuenta como integración |
 | D45 | Estudio de sequía agrícola argentina | Documentación, método o referencia científica | reference_only | Consultar producto real; descubrimiento no cuenta como integración |
 | D46 | Met Office sobre AMOC | Documentación, método o referencia científica | reference_only | Consultar producto real; descubrimiento no cuenta como integración |
-| D47 | NOAA IBTrACS | Dataset histórico | pending | Best tracks históricos, versión y agencia pendientes |
+| D47 | NOAA IBTrACS | Dataset histórico | /v1/products/d47-cyclone-tracks | Historia compilada, incluida posición provisional. No es trayectoria futura ni archivo de pronósticos emitidos. Viento WMO en nudos sin armonizar promedios 1/3/10 minutos; cada registro conserva agencia, IFLAG, tipo y presión mb. Faltantes nativos siguen null. Se dibujan centros publicados, con cortes de visualización al antimeridiano; sin inventar observaciones en los bordes. |
 | D48 | NOAA CPC ENSO | Pronóstico o producto científico existente | /v1/products/d48-oni-history | Historia ONI, medias móviles de tres meses y climatología definida por CPC. No se convierte automáticamente en fase ENSO vigente, perspectiva probabilística ni lluvia local. El diagnóstico operativo puede usar otro índice como RONI. |
 
 ## Capacidades de los 31 fenómenos
@@ -62,7 +62,7 @@ Observación puede ser parcial; un dato de contexto no habilita un detector. «s
 | F01 | Lluvias extremas | blocked | specified | specified | partial | specified |
 | F02 | Olas de calor | partial | specified | specified | partial | specified |
 | F03 | Olas de frío y heladas | specified | specified | specified | partial | specified |
-| F04 | Tormentas severas y granizo | specified | specified | specified | specified | specified |
+| F04 | Tormentas severas y granizo | partial | specified | specified | specified | specified |
 | F05 | Tornados | specified | specified | specified | specified | specified |
 | F06 | Ciclones tropicales | specified | specified | specified | specified | specified |
 | F07 | Marejadas e inundación costera | specified | specified | specified | specified | specified |

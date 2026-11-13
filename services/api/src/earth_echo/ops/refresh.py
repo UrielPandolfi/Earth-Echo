@@ -67,6 +67,7 @@ def jobs() -> dict:
     from earth_echo.connectors.terrain import fetch_dem
     from earth_echo.connectors.lhasa import fetch_lhasa
     from earth_echo.connectors.marine_heatwaves import fetch_mhw
+    from earth_echo.connectors.ibtracs import fetch_ibtracs
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -79,6 +80,7 @@ def jobs() -> dict:
         'd29-sentry':(86400,fetch_sentry), 'd27-tsunami-messages':(900,fetch_tsunami),
         'd48-oni-history':(604800,fetch_oni), 'd22-oaf-recent':(3600,fetch_oaf),
         'd30-dem-pampa':(2592000,fetch_dem), 'd24-lhasa-bc':(43200,fetch_lhasa), 'd16-mhw-monthly':(86400,fetch_mhw),
+        'd47-cyclone-tracks':(86400,fetch_ibtracs),
     }
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:

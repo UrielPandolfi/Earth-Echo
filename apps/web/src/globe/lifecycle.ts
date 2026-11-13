@@ -1,5 +1,6 @@
 import type { FrameResult, GeoExtent, PlacedMarker } from "./geography";
 import type { GlobeStatus } from "./createCesiumGlobe";
+import type { ProductTrack } from '../domain/generated';
 
 export interface GlobeMarker {
   id: string;
@@ -28,6 +29,7 @@ export interface GlobeHandle {
   selectMarker?: (id: string | null) => void;
   setSignals?: (signals: GlobeMarker[]) => void;
   setField?: (field: import("../demo/explore").FieldGrid | null, credit?: string) => void;
+  setTracks?: (tracks: ProductTrack[]) => void;
   setCameraListener?: (listener: ((heightMeters: number) => void) | null) => void;
 }
 
@@ -72,6 +74,7 @@ export function mountGlobe(container: HTMLElement, createGlobe: GlobeFactory): G
     selectMarker: (id) => handle.selectMarker?.(id),
     setSignals: (signals) => handle.setSignals?.(signals),
     setField: (field, credit) => handle.setField?.(field, credit),
+    setTracks: (tracks) => handle.setTracks?.(tracks),
     setCameraListener: (listener) => handle.setCameraListener?.(listener),
   };
   container.dataset.earthEchoGlobe = "live";
