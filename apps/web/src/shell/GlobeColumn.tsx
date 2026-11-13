@@ -22,6 +22,7 @@ interface GlobeColumnProps {
   onCameraHeight: (heightMeters: number) => void;
   emptyText?: string;
   trendNote?: string;
+  countLabel?: string;
 }
 
 const sectionNote: Record<Exclude<Section, "explorar">, string> = {
@@ -44,10 +45,11 @@ export function GlobeColumn({
   onCameraHeight,
   emptyText,
   trendNote,
+  countLabel,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
-  const note = state.section === "tendencias" && trendNote ? trendNote : state.section === "explorar" ? null : sectionNote[state.section];
+  const note = state.section === "explorar" ? null : trendNote ?? sectionNote[state.section];
 
   useEffect(() => {
     controls?.setSignals?.(markers);
@@ -79,7 +81,7 @@ export function GlobeColumn({
           </p>
         ) : null}
         <div className="synthesis" aria-live="polite">
-          <strong>{formatCount(signalCount)} señales</strong>
+          <strong>{countLabel ?? `${formatCount(signalCount)} señales`}</strong>
           {groupCount > 0 ? <span>{formatCount(groupCount)} grupos</span> : null}
           <span>·</span>
           {catalogState === "ready" && catalogTotal !== null ? (

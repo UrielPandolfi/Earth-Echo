@@ -20,6 +20,7 @@ import { GlobeColumn } from "./GlobeColumn";
 import { Inspector } from "./Inspector";
 import { RealInspector } from "./RealInspector";
 import { TrendPanel } from "./TrendPanel";
+import { CapabilitiesPanel } from "./CapabilitiesPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 
@@ -38,6 +39,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [realView, setRealView] = useState<RealSourceView | null>(null);
   const [realError, setRealError] = useState<string | null>(null);
   const [realField, setRealField] = useState<RealField | null>(null);
+  const [quakes, setQuakes] = useState<Array<{ id: string; longitude: number; latitude: number; magnitude: number; place: string; time: string }>>([]);
+  const [kpText, setKpText] = useState<string | null>(null);
   const onCameraHeight = useCallback((height: number) => {
     setCameraHeight((current) => (Math.abs(current - height) < 250_000 ? current : height));
   }, []);
@@ -118,6 +121,41 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
       }
     }
     void loadReal();
+    return () => controller.abort();
+  }, [state.dataMode]);
+
+  useEffect(() => {
+    if (state.dataMode !== "real") {
+      return;
+    }
+    const controller = new AbortController();
+    async function loadLayers() {
+      try {
+        const [quakeResponse, kpResponse] = await Promise.all([
+          fetch(`${apiBase}/v1/layers/d21-events`, { signal: controller.signal }),
+          fetch(`${apiBase}/v1/layers/d28-kp`, { signal: controller.signal }),
+        ]);
+        if (quakeResponse.ok) {
+          const body = (await quakeResponse.json()) as { features?: typeof quakes };
+          setQuakes(Array.isArray(body.features) ? body.features : []);
+        }
+        if (kpResponse.ok) {
+          const body = (await kpResponse.json()) as { latest_kp?: number | null; latest_time?: string | null; note?: string };
+          setKpText(
+            body.latest_kp === null || body.latest_kp === undefined
+              ? body.note ?? "Kp no disponible."
+              : `Kp ${body.latest_kp} · ${body.latest_time ?? "sin hora"} · índice planetario, no un aviso local`,
+          );
+        }
+      } catch (caught) {
+        if (caught instanceof DOMException && caught.name === "AbortError") {
+          return;
+        }
+        setQuakes([]);
+        setKpText("La capa adicional no respondió. El escenario DEMO no se usó como reemplazo.");
+      }
+    }
+    void loadLayers();
     return () => controller.abort();
   }, [state.dataMode]);
 
@@ -226,19 +264,32 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   };
   const shownMarkers: GlobeMarker[] =
     state.dataMode === "real"
-      ? realObservation?.spatial.geometry
-        ? [
-            {
-              id: realObservation.id,
-              title: "SST del Caribe",
-              longitude: realObservation.spatial.geometry.coordinates[0] ?? 0,
-              latitude: realObservation.spatial.geometry.coordinates[1] ?? 0,
-              priority: 1,
-              note: "°C",
-              symbol: "observation",
-            },
-          ]
-        : []
+      ? [
+          ...(realObservation?.spatial.geometry
+            ? [
+                {
+                  id: realObservation.id,
+                  title: "SST del Caribe",
+                  longitude: realObservation.spatial.geometry.coordinates[0] ?? 0,
+                  latitude: realObservation.spatial.geometry.coordinates[1] ?? 0,
+                  priority: 2,
+                  note: "°C",
+                  symbol: "observation" as const,
+                },
+              ]
+            : []),
+          ...(state.realQuakes
+            ? quakes.map((quake) => ({
+                id: quake.id,
+                title: `M${quake.magnitude.toFixed(1)}`,
+                longitude: quake.longitude,
+                latitude: quake.latitude,
+                priority: 1,
+                note: quake.place,
+                symbol: "observation" as const,
+              }))
+            : []),
+        ]
       : markers;
   const shownField =
     state.dataMode === "real" ? (realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
@@ -273,6 +324,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         onWide={(wide) => dispatch({ type: "wide", wide })}
         realView={realView}
         realError={realError}
+        quakesOn={state.realQuakes}
+        quakeCount={quakes.length}
+        kpText={kpText}
+        onToggleQuakes={() => dispatch({ type: "toggle-quakes" })}
       />
       <div className="center">
         <GlobeColumn
@@ -303,14 +358,17 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
               : undefined
           }
           frameRequest={frameRequest}
-          onSelect={(id) => dispatch({ type: "select", id })}
+          onSelect={(id) => dispatch(state.dataMode === "real" ? { type: "real-select", id } : { type: "select", id })}
+          countLabel={state.dataMode === "real" ? `1 agregado SST · ${state.realQuakes ? quakes.length : 0} sismos` : undefined}
           onCameraHeight={onCameraHeight}
           trendNote={
-            state.section !== "tendencias"
-              ? undefined
-              : state.dataMode === "real"
+            state.section === "tendencias"
+              ? state.dataMode === "real"
                 ? "La tendencia de la SST real está en el panel derecho. El globo sigue en el recorte."
                 : "El escenario demo no calcula una tendencia climática."
+              : state.section === "historico"
+                ? "La matriz de capacidades está en el panel derecho."
+                : undefined
           }
         />
         <TimelineBar
@@ -321,7 +379,9 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onRealIndex={(index) => dispatch({ type: "real-index", index })}
         />
       </div>
-      {state.section === "tendencias" ? (
+      {state.section === "historico" ? (
+        <CapabilitiesPanel />
+      ) : state.section === "tendencias" ? (
         <TrendPanel
           mode={state.dataMode}
           analysisOpen={state.analysisOpen}
@@ -334,6 +394,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           index={state.realIndex}
           analysisOpen={state.analysisOpen}
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
+          quake={quakes.find((item) => item.id === state.realSelectedId) ?? null}
         />
       ) : (
         <Inspector

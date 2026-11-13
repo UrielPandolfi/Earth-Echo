@@ -17,6 +17,8 @@ export interface ObservatoryState {
   searchText: string;
   dataMode: DataMode;
   realIndex: number;
+  realQuakes: boolean;
+  realSelectedId: string | null;
   wide: boolean;
   selectedId: string | null;
   tab: InspectorTab;
@@ -38,6 +40,8 @@ export type ObservatoryAction =
   | { type: "mode"; mode: DataMode }
   | { type: "real-index"; index: number }
   | { type: "real-tick"; count: number }
+  | { type: "toggle-quakes" }
+  | { type: "real-select"; id: string | null }
   | { type: "wide"; wide: boolean }
   | { type: "select"; id: string | null }
   | { type: "tab"; tab: InspectorTab }
@@ -61,6 +65,8 @@ export function initialObservatoryState(): ObservatoryState {
     searchText: "",
     dataMode: "demo",
     realIndex: 0,
+    realQuakes: true,
+    realSelectedId: null,
     wide: false,
     selectedId: HERO_ID,
     tab: "resumen",
@@ -116,6 +122,10 @@ export function reduceObservatory(state: ObservatoryState, action: ObservatoryAc
         return { ...state, playing: false };
       }
       return { ...state, realIndex: state.realIndex + 1 };
+    case "toggle-quakes":
+      return { ...state, realQuakes: !state.realQuakes };
+    case "real-select":
+      return { ...state, realSelectedId: action.id };
     case "wide":
       return { ...state, wide: action.wide };
     case "select":

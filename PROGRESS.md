@@ -176,6 +176,36 @@ La tendencia se calcula en la API, no en el gráfico. El caso real es la misma c
 - Los archivos mensuales NetCDF quedan en disco y no en Git. La serie agregada sí está en `data/real/d15/monthly_series.json`, con el checksum de cada mes.
 - D01 sigue sin credencial.
 
+## Fase 07 — completada en el alcance con datos públicos
+
+No se marcaron los 31 fenómenos como operativos. La matriz separa observación, indicador, tendencia y pronóstico.
+
+### Conectado
+
+- D15 sigue siendo la SST del Caribe occidental, como campo y como agregado. No es HotSpot, DHW ni blanqueamiento. F19 queda `partial`.
+- D21: 15 sismos de magnitud mayor o igual a 5, como puntos. No son probabilidades de réplica. F28 observación queda `partial` y su pronóstico sigue especificado.
+- D28: índice Kp planetario, último valor 0,33 a las 2026-11-13T03:00:00. No es un campo de pines ni un aviso local. F29 observación queda `connected`; el pronóstico no.
+
+### Bloqueado o sin archivo
+
+- F01 y D01, F11 y D02: faltan `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD`.
+- F12: GloFAS pide cuenta CDS. No se descargó caudal ni se convirtió en profundidad.
+- F15: GWIS quedó como portal. No hay FWI numérico. No es probabilidad de ignición.
+- F31 sigue en investigación, sin fecha de colapso.
+- Ningún pronóstico del catálogo quedó `connected`.
+
+### Operación y rendimiento
+
+- `d21-events` vence a la hora y `d28-kp` a las tres horas. Un fallo de red conserva la instantánea y no pasa a DEMO.
+- En este equipo (AMD Ryzen 7 5700, Windows 10) agrupar 1 000 puntos sintéticos tardó 0,86 ms y 10 000 tardó 4,86 ms. El total representado no cambió. No se midieron cuadros por segundo del globo, así que el objetivo de 30 FPS no se declara cumplido.
+
+### Evidencia
+
+- `uv run --directory services/api pytest`: 38 pruebas.
+- `npm --prefix apps/web test`: 18 pruebas. `npx tsc --noEmit` sin error.
+- `GET /v1/capabilities` devolvió 31 fenómenos y cero pronósticos conectados.
+- En http://127.0.0.1:5173/ el modo REAL mostró «1 agregado SST · 15 sismos», el Kp y, en Histórico, la matriz.
+
 ## Siguiente paso
 
-Fase 07: más capas sobre este mismo contrato de consulta, sin tratar esta pendiente como un pronóstico ni como una causa.
+Fase 08: pronósticos con una prueba temporal que no use el futuro, sin convertir estos sismos ni el Kp en una predicción.

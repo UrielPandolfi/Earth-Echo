@@ -17,9 +17,29 @@ interface FilterPanelProps {
   onWide: (wide: boolean) => void;
   realView: RealSourceView | null;
   realError: string | null;
+  quakesOn: boolean;
+  quakeCount: number;
+  kpText: string | null;
+  onToggleQuakes: () => void;
 }
 
-export function FilterPanel({ state, categoryCounts, infoCounts, onToggleCategory, onToggleInfo, onToggleLayer, onGroup, onWide, realView, realError }: FilterPanelProps) {
+export function FilterPanel({
+  state,
+  categoryCounts,
+  infoCounts,
+  onToggleCategory,
+  onToggleInfo,
+  onToggleLayer,
+  onGroup,
+  onWide,
+  realView,
+  realError,
+  quakesOn,
+  quakeCount,
+  kpText,
+  onToggleQuakes,
+}: FilterPanelProps) {
+  const [layersOpen, setLayersOpen] = useState(false);
   if (state.dataMode === "real") {
     return (
       <aside className="sidebar" aria-label="Consulta real">
@@ -37,12 +57,18 @@ export function FilterPanel({ state, categoryCounts, infoCounts, onToggleCategor
             <p className="hint">Cadencia {realView.cadence}. {realView.freshness ? freshnessLabel(realView.freshness) : ""}</p>
             <p className="hint">Última observación {realView.latest_observation?.replace(/\.\d+/, "")}. Última ingestión {realView.latest_ingest?.replace(/\.\d+/, "")}.</p>
             <p className="hint">IMERG (D01) sigue bloqueado: hacen falta EARTHDATA_USERNAME y EARTHDATA_PASSWORD en .env.</p>
+            <label className="row">
+              <input type="checkbox" checked={quakesOn} onChange={onToggleQuakes} />
+              <span>Sismos M≥5</span>
+              <b>{quakeCount}</b>
+            </label>
+            <p className="hint">Son eventos observados. No son probabilidades de réplica.</p>
+            <p className="hint">{kpText ?? "Kp no disponible. No se usó el escenario DEMO."}</p>
           </div>
         ) : null}
       </aside>
     );
   }
-  const [layersOpen, setLayersOpen] = useState(false);
   const activeLayer = demoScenario.layers.find((layer) => layer.id === state.activeLayerId) ?? null;
   const activeCategories = demoScenario.categories.filter((item) => state.enabledCategoryIds.includes(item.id));
 

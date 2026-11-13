@@ -18,6 +18,8 @@ from earth_echo.contracts.api_models import HealthResponse, ProviderReport, Prov
 from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQueryResult
 from earth_echo.ingest.d15_sst import default_store
 from earth_echo.queries.real_sst import RealSourceView, SstField, d01_blocked, d15_field, d15_view
+from earth_echo.catalog.capabilities import CapabilityMatrix, capability_matrix
+from earth_echo.queries.layers import KpLayer, QuakeLayer, kp_layer, quake_layer
 from earth_echo.queries.trend import TrendView, trend_csv, trend_view
 from earth_echo.queries.signals import query_signals
 from earth_echo.settings import get_settings
@@ -37,6 +39,7 @@ def create_app() -> FastAPI:
     app.include_router(_routes())
     app.include_router(_real_routes())
     app.include_router(_analysis_routes())
+    app.include_router(_scale_routes())
     return app
 
 
@@ -237,5 +240,23 @@ def _analysis_routes() -> APIRouter:
             media_type="text/csv",
             headers={"Content-Disposition": "attachment; filename=d15-sst-tendencia.csv"},
         )
+
+    return router
+
+
+def _scale_routes() -> APIRouter:
+    router = APIRouter(prefix="/v1")
+
+    @router.get("/capabilities", response_model=CapabilityMatrix)
+    def capabilities() -> CapabilityMatrix:
+        return capability_matrix()
+
+    @router.get("/layers/d21-events", response_model=QuakeLayer)
+    def quakes() -> QuakeLayer:
+        return quake_layer()
+
+    @router.get("/layers/d28-kp", response_model=KpLayer)
+    def kp() -> KpLayer:
+        return kp_layer()
 
     return router

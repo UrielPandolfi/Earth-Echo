@@ -15,11 +15,18 @@
       "detail": "La búsqueda pública de CMR devolvió metadatos de un gránulo SPL3SMP_E. El HDF científico no se descargó: el enlace está protegido y CMR informa un archivo de cientos de megabytes. Earth Echo no sustituye ese faltante con el modo DEMO."
     },
     "D21": {
-      "integration_status": "sample_retrieved",
+      "integration_status": "connected",
       "sample_kind": "geojson_feature",
       "sample_path": "data/samples/d21-usgs/event.geojson",
       "credential_variables": [],
-      "detail": "Se guardó un GeoJSON público de un evento con limit=1. Es una muestra de viabilidad del contrato de observación, no una conexión operativa ni la fuente de humedad del suelo."
+      "detail": "Consulta pública de sismos con magnitud de al menos 5, hasta 20 eventos. Son observaciones del catálogo, no probabilidades de réplica."
+    },
+    "D28": {
+      "integration_status": "connected",
+      "sample_kind": "json_index",
+      "sample_path": "data/samples/d28-swpc/planetary-k-index.json",
+      "credential_variables": [],
+      "detail": "Índice Kp planetario público de SWPC. No incluye los avisos ni convierte una fulguración en intensidad local."
     },
     "D15": {
       "integration_status": "connected",

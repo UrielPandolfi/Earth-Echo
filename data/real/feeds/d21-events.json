@@ -1,0 +1,144 @@
+{
+  "source_id": "D21",
+  "retrieved_at": "2026-11-13T07:45:49Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=5&limit=20&orderby=time",
+  "geometry_kind": "points",
+  "note": "Sismos observados de magnitud mayor o igual a 5. No son pronósticos de réplicas.",
+  "events": [
+    {
+      "id": "us7000txxl",
+      "longitude": 22.68,
+      "latitude": -6.9392,
+      "depth_km": 10.0,
+      "magnitude": 5.0,
+      "time": "2026-11-13T01:12:46Z",
+      "place": "85 km W of Mwene-Ditu, Democratic Republic of the Congo"
+    },
+    {
+      "id": "us7000txx9",
+      "longitude": 24.8798,
+      "latitude": 34.6967,
+      "depth_km": 43.358,
+      "magnitude": 5.1,
+      "time": "2026-11-13T00:05:04Z",
+      "place": "39 km S of Moíres, Greece"
+    },
+    {
+      "id": "us7000txwp",
+      "longitude": 149.8877,
+      "latitude": -1.5882,
+      "depth_km": 10.0,
+      "magnitude": 5.8,
+      "time": "2026-11-12T22:04:06Z",
+      "place": "148 km NW of Kavieng, Papua New Guinea"
+    },
+    {
+      "id": "us7000txw9",
+      "longitude": 139.5909,
+      "latitude": -51.4273,
+      "depth_km": 10.0,
+      "magnitude": 5.1,
+      "time": "2026-11-12T21:09:14Z",
+      "place": "western Indian-Antarctic Ridge"
+    },
+    {
+      "id": "us7000txqr",
+      "longitude": -26.0288,
+      "latitude": -59.0326,
+      "depth_km": 121.557,
+      "magnitude": 5.4,
+      "time": "2026-11-12T03:45:56Z",
+      "place": "South Sandwich Islands region"
+    },
+    {
+      "id": "us7000txmq",
+      "longitude": -74.1759,
+      "latitude": -41.5234,
+      "depth_km": 34.893,
+      "magnitude": 5.0,
+      "time": "2026-11-11T19:21:17Z",
+      "place": "48 km NW of Ancud, Chile"
+    },
+    {
+      "id": "us7000txm8",
+      "longitude": 154.7612,
+      "latitude": -6.3288,
+      "depth_km": 58.822,
+      "magnitude": 5.1,
+      "time": "2026-11-11T17:38:22Z",
+      "place": "80 km W of Panguna, Papua New Guinea"
+    },
+    {
+      "id": "us7000txjg",
+      "longitude": -27.7366,
+      "latitude": -56.0247,
+      "depth_km": 104.66,
+      "magnitude": 5.1,
+      "time": "2026-11-11T15:39:25Z",
+      "place": "South Sandwich Islands region"
+    },
+    {
+      "id": "us7000txis",
+      "longitude": -69.1693,
+      "latitude": -22.5427,
+      "depth_km": 91.309,
+      "magnitude": 5.1,
+      "time": "2026-11-11T11:36:51Z",
+      "place": "27 km WSW of Calama, Chile"
+    },
+    {
+      "id": "us7000txir",
+      "longitude": 130.2513,
+      "latitude": -7.9445,
+      "depth_km": 14.704,
+      "magnitude": 5.1,
+      "time": "2026-11-11T11:32:24Z",
+      "place": "Pulau Pulau Tanimbar, Indonesia"
+    },
+    {
+      "id": "us7000txhi",
+      "longitude": 155.0206,
+      "latitude": -62.4284,
+      "depth_km": 10.0,
+      "magnitude": 5.1,
+      "time": "2026-11-11T06:21:45Z",
+      "place": "Balleny Islands region"
+    },
+    {
+      "id": "us7000txgv",
+      "longitude": 149.4063,
+      "latitude": 44.3915,
+      "depth_km": 30.338,
+      "magnitude": 5.0,
+      "time": "2026-11-11T05:26:28Z",
+      "place": "152 km SE of Kuril’sk, Russia"
+    },
+    {
+      "id": "us7000txc0",
+      "longitude": 148.0429,
+      "latitude": -8.7206,
+      "depth_km": 124.245,
+      "magnitude": 5.2,
+      "time": "2026-11-10T17:36:49Z",
+      "place": "21 km WNW of Popondetta, Papua New Guinea"
+    },
+    {
+      "id": "us7000txc3",
+      "longitude": 68.4755,
+      "latitude": -20.7528,
+      "depth_km": 10.0,
+      "magnitude": 5.2,
+      "time": "2026-11-10T17:36:28Z",
+      "place": "Mid-Indian Ridge"
+    },
+    {
+      "id": "us7000txbi",
+      "longitude": 128.701,
+      "latitude": -0.9034,
+      "depth_km": 10.0,
+      "magnitude": 5.1,
+      "time": "2026-11-10T15:51:35Z",
+      "place": "139 km ESE of Labuha, Indonesia"
+    }
+  ]
+}

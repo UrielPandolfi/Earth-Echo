@@ -33,12 +33,13 @@ def test_health_is_only_the_process(client: TestClient) -> None:
 def test_providers_are_not_probed(client: TestClient) -> None:
     body = client.get("/providers").json()
     assert body["live_probe"] == "not_performed"
-    assert {item["source_id"] for item in body["providers"]} == {"D01", "D02", "D15", "D21"}
+    assert {item["source_id"] for item in body["providers"]} == {"D01", "D02", "D15", "D21", "D28"}
     by_id = {item["source_id"]: item for item in body["providers"]}
     assert by_id["D01"]["integration_status"] == "credential_required"
     assert by_id["D02"]["integration_status"] == "credential_required"
     assert by_id["D15"]["integration_status"] == "connected"
-    assert by_id["D21"]["integration_status"] == "sample_retrieved"
+    assert by_id["D21"]["integration_status"] == "connected"
+    assert by_id["D28"]["integration_status"] == "connected"
     assert all(item["live_status"] == "not_probed" for item in body["providers"])
 
 
@@ -55,7 +56,8 @@ def test_catalog_counts_come_from_the_file(client: TestClient) -> None:
     assert by_id["D01"] == "credential_required"
     assert by_id["D02"] == "credential_required"
     assert by_id["D15"] == "connected"
-    assert by_id["D21"] == "sample_retrieved"
+    assert by_id["D21"] == "connected"
+    assert by_id["D28"] == "connected"
     phenomena = client.get("/catalog/phenomena").json()
     assert phenomena["total"] == len(document.modules)
     assert all(item["capability_status"] == "specified" for item in phenomena["phenomena"])

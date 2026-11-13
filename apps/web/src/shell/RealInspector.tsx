@@ -3,19 +3,56 @@ import type { RealObservation, RealSourceView } from "../real/view";
 import { freshnessLabel } from "../real/view";
 import { AnomalyChart } from "./AnomalyChart";
 
+interface RealQuake {
+  id: string;
+  magnitude: number;
+  place: string;
+  time: string;
+  depth_km?: number | null;
+}
+
 interface RealInspectorProps {
   view: RealSourceView | null;
   error: string | null;
   index: number;
   onAnalysis: (open: boolean) => void;
   analysisOpen: boolean;
+  quake: RealQuake | null;
 }
 
 function utcLabel(value: string): string {
   return value.replace("T", " ").replace("Z", " UTC").replace("+00:00", " UTC");
 }
 
-export function RealInspector({ view, error, index, onAnalysis, analysisOpen }: RealInspectorProps) {
+export function RealInspector({ view, error, index, onAnalysis, analysisOpen, quake }: RealInspectorProps) {
+  if (quake) {
+    return (
+      <aside className="inspector" aria-label="Sismo observado">
+        <header className="inspector-head">
+          <p className="kicker">Sismo · D21 · REAL</p>
+          <h2>M{quake.magnitude.toFixed(1)}</h2>
+          <p className="region">{quake.place}</p>
+        </header>
+        <div className="inspector-body">
+          <p>Evento del catálogo USGS. No es una probabilidad de réplica ni un pronóstico del próximo sismo.</p>
+          <dl className="facts">
+            <div>
+              <dt>Hora</dt>
+              <dd>{quake.time}</dd>
+            </div>
+            <div>
+              <dt>Profundidad</dt>
+              <dd>{quake.depth_km === null || quake.depth_km === undefined ? "No disponible" : `${quake.depth_km} km`}</dd>
+            </div>
+            <div>
+              <dt>Identificador</dt>
+              <dd>{quake.id}</dd>
+            </div>
+          </dl>
+        </div>
+      </aside>
+    );
+  }
   const closeRef = useRef<HTMLButtonElement>(null);
   const onAnalysisRef = useRef(onAnalysis);
   onAnalysisRef.current = onAnalysis;
