@@ -7,7 +7,6 @@ export interface DemoCategory {
   id: string;
   label: string;
   icon: "rain" | "heat" | "fire" | "ocean" | "land" | "space";
-  displayCount: number;
   phenomenonIds: string[];
 }
 
@@ -15,7 +14,6 @@ export interface DemoInfoType {
   id: string;
   label: string;
   symbol: "observation" | "risk" | "forecast";
-  displayCount: number;
 }
 
 export interface DemoLayer {
@@ -67,19 +65,19 @@ export const demoScenario = {
   mode: "demo" as const,
   badge: "Concepto · datos simulados",
   signalQuery:
-    "Suma de displayCount de los tipos de información activos en este escenario. No consulta observaciones.",
+    "Cantidad de registros del escenario demo que cumplen categoría, tipo e instante. No es un censo real.",
   categories: [
-    { id: "rain", label: "Lluvia e inundación", icon: "rain", displayCount: 324, phenomenonIds: ["F01", "F07", "F12", "F13"] },
-    { id: "heat", label: "Calor y sequía", icon: "heat", displayCount: 287, phenomenonIds: ["F02", "F03", "F11", "F14"] },
-    { id: "fire", label: "Incendios", icon: "fire", displayCount: 146, phenomenonIds: ["F15"] },
-    { id: "ocean", label: "Océanos y corales", icon: "ocean", displayCount: 118, phenomenonIds: ["F17", "F18", "F19", "F20"] },
-    { id: "land", label: "Tierra y volcanes", icon: "land", displayCount: 96, phenomenonIds: ["F24", "F25", "F26", "F27", "F28"] },
-    { id: "space", label: "Clima espacial", icon: "space", displayCount: 42, phenomenonIds: ["F29", "F30"] },
+    { id: "rain", label: "Lluvia e inundación", icon: "rain", phenomenonIds: ["F01", "F07", "F12", "F13"] },
+    { id: "heat", label: "Calor y sequía", icon: "heat", phenomenonIds: ["F02", "F03", "F11", "F14"] },
+    { id: "fire", label: "Incendios", icon: "fire", phenomenonIds: ["F15"] },
+    { id: "ocean", label: "Océanos y corales", icon: "ocean", phenomenonIds: ["F17", "F18", "F19", "F20"] },
+    { id: "land", label: "Tierra y volcanes", icon: "land", phenomenonIds: ["F24", "F25", "F26", "F27", "F28"] },
+    { id: "space", label: "Clima espacial", icon: "space", phenomenonIds: ["F29", "F30"] },
   ] satisfies DemoCategory[],
   informationTypes: [
-    { id: "observation", label: "Observaciones", symbol: "observation", displayCount: 842 },
-    { id: "risk", label: "Condiciones de riesgo", symbol: "risk", displayCount: 213 },
-    { id: "forecast", label: "Pronósticos", symbol: "forecast", displayCount: 229 },
+    { id: "observation", label: "Observaciones", symbol: "observation" },
+    { id: "risk", label: "Condiciones de riesgo", symbol: "risk" },
+    { id: "forecast", label: "Pronósticos", symbol: "forecast" },
   ] satisfies DemoInfoType[],
   layers: [
     {
@@ -87,9 +85,9 @@ export const demoScenario = {
       label: "Humedad del suelo",
       variableId: "V08",
       legendTitle: "Humedad del suelo",
-      legendCaption: "Anomalía respecto de lo habitual",
-      scaleMin: "−40 %",
-      scaleMax: "+40 %",
+      legendCaption: "Anomalía ilustrativa en m³/m³. Las celdas transparentes no tienen valor.",
+      scaleMin: "−0,08",
+      scaleMax: "+0,08",
     },
     {
       id: "temperature",
@@ -105,9 +103,9 @@ export const demoScenario = {
       label: "Precipitación",
       variableId: "V01",
       legendTitle: "Precipitación",
-      legendCaption: "Anomalía sintética del acumulado",
-      scaleMin: "−50 %",
-      scaleMax: "+50 %",
+      legendCaption: "Acumulado ilustrativo en mm. No es un porcentaje de ocurrencia.",
+      scaleMin: "0 mm",
+      scaleMax: "40 mm",
     },
   ] satisfies DemoLayer[],
   signal: {

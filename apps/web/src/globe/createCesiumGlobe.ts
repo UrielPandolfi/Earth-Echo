@@ -1,12 +1,16 @@
 import {
+  BillboardCollection,
   Cartesian2,
   Cartesian3,
+  Color,
   Credit,
   EllipsoidalOccluder,
   EllipsoidTerrainProvider,
   ImageryLayer,
   Math as CesiumMath,
+  Rectangle,
   SceneTransforms,
+  SingleTileImageryProvider,
   TileMapServiceImageryProvider,
   UrlTemplateImageryProvider,
   Viewer,
@@ -20,11 +24,11 @@ import {
   frameExtent,
   isClick,
   placeMarkers,
-  technicalMarkers,
   type GeoExtent,
   type PlacedMarker,
 } from "./geography";
-import type { GlobeHandle } from "./lifecycle";
+import type { GlobeHandle, GlobeMarker } from "./lifecycle";
+import type { FieldGrid } from "../demo/explore";
 
 export type GlobeStatus =
   | { state: "loading"; detail: string }
@@ -72,7 +76,16 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     state: "loading",
     detail: "Cargando la base geográfica.",
   };
-  const markers = new Map(technicalMarkers.map((marker) => [marker.id, { ...marker }]));
+  const markers = new Map<string, GlobeMarker>();
+  let selectedId: string | null = null;
+  let fieldLayer: ImageryLayer | null = null;
+  let cameraListener: ((heightMeters: number) => void) | null = null;
+  const symbolImages = {
+    observation: paintShape("circle"),
+    risk: paintShape("triangle"),
+    forecast: paintShape("diamond"),
+  };
+  const clusterImages = new Map<number, HTMLCanvasElement>();
 
   const publish = (status: GlobeStatus) => {
     latestStatus = status;
@@ -80,6 +93,8 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
   };
 
   const scene = viewer.scene;
+  const billboards = new BillboardCollection({ scene });
+  scene.primitives.add(billboards);
   const globe = scene.globe;
   const camera = viewer.camera;
   const controller = scene.screenSpaceCameraController;
@@ -161,7 +176,8 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     occluder.cameraPosition = camera.positionWC;
     const width = container.clientWidth;
     const height = container.clientHeight;
-    const projected = [...markers.values()].map((marker) => {
+    const selected = selectedId ? markers.get(selectedId) : undefined;
+    const projected = (selected ? [selected] : []).map((marker) => {
       const position = Cartesian3.fromDegrees(marker.longitude, marker.latitude, 0, globe.ellipsoid, scratch);
       const visibleToCamera = occluder.isPointVisible(position);
       const screen = SceneTransforms.worldToWindowCoordinates(scene, position, windowPosition);
@@ -229,25 +245,92 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    const hit = [...markers.values()]
-      .map((marker) => {
-        const position = Cartesian3.fromDegrees(marker.longitude, marker.latitude, 0, globe.ellipsoid);
-        if (!occluder.isPointVisible(position)) {
-          return null;
+    const picked = scene.pick(new Cartesian2(x, y)) as { id?: unknown } | undefined;
+    const id = typeof picked?.id === "string" ? picked.id : null;
+    if (!id) {
+      return;
+    }
+    if (id.startsWith("cluster:")) {
+      const cluster = markers.get(id);
+      if (cluster) {
+        const framed = frameExtent({
+          west: cluster.longitude - 3,
+          south: cluster.latitude - 3,
+          east: cluster.longitude + 3,
+          north: cluster.latitude + 3,
+          crossesAntimeridian: false,
+        });
+        if (framed.status === "framed") {
+          flyToView(framed.view.longitude, framed.view.latitude, framed.view.heightMeters);
         }
-        const screen = SceneTransforms.worldToWindowCoordinates(scene, position);
-        if (!screen) {
-          return null;
-        }
-        const distance = Math.hypot(screen.x - x, screen.y - y);
-        return distance <= 22 ? { id: marker.id, note: marker.note, distance } : null;
-      })
-      .filter((item): item is { id: string; note: string; distance: number } => item !== null)
-      .sort((a, b) => a.distance - b.distance)[0];
-    selectionListener?.(
-      hit ? `${hit.id}. ${hit.note}` : null,
-    );
+      }
+      return;
+    }
+    selectedId = id;
+    selectionListener?.(id);
+    publishOverlays();
+    scene.requestRender();
   };
+  camera.percentageChanged = 0.05;
+  const onCamera = () => cameraListener?.(camera.positionCartographic.height);
+  camera.changed.addEventListener(onCamera);
+  removals.push(() => camera.changed.removeEventListener(onCamera));
+
+  const drawSignals = (signals: GlobeMarker[]) => {
+    markers.clear();
+    billboards.removeAll();
+    for (const signal of signals) {
+      markers.set(signal.id, signal);
+      const cluster = signal.symbol === "cluster";
+      billboards.add({
+        position: Cartesian3.fromDegrees(signal.longitude, signal.latitude, 0, globe.ellipsoid),
+        image: cluster ? clusterCanvas(clusterImages, signal.count ?? 0) : symbolImages[signal.symbol === "risk" || signal.symbol === "forecast" ? signal.symbol : "observation"],
+        color: cluster ? Color.WHITE : Color.fromCssColorString(symbolColor(signal.symbol)),
+        id: signal.id,
+        disableDepthTestDistance: 0,
+        scale: cluster ? 1 : 0.8,
+      });
+    }
+    publishOverlays();
+    scene.requestRender();
+  };
+
+  const paintField = (field: FieldGrid | null, credit: string) => {
+    if (fieldLayer) {
+      viewer.imageryLayers.remove(fieldLayer, true);
+      fieldLayer = null;
+    }
+    if (!field) {
+      scene.requestRender();
+      return;
+    }
+    const canvasField = document.createElement("canvas");
+    canvasField.width = field.width;
+    canvasField.height = field.height;
+    const context = canvasField.getContext("2d");
+    if (!context) {
+      return;
+    }
+    context.putImageData(new ImageData(new Uint8ClampedArray(field.rgba), field.width, field.height), 0, 0);
+    try {
+      const provider = new SingleTileImageryProvider({
+        url: canvasField.toDataURL("image/png"),
+        tileWidth: field.width,
+        tileHeight: field.height,
+        rectangle: Rectangle.fromDegrees(field.west, field.south, field.east, field.north),
+        credit,
+      });
+      fieldLayer = viewer.imageryLayers.addImageryProvider(provider);
+      fieldLayer.alpha = 0.62;
+    } catch {
+      publish({
+        state: "error",
+        detail: "No se pudo dibujar la capa ilustrativa. El globo y las señales siguen disponibles.",
+      });
+    }
+    scene.requestRender();
+  };
+
   canvas.addEventListener("pointerdown", onPointerDown);
   canvas.addEventListener("pointerup", onPointerUp);
   canvas.addEventListener("wheel", interrupt, { passive: true });
@@ -314,20 +397,27 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
       return framed;
     },
     addSignal(signal) {
-      markers.set(signal.id, signal);
-      scene.requestRender();
+      drawSignals([...markers.values(), signal]);
     },
     updateSignal(id, signal) {
       const current = markers.get(id);
       if (!current) {
         return;
       }
-      markers.set(id, { ...current, ...signal, id });
-      scene.requestRender();
+      drawSignals([...markers.values()].map((item) => (item.id === id ? { ...current, ...signal, id } : item)));
     },
     removeSignal(id) {
-      markers.delete(id);
-      scene.requestRender();
+      drawSignals([...markers.values()].filter((item) => item.id !== id));
+    },
+    setSignals(signals) {
+      drawSignals(signals);
+    },
+    setField(field, credit) {
+      paintField(field, credit ?? "Campo ilustrativo DEMO");
+    },
+    setCameraListener(listener) {
+      cameraListener = listener;
+      listener?.(camera.positionCartographic.height);
     },
     setOverlayListener(listener) {
       overlayListener = listener;
@@ -341,10 +431,78 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
       selectionListener = listener;
     },
     selectMarker(id) {
-      const marker = id ? markers.get(id) : undefined;
-      selectionListener?.(marker ? `${marker.id}. ${marker.note}` : null);
+      selectedId = id;
+      selectionListener?.(id);
+      publishOverlays();
+      scene.requestRender();
     },
   };
+}
+
+function symbolColor(symbol: GlobeMarker["symbol"]): string {
+  if (symbol === "risk") {
+    return "#e07a62";
+  }
+  if (symbol === "forecast") {
+    return "#7eb6e0";
+  }
+  return "#3ee0cf";
+}
+
+function paintShape(kind: "circle" | "triangle" | "diamond"): HTMLCanvasElement {
+  const canvas = document.createElement("canvas");
+  canvas.width = 32;
+  canvas.height = 32;
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return canvas;
+  }
+  context.translate(16, 16);
+  context.fillStyle = "#ffffff";
+  context.beginPath();
+  if (kind === "triangle") {
+    context.moveTo(0, -9);
+    context.lineTo(8, 7);
+    context.lineTo(-8, 7);
+  } else if (kind === "diamond") {
+    context.moveTo(0, -9);
+    context.lineTo(7, 0);
+    context.lineTo(0, 9);
+    context.lineTo(-7, 0);
+  } else {
+    context.arc(0, 0, 7, 0, Math.PI * 2);
+  }
+  context.closePath();
+  context.fill();
+  return canvas;
+}
+
+function clusterCanvas(cache: Map<number, HTMLCanvasElement>, count: number): HTMLCanvasElement {
+  const cached = cache.get(count);
+  if (cached) {
+    return cached;
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = 48;
+  canvas.height = 32;
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return canvas;
+  }
+  context.fillStyle = "#101826";
+  context.strokeStyle = "#3ee0cf";
+  context.lineWidth = 2;
+  context.beginPath();
+  context.roundRect(1, 1, 46, 30, 8);
+  context.fill();
+  context.stroke();
+  context.fillStyle = "#e8eef3";
+  context.font = "700 14px sans-serif";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  context.fillText(count > 99 ? "99+" : String(count), 24, 16);
+  cache.set(count, canvas);
+  return canvas;
 }
 
 function hasWebGl(): boolean {

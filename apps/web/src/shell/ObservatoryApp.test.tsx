@@ -1,7 +1,11 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ObservatoryApp } from "./ObservatoryApp";
+import { visibleRecords } from "../demo/explore";
+import { formatCount } from "../demo/queries";
 import { activeGlobeCount, type GlobeFactory, type GlobeHandle } from "../globe/lifecycle";
+import { ObservatoryApp } from "./ObservatoryApp";
+
+const categories = ["rain", "heat", "fire", "ocean", "land", "space"];
 
 function createGlobe(): GlobeFactory {
   return () => {
@@ -10,13 +14,23 @@ function createGlobe(): GlobeFactory {
   };
 }
 
+function countAt(days: number, infoTypeIds: string[]): number {
+  return visibleRecords({
+    wide: false,
+    categoryIds: categories,
+    infoTypeIds,
+    timelineDays: days,
+    clusterDegrees: 0,
+  }).length;
+}
+
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
 });
 
 describe("observatorio demo", () => {
-  it("cambia conteos, tiempo y análisis sin salir del modo simulado", async () => {
+  it("filtra, busca y cambia el instante sin salir del modo simulado", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () =>
@@ -29,26 +43,28 @@ describe("observatorio demo", () => {
     render(<ObservatoryApp createGlobe={createGlobe()} />);
     expect(await screen.findByText("31 fenómenos")).toBeTruthy();
     expect(screen.getByText("Concepto · datos simulados")).toBeTruthy();
-    expect(screen.getByText("1.284 señales")).toBeTruthy();
+    expect(screen.getByText(`${formatCount(countAt(0, ["observation", "risk", "forecast"]))} señales`)).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Déficit de humedad" })).toBeTruthy();
     expect(activeGlobeCount()).toBe(1);
 
     fireEvent.click(screen.getByRole("checkbox", { name: /Observaciones/ }));
-    expect(screen.getByText("442 señales")).toBeTruthy();
-    expect(screen.getByText("Concepto · datos simulados")).toBeTruthy();
+    expect(screen.getByText(`${formatCount(countAt(0, ["risk", "forecast"]))} señales`)).toBeTruthy();
+    expect(screen.getByText(/no cumple el filtro/)).toBeTruthy();
 
     fireEvent.change(screen.getByRole("searchbox", { name: "Buscar región o fenómeno" }), {
-      target: { value: "Amazonía" },
+      target: { value: "Déficit" },
     });
-    expect(screen.getByText("Sin consulta. La búsqueda se conecta en la fase 04.")).toBeTruthy();
-    expect(screen.queryByRole("listbox", { name: /resultados/i })).toBeNull();
+    fireEvent.click(screen.getByRole("option", { name: /Déficit de humedad/ }));
+    expect(screen.getByRole("heading", { name: "Déficit de humedad" })).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "+7 días" }));
     fireEvent.click(screen.getByRole("tab", { name: "Datos" }));
-    expect(screen.getByText(/\+7 días · tramo estimado/)).toBeTruthy();
+    expect(screen.getByText("Instante de la vista").closest("div")?.textContent).toMatch(/\+7 días/);
     expect(screen.getByText("No disponible")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Ver análisis completo" }));
-    expect(screen.getByRole("dialog").textContent).toMatch(/No hay un análisis calculado/);
+    expect(screen.getByRole("dialog").textContent).toMatch(/Déficit de humedad/);
+    expect(screen.getByRole("dialog").textContent).toMatch(/Fuentes previstas/);
     expect(activeGlobeCount()).toBe(1);
   });
 });

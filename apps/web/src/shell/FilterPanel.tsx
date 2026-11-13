@@ -6,13 +6,16 @@ import { Icon, SymbolMark } from "./icons";
 
 interface FilterPanelProps {
   state: ObservatoryState;
+  categoryCounts: Record<string, number>;
+  infoCounts: Record<string, number>;
   onToggleCategory: (id: string) => void;
   onToggleInfo: (id: string) => void;
   onToggleLayer: (id: string) => void;
   onGroup: () => void;
+  onWide: (wide: boolean) => void;
 }
 
-export function FilterPanel({ state, onToggleCategory, onToggleInfo, onToggleLayer, onGroup }: FilterPanelProps) {
+export function FilterPanel({ state, categoryCounts, infoCounts, onToggleCategory, onToggleInfo, onToggleLayer, onGroup, onWide }: FilterPanelProps) {
   const [layersOpen, setLayersOpen] = useState(false);
   const activeLayer = demoScenario.layers.find((layer) => layer.id === state.activeLayerId) ?? null;
   const activeCategories = demoScenario.categories.filter((item) => state.enabledCategoryIds.includes(item.id));
@@ -51,7 +54,7 @@ export function FilterPanel({ state, onToggleCategory, onToggleInfo, onToggleLay
                 />
                 <Icon name={category.icon} />
                 <span>{category.label}</span>
-                <b>{formatCount(category.displayCount)}</b>
+                <b>{formatCount(categoryCounts[category.id] ?? 0)}</b>
               </label>
             </li>
           ))}
@@ -68,7 +71,7 @@ export function FilterPanel({ state, onToggleCategory, onToggleInfo, onToggleLay
                 />
                 <SymbolMark kind={item.symbol} />
                 <span>{item.label}</span>
-                <b>{formatCount(item.displayCount)}</b>
+                <b>{formatCount(infoCounts[item.id] ?? 0)}</b>
               </label>
             </li>
           ))}
@@ -94,7 +97,8 @@ export function FilterPanel({ state, onToggleCategory, onToggleInfo, onToggleLay
               <strong>{activeLayer.legendTitle}</strong>
               <span>{activeLayer.legendCaption}</span>
             </figcaption>
-            <div className="legend-bar" />
+            <div className={`legend-bar legend-${activeLayer.id}`} />
+            <p className="hint">Se dibuja una capa por vez para no mezclar unidades. Lo transparente no tiene dato.</p>
             <div className="legend-scale">
               <span>{activeLayer.scaleMin}</span>
               <span>0</span>
@@ -110,9 +114,12 @@ export function FilterPanel({ state, onToggleCategory, onToggleInfo, onToggleLay
         </label>
         <p className="hint">
           {state.groupOnZoom
-            ? "Preferencia activa. El globo aún no agrupa: fase 04."
-            : "Agrupación desactivada en este escenario."}
+            ? "Al alejar, las señales cercanas se agrupan. El número es la cantidad de registros."
+            : "Agrupación desactivada: cada registro se dibuja por separado."}
         </p>
+        <button type="button" className="wide-toggle" aria-pressed={state.wide} onClick={() => onWide(!state.wide)}>
+          {state.wide ? "Volver al escenario de apertura" : "Conjunto amplio de rendimiento"}
+        </button>
       </div>
     </aside>
   );

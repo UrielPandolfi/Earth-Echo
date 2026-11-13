@@ -7,12 +7,14 @@ interface GlobeStageProps {
   createGlobe: GlobeFactory;
   onCount?: (count: number) => void;
   onControls?: (controls: GlobeHandle | null) => void;
+  onSelect?: (id: string) => void;
 }
 
-export function GlobeStage({ createGlobe, onCount, onControls }: GlobeStageProps) {
+export function GlobeStage({ createGlobe, onCount, onControls, onSelect }: GlobeStageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const onCountRef = useRef(onCount);
   const onControlsRef = useRef(onControls);
+  const onSelectRef = useRef(onSelect);
   const mountedRef = useRef<GlobeHandle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<GlobeStatus | null>(null);
@@ -20,6 +22,7 @@ export function GlobeStage({ createGlobe, onCount, onControls }: GlobeStageProps
   const [selection, setSelection] = useState<string | null>(null);
   onCountRef.current = onCount;
   onControlsRef.current = onControls;
+  onSelectRef.current = onSelect;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -31,7 +34,12 @@ export function GlobeStage({ createGlobe, onCount, onControls }: GlobeStageProps
       setError(null);
       mounted.setStatusListener?.(setStatus);
       mounted.setOverlayListener?.(setMarkers);
-      mounted.setSelectionListener?.(setSelection);
+      mounted.setSelectionListener?.((id) => {
+        setSelection(id);
+        if (id && !id.startsWith("cluster:")) {
+          onSelectRef.current?.(id);
+        }
+      });
       mountedRef.current = mounted;
       onCountRef.current?.(activeGlobeCount());
       onControlsRef.current?.(mounted);
@@ -78,7 +86,7 @@ export function GlobeStage({ createGlobe, onCount, onControls }: GlobeStageProps
           {status.detail}
         </p>
       ) : null}
-      {selection ? <p className="globe-selection">{selection}</p> : null}
+      {selection && !selection.startsWith("demo-") && !selection.startsWith("wide-") ? <p className="globe-selection">{selection}</p> : null}
       {error ? (
         <p className="globe-error" role="alert">
           {error}

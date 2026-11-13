@@ -186,6 +186,64 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 }
 .legend { margin: 12px; }
 .legend figcaption { display: flex; flex-direction: column; gap: 2px; }
+.legend-temperature {
+  background: linear-gradient(90deg, #4678be, #c45c30);
+}
+
+.legend-precipitation {
+  background: linear-gradient(90deg, #d6c48c, #1c5ca8);
+}
+
+.search-note {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  z-index: 5;
+  width: min(360px, 70vw);
+  padding: 8px;
+  border: 1px solid rgba(62, 224, 207, 0.35);
+  border-radius: 10px;
+  background: #101826;
+}
+
+.search-note ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-note button {
+  display: grid;
+  width: 100%;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.search-note button[aria-selected="true"],
+.search-note button:hover {
+  background: rgba(62, 224, 207, 0.12);
+}
+
+.search-note small {
+  color: #9eb0c2;
+}
+
+.empty-map,
+.outside {
+  margin: 8px 12px;
+  color: #d7e4ef;
+}
+
+.wide-toggle {
+  margin-top: 8px;
+}
+
 .legend-bar {
   height: 8px;
   margin-top: 8px;

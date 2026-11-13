@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GlobeStage } from "../globe/GlobeStage";
-import type { GlobeFactory, GlobeHandle } from "../globe/lifecycle";
-import { formatCount, signalDisplayCount } from "../demo/queries";
+import type { GlobeFactory, GlobeHandle, GlobeMarker } from "../globe/lifecycle";
+import { formatCount } from "../demo/queries";
+import type { FieldGrid } from "../demo/explore";
 import type { ObservatoryState, Section } from "./observatoryState";
-import { amazoniaFrame } from "../globe/geography";
+import { amazoniaFrame, type GeoExtent } from "../globe/geography";
 import { Icon, SymbolMark } from "./icons";
 
 interface GlobeColumnProps {
@@ -11,26 +12,71 @@ interface GlobeColumnProps {
   createGlobe: GlobeFactory;
   catalogTotal: number | null;
   catalogState: "loading" | "ready" | "error";
+  signalCount: number;
+  groupCount: number;
+  markers: GlobeMarker[];
+  field: FieldGrid | null;
+  fieldCredit: string;
+  frameRequest: GeoExtent | null;
+  onSelect: (id: string) => void;
+  onCameraHeight: (heightMeters: number) => void;
 }
 
 const sectionNote: Record<Exclude<Section, "explorar">, string> = {
-  tendencias: "Tendencias todavía no calcula series. La pantalla sigue en el escenario demo.",
-  historico: "El histórico todavía no carga archivos por fecha. La pantalla sigue en el escenario demo.",
+  tendencias: "Tendencias usa el mismo escenario demo. No hay una tendencia calculada aparte.",
+  historico: "Histórico mueve el tiempo del escenario. No carga archivos por fecha.",
 };
 
-export function GlobeColumn({ state, createGlobe, catalogTotal, catalogState }: GlobeColumnProps) {
+export function GlobeColumn({
+  state,
+  createGlobe,
+  catalogTotal,
+  catalogState,
+  signalCount,
+  groupCount,
+  markers,
+  field,
+  fieldCredit,
+  frameRequest,
+  onSelect,
+  onCameraHeight,
+}: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
-  const visible = signalDisplayCount(state.enabledInfoTypeIds);
   const note = state.section === "explorar" ? null : sectionNote[state.section];
+
+  useEffect(() => {
+    controls?.setSignals?.(markers);
+  }, [controls, markers]);
+
+  useEffect(() => {
+    controls?.setField?.(field, fieldCredit);
+  }, [controls, field, fieldCredit]);
+
+  useEffect(() => {
+    controls?.setCameraListener?.(onCameraHeight);
+    return () => controls?.setCameraListener?.(null);
+  }, [controls, onCameraHeight]);
+
+  useEffect(() => {
+    if (frameRequest) {
+      controls?.focusRegion?.(frameRequest);
+    }
+  }, [controls, frameRequest]);
 
   return (
     <section className="stage" aria-label="Globo">
       {note ? <p className="section-note" role="status">{note}</p> : null}
       <div className="globe-wrap">
-        <GlobeStage createGlobe={createGlobe} onControls={setControls} />
+        <GlobeStage createGlobe={createGlobe} onControls={setControls} onSelect={onSelect} />
+        {signalCount === 0 ? (
+          <p className="empty-map" role="status">
+            No hay señales en este instante y con estos filtros. Activá una categoría o volvé a Ahora.
+          </p>
+        ) : null}
         <div className="synthesis" aria-live="polite">
-          <strong>{formatCount(visible)} señales</strong>
+          <strong>{formatCount(signalCount)} señales</strong>
+          {groupCount > 0 ? <span>{formatCount(groupCount)} grupos</span> : null}
           <span>·</span>
           {catalogState === "ready" && catalogTotal !== null ? (
             <span>{formatCount(catalogTotal)} fenómenos</span>

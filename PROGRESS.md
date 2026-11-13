@@ -88,6 +88,31 @@ El área central sigue en CesiumJS. La Tierra visible usa NASA GIBS cuando respo
 - Blue Marble es una imagen fija, no el estado de hoy. GIBS puede no responder y entonces se ve Natural Earth II.
 - Las señales ambientales sobre el globo siguen para la fase 04.
 
+## Fase 04 — completada
+
+La pantalla sigue en DEMO. Filtros, mapa, contadores, búsqueda, tiempo e inspector leen el mismo escenario generado.
+
+### Hecho
+
+- Semilla `earth-echo-demo-2026-11-13`. En el instante de referencia se ven 169 registros de apertura. El conjunto amplio agrega 1 202, con dos puntos a 179,2° y −179,2° que no se agrupan juntos.
+- Cada registro tiene categoría, tipo, unidad, validez, disponibilidad y fuentes previstas. Un hueco de serie es null. No hay probabilidad.
+- En «Ahora» el total es 169. En +7 días quedan 33 pronósticos y la ficha de humedad avisa que ya no está en el mapa.
+- Al alejar, el encabezado separa señales y grupos. Vaciar los tipos muestra cómo recuperar resultados.
+- La búsqueda distingue región y señal y encuadra la cámara. La capa de humedad se apaga y vuelve sin duplicar el crédito.
+- Una sola capa ilustrativa a la vez. Las celdas sin valor son transparentes.
+
+### Evidencia
+
+- `npm --prefix apps/web test`: 17 pruebas, incluidas validez temporal, antimeridiano, huecos del campo y el recorrido de filtros.
+- `npx tsc --noEmit` en `apps/web` terminó sin error.
+- En http://127.0.0.1:5173/ la apertura mostró América, 169 señales, la ficha «Déficit de humedad» y la capa ilustrativa. Al alejar aparecieron 37 grupos sin cambiar las 169 señales. En +7 días el mapa quedó en pronósticos. La búsqueda de «Amazonía» listó la región aparte de las señales y acercó la cámara.
+
+### Limitaciones
+
+- El campo y las series son ilustrativos. No son SMAP, GLDAS ni un análisis.
+- El conjunto amplio sigue en memoria del navegador. No hay paginación ni un proveedor real.
+- Earthdata sigue faltando para el HDF de D02.
+
 ## Siguiente paso
 
-Fase 04: exploración demo sobre este visor, usando `addSignal` y `focusRegion`, sin conectar proveedores reales. Earthdata sigue faltando para el HDF de D02.
+Fase 05: el primer flujo real, de un proveedor al globo, sin cambiar en silencio a DEMO si falta la credencial. `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD` siguen siendo el bloqueo de D02.

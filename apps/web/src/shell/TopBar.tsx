@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { demoScenario } from "../demo/scenario";
 import { timelineLabel } from "../demo/queries";
+import type { SearchHit } from "../demo/explore";
 import type { ObservatoryState } from "./observatoryState";
 import { Icon } from "./icons";
 
 interface TopBarProps {
   state: ObservatoryState;
+  results: SearchHit[];
   onSection: (section: ObservatoryState["section"]) => void;
   onSearch: (text: string) => void;
+  onPick: (hit: SearchHit) => void;
   onTimeline: (days: number) => void;
   onPanel: (panel: "filters" | "inspector") => void;
 }
@@ -17,8 +21,9 @@ const sections = [
   { id: "historico", label: "Histórico" },
 ] as const;
 
-export function TopBar({ state, onSection, onSearch, onTimeline, onPanel }: TopBarProps) {
-  const searchPending = state.searchText.trim().length > 0;
+export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline, onPanel }: TopBarProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const searchPending = state.searchText.trim().length >= 2;
   return (
     <header className="topbar">
       <div className="brand">
@@ -46,15 +51,52 @@ export function TopBar({ state, onSection, onSearch, onTimeline, onPanel }: TopB
           placeholder="Buscar región o fenómeno"
           aria-label="Buscar región o fenómeno"
           aria-describedby="search-note"
-          onChange={(event) => onSearch(event.target.value)}
+          aria-controls="search-results"
+          aria-activedescendant={results[activeIndex] ? `search-hit-${activeIndex}` : undefined}
+          onChange={(event) => {
+            setActiveIndex(0);
+            onSearch(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown") {
+              event.preventDefault();
+              setActiveIndex((index) => Math.min(index + 1, Math.max(results.length - 1, 0)));
+            } else if (event.key === "ArrowUp") {
+              event.preventDefault();
+              setActiveIndex((index) => Math.max(index - 1, 0));
+            } else if (event.key === "Enter" && results[activeIndex]) {
+              event.preventDefault();
+              onPick(results[activeIndex]);
+            }
+          }}
         />
         {searchPending ? (
-          <p id="search-note" className="search-note" role="status">
-            Sin consulta. La búsqueda se conecta en la fase 04.
-          </p>
+          <div id="search-note" className="search-note">
+            {results.length === 0 ? (
+              <p role="status">Sin coincidencias en el escenario demo.</p>
+            ) : (
+              <ul id="search-results" role="listbox" aria-label="Resultados del escenario demo">
+                {results.map((hit, index) => (
+                  <li key={`${hit.kind}-${hit.id}`}>
+                    <button
+                      id={`search-hit-${index}`}
+                      type="button"
+                      role="option"
+                      aria-selected={index === activeIndex}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => onPick(hit)}
+                    >
+                      <strong>{hit.label}</strong>
+                      <small>{hit.kind === "region" ? "Región" : "Señal"} · {hit.detail}</small>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         ) : (
           <span id="search-note" className="sr-only">
-            El campo todavía no consulta el catálogo.
+            Escribí al menos dos letras para buscar en el escenario demo.
           </span>
         )}
       </div>

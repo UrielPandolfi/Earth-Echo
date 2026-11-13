@@ -1,13 +1,5 @@
-import { demoScenario } from "./scenario";
-
 export function formatCount(value: number): string {
   return new Intl.NumberFormat("es-AR").format(value);
-}
-
-export function signalDisplayCount(enabledInfoTypeIds: readonly string[]): number {
-  return demoScenario.informationTypes
-    .filter((item) => enabledInfoTypeIds.includes(item.id))
-    .reduce((sum, item) => sum + item.displayCount, 0);
 }
 
 export function timelineLabel(days: number): string {

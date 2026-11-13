@@ -8,6 +8,8 @@ export interface GlobeMarker {
   latitude: number;
   priority: number;
   note: string;
+  symbol?: "observation" | "risk" | "forecast" | "cluster";
+  count?: number;
 }
 
 export interface GlobeHandle {
@@ -24,6 +26,9 @@ export interface GlobeHandle {
   setStatusListener?: (listener: ((status: GlobeStatus) => void) | null) => void;
   setSelectionListener?: (listener: ((selection: string | null) => void) | null) => void;
   selectMarker?: (id: string | null) => void;
+  setSignals?: (signals: GlobeMarker[]) => void;
+  setField?: (field: import("../demo/explore").FieldGrid | null, credit?: string) => void;
+  setCameraListener?: (listener: ((heightMeters: number) => void) | null) => void;
 }
 
 export type GlobeFactory = (container: HTMLElement) => GlobeHandle;
@@ -65,6 +70,9 @@ export function mountGlobe(container: HTMLElement, createGlobe: GlobeFactory): G
     setStatusListener: (listener) => handle.setStatusListener?.(listener),
     setSelectionListener: (listener) => handle.setSelectionListener?.(listener),
     selectMarker: (id) => handle.selectMarker?.(id),
+    setSignals: (signals) => handle.setSignals?.(signals),
+    setField: (field, credit) => handle.setField?.(field, credit),
+    setCameraListener: (listener) => handle.setCameraListener?.(listener),
   };
   container.dataset.earthEchoGlobe = "live";
   active.add(handle);

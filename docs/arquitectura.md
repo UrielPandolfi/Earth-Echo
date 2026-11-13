@@ -37,7 +37,9 @@ La base visual preferida es NASA GIBS (D36), capa estática Blue Marble Shaded R
 
 `focusRegion` recibe una extensión en grados, con `crossesAntimeridian`. La conversión a la cámara está en `frameExtent`, sin Cesium. Los rótulos HTML se proyectan en cada frame y se ocultan si quedan detrás del planeta, fuera del área o encima de otro rótulo. Un arrastre no selecciona.
 
-La fase 04 agrega, actualiza y quita señales con `addSignal`, `updateSignal` y `removeSignal` sobre el mismo visor. Cada señal lleva `id`, título, longitud, latitud, prioridad y una nota. `focusRegion` y `restoreView` sirven para encuadrar. Un cambio de filtro no debe recrear el `Viewer`: el efecto de `GlobeStage` solo depende de la fábrica.
+Las señales demo se dibujan en una colección de símbolos del mismo visor: círculo, triángulo y rombo. Al alejarse, las cercanas se agrupan por celdas que no cruzan el antimeridiano. El número del grupo es la cantidad de registros, no una señal nueva. La señal seleccionada queda fuera del grupo para seguir visible. Un campo ilustrativo, humedad, temperatura o precipitación, se pinta como una sola capa con celdas transparentes donde no hay valor. Se dibuja una capa por vez. `setSignals` y `setField` no recrean el `Viewer`.
+
+El escenario sale de la semilla `earth-echo-demo-2026-11-13`. En el instante de referencia se ven 169 registros de apertura. El conjunto amplio agrega 1 202, incluidos dos puntos a ambos lados del antimeridiano. Cada registro tiene validez, disponibilidad y, si es pronóstico, inicialización. Un valor ausente queda en null. No hay probabilidades. Las fuentes son previstas, no conectadas. Los contadores cuentan ese conjunto filtrado. Si la selección deja de cumplir el filtro, la ficha permanece y avisa que no está en el mapa.
 
 ## Tiempo
 

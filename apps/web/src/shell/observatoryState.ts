@@ -1,3 +1,4 @@
+import { HERO_ID } from "../demo/catalog";
 import { demoScenario } from "../demo/scenario";
 
 export type Section = "explorar" | "tendencias" | "historico";
@@ -13,6 +14,8 @@ export interface ObservatoryState {
   timelineDays: number;
   playing: boolean;
   searchText: string;
+  wide: boolean;
+  selectedId: string | null;
   tab: InspectorTab;
   analysisOpen: boolean;
   filtersOpen: boolean;
@@ -29,6 +32,8 @@ export type ObservatoryAction =
   | { type: "play" }
   | { type: "tick" }
   | { type: "search"; text: string }
+  | { type: "wide"; wide: boolean }
+  | { type: "select"; id: string | null }
   | { type: "tab"; tab: InspectorTab }
   | { type: "analysis"; open: boolean }
   | { type: "panel"; panel: "filters" | "inspector" };
@@ -48,6 +53,8 @@ export function initialObservatoryState(): ObservatoryState {
     timelineDays: 0,
     playing: false,
     searchText: "",
+    wide: false,
+    selectedId: HERO_ID,
     tab: "resumen",
     analysisOpen: false,
     filtersOpen: false,
@@ -92,6 +99,10 @@ export function reduceObservatory(state: ObservatoryState, action: ObservatoryAc
     }
     case "search":
       return { ...state, searchText: action.text };
+    case "wide":
+      return { ...state, wide: action.wide };
+    case "select":
+      return { ...state, selectedId: action.id, tab: "resumen" };
     case "tab":
       return { ...state, tab: action.tab };
     case "analysis":
