@@ -30,6 +30,7 @@ from earth_echo.queries.trend import TrendView, trend_csv, trend_view
 from earth_echo.queries.signals import query_signals
 from earth_echo.settings import get_settings
 from earth_echo.contracts.products import ProductList, ScientificProduct
+from earth_echo.contracts.operations import RefreshStatus
 from earth_echo.queries.products import product_list
 from earth_echo.storage.products import read_product, products_root
 from fastapi.responses import FileResponse
@@ -263,14 +264,14 @@ def _analysis_routes() -> APIRouter:
 def _scale_routes() -> APIRouter:
     router = APIRouter(prefix="/v1")
 
-    @router.get('/operations/refresh')
+    @router.get('/operations/refresh',response_model=RefreshStatus)
     def refresh_status():
         from earth_echo.ops.refresh import status
         return status()
 
     @router.get('/products', response_model=ProductList)
-    def products() -> ProductList:
-        return product_list()
+    def products(summaries: bool = False) -> ProductList:
+        return product_list(summaries)
 
     @router.get('/products/{key}', response_model=ScientificProduct)
     def product(key: Annotated[str, Path(pattern=r'^[a-z0-9-]+$')]) -> ScientificProduct:

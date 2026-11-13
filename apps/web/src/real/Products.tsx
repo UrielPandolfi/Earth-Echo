@@ -2,12 +2,13 @@ import type { ProductList, ScientificProduct } from '../domain/generated';
 import { AnomalyChart } from '../shell/AnomalyChart';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
-export function ProductsPanel({ data, selected, onSelect, onFocus, quakesOn, quakeCount, onQuakes, kpText, error, grouped, onGroup }: {
+export function ProductsPanel({ data, selected, activeProduct, onSelect, onFocus, quakesOn, quakeCount, onQuakes, kpText, error, grouped, onGroup }: {
   data: ProductList | null; selected: string; onSelect: (key: string) => void; onFocus: () => void;
+  activeProduct: ScientificProduct | undefined;
   quakesOn: boolean; quakeCount: number; onQuakes: () => void; kpText: string | null; error: string | null;
   grouped: boolean; onGroup: () => void;
 }) {
-  const product = data?.products.find(p => p.id === selected);
+  const product = activeProduct;
   return <aside className="sidebar" aria-label="Consulta real"><div className="sidebar-head"><h2>Observatorio · REAL</h2></div>
     <div className="sidebar-body">
       <p className="hint">{data?.connected_sources ?? '—'} fuentes con datos · {data?.field_products ?? '—'} campos científicos</p>
@@ -37,7 +38,7 @@ export function ProductInspector({ product, selectedId }: { product: ScientificP
   const present = chartSamples.flatMap(s=>s.value === null || s.value === undefined ? [] : [s.value]);
   const low = present.length ? Math.min(...present) : 0;
   const high = present.length ? Math.max(...present) : 1;
-  return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {p.kind}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? p.retrieved_at} UTC</p></header>
+  return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {p.kind}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? `Recuperado ${p.retrieved_at}`} UTC</p></header>
     <div className="inspector-body"><p>{p.limitation}</p>
       {selected && <section><h3>{selected.attributes?.nombre ?? selected.id}</h3><p>{selected.value ?? 'Ausente'} {p.unit}</p><p>{selected.latitude}°, {selected.longitude}° WGS84</p><p className="fine">{Object.entries(selected.attributes ?? {}).map(([k,v])=>`${k}: ${v ?? 'ausente'}`).join(' · ')}</p><p className="fine">{selected.quality}</p></section>}
       {chartSamples.length > 0 && <AnomalyChart points={chartSamples.map(s=>({label:s.time?.slice(0,10) ?? s.id,kind:p.kind==='forecast'?'forecast':'observed',value:s.value ?? null}))} domain={{min:low-.1,max:high+.1,ticks:[high,(low+high)/2,low]}} caption={`${p.variable} · ${p.unit}; últimos ${chartSamples.length} registros. UTC; los huecos siguen ausentes.`}/>}

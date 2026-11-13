@@ -53,6 +53,10 @@ export function RealInspector({ view, error, index, onAnalysis, analysisOpen, qu
       </aside>
     );
   }
+  return <SstInspector view={view} error={error} index={index} onAnalysis={onAnalysis} analysisOpen={analysisOpen}/>;
+}
+
+function SstInspector({view,error,index,onAnalysis,analysisOpen}: Omit<RealInspectorProps,'quake'>) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const onAnalysisRef = useRef(onAnalysis);
   onAnalysisRef.current = onAnalysis;

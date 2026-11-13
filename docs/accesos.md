@@ -14,7 +14,9 @@ Comprobación local: 13 de noviembre de 2026. No se encontraron credenciales con
 
 Las variables CDS/ADS/EWDS/CDSE se reservan y documentan para el acceso; no se declara implementado un conector por tenerlas en el ejemplo. Ningún script crea cuentas, acepta términos ni activa servicios pagos.
 
-Acceso sin cuenta comprobado: ERDDAP de CRW (SST, HotSpot, DHW), USGS FDSN, SWPC observado/previsto, REST de MODIS ORNL (subconjuntos locales), listado ECMWF Open Data y resumen CNEOS Sentry. FIRMS CSV respondió con cabecera y cero filas: no acredita detecciones. Smithsonian WFS respondió 403 en este entorno: no acredita inventario.
+Acceso sin cuenta comprobado con datos: ERDDAP CRW (SST, HotSpot, DHW), USGS FDSN/OAF, SWPC observado/previsto, MODIS ORNL (subconjuntos locales), ECMWF Open Data IFS, NCEI OISST, CNEOS Sentry, CPC ONI, CAP de NTWC/PTWC, Smithsonian GVP, NOAA PSL MHW, NASA LHASA y GLO-90 público en AWS. GVP usa `webservices.volcano.si.edu/geoserver/GVP-VOTW/ows`; el 403 inicial correspondía a otro host. FIRMS CSV respondió con cabecera y cero filas: no acredita detecciones.
+
+D30 ya dispone de una tesela GLO-90 pública sin cuenta AWS/CDSE. Las credenciales CDSE de la tabla corresponden a otras rutas de descarga y a Sentinel, no bloquean esa tesela. D24 y D16 usan rangos HTTPS conservados y comprobados; no descargan las colecciones completas. [RAPID](https://rapid.ac.uk/rapidmoc/rapid_data/datadl.php), D34, solicita correo y consentimiento para descargar: se deja al usuario ese paso, sin enviar información personal ni aceptar condiciones.
 
 La documentación de [ECMWF Open Data](https://www.ecmwf.int/en/forecasts/datasets/open-data) publica un subconjunto gratuito por HTTPS, bajo CC BY 4.0 y términos ECMWF: no necesita cuenta CDS para esa distribución. La historia ERA5 y los ensembles estacionales siguen siendo vías diferentes.
 

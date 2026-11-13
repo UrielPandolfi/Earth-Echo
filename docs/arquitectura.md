@@ -20,6 +20,12 @@ IFS usa el índice público oficial para obtener cinco mensajes GRIB del paso +2
 
 Las evaluaciones orbitales y probabilidades OAF no se convierten en puntos de impacto. `ProductSample` requiere definición si contiene probabilidad. OAF conserva la región y modelo del proveedor, y se coteja con el checksum del manifiesto ComCat. Los mensajes CAP preservan prueba/cancelación y expiración; sin polígono no se reutiliza el epicentro como geometría de aviso. GVP es inventario estático con símbolos grises, sin precursores. ONI es historia de medias móviles, separada del diagnóstico ENSO operativo.
 
+Los GeoTIFF/HDF5 grandes usan rangos HTTP acotados, con ETag fuerte o Last-Modified para coherencia, validación de Content-Range y presupuesto de bytes/peticiones/tiempo. Un archivo JSON conserva URL, tamaño, identidad y bloques originales base64 para reproducir la decodificación sin red. LHASA usa ventana nativa y maneja su eje latitudinal ascendente; MHW comparte bloques entre tres plazos. Las probabilidades mensuales importadas conservan su definición experimental y no validan el modelo SST propio.
+
+La identidad de revisión incluye metadatos científicos y método, además del archivo. Solo se permite ignorar cambios de bytes si un conector calculó un checksum explícito de todos los valores y metadatos científicos del activo (ERDDAP agrega tiempos de petición en history). Un campo de visualización igual no demuestra igualdad del original. La lista resumida excluye mallas y muestras; se solicita el detalle al seleccionar para evitar transferir todos los campos en cada apertura.
+
+En Windows, `ops/windows/install-refresh.ps1` registra e inicia una tarea local al iniciar sesión, con el Python del proyecto y sin ventana. Comparte el lock con la API; no se solapan descargas. Estado efímero y heartbeat permanecen fuera de Git. Instalación, parada y recuperación se describen en `docs/actualizacion.md`.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

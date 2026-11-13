@@ -319,6 +319,16 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Comprobación: 70 pruebas API pasaron; fixtures pequeños se extrajeron de respuestas reales (no registros DEMO), con comprobaciones específicas de OAF, Sentry, GVP, CAP y ONI. Kp volvió a descargarse a las 22:53 UTC: observado y forecast dieron `unchanged`, avanzó último éxito y se conservó última fecha de cambio.
 - Continúa trabajo viable sobre GeoTIFF y subconjuntos públicos. No se declara conectado LHASA por descubrir archivos de ~190 MiB, ni MHW por encontrar un archivo que excede el tope inicial de descarga. RAPID solicita correo/consentimiento: no se envió información del usuario.
 
+## Incremento 11D — subconjuntos grandes y actualización independiente
+
+- D24: LHASA NRT `20261112T0000.tif`, recorte de Columbia Británica 120×120 a resolución nativa ~1 km. Eje ascendente corregido a norte→sur, 262 faltantes; máximo 0,9589964747428894 cotejado por coordenada y reproducido desde bloques originales con un lector nuevo. Se transfirió 1 MiB de un GeoTIFF mundial de 146,9 MB. Es nowcast/modelo importado, sin afirmar eventos observados ni seguridad de laderas.
+- D16: NOAA PSL NMME, ciclo octubre 2026, campos de noviembre/diciembre/enero en 1° (360×179). Definición mensual p90 1991–2020 con tendencia, producto externo experimental. HDF5 original 268,9 MB; 6.067.657 bytes en 47 rangos, compartidos entre plazos, archivo de replay 8.091.521 bytes. Valor 0,27419355511665344 cotejado con `struct.unpack` sobre el chunk original, independiente de h5py. Inicialización y validez conocidas; emisión no informada queda null.
+- D30: tesela pública GLO-90 de Pampa, original 4.618.020 bytes. Banda nativa 1200×1200, vista cada cinco centros (240×240), sin usar overviews promediados. WGS84 horizontal y EGM2008 vertical documentado contra Product Handbook 5.0. DSM estático incluye vegetación/construcciones; no habilita inundaciones ni terreno desnudo.
+- 15 fuentes del catálogo con datos retenidos, 27 productos nuevos y 22 campos. Almacén nuevo ~59 MB, presupuesto 128 MB y cuatro revisiones. La identidad contempla cambios de método/datum y no descarta cambios nativos por ser igual la vista reducida.
+- Tarea Windows `Earth Echo - Public Data Refresh` instalada, en ejecución y con revisión persistida; se inicia al iniciar sesión y funciona sin la aplicación abierta. API y worker comparten exclusión del SO. `/v1/operations/refresh` separa intento, éxito, cambio, próximo intento y revisión del worker. Instrucciones reproducibles en `docs/actualizacion.md`.
+- Consulta de apertura reducida de 14.686.191 a 51.478 bytes mediante `summaries=true`; detalle bajo demanda. Leyenda y encuadre explícito conservados. Se corrigió orden de hooks al pasar entre una ficha sísmica y SST. Inspector accesible a 1100×720, ancho documental 1100 sin desborde. Capturas REAL de MHW, LHASA y ventana reducida en `docs/integraciones/`.
+- Comprobación: 72 pruebas API, 20 web, contratos generados y build de producción. No se promociona ningún modelo por estas pruebas. Sigue IBTrACS; accesos autenticados pendientes afectan solo sus productos.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

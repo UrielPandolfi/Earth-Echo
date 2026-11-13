@@ -4,7 +4,7 @@ from earth_echo.paths import repo_root
 from earth_echo.storage.products import all_products
 
 OBS = {1,2,4,5,6,13,15,17,19,21,28,34}
-SCI = {3,7,9,10,11,12,14,15,16,18,20,22,24,27,28,29,33,48}
+SCI = {3,7,9,10,11,12,14,15,16,18,20,22,24,27,28,29,33,35,48}
 HISTORY = {8,13,23,34,41,47}
 STATIC = {23,26,30,31,32}
 SERVICES = {25,36,37}

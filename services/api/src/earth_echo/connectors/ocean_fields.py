@@ -89,13 +89,18 @@ def fetch_ocean(key: str, now: datetime) -> tuple[ScientificProduct, bytes, str]
     if value is None or not math.isclose(value, reference, abs_tol=1e-6):
         raise ValueError('Independent CSV does not match NetCDF')
     sha = hashlib.sha256(raw).hexdigest()
+    with tempfile.TemporaryDirectory() as temp:
+        path=Path(temp)/'subset.nc'; path.write_bytes(raw); ds=ClassicNetCdf(path)
+        # Every native number, including mask classes and axes, not just displayed values.
+        scientific={'dimensions':ds.dimensions,'variables':{name:{'attributes':v['attributes'],'values':ds.values(name)} for name,v in ds.variables.items()}}
+        science_sha=hashlib.sha256(json.dumps(scientific,sort_keys=True,default=str).encode()).hexdigest()
     limitation = ('SST analizada: no es temperatura del aire ni diagnóstico de ola de calor marina.' if var == 'analysed_sst' else
         'HotSpot: diferencia positiva de SST respecto de Maximum Monthly Mean; DHW: acumulación del estrés ≥1 °C durante 12 semanas. Indicadores importados de NOAA, sin confirmar blanqueamiento biológico ni pronóstico.')
     return ScientificProduct(id=key, source_id=source, title=title, collection_id=dataset_id, product_version='3.1',
         variable=var, unit=unit, native_unit=native, kind=kind, representation='field', observed_at=observed,
         retrieved_at=now, ingested_at=now, original_url=url,
         license_url='https://coralreefwatch.noaa.gov/satellite/', attribution='NOAA/NESDIS/STAR Coral Reef Watch',
-        checksum_sha256=sha, byte_size=len(raw), raw_file=f'{key}/assets/{sha}.nc',
+        checksum_sha256=sha,scientific_checksum_sha256=science_sha, byte_size=len(raw), raw_file=f'{key}/assets/{sha}.nc',
         coverage='Océanos mundiales; extensión exacta en grid; tierra y hielo excluidos.', cadence_seconds=86400,
         method_version='erddap-global-stride-v1', limitation=limitation, grid=grid,
         verification=Verification(method='Celda NetCDF contrastada con descarga CSV independiente del mismo producto', original_url=csv_url,

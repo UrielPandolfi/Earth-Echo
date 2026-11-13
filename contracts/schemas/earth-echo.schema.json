@@ -1924,6 +1924,150 @@
       "title": "ReferenceMention",
       "type": "object"
     },
+    "RefreshJob": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "running",
+            "stored",
+            "unchanged",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "last_attempt_at": {
+          "format": "date-time",
+          "title": "Last Attempt At",
+          "type": "string"
+        },
+        "next_attempt_at": {
+          "format": "date-time",
+          "title": "Next Attempt At",
+          "type": "string"
+        },
+        "last_success_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Success At"
+        },
+        "last_change_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Change At"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error"
+        },
+        "kept_previous": {
+          "default": false,
+          "title": "Kept Previous",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "last_attempt_at",
+        "next_attempt_at"
+      ],
+      "title": "RefreshJob",
+      "type": "object"
+    },
+    "RefreshStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "recent_scan": {
+          "title": "Recent Scan",
+          "type": "boolean"
+        },
+        "last_scan_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Scan At"
+        },
+        "worker_pid": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Worker Pid"
+        },
+        "heartbeat_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Heartbeat At"
+        },
+        "jobs": {
+          "additionalProperties": {
+            "$ref": "#/$defs/RefreshJob"
+          },
+          "title": "Jobs",
+          "type": "object"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "enabled",
+        "recent_scan",
+        "note"
+      ],
+      "title": "RefreshStatus",
+      "type": "object"
+    },
     "ScientificGrid": {
       "additionalProperties": false,
       "properties": {
@@ -2245,6 +2389,19 @@
           "pattern": "^[0-9a-f]{64}$",
           "title": "Checksum Sha256",
           "type": "string"
+        },
+        "scientific_checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scientific Checksum Sha256"
         },
         "byte_size": {
           "exclusiveMinimum": 0,
@@ -3085,6 +3242,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "refresh": {
+      "$ref": "#/$defs/RefreshStatus"
+    },
     "scientific_products": {
       "$ref": "#/$defs/ProductList"
     },
@@ -3123,6 +3283,7 @@
     }
   },
   "required": [
+    "refresh",
     "scientific_products",
     "health",
     "ready",

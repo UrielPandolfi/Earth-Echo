@@ -17,6 +17,8 @@ def status() -> dict:
     path = state_path()
     state = json.loads(path.read_bytes()) if path.exists() else {'jobs':{}}
     state['enabled'] = os.getenv('EARTH_ECHO_REFRESH_ENABLED', '1') == '1'
+    scanned=state.get('last_scan_at')
+    state['recent_scan'] = scanned is not None and datetime.now(timezone.utc)-datetime.fromisoformat(scanned)<timedelta(minutes=3)
     state['note'] = 'Cadencia local mientras la API o refresh:watch estén encendidos; lock del sistema, recuperación al reiniciar. Las fechas del dato no son las fechas de descarga.'
     return state
 
@@ -62,6 +64,9 @@ def jobs() -> dict:
     from earth_echo.connectors.geology_products import fetch_gvp, fetch_tsunami
     from earth_echo.connectors.climate_indices import fetch_oni
     from earth_echo.connectors.aftershocks import fetch_oaf
+    from earth_echo.connectors.terrain import fetch_dem
+    from earth_echo.connectors.lhasa import fetch_lhasa
+    from earth_echo.connectors.marine_heatwaves import fetch_mhw
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -73,6 +78,7 @@ def jobs() -> dict:
         'd13-oisst-global':(86400,fetch_oisst), 'd23-holocene-inventory':(604800,fetch_gvp),
         'd29-sentry':(86400,fetch_sentry), 'd27-tsunami-messages':(900,fetch_tsunami),
         'd48-oni-history':(604800,fetch_oni), 'd22-oaf-recent':(3600,fetch_oaf),
+        'd30-dem-pampa':(2592000,fetch_dem), 'd24-lhasa-bc':(43200,fetch_lhasa), 'd16-mhw-monthly':(86400,fetch_mhw),
     }
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:
@@ -104,6 +110,9 @@ def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] 
                 entry.update(status='failed', error=f'{type(error).__name__}: {error}', kept_previous=True)
             state['heartbeat_at'] = datetime.now(timezone.utc).isoformat()
             atomic_json(path, state)
+        state['last_scan_at']=(now or datetime.now(timezone.utc)).isoformat()
+        state['worker_pid']=os.getpid()
+        atomic_json(path,state)
         return state
 
 async def watch(stop: asyncio.Event):

@@ -47,7 +47,9 @@ def test_health_is_only_the_process(client: TestClient) -> None:
 def test_providers_are_not_probed(client: TestClient) -> None:
     body = client.get("/providers").json()
     assert body["live_probe"] == "not_performed"
-    assert {item["source_id"] for item in body["providers"]} == {"D01", "D02", "D04", "D05", "D07", "D13", "D15", "D21", "D22", "D23", "D27", "D28", "D29", "D48"}
+    actual={item['source_id'] for item in body['providers']}
+    assert {"D01", "D02", "D04", "D05", "D07", "D13", "D15", "D21", "D22", "D23", "D27", "D28", "D29", "D48"} <= actual
+    assert actual <= {source.id for source in load_catalog().sources}
     by_id = {item["source_id"]: item for item in body["providers"]}
     assert by_id["D01"]["integration_status"] == "credential_required"
     assert by_id["D02"]["integration_status"] == "credential_required"

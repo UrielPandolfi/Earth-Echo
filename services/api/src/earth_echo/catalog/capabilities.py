@@ -127,6 +127,10 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id['F28']['forecast'] = ('partial','OAF oficial de USGS para un evento reciente con producto publicado: probabilidades por magnitud y ventana, modelo/región definidos. Sin hora/lugar garantizados de la réplica.')
     if 'd29-sentry' in available:
         overrides_by_id.setdefault('F30',{})['forecast'] = ('partial','Evaluación orbital Sentry para objetos conocidos, con probabilidad acumulada y años de posibles impactos. No fecha/lugar terrestre ni cobertura de objetos no descubiertos.')
+    if 'd24-lhasa-bc' in available:
+        overrides_by_id.setdefault('F25',{})['indicator'] = ('partial','Nowcast LHASA p_landslide de Columbia Británica, malla nativa de ~1 km, versión de archivo trazable. No es deslizamiento observado ni falla garantizada de una ladera.')
+    if any(p.source_id=='D16' for p in products):
+        overrides_by_id.setdefault('F18',{})['forecast'] = ('partial','Probabilidades mensuales NMME de NOAA PSL sobre umbral p90, producto externo experimental con tendencia retenida y ventanas mensuales. Habilidad desigual; sin daño biológico confirmado.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

@@ -103,6 +103,27 @@
       "sample_path": "data/real/products/d22-oaf-recent/current.json",
       "credential_variables": [],
       "detail": "Réplicas USGS · us7000txrk (Evento us7000txrk: región {\"regionType\": \"circle\", \"regionCenterLat\": 44.4539, \"regionCenterLon\": -129.6205, \"regionRadius\": 10.0}; no cobertura mundial.)"
+    },
+    "D16": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d16-mhw-month-1/current.json",
+      "credential_variables": [],
+      "detail": "MHW · NMME 2026-11 (Océanos de la malla NMME de ~1°, con máscara; la habilidad cambia por región y plazo.); MHW · NMME 2026-12 (Océanos de la malla NMME de ~1°, con máscara; la habilidad cambia por región y plazo.); MHW · NMME 2027-01 (Océanos de la malla NMME de ~1°, con máscara; la habilidad cambia por región y plazo.)"
+    },
+    "D24": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d24-lhasa-bc/current.json",
+      "credential_variables": [],
+      "detail": "LHASA · Columbia Británica (Recorte nativo ~1° de Columbia Británica (-124 a -123°, 50 a 51°). El original nominal abarca ±60°; este producto local no acredita el resto.)"
+    },
+    "D30": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d30-dem-pampa/current.json",
+      "credential_variables": [],
+      "detail": "Relieve DSM GLO-90 · Pampa (Una tesela de ~1° de Pampa, sudoeste -63°, -36°. Extensión exacta y ajuste de PixelIsPoint en grid; no descarga mundial.)"
     }
   }
 }

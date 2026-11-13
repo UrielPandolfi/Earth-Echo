@@ -10,10 +10,12 @@ from earth_echo.contracts.records import AssetRecord, ForecastRecord, Observatio
 from earth_echo.contracts.typescript_emit import emit_typescript
 from earth_echo.contracts.types import ApiModel
 from earth_echo.contracts.products import ProductList
+from earth_echo.contracts.operations import RefreshStatus
 from earth_echo.paths import repo_root
 
 
 class ContractBundle(ApiModel):
+    refresh: RefreshStatus
     scientific_products: ProductList
     health: HealthResponse
     ready: ReadyResponse

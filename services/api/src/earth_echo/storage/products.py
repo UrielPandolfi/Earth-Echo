@@ -37,10 +37,17 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
         raise ValueError('Raw checksum mismatch')
     active = root or products_root()
     current = read_product(product.id, active)
-    if current is not None and (current.checksum_sha256 == product.checksum_sha256 or scientific_fingerprint(current) == scientific_fingerprint(product)):
+    def scientific_metadata(p):
+        metadata=p.model_dump(mode='json',exclude={'retrieved_at','ingested_at','checksum_sha256','byte_size','raw_file','verification'})
+        metadata['verification']=p.verification.model_dump(mode='json',exclude={'checked_at'})
+        return metadata
+    metadata=scientific_metadata(product)
+    same_asset=current is not None and (current.checksum_sha256==product.checksum_sha256 or (
+        product.scientific_checksum_sha256 is not None and current.scientific_checksum_sha256==product.scientific_checksum_sha256))
+    if same_asset and scientific_metadata(current)==metadata:
         return 'unchanged'
     used = sum(p.stat().st_size for p in active.rglob('*') if p.is_file()) if active.exists() else 0
-    projected = used + len(raw) + 2*len(product.model_dump_json().encode())
+    projected = used + (0 if (active/product.raw_file).exists() else len(raw)) + 2*len(product.model_dump_json().encode())
     if projected > 128_000_000:
         raise OSError('Scientific product store reached its 128 MB budget; last valid products preserved')
     target = active / product.raw_file
@@ -49,7 +56,8 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
         temp = target.with_suffix('.tmp')
         temp.write_bytes(raw)
         os.replace(temp, target)
-    revision = active / product.id / 'revisions' / (product.checksum_sha256 + '.json')
+    metadata_hash=hashlib.sha256(json.dumps(metadata,sort_keys=True,ensure_ascii=False).encode()).hexdigest()[:12]
+    revision = active / product.id / 'revisions' / (product.checksum_sha256 + '-' + metadata_hash + '.json')
     atomic_json(revision, product.model_dump(mode='json'))
     atomic_json(active / product.id / 'current.json', product.model_dump(mode='json'))
     # Keep four bounded snapshots per product. Historical experiment assets live elsewhere.
@@ -62,8 +70,3 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
             (active / previous.raw_file).unlink(missing_ok=True)
     return 'stored'
 
-def scientific_fingerprint(product: ScientificProduct) -> str:
-    """ERDDAP writes request time in history; it must not create scientific revisions."""
-    from hashlib import sha256
-    payload = product.model_dump(mode='json', include={'collection_id','product_version','variable','unit','native_unit','observed_at','observation_end','initialized_at','issued_at','valid_from','valid_to','grid','samples','method_version'})
-    return sha256(json.dumps(payload, sort_keys=True, separators=(',',':'),allow_nan=False).encode()).hexdigest()

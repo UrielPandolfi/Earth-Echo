@@ -90,6 +90,7 @@ class ScientificProduct(ApiModel):
     license_url: str
     attribution: str
     checksum_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
+    scientific_checksum_sha256: str | None = Field(default=None,pattern=r'^[0-9a-f]{64}$')
     byte_size: int = Field(gt=0)
     raw_file: str = Field(pattern=r'^(?:shared|[a-z0-9-]+/assets)/[0-9a-f]{64}\.[a-z0-9]+$')
     coverage: str

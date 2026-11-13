@@ -24,7 +24,7 @@ import { TrendPanel } from "./TrendPanel";
 import { CapabilitiesPanel } from "./CapabilitiesPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
-import type { ProductList } from '../domain/generated';
+import type { ProductList, ScientificProduct } from '../domain/generated';
 import { ProductsPanel, ProductInspector } from '../real/Products';
 import { groupMarkers } from '../globe/clustering';
 
@@ -46,7 +46,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [products, setProducts] = useState<ProductList | null>(null);
   const [productKey, setProductKey] = useState('d15-sst-global');
   const [productError, setProductError] = useState<string | null>(null);
-  const activeProduct = products?.products.find(p => p.id === productKey);
+  const [productDetails, setProductDetails] = useState<ScientificProduct | null>(null);
+  const activeProduct = productDetails?.id === productKey ? productDetails : products?.products.find(p => p.id === productKey);
   const [quakes, setQuakes] = useState<Array<{ id: string; longitude: number; latitude: number; magnitude: number; place: string; time: string }>>([]);
   const [kpText, setKpText] = useState<string | null>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
@@ -130,7 +131,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
     const controller = new AbortController();
     async function load() {
       try {
-        const response = await fetch(`${apiBase}/v1/products`, { signal: controller.signal });
+        const response = await fetch(`${apiBase}/v1/products?summaries=true`, { signal: controller.signal });
         if (!response.ok) throw new Error('No respondió la consulta de productos reales.');
         const body = await response.json() as ProductList;
         if (!Array.isArray(body.products) || body.data_mode !== 'real') throw new Error('Contrato de productos inválido.');
@@ -141,6 +142,21 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
     const timer = window.setInterval(() => void load(), 60_000);
     return () => { controller.abort(); window.clearInterval(timer); };
   }, [state.dataMode]);
+
+  useEffect(() => {
+    if (state.dataMode !== 'real' || productKey === 'archive' || !products?.products.some(p=>p.id===productKey)) return;
+    const controller = new AbortController();
+    async function load() {
+      try {
+        const response = await fetch(`${apiBase}/v1/products/${productKey}`,{signal:controller.signal});
+        if (!response.ok) throw new Error('No respondió el producto seleccionado.');
+        const body = await response.json() as ScientificProduct;
+        if (body.id !== productKey || body.data_mode !== 'real') throw new Error('Contrato de producto inválido.');
+        setProductDetails(body); setProductError(null);
+      } catch(e) { if (!controller.signal.aborted) setProductError(e instanceof Error ? e.message : 'Producto no disponible'); }
+    }
+    void load(); return ()=>controller.abort();
+  },[state.dataMode,productKey,products]);
 
   useEffect(() => {
     if (state.dataMode !== "real") {
@@ -321,8 +337,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
     state.dataMode === "real" ? (activeProduct?.grid ? paintSstField({...activeProduct.grid, observation_id: activeProduct.id, unit: activeProduct.unit}) : productKey === 'archive' && realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
   const badge =
     state.dataMode === "real"
-      ? realView?.status === "available"
-        ? activeProduct ? `REAL · ${activeProduct.source_id}` : "REAL · archivo CoralTemp"
+      ? activeProduct ? `REAL · ${activeProduct.source_id}` : realView?.status === "available"
+        ? "REAL · archivo CoralTemp"
         : "REAL · no disponible"
       : demoScenario.badge;
 
@@ -341,7 +357,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         assistantOpen={assistantOpen}
         badge={badge}
       />
-      {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
+      {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} activeProduct={activeProduct} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
         const g = activeProduct?.grid;
         if (g) setFrameRequest({west:g.west, east:g.east, north:g.north, south:g.south, crossesAntimeridian:false});
       }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError} grouped={state.groupOnZoom} onGroup={()=>dispatch({type:'group'})}/> : <FilterPanel

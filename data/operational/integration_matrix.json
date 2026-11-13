@@ -210,9 +210,13 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://psl.noaa.gov/marine-heatwaves/",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Resolver archivo numérico de perspectivas, sin inferir datos desde imagen",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d16-mhw-month-1",
+      "/v1/products/d16-mhw-month-2",
+      "/v1/products/d16-mhw-month-3"
+    ],
+    "blocker_or_next_step": "Producto externo experimental de investigación. Probabilidad mensual de SST sobre umbral estacional percentil 90 de 1991–2020, con tendencia retenida; lead=1.5 meses (centro del mes). Modelos: CanESM5, GEM5.2-NEMO, GFDL-SPEAR-regridded, NASA-GEOSS2S, COLA-RSMAS-CCSM4, COLA-RSMAS-CESM1, NCEP-CFSv2. No representa un evento diario Hobday ni una probabilidad de daño biológico. 6067657 bytes retenidos en 47 rangos de un archivo de 268867017; no se descargó toda la historia. | Producto externo experimental de investigación. Probabilidad mensual de SST sobre umbral estacional percentil 90 de 1991–2020, con tendencia retenida; lead=2.5 meses (centro del mes). Modelos: CanESM5, GEM5.2-NEMO, GFDL-SPEAR-regridded, NASA-GEOSS2S, COLA-RSMAS-CCSM4, COLA-RSMAS-CESM1, NCEP-CFSv2. No representa un evento diario Hobday ni una probabilidad de daño biológico. 6067657 bytes retenidos en 47 rangos de un archivo de 268867017; no se descargó toda la historia. | Producto externo experimental de investigación. Probabilidad mensual de SST sobre umbral estacional percentil 90 de 1991–2020, con tendencia retenida; lead=3.5 meses (centro del mes). Modelos: CanESM5, GEM5.2-NEMO, GFDL-SPEAR-regridded, NASA-GEOSS2S, COLA-RSMAS-CCSM4, COLA-RSMAS-CESM1, NCEP-CFSv2. No representa un evento diario Hobday ni una probabilidad de daño biológico. 6067657 bytes retenidos en 47 rangos de un archivo de 268867017; no se descargó toda la historia.",
     "limits": "En esta especificación está verificado el producto público, no la automatización del archivo numérico. Alternativa: desarrollar y validar un modelo con D09 y D13."
   },
   {
@@ -313,9 +317,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://gpm.nasa.gov/applications/landslides",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Resolver versión y archivo numérico LHASA",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d24-lhasa-bc"
+    ],
+    "blocker_or_next_step": "Nowcast/modelo importado, no un deslizamiento observado ni una alerta geotécnica de cada ladera. La fecha es la referencia del archivo NRT, no hora de un evento. Se transfirieron 1048576 bytes en 8 rangos de un GeoTIFF de 146876470 bytes; se conservan esos rangos, no el archivo mundial completo.",
     "limits": "No predice el colapso de cada ladera ni sustituye sensores geotécnicos locales. El inventario de eventos tiene sesgo de reporte."
   },
   {
@@ -393,9 +399,11 @@
       "Geometría o contexto estático"
     ],
     "official_url": "https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Seleccionar mosaico DSM/datum/licencia",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d30-dem-pampa"
+    ],
+    "blocker_or_next_step": "Contexto estático de superficie, sin fecha de adquisición por píxel disponible en este COG. No es terreno desnudo, nivel del agua ni modelo hidráulico. La edición DGED no está codificada: se identifica archivo por ETag y SHA-256.",
     "limits": "Es DSM, incluye vegetación y construcciones. No sustituye un modelo de terreno urbano o una topografía hidráulica de alta precisión."
   },
   {
@@ -450,7 +458,9 @@
   {
     "id": "D35",
     "name": "GDACS",
-    "classification": [],
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
     "official_url": "https://www.gdacs.org/Documents/2025/GDACS_API_quickstart_v1.pdf",
     "status": "pending",
     "evidence": [],

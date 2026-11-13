@@ -34,6 +34,16 @@ def test_idempotent_product_keeps_raw_and_previous_on_failure(tmp_path):
     with pytest.raises(ValueError):
         publish(p, b'corrupt', '.txt', tmp_path)
     assert read_product(p.id, tmp_path) == p
+    # A corrected datum/method must be published even with identical original bytes.
+    corrected=p.model_copy(update={'unit':'m sobre EGM2008','method_version':'datum-corrected'})
+    assert publish(corrected,raw,'.txt',tmp_path)=='stored'
+    assert read_product(p.id,tmp_path).unit=='m sobre EGM2008'
+    # A changed native asset cannot be hidden by an unchanged display subset.
+    changed=raw+b' changed native cell outside view'
+    changed_sha=hashlib.sha256(changed).hexdigest()
+    changed_product=corrected.model_copy(update={'checksum_sha256':changed_sha,'byte_size':len(changed),'raw_file':f'test-product/assets/{changed_sha}.txt'})
+    assert publish(changed_product,changed,'.txt',tmp_path)=='stored'
+    assert len(list(tmp_path.glob('*/revisions/*.json')))==3
 
 def test_scheduler_cadence_failure_recovery_and_os_lock(tmp_path, monkeypatch):
     path = tmp_path / 'state.json'

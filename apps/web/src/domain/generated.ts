@@ -310,6 +310,26 @@ export interface ReferenceMention {
   source_id: string;
 }
 
+export interface RefreshJob {
+  status: "running" | "stored" | "unchanged" | "failed";
+  last_attempt_at: string;
+  next_attempt_at: string;
+  last_success_at?: string | null;
+  last_change_at?: string | null;
+  error?: string | null;
+  kept_previous?: boolean;
+}
+
+export interface RefreshStatus {
+  enabled: boolean;
+  recent_scan: boolean;
+  last_scan_at?: string | null;
+  worker_pid?: number | null;
+  heartbeat_at?: string | null;
+  jobs?: Record<string, RefreshJob>;
+  note: string;
+}
+
 export interface ScientificGrid {
   width: number;
   height: number;
@@ -355,6 +375,7 @@ export interface ScientificProduct {
   license_url: string;
   attribution: string;
   checksum_sha256: string;
+  scientific_checksum_sha256?: string | null;
   byte_size: number;
   raw_file: string;
   coverage: string;
@@ -471,6 +492,7 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  refresh: RefreshStatus;
   scientific_products: ProductList;
   health: HealthResponse;
   ready: ReadyResponse;

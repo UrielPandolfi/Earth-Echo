@@ -19,7 +19,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D13 | NOAA OISST | Fuente de observaciones; Dataset histórico | /v1/products/d13-oisst-global | SST analizada e interpolada, preliminar cuando así lo identifica NOAA. No es temperatura del aire, un evento de calor marino ni diagnóstico ENSO. |
 | D14 | Copernicus Marine física oceánica | Pronóstico o producto científico existente | pending | COPERNICUSMARINE_SERVICE_USERNAME, COPERNICUSMARINE_SERVICE_PASSWORD |
 | D15 | NOAA Coral Reef Watch | Fuente de observaciones; Pronóstico o producto científico existente | /v1/products/d15-dhw-global, /v1/products/d15-hotspot-global, /v1/products/d15-sst-global | HotSpot: diferencia positiva de SST respecto de Maximum Monthly Mean; DHW: acumulación del estrés ≥1 °C durante 12 semanas. Indicadores importados de NOAA, sin confirmar blanqueamiento biológico ni pronóstico. ; SST analizada: no es temperatura del aire ni diagnóstico de ola de calor marina. |
-| D16 | NOAA pronóstico de olas de calor marinas | Pronóstico o producto científico existente | pending | Resolver archivo numérico de perspectivas, sin inferir datos desde imagen |
+| D16 | NOAA pronóstico de olas de calor marinas | Pronóstico o producto científico existente | /v1/products/d16-mhw-month-1, /v1/products/d16-mhw-month-2, /v1/products/d16-mhw-month-3 | Producto externo experimental de investigación. Probabilidad mensual de SST sobre umbral estacional percentil 90 de 1991–2020, con tendencia retenida; lead=1.5 meses (centro del mes). Modelos: CanESM5, GEM5.2-NEMO, GFDL-SPEAR-regridded, NASA-GEOSS2S, COLA-RSMAS-CCSM4, COLA-RSMAS-CESM1, NCEP-CFSv2. No representa un evento diario Hobday ni una probabilidad de daño biológico. 6067657 bytes retenidos en 47 rangos de un archivo de 268867017; no se descargó toda la historia. ; Producto externo experimental de investigación. Probabilidad mensual de SST sobre umbral estacional percentil 90 de 1991–2020, con tendencia retenida; lead=2.5 meses (centro del mes). Modelos: CanESM5, GEM5.2-NEMO, GFDL-SPEAR-regridded, NASA-GEOSS2S, COLA-RSMAS-CCSM4, COLA-RSMAS-CESM1, NCEP-CFSv2. No representa un evento diario Hobday ni una probabilidad de daño biológico. 6067657 bytes retenidos en 47 rangos de un archivo de 268867017; no se descargó toda la historia. ; Producto externo experimental de investigación. Probabilidad mensual de SST sobre umbral estacional percentil 90 de 1991–2020, con tendencia retenida; lead=3.5 meses (centro del mes). Modelos: CanESM5, GEM5.2-NEMO, GFDL-SPEAR-regridded, NASA-GEOSS2S, COLA-RSMAS-CCSM4, COLA-RSMAS-CESM1, NCEP-CFSv2. No representa un evento diario Hobday ni una probabilidad de daño biológico. 6067657 bytes retenidos en 47 rangos de un archivo de 268867017; no se descargó toda la historia. |
 | D17 | NASA Ocean Color | Fuente de observaciones | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
 | D18 | NOAA pronósticos ecológicos regionales | Pronóstico o producto científico existente | pending | Seleccionar servicio regional, variable/especie y archivo numérico |
 | D19 | FAO Locust Watch y Locust Hub | Fuente de observaciones | pending | Resolver capa FAO exportable y términos; Schistocerca gregaria solamente |
@@ -27,18 +27,18 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D21 | USGS ComCat y FDSN | Fuente de observaciones | /v1/layers/d21-events | Consultar producto real; descubrimiento no cuenta como integración |
 | D22 | USGS pronóstico de réplicas | Pronóstico o producto científico existente | /v1/products/d22-oaf-recent | Probabilidades importadas, no hora/lugar garantizados de la próxima réplica. Un solo evento reciente publicado; el producto no existe para todos los sismos. Modelo del proveedor: Reasenberg-Jones (1989, 1994) aftershock model (Bayesian Combination). |
 | D23 | Smithsonian Global Volcanism Program | Dataset histórico; Geometría o contexto estático | /v1/products/d23-holocene-inventory | Contexto estático, no una red de sensores ni un pronóstico de erupción. Elevación y año de última erupción conservan la definición del inventario. |
-| D24 | NASA LHASA | Pronóstico o producto científico existente | pending | Resolver versión y archivo numérico LHASA |
+| D24 | NASA LHASA | Pronóstico o producto científico existente | /v1/products/d24-lhasa-bc | Nowcast/modelo importado, no un deslizamiento observado ni una alerta geotécnica de cada ladera. La fecha es la referencia del archivo NRT, no hora de un evento. Se transfirieron 1048576 bytes en 8 rangos de un GeoTIFF de 146876470 bytes; se conservan esos rangos, no el archivo mundial completo. |
 | D25 | Copernicus Data Space | Servicio de descubrimiento o visualización | pending | Catálogo público; escena científica y procesamiento aún pendientes |
 | D26 | Randolph Glacier Inventory | Geometría o contexto estático | pending | Elegir edición y subconjunto RGI con época de geometría |
 | D27 | NOAA Tsunami Warning Centers | Pronóstico o producto científico existente | /v1/products/d27-tsunami-messages | Mensajes oficiales con emisor, estado, actualización/cancelación y expiración. Un mensaje informativo no confirma tsunami. No se infiere llegada ni área afectada desde el epicentro. Geometrías CAP originales preservadas en cada mensaje. |
 | D28 | NOAA SWPC | Fuente de observaciones; Pronóstico o producto científico existente | /v1/layers/d28-kp, /v1/forecasts/d28-kp | Consultar producto real; descubrimiento no cuenta como integración |
 | D29 | NASA JPL CNEOS | Pronóstico o producto científico existente | /v1/products/d29-sentry | No incluye objetos no descubiertos. Un acercamiento no es un impacto; las evaluaciones pueden retirarse o cambiar. No se inventa una fecha o lugar de desastre. |
-| D30 | Copernicus DEM | Geometría o contexto estático | pending | Seleccionar mosaico DSM/datum/licencia |
+| D30 | Copernicus DEM | Geometría o contexto estático | /v1/products/d30-dem-pampa | Contexto estático de superficie, sin fecha de adquisición por píxel disponible en este COG. No es terreno desnudo, nivel del agua ni modelo hidráulico. La edición DGED no está codificada: se identifica archivo por ETag y SHA-256. |
 | D31 | GEBCO | Geometría o contexto estático | pending | Subconjunto GEBCO y Type Identifier Grid con datum |
 | D32 | HydroATLAS | Geometría o contexto estático | pending | Subconjunto y licencia HydroATLAS; no son caudales |
 | D33 | NASA GRACE asimilado para sequía | Pronóstico o producto científico existente | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
 | D34 | RAPID AMOC | Fuente de observaciones; Dataset histórico | pending | Archivo RAPID y README/DOI pendientes |
-| D35 | GDACS |  | pending | Resolver productos, geometrias, cancelación y validez |
+| D35 | GDACS | Pronóstico o producto científico existente | pending | Resolver productos, geometrias, cancelación y validez |
 | D36 | NASA GIBS | Servicio de descubrimiento o visualización | pending | Consultar producto real; descubrimiento no cuenta como integración |
 | D37 | NASA earthaccess y CMR | Servicio de descubrimiento o visualización | pending | Consultar producto real; descubrimiento no cuenta como integración |
 | D38 | Qwen documentación oficial | Documentación, método o referencia científica | reference_only | Consultar producto real; descubrimiento no cuenta como integración |
@@ -76,14 +76,14 @@ Observación puede ser parcial; un dato de contexto no habilita un detector. «s
 | F15 | Peligro de incendios | specified | specified | specified | specified | specified |
 | F16 | Estrés agrícola | partial | specified | specified | specified | specified |
 | F17 | El Niño y La Niña | specified | partial | specified | specified | specified |
-| F18 | Olas de calor marinas | partial | specified | specified | specified | specified |
+| F18 | Olas de calor marinas | partial | specified | specified | partial | specified |
 | F19 | Estrés térmico de corales | partial | partial | partial | specified | experimental |
 | F20 | Floraciones de algas nocivas | specified | specified | specified | specified | specified |
 | F21 | Hipoxia acuática | specified | specified | specified | specified | specified |
 | F22 | Condiciones favorables para Vibrio | specified | specified | specified | specified | specified |
 | F23 | Langosta del desierto | specified | specified | specified | specified | specified |
 | F24 | Actividad volcánica y erupciones | partial | specified | specified | specified | specified |
-| F25 | Deslizamientos por lluvia | specified | specified | specified | specified | specified |
+| F25 | Deslizamientos por lluvia | specified | partial | specified | specified | specified |
 | F26 | Desbordes de lagos glaciares | specified | specified | specified | specified | specified |
 | F27 | Tsunamis | partial | specified | specified | specified | specified |
 | F28 | Réplicas sísmicas | partial | specified | specified | partial | specified |

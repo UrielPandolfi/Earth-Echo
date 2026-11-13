@@ -39,6 +39,7 @@ Thumbs.db
 .cache/
 data/operational/discovery/
 data/real/refresh/*.lock
+data/real/refresh/state.json
 data/real/products/*/assets/
 data/real/products/shared/
 data/real/feeds/assets/
