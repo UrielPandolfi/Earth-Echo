@@ -30,7 +30,7 @@ npm run dev:web
 ```
 
 - API: http://127.0.0.1:8000/health
-- Pantalla técnica: http://127.0.0.1:5173/
+- Pantalla: http://127.0.0.1:5173/
 
 La API escucha en `0.0.0.0` y el puerto `PORT` (8000 por defecto). El navegador usa el proxy `/api` de Vite.
 
@@ -52,6 +52,6 @@ uv run --directory services/api python -m earth_echo.contracts.schema_export --w
 
 ## Qué hay hoy
 
-La pantalla técnica monta un globo con Natural Earth II, incluido en CesiumJS, sin Cesium ion. La API distingue la salud del proceso de la disponibilidad de proveedores. El modo `real` no cae al modo `demo` cuando falta una fuente.
+La pantalla de escritorio monta el globo con Natural Earth II, incluido en CesiumJS, sin Cesium ion. El escenario visible es DEMO. La API distingue la salud del proceso de la disponibilidad de proveedores. El modo `real` no cae al modo `demo` cuando falta una fuente.
 
 La documentación de decisiones está en `docs/arquitectura.md`. El estado de la fase está en `PROGRESS.md`.

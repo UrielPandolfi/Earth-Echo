@@ -1,0 +1,30 @@
+:root {
+  --bg: #0c121c;
+  --bg-raised: #121b2a;
+  --bg-panel: #101826;
+  --bg-sunken: #070d14;
+  --line: rgba(232, 240, 246, 0.1);
+  --line-strong: rgba(232, 240, 246, 0.18);
+  --text: #e8eef3;
+  --text-dim: #93a3b0;
+  --text-faint: #6d7e8c;
+  --accent: #3ee0cf;
+  --accent-ink: #06221e;
+  --accent-dim: rgba(62, 224, 207, 0.16);
+  --warning: #e2b15a;
+  --danger: #e07a62;
+  --info: #7eb6e0;
+  --observed: #e0c36a;
+  --font: "Segoe UI", "Segoe UI Variable", system-ui, sans-serif;
+  --topbar: 48px;
+  --timeline: 78px;
+  --row: 28px;
+  --radius: 8px;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+  font-family: var(--font);
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--text);
+  background: var(--bg);
+}

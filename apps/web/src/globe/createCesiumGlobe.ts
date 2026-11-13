@@ -28,14 +28,37 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     ),
     requestRenderMode: true,
   });
-  viewer.camera.setView({
-    destination: Cartesian3.fromDegrees(-60, -15, 18_000_000),
-  });
-  viewer.scene.requestRender();
+  const frameAmericas = () => {
+    viewer.camera.setView({
+      destination: Cartesian3.fromDegrees(-72, 8, 12_500_000),
+    });
+    viewer.scene.requestRender();
+  };
+  frameAmericas();
+  const zoom = (direction: 1 | -1) => {
+    if (viewer.isDestroyed()) {
+      return;
+    }
+    const distance = viewer.camera.positionCartographic.height * 0.35;
+    if (direction > 0) {
+      viewer.camera.zoomIn(distance);
+    } else {
+      viewer.camera.zoomOut(distance);
+    }
+    viewer.scene.requestRender();
+  };
   return {
     destroy() {
       if (!viewer.isDestroyed()) {
         viewer.destroy();
+      }
+    },
+    zoomIn: () => zoom(1),
+    zoomOut: () => zoom(-1),
+    resize() {
+      if (!viewer.isDestroyed()) {
+        viewer.resize();
+        viewer.scene.requestRender();
       }
     },
   };

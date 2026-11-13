@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { activeGlobeCount, mountGlobe, type GlobeFactory } from "./lifecycle";
+import { activeGlobeCount, mountGlobe, type GlobeFactory, type GlobeHandle } from "./lifecycle";
 
 interface GlobeStageProps {
   createGlobe: GlobeFactory;
   onCount?: (count: number) => void;
+  onControls?: (controls: GlobeHandle | null) => void;
 }
 
-export function GlobeStage({ createGlobe, onCount }: GlobeStageProps) {
+export function GlobeStage({ createGlobe, onCount, onControls }: GlobeStageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const onCountRef = useRef(onCount);
+  const onControlsRef = useRef(onControls);
   const [error, setError] = useState<string | null>(null);
   onCountRef.current = onCount;
+  onControlsRef.current = onControls;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -21,8 +24,18 @@ export function GlobeStage({ createGlobe, onCount }: GlobeStageProps) {
       const mounted = mountGlobe(container, createGlobe);
       setError(null);
       onCountRef.current?.(activeGlobeCount());
+      onControlsRef.current?.(mounted);
+      const observer =
+        typeof ResizeObserver === "undefined"
+          ? null
+          : new ResizeObserver(() => {
+              mounted.resize?.();
+            });
+      observer?.observe(container);
       return () => {
+        observer?.disconnect();
         mounted.destroy();
+        onControlsRef.current?.(null);
         onCountRef.current?.(activeGlobeCount());
       };
     } catch (caught) {

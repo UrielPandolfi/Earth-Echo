@@ -33,6 +33,35 @@ El repositorio solo tenía la especificación, el catálogo, el PNG y los prompt
 - Los 31 fenómenos siguen especificados, no conectados ni validados.
 - El PNG de referencia mide 1672×941, no 1920×1080.
 
+## Fase 02 — completada
+
+La pantalla principal reemplazó a la prueba técnica. Conserva el visor de la fase 01 y muestra el escenario demo de Amazonía central.
+
+### Hecho
+
+- Barra superior, filtros, globo, inspector y línea de tiempo con los tokens de `tokens.css`.
+- Proporciones medidas sobre el PNG de 1672×941: 17,1 % / centro / 26,1 %.
+- Conteos del escenario en un solo fixture. El total de fenómenos sale del catálogo cuando la API responde.
+- Búsqueda, agrupación del globo y análisis completo declaran que todavía no operan.
+- La línea de tiempo es un único estado en días y se refleja en la ficha.
+
+### Evidencia
+
+- `npm --prefix apps/web test`: 6 pruebas pasaron.
+- `npm --prefix apps/web run typecheck` terminó sin error.
+- En el navegador, sin overflow horizontal y con un solo visor:
+  - 1920×1080, globo con América visible.
+  - 1366×768, el inspector conserva la cabecera y el botón de análisis.
+  - 1672×941, el tamaño nativo del PNG.
+- Desmarcar Observaciones cambió el total del escenario. Acercar no creó otro visor.
+
+### Diferencias que quedan
+
+- El globo no tiene marcadores, huracán ni etiquetas. Eso es la fase 04.
+- La textura sigue siendo Natural Earth II, no la imagen fotorrealista de la referencia. La iluminación y el encuadre fino son la fase 03.
+- La serie del inspector es sintética y está marcada como demo. No es SMAP ni GLDAS.
+- Los iconos son un juego propio de trazos, no una copia del set de la imagen.
+
 ## Siguiente paso
 
-Fase 02: construir la interfaz de escritorio sobre esta pantalla, conservando `mountGlobe` y los contratos. No conectar proveedores reales en esa fase. Para el primer flujo científico sigue haciendo falta Earthdata si la fuente es D02.
+Fase 03: acercar el globo a la referencia dentro de esta interfaz, sin reemplazar el adaptador ni pintar señales todavía. Earthdata sigue faltando para el HDF de D02.

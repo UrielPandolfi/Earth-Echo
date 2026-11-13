@@ -1,5 +1,8 @@
 export interface GlobeHandle {
   destroy: () => void;
+  zoomIn?: () => void;
+  zoomOut?: () => void;
+  resize?: () => void;
 }
 
 export type GlobeFactory = (container: HTMLElement) => GlobeHandle;
@@ -29,6 +32,9 @@ export function mountGlobe(container: HTMLElement, createGlobe: GlobeFactory): G
         delete container.dataset.earthEchoGlobe;
       }
     },
+    zoomIn: () => handle.zoomIn?.(),
+    zoomOut: () => handle.zoomOut?.(),
+    resize: () => handle.resize?.(),
   };
   container.dataset.earthEchoGlobe = "live";
   active.add(handle);

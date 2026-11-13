@@ -61,6 +61,14 @@ La candidata del primer flujo ambiental es **D02 NASA SMAP SPL3SMP_E**, porque l
 
 Para ejercer el contrato con un registro real se usó **D21 USGS ComCat**, un GeoJSON público de un evento (1155 bytes, HTTP 200). Es otra fuente, no un sustituto de la humedad. No hay pronóstico sísmico derivado de esa muestra. `GET /signals?phenomenon_id=F11&mode=real` responde no disponible por credencial y no incluye el valor sintético del demo.
 
+## Interfaz de la fase 02
+
+La pantalla de entrada es `ObservatoryApp`. El adaptador `mountGlobe` sigue siendo el único lugar que crea el visor. Los tokens están en `apps/web/src/styles/tokens.css`.
+
+El PNG mide 1672×941. El layout usa 17,1 % para filtros, el resto central para el globo y 26,1 % para el inspector, con barra superior de 48 px y franja temporal de 78 px. Esas relaciones salen de la imagen, no de una grilla genérica.
+
+El escenario Amazonía central vive en `apps/web/src/demo/scenario.ts`. Los conteos de la barra central son la suma de los tipos de información activos de ese archivo. El «31 fenómenos» sale de `GET /catalog/phenomena` y, si la API no responde, se muestra no disponible. La búsqueda, la agrupación en el globo y el análisis completo quedan explícitamente pendientes. No se conectó ningún proveedor científico.
+
 ## Lo que esta fase no incorpora
 
 PostgreSQL, PostGIS, Redis, colas, cuentas de Copernicus y el runtime de Qwen. No son un problema de instalación de la pantalla local: son trabajo de fases posteriores o accesos científicos todavía cerrados.

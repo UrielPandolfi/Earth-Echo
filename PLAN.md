@@ -5,7 +5,7 @@ Diez fases. El estado real está en `PROGRESS.md`. Los criterios siguientes son 
 | Fase | Resultado | Estado |
 | --- | --- | --- |
 | 01 | Proyecto ejecutable, arquitectura y contratos | Completada en el alcance de este repositorio |
-| 02 | Interfaz de escritorio fiel al PNG | Pendiente |
+| 02 | Interfaz de escritorio fiel al PNG | Completada como escenario DEMO |
 | 03 | Globo geográfico 3D integrado en esa interfaz | Pendiente |
 | 04 | Exploración completa con datos demo identificados | Pendiente |
 | 05 | Primer flujo real, del proveedor al globo | Pendiente, con bloqueo de credencial para D02 |

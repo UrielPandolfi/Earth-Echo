@@ -1,8 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { TechnicalApp } from "./TechnicalApp";
+import { ObservatoryApp } from "./shell/ObservatoryApp";
 import { createCesiumGlobe } from "./globe/createCesiumGlobe";
-import "./styles/technical.css";
+import "./styles/tokens.css";
+import "./styles/observatory.css";
 
 const root = document.getElementById("root");
 if (!root) {
@@ -11,6 +12,6 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <TechnicalApp createGlobe={createCesiumGlobe} />
+    <ObservatoryApp createGlobe={createCesiumGlobe} />
   </StrictMode>,
 );
