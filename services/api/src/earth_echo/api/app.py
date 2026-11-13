@@ -20,6 +20,8 @@ from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQ
 from earth_echo.ingest.d15_sst import default_store
 from earth_echo.queries.real_sst import RealSourceView, SstField, d01_blocked, d15_field, d15_view
 from earth_echo.catalog.capabilities import CapabilityMatrix, capability_matrix
+from earth_echo.assistant.provider import configured_provider
+from earth_echo.assistant.reply import AssistantReply, AssistantRequest, ask
 from earth_echo.queries.forecasts import calculate_replay, experiment_report, forecast_dir, reveal_replay
 from earth_echo.queries.layers import KpLayer, QuakeLayer, kp_layer, quake_layer
 from earth_echo.queries.trend import TrendView, trend_csv, trend_view
@@ -285,5 +287,26 @@ def _scale_routes() -> APIRouter:
         month: Annotated[int, Query(ge=1, le=12)],
     ) -> dict:
         return reveal_replay((year, month))
+
+    @router.get("/assistant/status")
+    def assistant_status() -> dict[str, object]:
+        provider = configured_provider(get_settings())
+        if provider is None:
+            return {
+                "configured": False,
+                "status": "unavailable",
+                "model": None,
+                "reason": "No están definidas EARTH_ECHO_LLM_BASE_URL y EARTH_ECHO_LLM_MODEL. El mapa sigue disponible.",
+            }
+        return {
+            "configured": True,
+            "status": "configured",
+            "model": provider.model_name,
+            "reason": "El modelo solo puede parafrasear el resultado de las herramientas.",
+        }
+
+    @router.post("/assistant/ask", response_model=AssistantReply)
+    def assistant_ask(body: AssistantRequest) -> AssistantReply:
+        return ask(body.question, body.context, configured_provider(get_settings()))
 
     return router

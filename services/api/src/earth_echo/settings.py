@@ -33,6 +33,10 @@ class Settings(BaseModel):
     cors_origins: list[str]
     max_body_bytes: int = Field(ge=1)
     catalog_path: Path | None = None
+    llm_base_url: str | None = None
+    llm_model: str | None = None
+    llm_timeout_seconds: float = Field(default=20, gt=0, le=60)
+    llm_max_tokens: int = Field(default=400, ge=32, le=800)
 
 
 def _split_origins(raw: str) -> list[str]:
@@ -58,4 +62,8 @@ def get_settings() -> Settings:
         ),
         max_body_bytes=int(os.environ.get("EARTH_ECHO_MAX_BODY_BYTES", "1048576")),
         catalog_path=Path(catalog_raw) if catalog_raw else None,
+        llm_base_url=os.environ.get("EARTH_ECHO_LLM_BASE_URL", "").strip() or None,
+        llm_model=os.environ.get("EARTH_ECHO_LLM_MODEL", "").strip() or None,
+        llm_timeout_seconds=float(os.environ.get("EARTH_ECHO_LLM_TIMEOUT_SECONDS", "20")),
+        llm_max_tokens=int(os.environ.get("EARTH_ECHO_LLM_MAX_TOKENS", "400")),
     )

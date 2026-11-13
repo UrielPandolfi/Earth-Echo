@@ -14,6 +14,7 @@ import { demoScenario } from "../demo/scenario";
 import { isRealSourceView, paintSstField, searchReal, type RealField, type RealSourceView } from "../real/view";
 import type { GeoExtent } from "../globe/geography";
 import type { GlobeFactory, GlobeMarker } from "../globe/lifecycle";
+import { AssistantDrawer } from "./AssistantDrawer";
 import { TopBar } from "./TopBar";
 import { FilterPanel } from "./FilterPanel";
 import { GlobeColumn } from "./GlobeColumn";
@@ -41,6 +42,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [realField, setRealField] = useState<RealField | null>(null);
   const [quakes, setQuakes] = useState<Array<{ id: string; longitude: number; latitude: number; magnitude: number; place: string; time: string }>>([]);
   const [kpText, setKpText] = useState<string | null>(null);
+  const [assistantOpen, setAssistantOpen] = useState(false);
+  const [replay, setReplay] = useState<{ issue: string | null; revealed: boolean }>({ issue: null, revealed: false });
   const onCameraHeight = useCallback((height: number) => {
     setCameraHeight((current) => (Math.abs(current - height) < 250_000 ? current : height));
   }, []);
@@ -311,6 +314,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         onTimeline={(days) => dispatch({ type: "timeline", days })}
         onPanel={(panel) => dispatch({ type: "panel", panel })}
         onMode={(mode) => dispatch({ type: "mode", mode })}
+        onAssistant={() => setAssistantOpen((open) => !open)}
+        assistantOpen={assistantOpen}
         badge={badge}
       />
       <FilterPanel
@@ -386,6 +391,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           mode={state.dataMode}
           analysisOpen={state.analysisOpen}
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
+          onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
       ) : state.dataMode === "real" ? (
         <RealInspector
@@ -407,6 +413,14 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onSelect={(id) => dispatch({ type: "select", id })}
         />
       )}
+      <AssistantDrawer
+        open={assistantOpen}
+        mode={state.dataMode}
+        replayIssue={replay.issue}
+        replayRevealed={replay.revealed}
+        onClose={() => setAssistantOpen(false)}
+        onOpenSection={(section) => dispatch({ type: "section", section })}
+      />
     </div>
   );
 }

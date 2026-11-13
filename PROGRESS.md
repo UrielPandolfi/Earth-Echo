@@ -236,6 +236,28 @@ Hay dos caminos distintos. Ninguno queda validado para uso operativo.
 - `npm --prefix apps/web test`: 18 pruebas. `npx tsc --noEmit` sin error.
 - En http://127.0.0.1:5173/, modo REAL y Tendencias, se vieron el Kp importado, los tres errores y el desenlace revelado.
 
+## Fase 09 — completada sin inferencia real
+
+El asistente consulta las herramientas de las fases anteriores. No hay un runtime de Qwen en este equipo: `ollama` no está instalado y `127.0.0.1:11434` no respondió tras unos 2 segundos. La inferencia real queda pendiente. No se descargaron pesos.
+
+### Qué puede responder
+
+- Tendencia de SST, experimento, replay con corte, Kp importado, sismos observados y el estado de una fuente o un fenómeno.
+- Si la pregunta pide la fecha del próximo terremoto, la comparación de °C con humedad, o una fuente sin credencial, la respuesta lo dice y no rellena el hueco.
+- Un documento recuperado que pide validar el experimento no cambia `validated_for_use`.
+- Un proveedor simulado que inserta `99.9` se descarta y queda etiquetado como `mock`, no como Qwen.
+
+### Configuración
+
+En `.env`, del lado del servidor: `EARTH_ECHO_LLM_BASE_URL`, `EARTH_ECHO_LLM_MODEL` y, si hace falta, `EARTH_ECHO_LLM_API_KEY`. El navegador no puede enviar otra URL. Un candidato pequeño, cuando exista el runtime, es un Qwen de alrededor de 1.5B servido en local. No se midió memoria ni latencia de un modelo porque no había ninguno cargado.
+
+### Evidencia
+
+- `uv run --directory services/api pytest`: 57 pruebas.
+- `npm --prefix apps/web test`: 19 pruebas. `npx tsc --noEmit` sin error.
+- `GET /v1/assistant/status` responde `unavailable` mientras las variables estén vacías.
+- El panel se abre sobre el mapa sin cambiar la grilla. Cerrar lo devuelve al observatorio.
+
 ## Siguiente paso
 
-Fase 09: explicaciones a partir de estos resultados ya calculados, sin usar un modelo de lenguaje para inventar el número ni para validar el experimento.
+Fase 10: pruebas de cierre, operación y entrega, sin declarar ejecutada una inferencia que este equipo no corrió.

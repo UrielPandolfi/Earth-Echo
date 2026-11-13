@@ -52,7 +52,11 @@ function mae(report: ExperimentReport, name: string): string {
   return metric ? `${metric.mae_c.toFixed(3)} °C` : "no disponible";
 }
 
-export function ForecastReplay() {
+interface ForecastReplayProps {
+  onReplay?: (issue: string, revealed: boolean) => void;
+}
+
+export function ForecastReplay({ onReplay }: ForecastReplayProps) {
   const [forecast, setForecast] = useState<KpForecast | null>(null);
   const [report, setReport] = useState<ExperimentReport | null>(null);
   const [issue, setIssue] = useState("2024-6");
@@ -86,7 +90,10 @@ export function ForecastReplay() {
   async function post(path: string) {
     const [year, month] = issue.split("-").map(Number);
     const response = await fetch(`${apiBase}${path}?year=${year}&month=${month}`, { method: "POST" });
-    setReplayResult((await response.json()) as ReplayResult);
+    const body = (await response.json()) as ReplayResult;
+    setReplayResult(body);
+    const revealed = body.outcome_c !== null && body.outcome_c !== undefined;
+    onReplay?.(`${year}-${String(month).padStart(2, "0")}`, revealed);
   }
 
   return (
@@ -134,7 +141,12 @@ export function ForecastReplay() {
           </p>
           <label>
             Mes de emisión
-            <select value={issue} onChange={(event) => { setIssue(event.target.value); setReplayResult(null); }}>
+            <select value={issue} onChange={(event) => {
+              setIssue(event.target.value);
+              setReplayResult(null);
+              const [year, month] = event.target.value.split("-");
+              onReplay?.(`${year}-${month.padStart(2, "0")}`, false);
+            }}>
               {issues.map((item) => (
                 <option key={`${item.year}-${item.month}`} value={`${item.year}-${item.month}`}>
                   {item.year}-{String(item.month).padStart(2, "0")}

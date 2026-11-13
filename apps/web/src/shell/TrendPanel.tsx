@@ -40,9 +40,10 @@ interface TrendPanelProps {
   mode: DataMode;
   analysisOpen: boolean;
   onAnalysis: (open: boolean) => void;
+  onReplay?: (issue: string, revealed: boolean) => void;
 }
 
-export function TrendPanel({ mode, analysisOpen, onAnalysis }: TrendPanelProps) {
+export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPanelProps) {
   const [view, setView] = useState<TrendResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -131,7 +132,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis }: TrendPanelProps) 
           </div>
         </dl>
         <p className="fine">Método {view.method_id}. Ejecución {view.execution_id}.</p>
-        <ForecastReplay />
+        <ForecastReplay onReplay={onReplay} />
       </div>
       <footer className="inspector-foot">
         <button type="button" className="analysis" onClick={() => onAnalysis(true)}>

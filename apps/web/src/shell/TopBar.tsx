@@ -14,6 +14,8 @@ interface TopBarProps {
   onTimeline: (days: number) => void;
   onPanel: (panel: "filters" | "inspector") => void;
   onMode: (mode: DataMode) => void;
+  onAssistant: () => void;
+  assistantOpen: boolean;
   badge: string;
 }
 
@@ -23,7 +25,7 @@ const sections = [
   { id: "historico", label: "Histórico" },
 ] as const;
 
-export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline, onPanel, onMode, badge }: TopBarProps) {
+export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline, onPanel, onMode, onAssistant, assistantOpen, badge }: TopBarProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const searchPending = state.searchText.trim().length >= 2;
   return (
@@ -136,9 +138,9 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
           <Icon name="bell" />
           <span className="sr-only">Avisos, no disponibles</span>
         </button>
-        <button type="button" className="icon-button" disabled title="La ayuda llega con el asistente">
+        <button type="button" className="icon-button" aria-expanded={assistantOpen} title="Asistente" onClick={onAssistant}>
           <Icon name="help" />
-          <span className="sr-only">Ayuda, no disponible</span>
+          <span className="sr-only">Asistente</span>
         </button>
         <button type="button" className="icon-button" disabled title="No hay ajustes de cuenta">
           <Icon name="settings" />

@@ -12,7 +12,7 @@ Diez fases. El estado real está en `PROGRESS.md`. Los criterios siguientes son 
 | 06 | Series, tendencias e incertidumbre | Completada para la SST del Caribe occidental |
 | 07 | Más capas, capacidades y volumen | Completada con matriz, sismos, Kp y una carga sintética |
 | 08 | Pronósticos y prueba histórica reproducible | Completada con Kp importado y un experimento de SST sin habilidad extra |
-| 09 | Asistente con herramientas | Pendiente |
+| 09 | Asistente con herramientas | Completada con herramientas; la inferencia de Qwen queda pendiente |
 | 10 | Pruebas, rendimiento, operación y entrega | Pendiente |
 
 ## Criterios por fase
