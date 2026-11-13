@@ -1,0 +1,18 @@
+{
+  "sources": {
+    "D02": {
+      "integration_status": "credential_required",
+      "sample_kind": "cmr_metadata",
+      "sample_path": "data/samples/d02-smap/cmr-granule.json",
+      "credential_variables": ["EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"],
+      "detail": "La búsqueda pública de CMR devolvió metadatos de un gránulo SPL3SMP_E. El HDF científico no se descargó: el enlace está protegido y CMR informa un archivo de cientos de megabytes. Earth Echo no sustituye ese faltante con el modo DEMO."
+    },
+    "D21": {
+      "integration_status": "sample_retrieved",
+      "sample_kind": "geojson_feature",
+      "sample_path": "data/samples/d21-usgs/event.geojson",
+      "credential_variables": [],
+      "detail": "Se guardó un GeoJSON público de un evento con limit=1. Es una muestra de viabilidad del contrato de observación, no una conexión operativa ni la fuente de humedad del suelo."
+    }
+  }
+}

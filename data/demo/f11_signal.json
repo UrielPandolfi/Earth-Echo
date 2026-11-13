@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "id": "demo-f11-humedad-suelo",
+  "data_mode": "demo",
+  "phenomenon_id": "F11",
+  "output_class": "diagnosis",
+  "title": "Déficit de humedad del suelo (demostración)",
+  "summary": "Anomalía sintética para ejercitar el contrato. No proviene de SMAP, de GLDAS ni de la imagen de referencia. No es un pronóstico ni una probabilidad.",
+  "variable_id": "V08",
+  "measurement": {
+    "status": "present",
+    "value": -0.04,
+    "unit": "m3/m3"
+  },
+  "spatial": {
+    "role": "region_anchor",
+    "region_id": "demo-amazonia-central",
+    "grid_id": null,
+    "extent": null,
+    "geometry": {
+      "type": "Point",
+      "coordinates": [-60.0, -3.0]
+    },
+    "vertical": null,
+    "resolution_note": "Ancla sintética de una región de demostración. No es el contorno de la Amazonia ni un punto medido."
+  },
+  "observed": {
+    "kind": "interval",
+    "start": "2024-11-01T00:00:00Z",
+    "end": "2024-12-01T00:00:00Z",
+    "bounds": "start_inclusive_end_exclusive"
+  },
+  "valid": null,
+  "issued_at": null,
+  "availability": {
+    "status": "unknown"
+  },
+  "ingested_at": "2026-11-13T05:00:00Z",
+  "quality": {
+    "flags": ["synthetic"],
+    "summary": "Valor inventado para la demostración. La unidad m3/m3 describe una anomalía sintética, no humedad absoluta medida."
+  },
+  "provenance": {
+    "source_ids": [],
+    "asset_ids": [],
+    "collection_id": null,
+    "product_version": null,
+    "license_url": null,
+    "native_unit": "m3/m3",
+    "retrieval": "demo_fixture",
+    "note": "Sin fuente conectada."
+  },
+  "capability_status": "specified",
+  "probability": {
+    "state": "absent",
+    "value": null,
+    "definition": null
+  }
+}

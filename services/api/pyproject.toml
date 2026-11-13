@@ -1,0 +1,31 @@
+[project]
+name = "earth-echo-api"
+version = "0.1.0"
+description = "API de Earth Echo"
+authors = [
+    { name = "UrielPandolfi", email = "urielpandolfi@gmail.com" },
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.162.5",
+    "jsonschema>=4.23",
+    "pydantic>=2.14",
+    "uvicorn>=0.54",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28",
+    "httpx2>=2.16.0",
+    "pytest>=8.3",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "earth_echo"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

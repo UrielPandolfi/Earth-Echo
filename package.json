@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "earth-echo",
+  "scripts": {
+    "dev:web": "npm --prefix apps/web run dev",
+    "dev:api": "uv run --directory services/api uvicorn earth_echo.main:app --host 0.0.0.0 --port 8000",
+    "test:api": "uv run --directory services/api pytest",
+    "test:web": "npm --prefix apps/web test",
+    "typecheck": "npm --prefix apps/web run typecheck",
+    "build:web": "npm --prefix apps/web run build",
+    "contracts:check": "uv run --directory services/api python -m earth_echo.contracts.schema_export --check"
+  }
+}

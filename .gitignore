@@ -1,0 +1,37 @@
+# Dependencias y entornos
+node_modules/
+.venv/
+venv/
+
+# Build y cachés
+dist/
+dist-ssr/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.vite/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+
+# Datos pesados que no forman parte de la fase
+*.h5
+*.nc
+*.grib
+*.grib2
+*.tif
+*.tiff
+*.grb
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.local

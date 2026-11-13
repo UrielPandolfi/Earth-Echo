@@ -1,0 +1,15 @@
+{
+  "source_id": "D02",
+  "retrieved_at": "2026-11-13T05:29:03Z",
+  "request_url": "https://cmr.earthdata.nasa.gov/search/granules.json?short_name=SPL3SMP_E&page_size=1&sort_key=-start_date",
+  "http_status": 200,
+  "content_type": "application/json;charset=utf-8",
+  "sha256": "d6de1a5fd003e6a5a9776d7361c6abb5d5c31711378115d82f3215c18e0d3cdd",
+  "byte_size": 4719,
+  "science_file_retrieved": false,
+  "credential_variables": [
+    "EARTHDATA_USERNAME",
+    "EARTHDATA_PASSWORD"
+  ],
+  "note": "Metadatos públicos de un gránulo SPL3SMP_E. El HDF científico no se descargó."
+}

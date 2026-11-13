@@ -1,0 +1,1469 @@
+{
+  "project": "Earth Echo",
+  "version": "1.0",
+  "reviewed_on": "2026-11-12",
+  "language": "es-AR",
+  "purpose": "Especificación de datos y métodos candidatos. No es un motor predictivo operativo.",
+  "all_modules_implemented": false,
+  "all_sources_ingestion_verified": false,
+  "evidence_levels": [
+    "Documentación consultada",
+    "HTTP JSON de muestra comprobado",
+    "Ingestión completa pendiente",
+    "Modelo propio sin validar"
+  ],
+  "sources": [
+    {
+      "id": "D01",
+      "name": "NASA GPM IMERG",
+      "url": "https://gpm.nasa.gov/data/imerg",
+      "variables": "Tasa y acumulación de precipitación. Elegir producto y unidad nativa antes de convertir a mm por intervalo.",
+      "coverage": "Malla global de 0,1 grados del producto actual. La calidad cambia con latitud, nieve, relieve y disponibilidad de observaciones.",
+      "cadence": "Intervalos de 30 minutos. Early Run tiene latencia nominal de unas 4 horas. Late y Final priorizan otras necesidades; Final no es tiempo real.",
+      "access": "Earthdata o PPS según distribución. HTTPS y formatos científicos; el directorio ofrece derivados GeoTIFF. Registrar colección y versión.",
+      "limits": "Es precipitación estimada, no futura. Las diferencias entre Early y Final importan en pruebas históricas. No usar Final como si hubiese estado disponible ese día.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D02",
+      "name": "NASA SMAP SPL3SMP E",
+      "url": "https://nsidc.org/data/spl3smp_e",
+      "variables": "Humedad volumétrica superficial del suelo en m3/m3 y banderas de calidad.",
+      "coverage": "Malla EASE Grid de 9 km. Malla no equivale a resolución efectiva independiente. Recuperaciones inválidas en ciertas superficies y condiciones.",
+      "cadence": "Producto diario con cobertura dependiente de pasadas. Consultar fechas de cada gránulo y latencia efectiva.",
+      "access": "Cuenta Earthdata gratuita. Buscar por short name SPL3SMP_E en CMR y descargar el producto con earthaccess.",
+      "limits": "No observa directamente toda la zona radicular. Excluir suelo congelado, nieve, agua y recuperaciones rechazadas. No rellenar huecos como mediciones reales.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D03",
+      "name": "NASA GLDAS",
+      "url": "https://ldas.gsfc.nasa.gov/gldas/dataset",
+      "variables": "Humedad del suelo por capas, evapotranspiración, escorrentía, temperatura y forzantes. Revisar unidades de cada variable.",
+      "coverage": "Superficie terrestre modelada. GLDAS Noah 2.1 tiene producto de 0,25 grados; no representa parcelas ni sistemas urbanos.",
+      "cadence": "Campos de 3 horas y mensuales; 2.1 desde 2000. Producto principal y Early Product tienen disponibilidad diferente.",
+      "access": "GES DISC, Earthdata, descargas y subconjuntos. Giovanni sirve para explorar series. Fijar GLDAS_NOAH025_3H y versión.",
+      "limits": "Es salida de un modelo con observaciones asimiladas o forzantes, no una medición satelital directa. No combinar series 2.0 y 2.1 sin evaluar discontinuidades.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D04",
+      "name": "NASA MODIS MOD13Q1",
+      "url": "https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD13Q1/",
+      "variables": "NDVI, EVI y calidad. Aplicar escala y máscara del producto.",
+      "coverage": "Vegetación terrestre global en mosaicos de 250 m, sujeto a nubes y calidad.",
+      "cadence": "Compuestos de 16 días. La ventana del compuesto no es una observación instantánea ni una latencia.",
+      "access": "CMR y Earthdata con archivos HDF. Identificador MOD13Q1, colección 6.1 documentada.",
+      "limits": "Un cambio de verdor puede deberse a cosecha, estación, incendio o nubes. No prueba sequía, pérdida de rendimiento ni mortalidad por sí solo.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D05",
+      "name": "NASA MODIS MOD11A2",
+      "url": "https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD11A2/",
+      "variables": "Temperatura de superficie terrestre diurna y nocturna, emisividad y calidad. Kelvin y factor de escala según metadatos.",
+      "coverage": "Superficie terrestre global a 1 km en mosaicos.",
+      "cadence": "Promedios de 8 días. No es lectura continua ni reemplazo del termómetro a 2 m.",
+      "access": "Earthdata y LAADS. Archivos de la colección MOD11A2.",
+      "limits": "Contaminación por nubes y muestreo de cielo despejado. Temperatura de superficie y temperatura del aire tienen significados distintos.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D06",
+      "name": "NASA FIRMS",
+      "url": "https://firms.modaps.eosdis.nasa.gov/api/",
+      "variables": "Detecciones de anomalías térmicas o fuego activo, tiempo de adquisición, confianza y potencia radiativa según sensor.",
+      "coverage": "Cobertura mundial con MODIS y VIIRS. La detección depende del tamaño, nubes, humo y pasada.",
+      "cadence": "Productos globales NRT disponibles nominalmente dentro de 3 horas de la observación, no cada 3 horas sobre cada punto.",
+      "access": "API CSV con MAP_KEY gratuita y límites de transacciones. Consultar data_availability antes de pedir intervalos.",
+      "limits": "Detecta fuego o calor existente. Un punto no es el perímetro completo ni una predicción de ignición. Conservar identificador del sensor.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D07",
+      "name": "ECMWF Open Data",
+      "url": "https://www.ecmwf.int/en/forecasts/datasets/open-data",
+      "variables": "Temperatura, punto de rocío, viento, presión, precipitación, perfiles, CAPE y otros parámetros del subconjunto. Verificar códigos disponibles.",
+      "coverage": "Pronóstico atmosférico mundial. IFS publica mallas 0,25 y 0,1 grados según documentación vigente; no resuelve cada tormenta local.",
+      "cadence": "Ciclos y pasos según stream. Productos de alcance medio; guardar initialization time y forecast step.",
+      "access": "GRIB2 público con ecmwf-opendata. CC BY 4.0 y términos ECMWF. Existe archivo rodante corto; guardar las corridas usadas.",
+      "limits": "No todo parámetro de IFS está en el subconjunto abierto. Productos históricos, ensembles y servicios de entrega deben revisarse por separado.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D08",
+      "name": "ERA5 histórico",
+      "url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels",
+      "variables": "Temperatura a 2 m, viento, presión, precipitación, nieve y variables de superficie. Pedir niveles de presión aparte si hacen falta.",
+      "coverage": "Reanálisis mundial. Malla atmosférica publicada de 0,25 grados.",
+      "cadence": "Horario, desde 1940. Hay retraso de publicación y revisiones. No es pronóstico archivado.",
+      "access": "Cuenta CDS, aceptación de licencia del dataset y API CDS. Subconjuntos por área, fecha y variable.",
+      "limits": "Reconstruye el pasado usando información posterior. Sirve como referencia histórica; no demuestra qué se podía saber en tiempo real. La precipitación acumulada necesita tratamiento temporal correcto.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D09",
+      "name": "C3S pronóstico estacional",
+      "url": "https://cds.climate.copernicus.eu/datasets/seasonal-original-single-levels",
+      "variables": "Ensembles de precipitación, temperatura y variables oceánicas o atmosféricas según centro y colección.",
+      "coverage": "Mallas mundiales con habilidad desigual según región, estación, variable y horizonte.",
+      "cadence": "Corridas estacionales. Revisar centros, meses de inicialización, horizonte y reforecasts disponibles.",
+      "access": "CDS API con cuenta y términos aceptados. Conservar centro, sistema, versión, miembro y fecha de corrida.",
+      "limits": "Predice distribuciones estacionales. No permite afirmar qué día lloverá dentro de seis meses. Calibrar contra reforecasts compatibles.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D10",
+      "name": "Copernicus GloFAS",
+      "url": "https://global-flood.emergency.copernicus.eu/general-information/about-glofas",
+      "variables": "Caudal de ríos y pronósticos hidrológicos probabilísticos. Unidades de caudal m3/s; umbrales según producto.",
+      "coverage": "Red fluvial global modelada. Cobertura útil condicionada por tamaño de cuenca, regulación y calidad local.",
+      "cadence": "Productos operativos y perspectivas a distintos plazos. Elegir una versión y confirmar frecuencia y plazo en el catálogo actual.",
+      "access": "Productos cems-glofas-historical, cems-glofas-forecast y cems-glofas-reforecast a resolver en CDS y documentación CEMS.",
+      "limits": "No es un pronóstico global de inundación urbana, costera ni de toda inundación repentina. Caudal alto no da automáticamente profundidad de agua sobre una calle.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D11",
+      "name": "Copernicus GWIS",
+      "url": "https://gwis.jrc.ec.europa.eu/applications/data-and-services",
+      "variables": "Fire Weather Index y componentes de peligro meteorológico de incendio, además de capas de combustibles según servicio.",
+      "coverage": "Productos globales de peligro. La aplicabilidad depende del ecosistema y combustible.",
+      "cadence": "Pronóstico de peligro hasta 10 días en el sistema documentado. Históricos y reanálisis por vías diferentes.",
+      "access": "Portal GWIS y documentación CEMS Fire Data access. Confirmar exportación, licencia y acceso del campo numérico elegido.",
+      "limits": "FWI no es probabilidad calibrada de que comience un incendio. Un servicio de mapas puede no permitir descargar toda la serie analítica.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D12",
+      "name": "CAMS composición atmosférica",
+      "url": "https://ads.atmosphere.copernicus.eu/datasets/cams-global-atmospheric-composition-forecasts",
+      "variables": "Aerosoles, polvo, PM y gases según variable. Distinguir concentración superficial de cantidad integrada en columna.",
+      "coverage": "Modelos mundiales. Documentación ADS describe malla regular 0,4 grados; comprobar versión seleccionada.",
+      "cadence": "Dos corridas diarias con pronósticos de cinco días. Archivo operativo distinto del reanálisis de larga duración.",
+      "access": "ADS API y cuenta con licencia aceptada. Solicitar unidades y niveles correctos.",
+      "limits": "No reproduce exposición individual ni diferencias por calle. La conversión a índice de calidad del aire exige norma y ventana de promediado explícitas.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D13",
+      "name": "NOAA OISST",
+      "url": "https://www.ncei.noaa.gov/products/optimum-interpolation-sst",
+      "variables": "Temperatura de superficie del mar y variables auxiliares del producto. Grados Celsius según metadatos.",
+      "coverage": "Grilla oceánica mundial de 0,25 grados construida con satélites y mediciones in situ.",
+      "cadence": "Diario desde septiembre de 1981, con publicación y revisiones propias.",
+      "access": "NCEI y servidores NOAA enlazados en la ficha; archivos NetCDF.",
+      "limits": "Campo interpolado y suavizado. No resuelve todos los estuarios, arrecifes ni cambios subsuperficiales.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D14",
+      "name": "Copernicus Marine física oceánica",
+      "url": "https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description",
+      "variables": "Temperatura, salinidad, corrientes, nivel del mar y otras variables por profundidad.",
+      "coverage": "Océano global a 1/12 de grado nominal. Estuarios y costa requieren productos regionales más detallados.",
+      "cadence": "Pronóstico de 10 días actualizado diariamente según ficha. Ventana operativa móvil; los reanálisis son otros productos.",
+      "access": "Copernicus Marine Toolbox, CLI o Python API. Revisar cuenta, versión y licencia del producto.",
+      "limits": "No convertir nivel marino modelado en inundación costera sin mareas, datum, batimetría y elevación local compatibles.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D15",
+      "name": "NOAA Coral Reef Watch",
+      "url": "https://coralreefwatch.noaa.gov/product/5km/index.php",
+      "variables": "SST, anomalías, HotSpot, Degree Heating Weeks y Bleaching Alert Area. DHW integra estrés térmico.",
+      "coverage": "Monitoreo oceánico global a 5 km; enfocar arrecifes y controles de calidad.",
+      "cadence": "Monitoreo diario y producto separado Four Month Coral Bleaching Outlook. Resolución y frecuencia del outlook son propias.",
+      "access": "NetCDF vía HTTP y servidores indicados. Metodología y catálogo de pronósticos disponibles en el portal.",
+      "limits": "Estrés térmico y riesgo de blanqueamiento no confirman daño biológico observado. No asignar automáticamente los 5 km al pronóstico de cuatro meses.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D16",
+      "name": "NOAA pronóstico de olas de calor marinas",
+      "url": "https://psl.noaa.gov/marine-heatwaves/",
+      "variables": "Diagnóstico oceánico y perspectivas probabilísticas basadas en NMME y CFSv2.",
+      "coverage": "Perspectiva mundial con habilidad dependiente de región, estación y estado climático.",
+      "cadence": "Estacional. Confirmar última emisión y disponibilidad del archivo numérico; no asumir API estable por existir un gráfico.",
+      "access": "Portal NOAA PSL y documentación científica. Para ingestión masiva, resolver enlace de datos y permiso vigente.",
+      "limits": "En esta especificación está verificado el producto público, no la automatización del archivo numérico. Alternativa: desarrollar y validar un modelo con D09 y D13.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D17",
+      "name": "NASA Ocean Color",
+      "url": "https://oceandata.sci.gsfc.nasa.gov/",
+      "variables": "Clorofila a en mg/m3 y reflectancias, además de banderas de calidad según sensor.",
+      "coverage": "Observaciones amplias del océano. Hay huecos por nubes, hielo, geometría y condiciones ópticas costeras.",
+      "cadence": "Productos por órbita y compuestos de varios intervalos; elegir colección y fecha efectiva de disponibilidad.",
+      "access": "OB DAAC y Earthdata, descargas de Level 2 y Level 3 con NetCDF según producto.",
+      "limits": "Clorofila alta no identifica una especie tóxica ni una toxina. El agua turbia costera puede sesgar las recuperaciones.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D18",
+      "name": "NOAA pronósticos ecológicos regionales",
+      "url": "https://oceanservice.noaa.gov/ecoforecasting/",
+      "variables": "Productos regionales de algas nocivas, hipoxia y condiciones favorables para patógenos costeros.",
+      "coverage": "Regiones específicas, principalmente de Estados Unidos. No equivale a un servicio mundial completo.",
+      "cadence": "Depende del sistema: boletines, productos de corto plazo y perspectivas estacionales.",
+      "access": "Resolver datos o servicio de cada programa desde el portal. Un boletín público no garantiza API numérica.",
+      "limits": "La extrapolación mundial exige observaciones y calibración nuevas. No inferir toxicidad o enfermedad humana desde temperatura del agua.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D19",
+      "name": "FAO Locust Watch y Locust Hub",
+      "url": "https://www.fao.org/locust-watch/activities/dlis-home/early-warning/en",
+      "variables": "Observaciones de langosta del desierto, reproducción, lluvia, vegetación y trayectorias de viento.",
+      "coverage": "Área biogeográfica de la langosta del desierto y países vigilados. No cubre todas las plagas del mundo.",
+      "cadence": "Boletines y observaciones con frecuencia propia. Revisar fecha y esfuerzo de muestreo.",
+      "access": "Portal y https://locust-hub-hqfao.hub.arcgis.com/ para explorar capas. Confirmar metadatos, exportación y términos de cada capa.",
+      "limits": "Un satélite no cuenta directamente las langostas. Ausencia de observaciones de campo no prueba ausencia de plaga.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D20",
+      "name": "FAO ASIS",
+      "url": "https://www.fao.org/giews/earthobservation/access.jsp",
+      "variables": "Indicadores de estrés agrícola, vegetación y condiciones de sequedad ya procesados.",
+      "coverage": "Rásteres globales de 1 km indicados en el portal; interpretar por calendario y máscara agrícola.",
+      "cadence": "Histórico desde 1984 según portal; frecuencia y ventana según indicador.",
+      "access": "Image services y recursos de acceso publicados por FAO; revisar licencia y capacidad de descarga por capa.",
+      "limits": "Indicador de estrés no equivale a toneladas de cosecha perdidas. El rendimiento necesita estadísticas de producción y prácticas agrícolas.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D21",
+      "name": "USGS ComCat y FDSN",
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/",
+      "variables": "Eventos sísmicos, magnitud, profundidad, hora, coordenadas, calidad y revisiones.",
+      "coverage": "Catálogo mundial con capacidad de detección desigual. Los sismos pequeños faltan en muchas regiones.",
+      "cadence": "Feeds recientes y consultas históricas. La información cambia al revisarse los eventos.",
+      "access": "API FDSN GET, GeoJSON y otros formatos sin clave para consultas públicas. Para mapa reciente, usar feeds recomendados.",
+      "limits": "Un catálogo de sismos no permite predecir el próximo terremoto. Guardar versión y completitud de la secuencia.",
+      "verification": "Documentación consultada y una petición HTTP pública con JSON válido comprobada. Sin validar el modelo ni el flujo completo."
+    },
+    {
+      "id": "D22",
+      "name": "USGS pronóstico de réplicas",
+      "url": "https://earthquake.usgs.gov/data/oaf/overview.php",
+      "variables": "Probabilidades de réplicas por umbral de magnitud y ventana temporal.",
+      "coverage": "Eventos y regiones para los que USGS publica el producto. No prometer un pronóstico para cada sismo mundial.",
+      "cadence": "Actualizaciones después del evento principal y ventanas temporales propias.",
+      "access": "Productos enlazados a las páginas de eventos de USGS. Confirmar formato y vínculo de cada producto.",
+      "limits": "Si se implementa un modelo propio en otras regiones, se necesita calibración tectónica y estimar el umbral de completitud.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D23",
+      "name": "Smithsonian Global Volcanism Program",
+      "url": "https://volcano.si.edu/database/webservices.cfm",
+      "variables": "Ubicación de volcanes, características e historial de erupciones.",
+      "coverage": "Catálogo mundial conocido. No es una red mundial homogénea de sensores en tiempo real.",
+      "cadence": "Actualizaciones de base e informes de actividad. No inferir frecuencia continua del catálogo.",
+      "access": "WFS con GetCapabilities y GetFeature. Exporta CSV, GML, GeoJSON, KML y Shapefile. Respetar cita y términos Smithsonian.",
+      "limits": "No incluye todos los datos locales necesarios de gases, deformación y sismicidad para pronosticar una erupción.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D24",
+      "name": "NASA LHASA",
+      "url": "https://gpm.nasa.gov/applications/landslides",
+      "variables": "Peligro de deslizamientos por lluvia con precipitación, humedad antecedente y susceptibilidad del terreno.",
+      "coverage": "Cobertura global nominal del modelo, con máscaras y desempeño regional propios.",
+      "cadence": "Nowcasts y otros productos según versión. Confirmar si la capa concreta es diagnóstico actual o pronóstico futuro.",
+      "access": "Acceso enlazado a NASA Landslides y GPM Viewer. Revisar archivos y servicios disponibles de la versión elegida.",
+      "limits": "No predice el colapso de cada ladera ni sustituye sensores geotécnicos locales. El inventario de eventos tiene sesgo de reporte.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D25",
+      "name": "Copernicus Data Space",
+      "url": "https://documentation.dataspace.copernicus.eu/APIs.html",
+      "variables": "Sentinel 1 SAR para cambios y deformación; Sentinel 2 óptico para agua y vegetación; Sentinel 5P para gases según producto.",
+      "coverage": "Misiones de alcance amplio. Adquisición, resolución, nubes, bandas y geometría varían por misión y lugar.",
+      "cadence": "Por pasada y procesamiento. Revisar hora de adquisición y publicación de cada escena.",
+      "access": "Catálogos STAC y OData. Descargas y procesamiento pueden requerir cuenta, token y cuotas. Usar documentación actual.",
+      "limits": "InSAR necesita series SLC compatibles y correcciones. Una imagen SAR no es una medición directa de deformación. SO2 atmosférico no reemplaza el flujo de gas medido en un volcán.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D26",
+      "name": "Randolph Glacier Inventory",
+      "url": "https://rgidata.org/",
+      "variables": "Contornos de glaciares e identificadores de inventario.",
+      "coverage": "Inventario mundial de glaciares fuera de las grandes capas de hielo, según versión.",
+      "cadence": "Versiones de inventario, sin actualización continua. Cada geometría representa una época.",
+      "access": "Archivos y documentación RGI; GLIMS ofrece información complementaria por fecha.",
+      "limits": "No incluye nivel de cada lago, estabilidad de cada dique ni disparadores de una rotura. Es una capa de contexto.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D27",
+      "name": "NOAA Tsunami Warning Centers",
+      "url": "https://www.tsunami.gov/?page=productRetrieval",
+      "variables": "Mensajes de tsunami, regiones afectadas y tiempos previstos cuando están disponibles.",
+      "coverage": "Ámbitos de responsabilidad de los centros emisores. Para cobertura mundial hay que sumar otros centros autorizados.",
+      "cadence": "Por evento, con actualizaciones y cancelaciones.",
+      "access": "Atom y CAP XML publicados. Leer emisor, estado, validez, zona y mensaje de cancelación.",
+      "limits": "La alerta suele comenzar después de detectarse la fuente. No predice el terremoto. La demora de difusión puede importar en costas cercanas.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D28",
+      "name": "NOAA SWPC",
+      "url": "https://www.swpc.noaa.gov/content/data-access",
+      "variables": "Viento solar, campo magnético, índices geomagnéticos, avisos y productos de modelo.",
+      "coverage": "Entorno espacial de la Tierra. Productos globales y regionales como aurora tienen geometrías distintas.",
+      "cadence": "Observaciones y productos con cadencias propias. Hay JSON recientes y archivos de corta retención.",
+      "access": "Servicios públicos https://services.swpc.noaa.gov/json/ y /products/. Registrar esquema y producto.",
+      "limits": "Una señal solar no determina exactamente la intensidad terrestre. Las previsiones dependen de trayectoria, orientación magnética y actualización del viento solar.",
+      "verification": "Documentación consultada y una petición HTTP pública con JSON válido comprobada. Sin validar el modelo ni el flujo completo."
+    },
+    {
+      "id": "D29",
+      "name": "NASA JPL CNEOS",
+      "url": "https://ssd-api.jpl.nasa.gov/doc/index.php",
+      "variables": "Scout para objetos recién observados; Sentry para evaluación de posibles impactos. Probabilidades y órbitas con incertidumbre.",
+      "coverage": "Objetos descubiertos y modelados. No cubre cuerpos que todavía no se detectaron.",
+      "cadence": "Actualiza según nuevas observaciones. Cada solución puede cambiar o eliminar un riesgo anterior.",
+      "access": "JSON en scout.api y sentry.api, con documentación específica. JPL pide una sola petición a la vez y uso moderado con caché.",
+      "limits": "Acercamiento no significa impacto. Conservar fecha de solución y unidad. La documentación de cada API prevalece sobre supuestos de una clave NASA genérica.",
+      "verification": "Documentación consultada y una petición HTTP pública con JSON válido comprobada. Sin validar el modelo ni el flujo completo."
+    },
+    {
+      "id": "D30",
+      "name": "Copernicus DEM",
+      "url": "https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM",
+      "variables": "Elevación y productos auxiliares del modelo digital de superficie.",
+      "coverage": "Instancias globales GLO 30 y GLO 90 con condiciones del producto. Resolución no es exactitud vertical.",
+      "cadence": "Producto estático por edición, sin cadencia meteorológica.",
+      "access": "Copernicus Data Space y distribuidores documentados. Seleccionar instancia libre y conservar licencia y atribución.",
+      "limits": "Es DSM, incluye vegetación y construcciones. No sustituye un modelo de terreno urbano o una topografía hidráulica de alta precisión.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D31",
+      "name": "GEBCO",
+      "url": "https://www.gebco.net/data-products/gridded-bathymetry-data",
+      "variables": "Elevación y profundidad oceánica en metros; Type Identifier Grid describe origen del dato.",
+      "coverage": "Malla mundial de 15 segundos de arco en la edición consultada, con detalle real desigual.",
+      "cadence": "Ediciones, sin actualización de nivel del mar en tiempo real.",
+      "access": "Descarga global y subconjuntos desde el portal GEBCO. NetCDF y opciones de distribución documentadas.",
+      "limits": "Gran parte de la profundidad se estima o interpola. No es suficiente para resolver inundación en cada puerto. Revisar datum y licencia de la edición.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D32",
+      "name": "HydroATLAS",
+      "url": "https://www.hydrosheds.org/hydroatlas",
+      "variables": "Cuencas, tramos de río, lagos y atributos hidroambientales.",
+      "coverage": "Compendio global, con restricciones y calidad propias de la versión base.",
+      "cadence": "Ediciones estáticas. No son caudales ni niveles actuales.",
+      "access": "Descargas BasinATLAS, RiverATLAS y LakeATLAS, con licencia de cada producto.",
+      "limits": "Un atributo estático no describe cambios recientes de cauce, obras, diques o drenaje urbano.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D33",
+      "name": "NASA GRACE asimilado para sequía",
+      "url": "https://www.drought.gov/data-maps-tools/groundwater-and-soil-moisture-conditions-grace-data-assimilation",
+      "variables": "Percentiles de humedad superficial, zona radicular y agua subterránea derivados mediante asimilación.",
+      "coverage": "Producto global y productos regionales. La malla de salida no equivale a la resolución de observación de GRACE.",
+      "cadence": "Indicadores semanales. Forecasts disponibles deben verificarse por región; no asumir que la perspectiva estadounidense es mundial.",
+      "access": "Enlaces NASA y Drought.gov; colección global GRACEDADM_CLSM025GL_7D documentada. Revisar Earthdata y formato.",
+      "limits": "El satélite observa cambios integrados de masa. La estimación de agua subterránea depende de un modelo y no mide cada pozo.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D34",
+      "name": "RAPID AMOC",
+      "url": "https://rapid.ac.uk/data/data-download",
+      "variables": "Transporte meridional de la circulación atlántica en la sección observada, expresado habitualmente en Sverdrups.",
+      "coverage": "Red observacional en una sección del Atlántico, no mapa mundial completo de circulación.",
+      "cadence": "Series desde 2004 con versiones y retraso de publicación. Revisar cobertura exacta de la edición.",
+      "access": "Archivos de datos y README con DOI. Respetar atribución al proyecto y condiciones de uso.",
+      "limits": "Serie relativamente corta para inferir un punto de quiebre secular. No produce una fecha confiable de colapso.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D35",
+      "name": "GDACS",
+      "url": "https://www.gdacs.org/Documents/2025/GDACS_API_quickstart_v1.pdf",
+      "variables": "Eventos, geometrías y alertas de múltiples amenazas.",
+      "coverage": "Sistema global con criterios de inclusión propios y cobertura no exhaustiva.",
+      "cadence": "Actualización por evento. Interpretar fecha de emisión y estado.",
+      "access": "API documentada en https://www.gdacs.org/gdacsapi/swagger/index.html y feeds XML.",
+      "limits": "Integrar una alerta no equivale a haber predicho el evento. Puede haber estimaciones automáticas y revisiones; no es verdad de referencia completa.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D36",
+      "name": "NASA GIBS",
+      "url": "https://nasa-gibs.github.io/gibs-api-docs/access-basics/",
+      "variables": "Teselas visuales de capas de observación de la Tierra.",
+      "coverage": "Según capa y proyección; catálogo con fechas y resoluciones disponibles.",
+      "cadence": "Cadencia y demora propias de cada visualización.",
+      "access": "WMTS y servicios indicados en https://gibs.earthdata.nasa.gov. Leer capabilities y metadatos.",
+      "limits": "Los colores de un PNG no reemplazan el archivo científico. Usar para el globo y descargar valores analíticos por la ruta del dataset.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D37",
+      "name": "NASA earthaccess y CMR",
+      "url": "https://earthaccess.readthedocs.io/en/latest/api/",
+      "variables": "Metadatos de colecciones y gránulos y enlaces a archivos científicos.",
+      "coverage": "Catálogo de NASA Earthdata con múltiples proveedores. No todo dato ambiental del mundo está allí.",
+      "cadence": "Disponibilidad según colección. Consultar fechas y versiones.",
+      "access": "earthaccess para autenticación, búsqueda y descarga. CMR permite filtrar short_name, versión, área y tiempo.",
+      "limits": "CMR es descubrimiento, no predictor ni API universal de series. Revisar el proveedor y las credenciales del dato final.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D38",
+      "name": "Qwen documentación oficial",
+      "url": "https://github.com/QwenLM/Qwen3/blob/main/README.md",
+      "variables": "Modelo de lenguaje para consultas, clasificación de intención y explicaciones apoyadas en resultados.",
+      "coverage": "Sin cobertura científica propia. Depende de las herramientas y documentos que se le entregan.",
+      "cadence": "Versión de modelo fijada por el proyecto; nunca tratar la salida como sensor actualizado.",
+      "access": "Pesos abiertos y despliegue local documentado, por ejemplo mediante Ollama. Revisar licencia del checkpoint.",
+      "limits": "No valida causalidad ni fabrica probabilidades. La inferencia local evita tarifa de API pero consume hardware, energía y mantenimiento.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D39",
+      "name": "Validación temporal con scikit learn",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit",
+      "variables": "Particiones ordenadas en el tiempo y separación entre entrenamiento y evaluación.",
+      "coverage": "Método de evaluación, no fuente ambiental.",
+      "cadence": "Depende de la frecuencia del conjunto usado.",
+      "access": "Documentación y biblioteca de código abierto. El diseño también debe separar regiones y eventos correlacionados.",
+      "limits": "La división cronológica por sí sola no evita fuga por reanálisis, normalización global, ventanas solapadas o selección de casos.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D40",
+      "name": "NASA Space Apps Earth System Trend Detective",
+      "url": "https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/",
+      "variables": "Requisitos del desafío sobre variables ambientales, regiones, series y significancia de tendencias.",
+      "coverage": "Aplicación a variables y regiones elegidas por el equipo.",
+      "cadence": "Edición del desafío consultada para 2026.",
+      "access": "Página pública. El contenido se consultó también mediante indexación; el acceso directo tuvo fallas intermitentes.",
+      "limits": "La predicción multiamenaza es una ampliación del reto. Debe conservar selección de variables, visualización y análisis estadístico como funciones centrales.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D41",
+      "name": "C3S GTSM nivel costero histórico y escenarios",
+      "url": "https://cds.climate.copernicus.eu/datasets/sis-water-level-change-timeseries-cmip6",
+      "variables": "Series modeladas de mareas, marejada y nivel del mar con forzantes históricas y escenarios.",
+      "coverage": "Ubicaciones costeras globales según producto, no cada metro de costa.",
+      "cadence": "Series históricas y proyecciones del producto. No es un servicio de pronóstico meteorológico en vivo.",
+      "access": "CDS API con cuenta y licencia. Revisar coordenadas, datum, unidades y escenarios.",
+      "limits": "Una simulación hasta 2050 no predice la marejada de una fecha futura. Sirve para estudiar peligro y escenarios, o como referencia retrospectiva.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D42",
+      "name": "USGS señales precursoras volcánicas",
+      "url": "https://www.usgs.gov/faqs/how-can-we-tell-when-a-volcano-will-erupt",
+      "variables": "Fundamento de sismicidad, gases, deformación y calor como indicadores de actividad.",
+      "coverage": "Marco científico para volcanes vigilados, con comportamiento distinto en cada sistema.",
+      "cadence": "Señales pueden durar semanas o años y terminar sin erupción.",
+      "access": "Explicación pública; las series operativas se buscan en el observatorio correspondiente.",
+      "limits": "Algunas erupciones ocurren con poca o ninguna advertencia. La presencia de precursores no determina la fecha ni el tamaño de una erupción.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D43",
+      "name": "USGS límites de predicción sísmica",
+      "url": "https://www.usgs.gov/faqs/can-you-predict-earthquakes",
+      "variables": "Diferencia entre predicción determinista y probabilidades de peligro sísmico.",
+      "coverage": "Límite científico general.",
+      "cadence": "No aplica como flujo de datos.",
+      "access": "Explicación pública de USGS.",
+      "limits": "No existe un método fiable para predecir fecha, lugar y magnitud de un terremoto individual. Alerta temprana detecta un evento ya iniciado.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D44",
+      "name": "Estudio de predictibilidad de calor marino",
+      "url": "https://repository.library.noaa.gov/view/noaa/45151",
+      "variables": "Evaluación retrospectiva de pronósticos estacionales de olas de calor marinas.",
+      "coverage": "Habilidad distinta por región, estación y modo climático.",
+      "cadence": "Analiza décadas de pronósticos retrospectivos; no constituye un sensor.",
+      "access": "Trabajo científico y datos asociados indicados por NOAA.",
+      "limits": "Resultados favorables en algunas condiciones no garantizan habilidad uniforme para todos los océanos ni todos los horizontes.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D45",
+      "name": "Estudio de sequía agrícola argentina",
+      "url": "https://hess.copernicus.org/articles/25/2475/2021/",
+      "variables": "Precipitación, humedad del suelo y rendimiento de cultivos con sus etapas sensibles.",
+      "coverage": "Región agrícola central argentina; no modelo mundial transferible sin evaluación.",
+      "cadence": "Análisis histórico de varias décadas.",
+      "access": "Artículo de investigación con métodos y fuentes de datos.",
+      "limits": "Relacionar indicadores con rendimiento requiere calendario y cultivo. No demuestra la precisión de un modelo que aún no construimos.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D46",
+      "name": "Met Office sobre AMOC",
+      "url": "https://weather.metoffice.gov.uk/learn-about/weather/oceans/amoc",
+      "variables": "Funcionamiento, observaciones e incertidumbre de cambios en la circulación atlántica.",
+      "coverage": "Atlántico y efectos climáticos relacionados.",
+      "cadence": "Cambios interanuales y de largo plazo; revisión científica.",
+      "access": "Información científica pública y referencias.",
+      "limits": "Separar debilitamiento, variabilidad y colapso. No convertir una señal estadística exploratoria en una fecha de colapso.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D47",
+      "name": "NOAA IBTrACS",
+      "url": "https://www.ncei.noaa.gov/products/international-best-track-archive",
+      "variables": "Trayectorias e intensidades históricas de ciclones tropicales de múltiples agencias.",
+      "coverage": "Compilación mundial con calidad y disponibilidad distintas según época y cuenca.",
+      "cadence": "Best tracks históricos y actualizaciones. Revisar versión y estados provisionales.",
+      "access": "Archivos públicos y formatos enlazados en NCEI. Conservar agencia y definición de viento.",
+      "limits": "No contiene todos los pronósticos emitidos originalmente. No reemplaza un archivo histórico de forecasts para validar anticipación.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    },
+    {
+      "id": "D48",
+      "name": "NOAA CPC ENSO",
+      "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
+      "variables": "Diagnóstico y perspectivas probabilísticas de ENSO con explicación del estado oceánico y atmosférico.",
+      "coverage": "Índice climático del Pacífico y efectos potenciales regionales.",
+      "cadence": "Boletines y productos con fechas propias. Archivar cada emisión.",
+      "access": "Página y recursos asociados NOAA. Confirmar archivo numérico y criterio del índice vigente antes de automatizar.",
+      "limits": "Una probabilidad de fase no es probabilidad de inundación local. Las asociaciones climáticas admiten excepciones y requieren validación regional.",
+      "verification": "Documentación pública consultada el 12 de noviembre de 2026. Ingestión pendiente."
+    }
+  ],
+  "variables": [
+    {
+      "id": "V01",
+      "name": "Precipitación",
+      "units": "mm por intervalo o mm/h",
+      "source_ids": [
+        "D01",
+        "D07",
+        "D08"
+      ],
+      "source_notes": "D01 D07 D08",
+      "processing_notes": "Conservar duración. No sumar tasas sin integrar tiempo. Los acumulados de forecast pueden reiniciarse con cada corrida."
+    },
+    {
+      "id": "V02",
+      "name": "Temperatura del aire a 2 m",
+      "units": "K nativo y grados C canónicos",
+      "source_ids": [
+        "D07",
+        "D08"
+      ],
+      "source_notes": "D07 D08",
+      "processing_notes": "Separar temperatura instantánea, mínima, máxima y promedio. Convertir Kelvin restando 273,15."
+    },
+    {
+      "id": "V03",
+      "name": "Humedad y punto de rocío",
+      "units": "Porcentaje o K según campo",
+      "source_ids": [
+        "D07",
+        "D08"
+      ],
+      "source_notes": "D07 D08",
+      "processing_notes": "La humedad relativa puede derivarse de temperatura y rocío con una fórmula documentada. Nunca mezclar humedad específica y relativa."
+    },
+    {
+      "id": "V04",
+      "name": "Viento y ráfaga",
+      "units": "m/s y dirección derivada",
+      "source_ids": [
+        "D07",
+        "D08"
+      ],
+      "source_notes": "D07 D08",
+      "processing_notes": "Conservar componentes u y v y altura. Viento medio y ráfaga no son intercambiables."
+    },
+    {
+      "id": "V05",
+      "name": "Presión atmosférica",
+      "units": "Pa o hPa",
+      "source_ids": [
+        "D07",
+        "D08"
+      ],
+      "source_notes": "D07 D08",
+      "processing_notes": "Distinguir presión superficial y reducida al nivel del mar. Para pasar de Pa a hPa, dividir por 100."
+    },
+    {
+      "id": "V06",
+      "name": "Perfiles verticales",
+      "units": "K, m/s y humedad por nivel",
+      "source_ids": [
+        "D07"
+      ],
+      "source_notes": "D07",
+      "processing_notes": "Niveles y parámetros dependen del subconjunto abierto. El perfil de presión no incluye automáticamente el detalle de una tormenta."
+    },
+    {
+      "id": "V07",
+      "name": "CAPE y cizalladura",
+      "units": "J/kg y m/s",
+      "source_ids": [
+        "D07"
+      ],
+      "source_notes": "D07",
+      "processing_notes": "CAPE mide energía potencial convectiva. La cizalladura requiere definir las alturas. Son condiciones favorables, no confirmación de tornado."
+    },
+    {
+      "id": "V08",
+      "name": "Humedad superficial del suelo",
+      "units": "m3/m3",
+      "source_ids": [
+        "D02"
+      ],
+      "source_notes": "D02",
+      "processing_notes": "Aplicar banderas de calidad y máscara. No comparar directamente una recuperación superficial con agua total de dos metros de suelo."
+    },
+    {
+      "id": "V09",
+      "name": "Agua en capas del suelo",
+      "units": "kg/m2 o unidad del producto",
+      "source_ids": [
+        "D03"
+      ],
+      "source_notes": "D03",
+      "processing_notes": "Para convertir almacenamiento a humedad volumétrica hacen falta espesor y densidad del agua. Fijar capa y método."
+    },
+    {
+      "id": "V10",
+      "name": "Evapotranspiración y escorrentía",
+      "units": "Tasa o acumulado según producto",
+      "source_ids": [
+        "D03",
+        "D08"
+      ],
+      "source_notes": "D03 D08",
+      "processing_notes": "Revisar signo, acumulación y unidad. Una tasa de flujo de agua necesita integración temporal."
+    },
+    {
+      "id": "V11",
+      "name": "NDVI y EVI",
+      "units": "Adimensional con escala",
+      "source_ids": [
+        "D04"
+      ],
+      "source_notes": "D04",
+      "processing_notes": "Aplicar factor de escala y QA. El compuesto de 16 días no debe tratarse como 16 observaciones diarias independientes."
+    },
+    {
+      "id": "V12",
+      "name": "Temperatura de superficie",
+      "units": "K o grados C",
+      "source_ids": [
+        "D05"
+      ],
+      "source_notes": "D05",
+      "processing_notes": "Diferenciar de aire a 2 m. Registrar día, noche, cielo despejado y ventana del compuesto."
+    },
+    {
+      "id": "V13",
+      "name": "Peligro meteorológico de fuego",
+      "units": "FWI y componentes",
+      "source_ids": [
+        "D11"
+      ],
+      "source_notes": "D11",
+      "processing_notes": "Un índice de peligro no es porcentaje de ignición. Conservar la definición del sistema y región de calibración."
+    },
+    {
+      "id": "V14",
+      "name": "Caudal y almacenamiento",
+      "units": "m3/s y m3",
+      "source_ids": [
+        "D10",
+        "D33"
+      ],
+      "source_notes": "D10 D33 y registros locales",
+      "processing_notes": "Caudal no es profundidad de inundación. Almacenamiento modelado y volumen observado de embalse requieren modelos de datos distintos."
+    },
+    {
+      "id": "V15",
+      "name": "SST y calor acumulado",
+      "units": "Grados C y grados C semana",
+      "source_ids": [
+        "D13",
+        "D15"
+      ],
+      "source_notes": "D13 D15",
+      "processing_notes": "SST es temperatura superficial del mar. DHW integra estrés térmico con metodología propia, sin equivalencia directa con daño confirmado."
+    },
+    {
+      "id": "V16",
+      "name": "Temperatura salinidad y corrientes",
+      "units": "Unidad del NetCDF y m/s",
+      "source_ids": [
+        "D14"
+      ],
+      "source_notes": "D14",
+      "processing_notes": "Elegir profundidad y tiempo. No asumir salinidad en una unidad sin leer standard_name y units."
+    },
+    {
+      "id": "V17",
+      "name": "Clorofila y reflectancia",
+      "units": "mg/m3 y unidad óptica",
+      "source_ids": [
+        "D17"
+      ],
+      "source_notes": "D17",
+      "processing_notes": "Controlar nubes, hielo y agua turbia. Clorofila no identifica automáticamente toxina ni especie."
+    },
+    {
+      "id": "V18",
+      "name": "Oxígeno nutrientes y microbiología",
+      "units": "Unidades del laboratorio o producto",
+      "source_ids": [
+        "D18"
+      ],
+      "source_notes": "D18 y proveedor regional pendiente",
+      "processing_notes": "Faltan series globales suficientes en esta especificación. Seleccionar producto biogeoquímico y muestras antes de habilitar estos predictores."
+    },
+    {
+      "id": "V19",
+      "name": "Partículas y gases atmosféricos",
+      "units": "Concentración o carga de columna",
+      "source_ids": [
+        "D12"
+      ],
+      "source_notes": "D12",
+      "processing_notes": "Nivel superficial, columna y promedio temporal son diferentes. Convertir a microgramos/m3 solo cuando la definición lo permita."
+    },
+    {
+      "id": "V20",
+      "name": "Evento sísmico",
+      "units": "Magnitud profundidad tiempo y posición",
+      "source_ids": [
+        "D21"
+      ],
+      "source_notes": "D21",
+      "processing_notes": "Magnitudes de distintas escalas no se mezclan sin criterio. Guardar revisiones, estado y umbral de detección."
+    },
+    {
+      "id": "V21",
+      "name": "Deformación y gases volcánicos",
+      "units": "Desplazamiento y flujo según sensor",
+      "source_ids": [
+        "D25"
+      ],
+      "source_notes": "D25 y observatorio pendiente",
+      "processing_notes": "InSAR observa desplazamiento en línea de visión tras procesamiento. Columna de SO2 satelital y flujo de gas local no son equivalentes."
+    },
+    {
+      "id": "V22",
+      "name": "Geometría y nivel de lagos",
+      "units": "m2 y m con datum",
+      "source_ids": [
+        "D25",
+        "D26",
+        "D30"
+      ],
+      "source_notes": "D25 D26 D30 y sensores pendientes",
+      "processing_notes": "Área observada no determina estabilidad del dique. Registrar fecha del contorno y procedencia del nivel."
+    },
+    {
+      "id": "V23",
+      "name": "Elevación y batimetría",
+      "units": "m con datum",
+      "source_ids": [
+        "D30",
+        "D31"
+      ],
+      "source_notes": "D30 D31",
+      "processing_notes": "Comprobar datum vertical, resolución y tipo de superficie. No mezclar alturas relativas y absolutas."
+    },
+    {
+      "id": "V24",
+      "name": "Viento solar e índices geomagnéticos",
+      "units": "km/s nT e índice definido",
+      "source_ids": [
+        "D28"
+      ],
+      "source_notes": "D28",
+      "processing_notes": "Conservar unidades y ventana de cada feed. Un índice previsto y uno observado deben almacenarse en clases distintas."
+    },
+    {
+      "id": "V25",
+      "name": "Solución orbital y riesgo de impacto",
+      "units": "Época probabilidad y parámetros",
+      "source_ids": [
+        "D29"
+      ],
+      "source_notes": "D29",
+      "processing_notes": "Conservar unidades y significado de cada campo de API. Un encuentro cercano no constituye un impacto previsto."
+    },
+    {
+      "id": "V26",
+      "name": "Transporte de la AMOC",
+      "units": "Sverdrup según serie",
+      "source_ids": [
+        "D34"
+      ],
+      "source_notes": "D34",
+      "processing_notes": "Un Sverdrup representa un millón de m3/s. La sección RAPID no es una observación continua de todo el Atlántico."
+    }
+  ],
+  "modules": [
+    {
+      "id": "F01",
+      "name": "Lluvias extremas",
+      "family": "Atmósfera",
+      "global_scope": "Global aproximado",
+      "output_type": "Pronóstico importado y diagnóstico propio",
+      "required_inputs": "D01: lluvia reciente en mm y mm/h. D07: precipitación futura y miembros disponibles. D08: climatología por estación. Radar y pluviómetros locales para detalle.",
+      "proposed_method": "Detectar acumulados o intensidades que excedan percentiles locales. Para futuro, usar precipitación pronosticada y, si hay ensemble, proporción de miembros sobre el umbral. Corregir sesgos por región antes de llamarla probabilidad calibrada.",
+      "horizon": "Horas a varios días; detalle local decrece con el plazo.",
+      "missing_or_local_data": "IMERG llega con demora y no resuelve cada tormenta urbana. Sin radar mundial homogéneo, mostrar una zona de riesgo y resolución explícita.",
+      "validation": "Comparar con pluviómetros y estimaciones independientes. Medir Brier, precisión y exhaustividad por evento, plazo y región; tolerancia espacial para tormentas desplazadas.",
+      "source_ids": [
+        "D01",
+        "D07",
+        "D08"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F02",
+      "name": "Olas de calor",
+      "family": "Atmósfera",
+      "global_scope": "Global aproximado",
+      "output_type": "Pronóstico y anomalía",
+      "required_inputs": "D07: temperatura a 2 m y humedad o punto de rocío. D08: extremos diarios por época. D09: perspectivas estacionales opcionales.",
+      "proposed_method": "Definir duración y umbral local antes de evaluar. Calcular días consecutivos por encima del umbral térmico y agregar incertidumbre del ensemble. Una ola de calor ambiental no equivale automáticamente a impacto sanitario.",
+      "horizon": "Días; semanas o meses para anomalías regionales probabilísticas.",
+      "missing_or_local_data": "Las ciudades, interiores y exposición humana requieren datos adicionales. Temperatura MODIS de superficie no sustituye temperatura del aire.",
+      "validation": "Verificar temperatura, inicio, duración y eventos fallidos contra estaciones. Comparar con climatología y persistencia; calibrar por estación del año.",
+      "source_ids": [
+        "D07",
+        "D08",
+        "D09",
+        "D05"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F03",
+      "name": "Olas de frío y heladas",
+      "family": "Atmósfera",
+      "global_scope": "Global aproximado",
+      "output_type": "Pronóstico de condiciones",
+      "required_inputs": "D07: temperatura mínima, viento, nubosidad y humedad. D08: distribución histórica. Estaciones de superficie y relieve fino si el objetivo es agrícola.",
+      "proposed_method": "Separar frío anómalo de temperatura bajo un umbral de helada. Calcular frecuencia de miembros que cruzan el umbral en una ventana. Ajustar elevación solo con un método validado.",
+      "horizon": "Días; el riesgo por lote tiene menor certeza.",
+      "missing_or_local_data": "Helada en cultivo depende de temperatura al nivel de la planta, duración y especie. La malla global no captura todas las inversiones de valle.",
+      "validation": "Evaluar mínimos, duración y falsas alertas contra estaciones o sensores agrícolas. Informar errores por altura y tipo de terreno.",
+      "source_ids": [
+        "D07",
+        "D08",
+        "D30"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F04",
+      "name": "Tormentas severas y granizo",
+      "family": "Atmósfera",
+      "global_scope": "Parcial para eventos locales",
+      "output_type": "Riesgo de ambiente favorable",
+      "required_inputs": "D07: perfiles de temperatura, humedad y viento, CAPE y cizalladura derivada. Radares, rayos y reportes locales para tormentas específicas.",
+      "proposed_method": "Crear un diagnóstico de ambiente convectivo y usar avisos autorizados donde existan. Para predecir granizo específico se necesita un sistema convectivo regional o modelo calibrado con observaciones.",
+      "horizon": "Horas a días para ambientes de riesgo; menor plazo para una celda concreta.",
+      "missing_or_local_data": "No hay una colección abierta homogénea mundial de radar y granizo identificada para este proyecto. CAPE alto no confirma tormenta ni granizo.",
+      "validation": "Validar contra radares y reportes con sesgo de cobertura conocido. Separar días sin tormenta, precipitación no severa y eventos severos.",
+      "source_ids": [
+        "D07",
+        "D08",
+        "D35"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F05",
+      "name": "Tornados",
+      "family": "Atmósfera",
+      "global_scope": "Regional",
+      "output_type": "Avisos importados o riesgo ambiental",
+      "required_inputs": "Perfiles atmosféricos de D07 para contexto. Radar Doppler y avisos del servicio meteorológico local para detección y evolución de tormentas.",
+      "proposed_method": "Importar avisos oficiales conservando emisor y geometría. Un detector propio con datos globales solo puede etiquetar ambientes favorables; la predicción localizada requiere sensores y experiencia regionales.",
+      "horizon": "Riesgo amplio con horas o días; advertencias localizadas suelen tener margen de minutos y pueden faltar.",
+      "missing_or_local_data": "No hay predictor mundial fiable de tornados individuales construido con esta lista. No convertir índices de inestabilidad en puntos exactos de tornado futuro.",
+      "validation": "Si se integra un servicio, medir demora y fidelidad de republicación. Un modelo propio necesita verificación regional por evento y falsas alarmas.",
+      "source_ids": [
+        "D07",
+        "D35"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F06",
+      "name": "Ciclones tropicales",
+      "family": "Atmósfera",
+      "global_scope": "Global con combinación de centros",
+      "output_type": "Pronósticos y trayectorias importados",
+      "required_inputs": "D07: circulación, ensembles y productos de trayectoria disponibles. D35: eventos y geometrías. D13 o D14: estado oceánico. IBTrACS para historial.",
+      "proposed_method": "Unificar identificadores y avisos de los centros meteorológicos responsables de cada cuenca. Mostrar trayectorias y distribución espacial cuando el proveedor la publique. Usar un modelo global como complemento.",
+      "horizon": "Días. Formación, trayectoria e intensidad tienen errores diferentes.",
+      "missing_or_local_data": "GDACS no reemplaza todos los boletines de cada cuenca. IBTrACS es best track histórico, no pronóstico emitido en el pasado.",
+      "validation": "Evaluar trayectoria en km, intensidad con unidades normalizadas y plazo. Evitar mezclar vientos sostenidos de 1 y 10 minutos. Comparar contra best tracks revisados.",
+      "source_ids": [
+        "D07",
+        "D13",
+        "D14",
+        "D35",
+        "D47"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F07",
+      "name": "Marejadas e inundación costera",
+      "family": "Agua",
+      "global_scope": "Parcial para impacto local",
+      "output_type": "Peligro y pronóstico regional",
+      "required_inputs": "D07: viento y presión. D31: batimetría. D30: elevación. Mareas, nivel observado, datum vertical y modelos hidráulicos costeros. D41 como referencia histórica.",
+      "proposed_method": "Integrar modelos operativos costeros cuando existan. Desarrollar un modelo propio exige resolver mareas, oleaje, marejada e inundación con malla y datum coherentes.",
+      "horizon": "Horas a días para un evento; años o décadas para escenarios de peligro.",
+      "missing_or_local_data": "D14 no basta para inundación calle por calle. D41 contiene simulaciones históricas y escenarios, sin pronóstico diario futuro. GEBCO y DSM pueden ser insuficientes en costa.",
+      "validation": "Comparar niveles con mareógrafos y extensión inundada con evidencia independiente. Separar error del nivel, error del terreno y exposición.",
+      "source_ids": [
+        "D07",
+        "D14",
+        "D30",
+        "D31",
+        "D41"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F08",
+      "name": "Nieve y tormentas de hielo",
+      "family": "Atmósfera",
+      "global_scope": "Global aproximado",
+      "output_type": "Pronóstico meteorológico",
+      "required_inputs": "D07: perfiles térmicos, precipitación, tipo de precipitación y nieve equivalente en agua. D08 para umbrales y contexto histórico.",
+      "proposed_method": "Importar precipitación sólida o tipo de precipitación del modelo. La acumulación de nieve en centímetros necesita densidad y condiciones locales; la lluvia engelante requiere perfiles adecuados.",
+      "horizon": "Días; acumulaciones y límites de fase son sensibles al detalle local.",
+      "missing_or_local_data": "Equivalente en agua no es altura de nieve. No convertir todo con una razón universal. El relieve fino y las superficies tratadas modifican el impacto.",
+      "validation": "Verificar fase y acumulación contra estaciones y observación de nieve. Reportar errores cerca del punto de congelación por separado.",
+      "source_ids": [
+        "D07",
+        "D08",
+        "D30"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F09",
+      "name": "Tormentas de polvo",
+      "family": "Atmósfera",
+      "global_scope": "Global aproximado",
+      "output_type": "Pronóstico importado",
+      "required_inputs": "D12: polvo y aerosoles por nivel o columna. D07: viento. D08 y datos de superficie para contexto de sequedad.",
+      "proposed_method": "Usar transporte de polvo del modelo químico atmosférico. Umbrales dependen de si se comunica concentración superficial, visibilidad o carga de columna.",
+      "horizon": "Horas a cinco días con el producto CAMS considerado.",
+      "missing_or_local_data": "Aerosol óptico de columna no es concentración respirada en superficie. La ubicación y fuerza de fuentes pequeñas pueden estar mal representadas.",
+      "validation": "Comparar con estaciones de partículas, visibilidad y redes de aerosoles cuando existan. Evaluar transporte e intensidad por separado.",
+      "source_ids": [
+        "D12",
+        "D07"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F10",
+      "name": "Contaminación y transporte de humo",
+      "family": "Atmósfera",
+      "global_scope": "Global aproximado",
+      "output_type": "Pronóstico de composición",
+      "required_inputs": "D12: PM y gases en superficie. D06: incendios detectados como contexto. D07: viento y mezcla atmosférica. Estaciones para calibración.",
+      "proposed_method": "Importar concentración pronosticada y aplicar promedios y norma explícitos si se publica un índice. La atribución al humo necesita productos o análisis específicos, no solo cercanía a un incendio.",
+      "horizon": "Horas a cinco días en el producto considerado.",
+      "missing_or_local_data": "No predice exposiciones por calle ni prueba origen industrial o de incendio sin evidencia adicional. Las nuevas emisiones desconocidas generan errores.",
+      "validation": "Comparar con monitores de superficie usando la misma unidad y promedio. Verificar sesgo, extremos y cobertura urbana; no validar solo contra otro modelo.",
+      "source_ids": [
+        "D12",
+        "D06",
+        "D07"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F11",
+      "name": "Sequías",
+      "family": "Agua",
+      "global_scope": "Global aproximado",
+      "output_type": "Diagnóstico y pronóstico a validar",
+      "required_inputs": "D01: lluvia. D02 y D03: humedad del suelo. D08: base estacional. D09: escenarios futuros. D33 puede complementar almacenamiento de agua.",
+      "proposed_method": "Definir sequía meteorológica, agrícola o hidrológica. Calcular anomalías y percentiles por estación. Para futuro, calibrar un modelo sencillo o usar escenarios meteorológicos con modelo terrestre; la analogía histórica es un candidato a evaluar.",
+      "horizon": "Semanas a meses; habilidad desigual según zona y época.",
+      "missing_or_local_data": "SMAP no tiene toda la historia de GLDAS. Un percentil bajo actual es diagnóstico; sin evaluación temporal, el riesgo futuro es experimental.",
+      "validation": "Comparar con persistencia y climatología. Usar ventanas futuras sin solapar entre entrenamiento y prueba. Medir probabilidades, eventos omitidos y falsas alarmas.",
+      "source_ids": [
+        "D01",
+        "D02",
+        "D03",
+        "D08",
+        "D09",
+        "D33"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F12",
+      "name": "Crecidas fluviales",
+      "family": "Agua",
+      "global_scope": "Global aproximado en la red modelada",
+      "output_type": "Pronóstico hidrológico importado",
+      "required_inputs": "D10: ensemble de caudal y umbrales. D32: geometría de cuencas. Aforos locales para validación y corrección.",
+      "proposed_method": "Usar GloFAS para probabilidad de superar umbrales del caudal. Vincular cada tramo a un punto del modelo. Mantener la versión y fecha de corrida.",
+      "horizon": "Días y perspectivas más largas según producto y cuenca.",
+      "missing_or_local_data": "Las represas y operaciones humanas pueden alterar la relación lluvia y caudal. Caudal elevado no establece por sí solo las viviendas inundadas.",
+      "validation": "Evaluar caudal, fecha del pico y superación de umbrales contra aforos y eventos documentados. Usar reforecasts del mismo sistema para calibrar.",
+      "source_ids": [
+        "D10",
+        "D32"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F13",
+      "name": "Inundaciones repentinas",
+      "family": "Agua",
+      "global_scope": "Regional para predicción útil",
+      "output_type": "Riesgo de respuesta rápida",
+      "required_inputs": "Lluvia de D01 como antecedente y D07 como escenario. Radar de alta frecuencia, drenaje, impermeabilización, suelo y D30 como contexto.",
+      "proposed_method": "Aplicar un modelo regional lluvia y escorrentía o importar avisos locales. Puede elaborarse un índice global exploratorio de susceptibilidad; requiere etiqueta experimental.",
+      "horizon": "Minutos a horas para avisos locales; a veces sin margen útil.",
+      "missing_or_local_data": "La latencia de IMERG puede ser mayor que el tiempo de respuesta de una cuenca. GloFAS no cubre este problema completo. Falta drenaje urbano global detallado.",
+      "validation": "Evaluar con registros de inundación y sensores de lluvia y nivel a frecuencia adecuada. La ausencia de reporte no se toma automáticamente como negativo.",
+      "source_ids": [
+        "D01",
+        "D07",
+        "D10",
+        "D30"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F14",
+      "name": "Escasez de agua",
+      "family": "Agua",
+      "global_scope": "Global para indicadores y parcial para abastecimiento",
+      "output_type": "Riesgo hidrológico",
+      "required_inputs": "D03 y D33: almacenamiento y humedad estimados. D10: caudales. Nieve de D07 o D08. Embalses, extracción, demanda y reservas locales.",
+      "proposed_method": "Combinar déficit de aportes con almacenamiento y demanda. Publicar indicadores ambientales globales. La predicción de abastecimiento requiere un balance específico por sistema de agua.",
+      "horizon": "Semanas a meses para perspectivas; escenarios más largos con supuestos.",
+      "missing_or_local_data": "GRACE no mide cada acuífero pequeño. No hay inventario operativo mundial completo de demanda, extracciones y manejo de embalses identificado aquí.",
+      "validation": "Comparar con niveles, volúmenes y restricciones observadas en cada sistema. Evaluar por separado aportes naturales y decisiones de gestión.",
+      "source_ids": [
+        "D03",
+        "D07",
+        "D08",
+        "D10",
+        "D33"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F15",
+      "name": "Peligro de incendios",
+      "family": "Superficie",
+      "global_scope": "Global aproximado",
+      "output_type": "Peligro meteorológico y detección",
+      "required_inputs": "D11: FWI y componentes. D07: viento, humedad y temperatura. D04: estado de vegetación como complemento. D06: fuegos ya detectados.",
+      "proposed_method": "Integrar FWI pronosticado con clases de combustible apropiadas. Mantener separadas las capas de peligro previo, detección de fuego y propagación modelada.",
+      "horizon": "Hasta diez días para el peligro del sistema GWIS consultado. Detección depende de la pasada.",
+      "missing_or_local_data": "La ignición humana no se deduce del clima. Predecir perímetro futuro requiere combustible, relieve, humedad y estado del incendio con mucho más detalle.",
+      "validation": "Evaluar discriminación de días o áreas con fuego bajo sesgo de detección. Una calibración por ecosistema debe preceder a cualquier porcentaje de ignición.",
+      "source_ids": [
+        "D11",
+        "D07",
+        "D04",
+        "D06"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F16",
+      "name": "Estrés agrícola",
+      "family": "Ecosistemas",
+      "global_scope": "Global para indicadores y regional para rendimiento",
+      "output_type": "Diagnóstico y riesgo experimental",
+      "required_inputs": "D20: estrés agrícola procesado. D04: NDVI y EVI. D02 y D03: agua en suelo. Lluvia y temperatura. Calendario, tipo de cultivo y prácticas locales.",
+      "proposed_method": "Detectar desviaciones de vegetación y humedad respecto de la fase de cultivo. La predicción de caída de rendimiento requiere un modelo adicional y datos de cosecha.",
+      "horizon": "Semanas o meses según cultivo y etapa; no garantía por parcela.",
+      "missing_or_local_data": "Cosecha, riego y rotación pueden parecer anomalías. El satélite no explica por sí solo si el daño proviene de agua, plaga o manejo.",
+      "validation": "Validar indicadores contra observaciones de campo y rendimiento contra estadísticas independientes. Separar años, regiones y cultivos en prueba.",
+      "source_ids": [
+        "D20",
+        "D04",
+        "D02",
+        "D03",
+        "D01",
+        "D45"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F17",
+      "name": "El Niño y La Niña",
+      "family": "Océano",
+      "global_scope": "Global en influencia con índice del Pacífico",
+      "output_type": "Diagnóstico y pronóstico climático",
+      "required_inputs": "D13: SST del Pacífico. D14: estado oceánico por profundidad. D09: ensembles estacionales. Boletines ENSO de NOAA para referencia autorizada.",
+      "proposed_method": "Mostrar el diagnóstico y las probabilidades oficiales de fase con fecha y definición del índice. Un índice de SST propio sirve de contexto, pero debe especificar región, climatología y criterio.",
+      "horizon": "Meses, con dificultad dependiente de estación e inicialización.",
+      "missing_or_local_data": "Una fase ENSO no determina la lluvia exacta en Rosario ni cada impacto mundial. Los índices y criterios pueden actualizarse; fijar la definición usada.",
+      "validation": "Comparar probabilidades archivadas por horizonte y época del año. Para impactos locales se necesita otra validación específica.",
+      "source_ids": [
+        "D13",
+        "D14",
+        "D09",
+        "D48"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F18",
+      "name": "Olas de calor marinas",
+      "family": "Océano",
+      "global_scope": "Global con habilidad desigual",
+      "output_type": "Diagnóstico y pronóstico probabilístico",
+      "required_inputs": "D13: SST diaria e historia estacional. D16: perspectivas existentes. D09: escenarios climáticos si se desarrolla un predictor propio.",
+      "proposed_method": "Definir evento por umbral estacional y duración. Distinguir temperatura alta respecto del clima histórico de la anomalía respecto de una base reciente. Importar forecast validado o evaluar un método propio.",
+      "horizon": "Semanas a meses; ciertos estudios hallan habilidad más larga en condiciones particulares.",
+      "missing_or_local_data": "La habilidad no es uniforme entre océanos. El acceso numérico automatizado de D16 queda pendiente de verificar. No asumir que la precisión de una celda costera es la del océano abierto.",
+      "validation": "Evaluar inicio, duración, intensidad y probabilidad contra SST posterior. Comparar con persistencia y climatología, sin usar futuros años en el umbral.",
+      "source_ids": [
+        "D13",
+        "D16",
+        "D09",
+        "D44"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F19",
+      "name": "Estrés térmico de corales",
+      "family": "Océano",
+      "global_scope": "Global para monitoreo térmico",
+      "output_type": "Indicadores y outlook importados",
+      "required_inputs": "D15: HotSpot, DHW y alertas térmicas; outlook de blanqueamiento. Ubicación de arrecifes y observaciones biológicas para validar daño.",
+      "proposed_method": "Integrar indicadores y perspectivas de Coral Reef Watch conservando sus categorías. Explicar calor acumulado y plazo del pronóstico. La confirmación de blanqueamiento es un dato distinto.",
+      "horizon": "Actualización diaria de monitoreo; perspectivas hasta cuatro meses según producto.",
+      "missing_or_local_data": "Temperatura no determina por sí sola susceptibilidad de todas las especies. La geometría de arrecifes y el forecast tienen resoluciones diferentes.",
+      "validation": "Comparar forecast con estrés térmico observado. Para blanqueamiento real, usar censos y reportes biológicos; reportar su cobertura limitada.",
+      "source_ids": [
+        "D15"
+      ],
+      "implementation_priority": "P1",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F20",
+      "name": "Floraciones de algas nocivas",
+      "family": "Ecosistemas",
+      "global_scope": "Regional para nocividad y amplio para observación",
+      "output_type": "Detección y pronóstico regional",
+      "required_inputs": "D17: clorofila y reflectancia. D14: corrientes, temperatura y salinidad. D18: sistemas regionales. Nutrientes y muestras de especies o toxinas.",
+      "proposed_method": "Detectar anomalías ópticas como observación. Para nocividad, usar modelos regionales validados con muestreo. El transporte previsto de una floración detectada requiere corrientes y dinámica biológica.",
+      "horizon": "Días y perspectivas estacionales donde existe un sistema específico.",
+      "missing_or_local_data": "Clorofila elevada no confirma toxinas. No se identificó una base abierta mundial con muestreo toxicológico suficiente para todas las especies y costas.",
+      "validation": "Validar especie y toxina con muestras. Evaluar por región, especie y plazo. La validación óptica y la de riesgo sanitario son tareas separadas.",
+      "source_ids": [
+        "D17",
+        "D14",
+        "D18"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F21",
+      "name": "Hipoxia acuática",
+      "family": "Ecosistemas",
+      "global_scope": "Regional",
+      "output_type": "Pronóstico de oxígeno con modelo especializado",
+      "required_inputs": "Oxígeno disuelto medido y perfiles. Nutrientes y aportes de ríos. D14 para física y mezcla; productos biogeoquímicos a seleccionar. D18 como ejemplo de sistemas existentes.",
+      "proposed_method": "Integrar un sistema regional de oxígeno o desarrollar un modelo acoplado de física y biogeoquímica. Temperatura y estratificación son factores explicativos, no mediciones directas de oxígeno.",
+      "horizon": "Días o perspectivas estacionales según región y producto.",
+      "missing_or_local_data": "No hay una ingestión mundial validada de todos los insumos definida en este documento. Requiere elegir producto biogeoquímico, profundidad y umbral de oxígeno.",
+      "validation": "Comparar concentración, profundidad y extensión con campañas, boyas y sensores. Validar extremos y errores de muestreo espacial.",
+      "source_ids": [
+        "D14",
+        "D18"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F22",
+      "name": "Condiciones favorables para Vibrio",
+      "family": "Ecosistemas",
+      "global_scope": "Regional",
+      "output_type": "Idoneidad ambiental o forecast importado",
+      "required_inputs": "D14: temperatura y salinidad; datos costeros de mayor detalle y muestreos microbiológicos. D18: modelos regionales publicados.",
+      "proposed_method": "Importar un modelo específico por especie y ambiente. En otras regiones, una regla térmica solo puede indicar condiciones favorables hasta validarse con muestras.",
+      "horizon": "Días en los sistemas regionales que lo ofrecen.",
+      "missing_or_local_data": "Agua cálida no confirma presencia, dosis, infección ni riesgo individual. El modelo de una bahía no se extrapola automáticamente a todas las costas.",
+      "validation": "Verificar contra muestras y protocolos de laboratorio compatibles. Evaluar calibración por especie, salinidad, estación y región.",
+      "source_ids": [
+        "D14",
+        "D18"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F23",
+      "name": "Langosta del desierto",
+      "family": "Ecosistemas",
+      "global_scope": "Área biogeográfica específica",
+      "output_type": "Vigilancia y perspectivas importadas",
+      "required_inputs": "D19: observaciones de campo y boletines. D01: lluvia. D04: vegetación. D07: viento para trayectorias. Temperatura para desarrollo biológico.",
+      "proposed_method": "Unir reportes y condiciones favorables de reproducción. Utilizar perspectivas FAO con fecha. Un pronóstico propio necesita dinámica de población y movimiento, además del hábitat.",
+      "horizon": "Semanas a meses según etapa y observaciones disponibles.",
+      "missing_or_local_data": "La cobertura corresponde a langosta del desierto, no todas las especies. El muestreo de campo es esencial y no está distribuido uniformemente.",
+      "validation": "Comparar con relevamientos posteriores y expansión reportada, considerando esfuerzo de observación. Evaluar llegada y reproducción por separado.",
+      "source_ids": [
+        "D19",
+        "D01",
+        "D04",
+        "D07"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F24",
+      "name": "Actividad volcánica y erupciones",
+      "family": "Geología",
+      "global_scope": "Global para inventario y local para pronóstico",
+      "output_type": "Actividad y avisos importados",
+      "required_inputs": "D23: catálogo e historia. D25: imágenes y gases observables. Observatorio local: sismicidad, GNSS, deformación, gases y señales térmicas.",
+      "proposed_method": "Mostrar actividad y nivel de alerta del observatorio. La predicción exige interpretar cambios persistentes respecto de la línea base de cada volcán, con un modelo o criterio específico validado.",
+      "horizon": "Algunos eventos admiten aviso de horas o días. La agitación puede persistir años sin erupción.",
+      "missing_or_local_data": "No hay red mundial abierta y uniforme con todos estos sensores. El catálogo de volcanes no aporta esos precursores. Una señal de SO2 o calor no basta para anunciar una erupción.",
+      "validation": "Evaluar episodios con y sin erupción. Separar escalada de alerta, inicio, magnitud y duración. Revisión experta necesaria para un predictor nuevo.",
+      "source_ids": [
+        "D23",
+        "D25",
+        "D42"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F25",
+      "name": "Deslizamientos por lluvia",
+      "family": "Geología",
+      "global_scope": "Global aproximado para peligro",
+      "output_type": "Nowcast o forecast según producto",
+      "required_inputs": "D24: producto LHASA. D01: precipitación. D02: humedad antecedente. D30: relieve. Geología y susceptibilidad según modelo.",
+      "proposed_method": "Priorizar integración de LHASA y conservar su definición de salida. Si se construye un predictor, modelar probabilidad de actividad en una unidad espacial y ventana definidas.",
+      "horizon": "Condiciones actuales y plazos cortos donde exista forecast documentado.",
+      "missing_or_local_data": "No resuelve cada ladera, deslizamiento lento ni falla de roca. La calidad varía con geología y reporte de eventos. Nowcast no se debe presentar como anticipación futura.",
+      "validation": "Validar contra inventarios independientes separados por región y evento de lluvia. Medir omisiones, falsas alarmas y resolución real.",
+      "source_ids": [
+        "D24",
+        "D01",
+        "D02",
+        "D30"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F26",
+      "name": "Desbordes de lagos glaciares",
+      "family": "Geología",
+      "global_scope": "Amplio para vigilancia y local para alerta",
+      "output_type": "Susceptibilidad y detección de cambios",
+      "required_inputs": "D25: imágenes ópticas y SAR para extensión del lago y cambios. D26: glaciares. D30: relieve. Nivel del lago, dique, sismicidad y caudal con sensores locales.",
+      "proposed_method": "Detectar crecimiento y cambios de la cuenca para priorizar inspección. Una alerta de rotura o propagación requiere sensores rápidos y modelo hidráulico del valle.",
+      "horizon": "Meses o años para vigilancia de peligro; minutos u horas de margen tras detectar una liberación, según lugar.",
+      "missing_or_local_data": "La pasada satelital no detecta continuamente una rotura súbita. El inventario RGI no contiene niveles ni estabilidad de diques. No hay fecha de rotura mundial deducible solo del tamaño del lago.",
+      "validation": "Validar contornos y cambios contra imágenes de mayor detalle. Para alerta, probar detección, demora y tiempo de llegada con casos y simulaciones de sitio.",
+      "source_ids": [
+        "D25",
+        "D26",
+        "D30",
+        "D32"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F27",
+      "name": "Tsunamis",
+      "family": "Geología",
+      "global_scope": "Cobertura por centros responsables",
+      "output_type": "Alertas y llegada importadas",
+      "required_inputs": "D27: mensajes CAP y Atom. D21: sismo detectado como contexto. Redes de nivel del mar y boyas. D31: batimetría para modelado específico.",
+      "proposed_method": "Integrar mensajes autorizados y sus cancelaciones. Mostrar tiempo de arribo solo si el emisor lo ofrece. Un modelo independiente requiere caracterizar la fuente y propagar ondas con datos adecuados.",
+      "horizon": "Minutos a horas antes de llegar a una costa, después de iniciada la fuente; puede no haber margen cercano.",
+      "missing_or_local_data": "No predice el terremoto. Los centros NOAA no cubren por sí solos todos los ámbitos del mundo. Un sismo fuerte no confirma que se haya generado un tsunami.",
+      "validation": "Verificar integridad de mensajes, tiempo de ingestión y cancelaciones. Para pronóstico propio, contrastar altura y arribo con mareógrafos y boyas.",
+      "source_ids": [
+        "D27",
+        "D21",
+        "D31"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F28",
+      "name": "Réplicas sísmicas",
+      "family": "Geología",
+      "global_scope": "Parcial en productos y potencialmente ampliable",
+      "output_type": "Probabilidades tras un sismo",
+      "required_inputs": "D21: secuencia sísmica y completitud. D22: productos de forecast. Parámetros tectónicos y de red para un modelo propio.",
+      "proposed_method": "Importar la probabilidad publicada para magnitud y ventana concretas. Si se desarrolla un modelo, calibrar una familia tipo ETAS o frecuencia temporal para la región y evaluar fuera de muestra.",
+      "horizon": "Días a meses según ventana. Siempre condicionado a un evento y estado de la secuencia.",
+      "missing_or_local_data": "No garantiza hora o lugar de la próxima réplica. Los productos públicos no existen para todos los eventos del mundo. Revisiones del catálogo afectan la evaluación retrospectiva.",
+      "validation": "Usar puntuaciones probabilísticas y comparación con un modelo base. Evaluar secuencias completas que no se hayan usado para ajustar parámetros.",
+      "source_ids": [
+        "D21",
+        "D22",
+        "D43"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F29",
+      "name": "Tormentas geomagnéticas",
+      "family": "Espacio",
+      "global_scope": "Global con efectos regionales",
+      "output_type": "Observación y pronóstico importados",
+      "required_inputs": "D28: eyecciones observadas, viento solar, campo magnético e índices. Avisos y modelos operativos SWPC.",
+      "proposed_method": "Integrar watch, warning y forecast manteniendo producto, escala y emisor. Explicar qué señales sostienen la perspectiva y qué se mide al acercarse a la Tierra.",
+      "horizon": "Horas a días en casos favorables. La precisión aumenta o cambia al llegar nuevas mediciones.",
+      "missing_or_local_data": "El impacto depende de orientación magnética y dinámica espacial. Una fulguración visible no permite anticipar con antelación su propia radiación en la Tierra.",
+      "validation": "Comparar nivel y ventana previstos con índices observados. Guardar emisiones históricas y revisiones; medir falsas alertas y eventos omitidos.",
+      "source_ids": [
+        "D28"
+      ],
+      "implementation_priority": "P2",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F30",
+      "name": "Impactos de asteroides conocidos",
+      "family": "Espacio",
+      "global_scope": "Global para objetos detectados",
+      "output_type": "Evaluación orbital importada",
+      "required_inputs": "D29: Scout y Sentry con soluciones, probabilidades y épocas de observación. Seguimiento astronómico realizado por las redes de observatorios.",
+      "proposed_method": "Publicar la evaluación CNEOS conservando incertidumbre y fecha. El mecanismo es cálculo orbital, no analogía con catástrofes pasadas. Separar riesgo de impacto y mero acercamiento.",
+      "horizon": "Desde horas hasta plazos largos, según descubrimiento, observaciones y geometría orbital.",
+      "missing_or_local_data": "Un cuerpo no descubierto queda fuera. Probabilidades pueden subir o bajar al incorporar datos. No convertir diámetro incierto en daños exactos.",
+      "validation": "Comparar evolución de soluciones y, cuando existe impacto, momento y región observados. El pequeño número de impactos anticipados limita una evaluación estadística general.",
+      "source_ids": [
+        "D29"
+      ],
+      "implementation_priority": "P3",
+      "implementation_status": "Especificado sin implementar"
+    },
+    {
+      "id": "F31",
+      "name": "Cambios en la AMOC",
+      "family": "Investigación",
+      "global_scope": "Atlántico y proxies incompletos",
+      "output_type": "Tendencias y análisis exploratorio",
+      "required_inputs": "D34: transporte observado. D14: temperatura, salinidad y corrientes modeladas. D13: SST como contexto y posibles proxies con respaldo científico.",
+      "proposed_method": "Mostrar variabilidad, tendencia e incertidumbre. Las señales exploratorias de pérdida de estabilidad requieren hipótesis y pruebas frente a ruido y cambios de observación; no producen fecha operativa de colapso.",
+      "horizon": "Variabilidad de años a décadas; sin cuenta regresiva fiable al colapso.",
+      "missing_or_local_data": "Historia instrumental relativamente corta y proxies no equivalentes a observación directa. No hay suficientes colapsos modernos observados para entrenar y validar un clasificador convencional.",
+      "validation": "Evaluar estabilidad de resultados con ventanas, métodos y proxies. Usar simulaciones para investigación y comunicar que no validan una predicción operativa del mundo real.",
+      "source_ids": [
+        "D34",
+        "D14",
+        "D13",
+        "D46"
+      ],
+      "implementation_priority": "Investigación",
+      "implementation_status": "Especificado sin implementar"
+    }
+  ],
+  "http_sample_checks": [
+    {
+      "source": "USGS",
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-09-01&endtime=2024-09-02&minmagnitude=6&limit=1",
+      "status": 200,
+      "bytes": 1155,
+      "json_keys": [
+        "type",
+        "metadata",
+        "features"
+      ],
+      "tested": "HTTP GET and JSON parsing only"
+    },
+    {
+      "source": "SWPC",
+      "url": "https://services.swpc.noaa.gov/products/summary/solar-wind-speed.json",
+      "status": 200,
+      "bytes": 59,
+      "json_keys": [],
+      "tested": "HTTP GET and JSON parsing only"
+    },
+    {
+      "source": "CNEOS",
+      "url": "https://ssd-api.jpl.nasa.gov/sentry.api",
+      "status": 200,
+      "bytes": 588567,
+      "json_keys": [
+        "data",
+        "signature",
+        "count"
+      ],
+      "tested": "HTTP GET and JSON parsing only"
+    }
+  ],
+  "output_contract_example": {
+    "phenomenon_id": "F11",
+    "output_type": "experimental_forecast",
+    "model_version": null,
+    "run_id": null,
+    "issued_at": null,
+    "valid_from": null,
+    "valid_to": null,
+    "source_asset_ids": [],
+    "probability": null,
+    "probability_definition": null,
+    "uncertainty": null,
+    "validation_reference": null,
+    "operational_state": "specified"
+  }
+}

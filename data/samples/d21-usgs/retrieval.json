@@ -1,0 +1,10 @@
+{
+  "source_id": "D21",
+  "retrieved_at": "2026-11-13T05:29:03Z",
+  "request_url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-09-01&endtime=2024-09-02&minmagnitude=6&limit=1",
+  "http_status": 200,
+  "content_type": "application/json; charset=utf-8",
+  "sha256": "2ef3ee10fce811eb5944e4220131ec102003ca42e707b4316c1912d42b21bcf0",
+  "byte_size": 1155,
+  "note": "Muestra de viabilidad de un evento. No es una conexión operativa ni un pronóstico."
+}

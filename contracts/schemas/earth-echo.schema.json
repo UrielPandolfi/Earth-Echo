@@ -1,0 +1,2428 @@
+{
+  "$defs": {
+    "AssetRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^D\\d{2}$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "collection_id": {
+          "minLength": 1,
+          "title": "Collection Id",
+          "type": "string"
+        },
+        "product_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Product Version"
+        },
+        "variable_id": {
+          "pattern": "^V\\d{2}$",
+          "title": "Variable Id",
+          "type": "string"
+        },
+        "native_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Native Unit"
+        },
+        "spatial": {
+          "$ref": "#/$defs/SpatialSupport"
+        },
+        "observed": {
+          "discriminator": {
+            "mapping": {
+              "instant": "#/$defs/InstantSpan",
+              "interval": "#/$defs/IntervalSpan"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/InstantSpan"
+            },
+            {
+              "$ref": "#/$defs/IntervalSpan"
+            }
+          ],
+          "title": "Observed"
+        },
+        "issued_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Issued At"
+        },
+        "availability": {
+          "discriminator": {
+            "mapping": {
+              "known": "#/$defs/AvailabilityKnown",
+              "unknown": "#/$defs/AvailabilityUnknown"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AvailabilityKnown"
+            },
+            {
+              "$ref": "#/$defs/AvailabilityUnknown"
+            }
+          ],
+          "title": "Availability"
+        },
+        "ingested_at": {
+          "format": "date-time",
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "quality": {
+          "$ref": "#/$defs/Quality"
+        },
+        "checksum_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Checksum Sha256"
+        },
+        "byte_size": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Byte Size"
+        },
+        "original_locator": {
+          "minLength": 1,
+          "title": "Original Locator",
+          "type": "string"
+        },
+        "science_file_retrieved": {
+          "title": "Science File Retrieved",
+          "type": "boolean"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "source_id",
+        "collection_id",
+        "product_version",
+        "variable_id",
+        "native_unit",
+        "spatial",
+        "observed",
+        "issued_at",
+        "availability",
+        "ingested_at",
+        "quality",
+        "checksum_sha256",
+        "original_locator",
+        "science_file_retrieved",
+        "provenance"
+      ],
+      "title": "AssetRecord",
+      "type": "object"
+    },
+    "AvailabilityKnown": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "known",
+          "title": "Status",
+          "type": "string"
+        },
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "at"
+      ],
+      "title": "AvailabilityKnown",
+      "type": "object"
+    },
+    "AvailabilityUnknown": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "unknown",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "AvailabilityUnknown",
+      "type": "object"
+    },
+    "CatalogSourceView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^D\\d{2}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "url": {
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "variables": {
+          "title": "Variables",
+          "type": "string"
+        },
+        "coverage": {
+          "title": "Coverage",
+          "type": "string"
+        },
+        "cadence": {
+          "title": "Cadence",
+          "type": "string"
+        },
+        "access": {
+          "title": "Access",
+          "type": "string"
+        },
+        "limits": {
+          "title": "Limits",
+          "type": "string"
+        },
+        "verification": {
+          "title": "Verification",
+          "type": "string"
+        },
+        "integration_status": {
+          "enum": [
+            "documented",
+            "credential_required",
+            "sample_retrieved",
+            "connected",
+            "blocked"
+          ],
+          "title": "Integration Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "url",
+        "variables",
+        "coverage",
+        "cadence",
+        "access",
+        "limits",
+        "verification",
+        "integration_status"
+      ],
+      "title": "CatalogSourceView",
+      "type": "object"
+    },
+    "CatalogValidationReport": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "reference_path": {
+          "title": "Reference Path",
+          "type": "string"
+        },
+        "reference_sha256": {
+          "title": "Reference Sha256",
+          "type": "string"
+        },
+        "pinned_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Pinned Sha256"
+        },
+        "reference_integrity": {
+          "enum": [
+            "match",
+            "mismatch",
+            "pin_missing"
+          ],
+          "title": "Reference Integrity",
+          "type": "string"
+        },
+        "specification_integrity": {
+          "enum": [
+            "match",
+            "mismatch",
+            "pin_missing"
+          ],
+          "title": "Specification Integrity",
+          "type": "string"
+        },
+        "image_integrity": {
+          "enum": [
+            "match",
+            "mismatch",
+            "pin_missing"
+          ],
+          "title": "Image Integrity",
+          "type": "string"
+        },
+        "source_count": {
+          "title": "Source Count",
+          "type": "integer"
+        },
+        "variable_count": {
+          "title": "Variable Count",
+          "type": "integer"
+        },
+        "phenomenon_count": {
+          "title": "Phenomenon Count",
+          "type": "integer"
+        },
+        "duplicate_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Duplicate Ids",
+          "type": "array"
+        },
+        "dangling_references": {
+          "items": {
+            "$ref": "#/$defs/ReferenceMention"
+          },
+          "title": "Dangling References",
+          "type": "array"
+        },
+        "unreferenced_source_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unreferenced Source Ids",
+          "type": "array"
+        },
+        "descriptive_source_notes": {
+          "items": {
+            "$ref": "#/$defs/DescriptiveNote"
+          },
+          "title": "Descriptive Source Notes",
+          "type": "array"
+        },
+        "capability_counts": {
+          "items": {
+            "$ref": "#/$defs/StatusCount"
+          },
+          "title": "Capability Counts",
+          "type": "array"
+        },
+        "recorded_http_checks": {
+          "items": {
+            "$ref": "#/$defs/RecordedHttpCheck"
+          },
+          "title": "Recorded Http Checks",
+          "type": "array"
+        },
+        "recorded_http_checks_note": {
+          "title": "Recorded Http Checks Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "reference_path",
+        "reference_sha256",
+        "pinned_sha256",
+        "reference_integrity",
+        "specification_integrity",
+        "image_integrity",
+        "source_count",
+        "variable_count",
+        "phenomenon_count",
+        "duplicate_ids",
+        "dangling_references",
+        "unreferenced_source_ids",
+        "descriptive_source_notes",
+        "capability_counts",
+        "recorded_http_checks",
+        "recorded_http_checks_note"
+      ],
+      "title": "CatalogValidationReport",
+      "type": "object"
+    },
+    "CatalogVariable": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^V\\d{2}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "units": {
+          "title": "Units",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "pattern": "^D\\d{2}$",
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "source_notes": {
+          "title": "Source Notes",
+          "type": "string"
+        },
+        "processing_notes": {
+          "title": "Processing Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "units",
+        "source_ids",
+        "source_notes",
+        "processing_notes"
+      ],
+      "title": "CatalogVariable",
+      "type": "object"
+    },
+    "DescriptiveNote": {
+      "additionalProperties": false,
+      "properties": {
+        "variable_id": {
+          "title": "Variable Id",
+          "type": "string"
+        },
+        "remainder": {
+          "title": "Remainder",
+          "type": "string"
+        }
+      },
+      "required": [
+        "variable_id",
+        "remainder"
+      ],
+      "title": "DescriptiveNote",
+      "type": "object"
+    },
+    "ForecastRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "phenomenon_id": {
+          "pattern": "^F\\d{2}$",
+          "title": "Phenomenon Id",
+          "type": "string"
+        },
+        "model_id": {
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model Version"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Run Id"
+        },
+        "initialization_time": {
+          "format": "date-time",
+          "title": "Initialization Time",
+          "type": "string"
+        },
+        "issued_at": {
+          "format": "date-time",
+          "title": "Issued At",
+          "type": "string"
+        },
+        "valid": {
+          "$ref": "#/$defs/IntervalSpan"
+        },
+        "lead_time_hours": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lead Time Hours"
+        },
+        "variable_id": {
+          "anyOf": [
+            {
+              "pattern": "^V\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Variable Id"
+        },
+        "measurement": {
+          "discriminator": {
+            "mapping": {
+              "missing": "#/$defs/MissingValue",
+              "present": "#/$defs/PresentValue"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/MissingValue"
+            },
+            {
+              "$ref": "#/$defs/PresentValue"
+            }
+          ],
+          "title": "Measurement"
+        },
+        "probability": {
+          "discriminator": {
+            "mapping": {
+              "absent": "#/$defs/ProbabilityAbsent",
+              "defined": "#/$defs/ProbabilityDefined"
+            },
+            "propertyName": "state"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProbabilityAbsent"
+            },
+            {
+              "$ref": "#/$defs/ProbabilityDefined"
+            }
+          ],
+          "title": "Probability"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Uncertainty"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "spatial": {
+          "$ref": "#/$defs/SpatialSupport"
+        },
+        "availability": {
+          "discriminator": {
+            "mapping": {
+              "known": "#/$defs/AvailabilityKnown",
+              "unknown": "#/$defs/AvailabilityUnknown"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AvailabilityKnown"
+            },
+            {
+              "$ref": "#/$defs/AvailabilityUnknown"
+            }
+          ],
+          "title": "Availability"
+        },
+        "ingested_at": {
+          "format": "date-time",
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "quality": {
+          "$ref": "#/$defs/Quality"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "validation_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Validation Reference"
+        },
+        "capability_status": {
+          "enum": [
+            "specified",
+            "source_connected",
+            "historical_ready",
+            "experimental",
+            "validated_for_scope"
+          ],
+          "title": "Capability Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "phenomenon_id",
+        "model_id",
+        "model_version",
+        "run_id",
+        "initialization_time",
+        "issued_at",
+        "valid",
+        "variable_id",
+        "measurement",
+        "probability",
+        "spatial",
+        "availability",
+        "ingested_at",
+        "quality",
+        "provenance",
+        "validation_reference",
+        "capability_status"
+      ],
+      "title": "ForecastRecord",
+      "type": "object"
+    },
+    "GeoLineString": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "LineString",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "GeoLineString",
+      "type": "object"
+    },
+    "GeoMultiLineString": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "MultiLineString",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "items": {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "GeoMultiLineString",
+      "type": "object"
+    },
+    "GeoMultiPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "MultiPoint",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "GeoMultiPoint",
+      "type": "object"
+    },
+    "GeoMultiPolygon": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "MultiPolygon",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "items": {
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "GeoMultiPolygon",
+      "type": "object"
+    },
+    "GeoPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Point",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "GeoPoint",
+      "type": "object"
+    },
+    "GeoPolygon": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Polygon",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "items": {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "title": "GeoPolygon",
+      "type": "object"
+    },
+    "GeographicExtent": {
+      "additionalProperties": false,
+      "properties": {
+        "west": {
+          "title": "West",
+          "type": "number"
+        },
+        "south": {
+          "title": "South",
+          "type": "number"
+        },
+        "east": {
+          "title": "East",
+          "type": "number"
+        },
+        "north": {
+          "title": "North",
+          "type": "number"
+        },
+        "crosses_antimeridian": {
+          "title": "Crosses Antimeridian",
+          "type": "boolean"
+        },
+        "crs": {
+          "const": "EPSG:4326",
+          "default": "EPSG:4326",
+          "title": "Crs",
+          "type": "string"
+        }
+      },
+      "required": [
+        "west",
+        "south",
+        "east",
+        "north",
+        "crosses_antimeridian"
+      ],
+      "title": "GeographicExtent",
+      "type": "object"
+    },
+    "HealthResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "const": "ok",
+          "title": "Status",
+          "type": "string"
+        },
+        "service": {
+          "const": "earth-echo-api",
+          "title": "Service",
+          "type": "string"
+        },
+        "time": {
+          "format": "date-time",
+          "title": "Time",
+          "type": "string"
+        },
+        "checks": {
+          "items": {
+            "const": "process",
+            "type": "string"
+          },
+          "title": "Checks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "status",
+        "service",
+        "time",
+        "checks"
+      ],
+      "title": "HealthResponse",
+      "type": "object"
+    },
+    "InstantSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "instant",
+          "title": "Kind",
+          "type": "string"
+        },
+        "start": {
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "start"
+      ],
+      "title": "InstantSpan",
+      "type": "object"
+    },
+    "IntervalSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "interval",
+          "title": "Kind",
+          "type": "string"
+        },
+        "start": {
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "format": "date-time",
+          "title": "End",
+          "type": "string"
+        },
+        "bounds": {
+          "const": "start_inclusive_end_exclusive",
+          "title": "Bounds",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "start",
+        "end",
+        "bounds"
+      ],
+      "title": "IntervalSpan",
+      "type": "object"
+    },
+    "MissingValue": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "missing",
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value",
+          "type": "null"
+        },
+        "unit": {
+          "default": null,
+          "title": "Unit",
+          "type": "null"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "MissingValue",
+      "type": "object"
+    },
+    "ObservationRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "asset_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "title": "Asset Id",
+          "type": "string"
+        },
+        "variable_id": {
+          "pattern": "^V\\d{2}$",
+          "title": "Variable Id",
+          "type": "string"
+        },
+        "phenomenon_id": {
+          "anyOf": [
+            {
+              "pattern": "^F\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Phenomenon Id"
+        },
+        "measurement": {
+          "discriminator": {
+            "mapping": {
+              "missing": "#/$defs/MissingValue",
+              "present": "#/$defs/PresentValue"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/MissingValue"
+            },
+            {
+              "$ref": "#/$defs/PresentValue"
+            }
+          ],
+          "title": "Measurement"
+        },
+        "spatial": {
+          "$ref": "#/$defs/SpatialSupport"
+        },
+        "observed": {
+          "discriminator": {
+            "mapping": {
+              "instant": "#/$defs/InstantSpan",
+              "interval": "#/$defs/IntervalSpan"
+            },
+            "propertyName": "kind"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/InstantSpan"
+            },
+            {
+              "$ref": "#/$defs/IntervalSpan"
+            }
+          ],
+          "title": "Observed"
+        },
+        "issued_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Issued At"
+        },
+        "availability": {
+          "discriminator": {
+            "mapping": {
+              "known": "#/$defs/AvailabilityKnown",
+              "unknown": "#/$defs/AvailabilityUnknown"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AvailabilityKnown"
+            },
+            {
+              "$ref": "#/$defs/AvailabilityUnknown"
+            }
+          ],
+          "title": "Availability"
+        },
+        "ingested_at": {
+          "format": "date-time",
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "quality": {
+          "$ref": "#/$defs/Quality"
+        },
+        "product_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Product Version"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "asset_id",
+        "variable_id",
+        "phenomenon_id",
+        "measurement",
+        "spatial",
+        "observed",
+        "issued_at",
+        "availability",
+        "ingested_at",
+        "quality",
+        "product_version",
+        "provenance"
+      ],
+      "title": "ObservationRecord",
+      "type": "object"
+    },
+    "PhenomenonList": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "total": {
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "returned": {
+          "minimum": 0,
+          "title": "Returned",
+          "type": "integer"
+        },
+        "phenomena": {
+          "items": {
+            "$ref": "#/$defs/PhenomenonView"
+          },
+          "title": "Phenomena",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "total",
+        "returned",
+        "phenomena"
+      ],
+      "title": "PhenomenonList",
+      "type": "object"
+    },
+    "PhenomenonView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^F\\d{2}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "family": {
+          "title": "Family",
+          "type": "string"
+        },
+        "global_scope": {
+          "title": "Global Scope",
+          "type": "string"
+        },
+        "output_type": {
+          "title": "Output Type",
+          "type": "string"
+        },
+        "required_inputs": {
+          "title": "Required Inputs",
+          "type": "string"
+        },
+        "proposed_method": {
+          "title": "Proposed Method",
+          "type": "string"
+        },
+        "horizon": {
+          "title": "Horizon",
+          "type": "string"
+        },
+        "missing_or_local_data": {
+          "title": "Missing Or Local Data",
+          "type": "string"
+        },
+        "validation": {
+          "title": "Validation",
+          "type": "string"
+        },
+        "source_ids": {
+          "items": {
+            "pattern": "^D\\d{2}$",
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "implementation_priority": {
+          "title": "Implementation Priority",
+          "type": "string"
+        },
+        "implementation_status": {
+          "title": "Implementation Status",
+          "type": "string"
+        },
+        "capability_status": {
+          "enum": [
+            "specified",
+            "source_connected",
+            "historical_ready",
+            "experimental",
+            "validated_for_scope"
+          ],
+          "title": "Capability Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "family",
+        "global_scope",
+        "output_type",
+        "required_inputs",
+        "proposed_method",
+        "horizon",
+        "missing_or_local_data",
+        "validation",
+        "source_ids",
+        "implementation_priority",
+        "implementation_status",
+        "capability_status"
+      ],
+      "title": "PhenomenonView",
+      "type": "object"
+    },
+    "PresentValue": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "present",
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "value",
+        "unit"
+      ],
+      "title": "PresentValue",
+      "type": "object"
+    },
+    "ProbabilityAbsent": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "absent",
+          "title": "State",
+          "type": "string"
+        },
+        "value": {
+          "default": null,
+          "title": "Value",
+          "type": "null"
+        },
+        "definition": {
+          "default": null,
+          "title": "Definition",
+          "type": "null"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "ProbabilityAbsent",
+      "type": "object"
+    },
+    "ProbabilityDefined": {
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "const": "defined",
+          "title": "State",
+          "type": "string"
+        },
+        "value": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Value",
+          "type": "number"
+        },
+        "definition": {
+          "minLength": 1,
+          "title": "Definition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "state",
+        "value",
+        "definition"
+      ],
+      "title": "ProbabilityDefined",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "source_ids": {
+          "items": {
+            "pattern": "^D\\d{2}$",
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "asset_ids": {
+          "items": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+            "type": "string"
+          },
+          "title": "Asset Ids",
+          "type": "array"
+        },
+        "collection_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Collection Id"
+        },
+        "product_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Version"
+        },
+        "license_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License Url"
+        },
+        "native_unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Native Unit"
+        },
+        "retrieval": {
+          "anyOf": [
+            {
+              "enum": [
+                "viability_sample",
+                "demo_fixture",
+                "live"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retrieval"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Note"
+        }
+      },
+      "required": [
+        "source_ids"
+      ],
+      "title": "Provenance",
+      "type": "object"
+    },
+    "ProviderReport": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "live_probe": {
+          "enum": [
+            "not_performed",
+            "performed"
+          ],
+          "title": "Live Probe",
+          "type": "string"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        },
+        "providers": {
+          "items": {
+            "$ref": "#/$defs/ProviderStatus"
+          },
+          "title": "Providers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "checked_at",
+        "live_probe",
+        "note",
+        "providers"
+      ],
+      "title": "ProviderReport",
+      "type": "object"
+    },
+    "ProviderStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "pattern": "^D\\d{2}$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "integration_status": {
+          "enum": [
+            "documented",
+            "credential_required",
+            "sample_retrieved",
+            "connected",
+            "blocked"
+          ],
+          "title": "Integration Status",
+          "type": "string"
+        },
+        "sample_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sample Kind"
+        },
+        "live_status": {
+          "enum": [
+            "not_probed",
+            "reachable",
+            "unreachable"
+          ],
+          "title": "Live Status",
+          "type": "string"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "name",
+        "integration_status",
+        "sample_kind",
+        "live_status",
+        "detail"
+      ],
+      "title": "ProviderStatus",
+      "type": "object"
+    },
+    "Quality": {
+      "additionalProperties": false,
+      "properties": {
+        "flags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Flags",
+          "type": "array"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        }
+      },
+      "title": "Quality",
+      "type": "object"
+    },
+    "RecordedHttpCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "integer"
+        },
+        "byte_count": {
+          "title": "Byte Count",
+          "type": "integer"
+        },
+        "json_keys": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Json Keys",
+          "type": "array"
+        },
+        "tested": {
+          "title": "Tested",
+          "type": "string"
+        },
+        "reexecuted": {
+          "const": false,
+          "title": "Reexecuted",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source",
+        "url",
+        "status",
+        "byte_count",
+        "json_keys",
+        "tested",
+        "reexecuted"
+      ],
+      "title": "RecordedHttpCheck",
+      "type": "object"
+    },
+    "ReferenceMention": {
+      "additionalProperties": false,
+      "properties": {
+        "owner_type": {
+          "enum": [
+            "variable",
+            "module"
+          ],
+          "title": "Owner Type",
+          "type": "string"
+        },
+        "owner_id": {
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner_type",
+        "owner_id",
+        "source_id"
+      ],
+      "title": "ReferenceMention",
+      "type": "object"
+    },
+    "SignalQueryResult": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "requested_data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Requested Data Mode",
+          "type": "string"
+        },
+        "phenomenon_id": {
+          "pattern": "^F\\d{2}$",
+          "title": "Phenomenon Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "signals": {
+          "items": {
+            "$ref": "#/$defs/SignalRecord"
+          },
+          "title": "Signals",
+          "type": "array"
+        },
+        "forecasts": {
+          "items": {
+            "$ref": "#/$defs/ForecastRecord"
+          },
+          "title": "Forecasts",
+          "type": "array"
+        },
+        "unavailable": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UnavailableResult"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "requested_data_mode",
+        "phenomenon_id",
+        "status",
+        "signals",
+        "forecasts",
+        "unavailable"
+      ],
+      "title": "SignalQueryResult",
+      "type": "object"
+    },
+    "SignalRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "phenomenon_id": {
+          "pattern": "^F\\d{2}$",
+          "title": "Phenomenon Id",
+          "type": "string"
+        },
+        "output_class": {
+          "enum": [
+            "observation",
+            "diagnosis",
+            "trend",
+            "hazard",
+            "risk",
+            "nowcast",
+            "forecast",
+            "research_signal"
+          ],
+          "title": "Output Class",
+          "type": "string"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "variable_id": {
+          "anyOf": [
+            {
+              "pattern": "^V\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Variable Id"
+        },
+        "measurement": {
+          "discriminator": {
+            "mapping": {
+              "missing": "#/$defs/MissingValue",
+              "present": "#/$defs/PresentValue"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/MissingValue"
+            },
+            {
+              "$ref": "#/$defs/PresentValue"
+            }
+          ],
+          "title": "Measurement"
+        },
+        "spatial": {
+          "$ref": "#/$defs/SpatialSupport"
+        },
+        "observed": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "instant": "#/$defs/InstantSpan",
+                  "interval": "#/$defs/IntervalSpan"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/InstantSpan"
+                },
+                {
+                  "$ref": "#/$defs/IntervalSpan"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed"
+        },
+        "valid": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "instant": "#/$defs/InstantSpan",
+                  "interval": "#/$defs/IntervalSpan"
+                },
+                "propertyName": "kind"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/InstantSpan"
+                },
+                {
+                  "$ref": "#/$defs/IntervalSpan"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid"
+        },
+        "issued_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Issued At"
+        },
+        "availability": {
+          "discriminator": {
+            "mapping": {
+              "known": "#/$defs/AvailabilityKnown",
+              "unknown": "#/$defs/AvailabilityUnknown"
+            },
+            "propertyName": "status"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/AvailabilityKnown"
+            },
+            {
+              "$ref": "#/$defs/AvailabilityUnknown"
+            }
+          ],
+          "title": "Availability"
+        },
+        "ingested_at": {
+          "format": "date-time",
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "quality": {
+          "$ref": "#/$defs/Quality"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "capability_status": {
+          "enum": [
+            "specified",
+            "source_connected",
+            "historical_ready",
+            "experimental",
+            "validated_for_scope"
+          ],
+          "title": "Capability Status",
+          "type": "string"
+        },
+        "probability": {
+          "discriminator": {
+            "mapping": {
+              "absent": "#/$defs/ProbabilityAbsent",
+              "defined": "#/$defs/ProbabilityDefined"
+            },
+            "propertyName": "state"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProbabilityAbsent"
+            },
+            {
+              "$ref": "#/$defs/ProbabilityDefined"
+            }
+          ],
+          "title": "Probability"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "data_mode",
+        "phenomenon_id",
+        "output_class",
+        "title",
+        "summary",
+        "variable_id",
+        "measurement",
+        "spatial",
+        "observed",
+        "valid",
+        "issued_at",
+        "availability",
+        "ingested_at",
+        "quality",
+        "provenance",
+        "capability_status",
+        "probability"
+      ],
+      "title": "SignalRecord",
+      "type": "object"
+    },
+    "SourceList": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "total": {
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "returned": {
+          "minimum": 0,
+          "title": "Returned",
+          "type": "integer"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/CatalogSourceView"
+          },
+          "title": "Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "total",
+        "returned",
+        "sources"
+      ],
+      "title": "SourceList",
+      "type": "object"
+    },
+    "SpatialSupport": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": [
+            "observation_location",
+            "grid_cell",
+            "gridded_product",
+            "area",
+            "track",
+            "region_anchor"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "region_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region Id"
+        },
+        "grid_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grid Id"
+        },
+        "extent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GeographicExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "geometry": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "LineString": "#/$defs/GeoLineString",
+                  "MultiLineString": "#/$defs/GeoMultiLineString",
+                  "MultiPoint": "#/$defs/GeoMultiPoint",
+                  "MultiPolygon": "#/$defs/GeoMultiPolygon",
+                  "Point": "#/$defs/GeoPoint",
+                  "Polygon": "#/$defs/GeoPolygon"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/GeoPoint"
+                },
+                {
+                  "$ref": "#/$defs/GeoMultiPoint"
+                },
+                {
+                  "$ref": "#/$defs/GeoLineString"
+                },
+                {
+                  "$ref": "#/$defs/GeoMultiLineString"
+                },
+                {
+                  "$ref": "#/$defs/GeoPolygon"
+                },
+                {
+                  "$ref": "#/$defs/GeoMultiPolygon"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Geometry"
+        },
+        "vertical": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/VerticalPosition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "resolution_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution Note"
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "title": "SpatialSupport",
+      "type": "object"
+    },
+    "StatusCount": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "title": "Status",
+          "type": "string"
+        },
+        "count": {
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "status",
+        "count"
+      ],
+      "title": "StatusCount",
+      "type": "object"
+    },
+    "UnavailableResult": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "const": "unavailable",
+          "title": "Status",
+          "type": "string"
+        },
+        "requested_data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Requested Data Mode",
+          "type": "string"
+        },
+        "reason_code": {
+          "enum": [
+            "insufficient_data",
+            "source_unreachable",
+            "not_implemented",
+            "credential_required",
+            "outside_coverage",
+            "quality_rejected",
+            "no_demo_fixture"
+          ],
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "reason": {
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        },
+        "phenomenon_id": {
+          "anyOf": [
+            {
+              "pattern": "^F\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Phenomenon Id"
+        },
+        "variable_id": {
+          "anyOf": [
+            {
+              "pattern": "^V\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Variable Id"
+        },
+        "source_ids": {
+          "items": {
+            "pattern": "^D\\d{2}$",
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "status",
+        "requested_data_mode",
+        "reason_code",
+        "reason",
+        "phenomenon_id",
+        "variable_id",
+        "source_ids",
+        "as_of"
+      ],
+      "title": "UnavailableResult",
+      "type": "object"
+    },
+    "Uncertainty": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Low"
+        },
+        "high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "High"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        }
+      },
+      "required": [
+        "description"
+      ],
+      "title": "Uncertainty",
+      "type": "object"
+    },
+    "VariableList": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "total": {
+          "minimum": 0,
+          "title": "Total",
+          "type": "integer"
+        },
+        "returned": {
+          "minimum": 0,
+          "title": "Returned",
+          "type": "integer"
+        },
+        "variables": {
+          "items": {
+            "$ref": "#/$defs/CatalogVariable"
+          },
+          "title": "Variables",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "total",
+        "returned",
+        "variables"
+      ],
+      "title": "VariableList",
+      "type": "object"
+    },
+    "VerticalPosition": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        },
+        "datum": {
+          "minLength": 1,
+          "title": "Datum",
+          "type": "string"
+        },
+        "direction": {
+          "enum": [
+            "down",
+            "up"
+          ],
+          "title": "Direction",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "unit",
+        "datum",
+        "direction"
+      ],
+      "title": "VerticalPosition",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "health": {
+      "$ref": "#/$defs/HealthResponse"
+    },
+    "providers": {
+      "$ref": "#/$defs/ProviderReport"
+    },
+    "sources": {
+      "$ref": "#/$defs/SourceList"
+    },
+    "phenomena": {
+      "$ref": "#/$defs/PhenomenonList"
+    },
+    "variables": {
+      "$ref": "#/$defs/VariableList"
+    },
+    "validation": {
+      "$ref": "#/$defs/CatalogValidationReport"
+    },
+    "observation": {
+      "$ref": "#/$defs/ObservationRecord"
+    },
+    "asset": {
+      "$ref": "#/$defs/AssetRecord"
+    },
+    "signal_query": {
+      "$ref": "#/$defs/SignalQueryResult"
+    },
+    "forecast": {
+      "$ref": "#/$defs/ForecastRecord"
+    }
+  },
+  "required": [
+    "health",
+    "providers",
+    "sources",
+    "phenomena",
+    "variables",
+    "validation",
+    "observation",
+    "asset",
+    "signal_query",
+    "forecast"
+  ],
+  "title": "ContractBundle",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

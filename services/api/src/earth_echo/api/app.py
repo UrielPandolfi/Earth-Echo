@@ -1,0 +1,159 @@
+"""API mínima: salud, catálogo, muestras y consultas con modo explícito."""
+
+from datetime import datetime, timezone
+from typing import Annotated, Literal
+
+from fastapi import APIRouter, FastAPI, HTTPException, Path, Query
+from fastapi.middleware.cors import CORSMiddleware
+
+from earth_echo.api.limit import BodyLimitMiddleware
+from earth_echo.catalog.load import load_catalog
+from earth_echo.catalog.overlay import integration_status_for, load_overlay
+from earth_echo.catalog.validate import normalize_capability, validate_catalog
+from earth_echo.catalog.views import PhenomenonList, PhenomenonView, SourceList, CatalogSourceView, VariableList
+from earth_echo.connectors.smap_metadata import load_smap_asset
+from earth_echo.connectors.usgs_comcat import load_usgs_asset, load_usgs_observation
+from earth_echo.contracts.api_models import HealthResponse, ProviderReport, ProviderStatus
+from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQueryResult
+from earth_echo.queries.signals import query_signals
+from earth_echo.settings import get_settings
+
+
+def create_app() -> FastAPI:
+    settings = get_settings()
+    app = FastAPI(title="Earth Echo", version="0.1.0")
+    app.add_middleware(BodyLimitMiddleware, max_bytes=settings.max_body_bytes)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.cors_origins,
+        allow_credentials=False,
+        allow_methods=["GET", "OPTIONS"],
+        allow_headers=["Accept", "Content-Type"],
+    )
+    app.include_router(_routes())
+    return app
+
+
+def _routes() -> APIRouter:
+    router = APIRouter()
+
+    @router.get("/health", response_model=HealthResponse)
+    def health() -> HealthResponse:
+        return HealthResponse(
+            schema_version="1.0",
+            status="ok",
+            service="earth-echo-api",
+            time=datetime.now(timezone.utc),
+            checks=["process"],
+        )
+
+    @router.get("/providers", response_model=ProviderReport)
+    def providers() -> ProviderReport:
+        document = load_catalog()
+        names = {item.id: item.name for item in document.sources}
+        listed = []
+        for source_id, item in load_overlay().sources.items():
+            listed.append(
+                ProviderStatus(
+                    source_id=source_id,
+                    name=names.get(source_id, source_id),
+                    integration_status=item.integration_status,
+                    sample_kind=item.sample_kind,
+                    live_status="not_probed",
+                    detail=item.detail,
+                )
+            )
+        return ProviderReport(
+            schema_version="1.0",
+            checked_at=datetime.now(timezone.utc),
+            live_probe="not_performed",
+            note=(
+                "Este listado no es la salud del proceso. Describe integraciones conocidas "
+                "y no sondea proveedores en cada consulta. El resto de las fuentes sigue documentado."
+            ),
+            providers=listed,
+        )
+
+    @router.get("/catalog/sources", response_model=SourceList)
+    def sources(
+        limit: Annotated[int | None, Query(ge=1, le=100)] = None,
+    ) -> SourceList:
+        items = [
+            CatalogSourceView(
+                **source.model_dump(),
+                integration_status=integration_status_for(source.id),
+            )
+            for source in load_catalog().sources
+        ]
+        returned = items if limit is None else items[:limit]
+        return SourceList(schema_version="1.0", total=len(items), returned=len(returned), sources=returned)
+
+    @router.get("/catalog/sources/{source_id}", response_model=CatalogSourceView)
+    def source(source_id: Annotated[str, Path(pattern=r"^D\d{2}$")]) -> CatalogSourceView:
+        found = next((item for item in load_catalog().sources if item.id == source_id), None)
+        if found is None:
+            raise HTTPException(status_code=404, detail="La fuente no está en el catálogo.")
+        return CatalogSourceView(
+            **found.model_dump(),
+            integration_status=integration_status_for(found.id),
+        )
+
+    @router.get("/catalog/phenomena", response_model=PhenomenonList)
+    def phenomena(
+        limit: Annotated[int | None, Query(ge=1, le=100)] = None,
+    ) -> PhenomenonList:
+        items = [
+            PhenomenonView(
+                **module.model_dump(),
+                capability_status=normalize_capability(module.implementation_status),
+            )
+            for module in load_catalog().modules
+        ]
+        returned = items if limit is None else items[:limit]
+        return PhenomenonList(
+            schema_version="1.0",
+            total=len(items),
+            returned=len(returned),
+            phenomena=returned,
+        )
+
+    @router.get("/catalog/variables", response_model=VariableList)
+    def variables(
+        limit: Annotated[int | None, Query(ge=1, le=100)] = None,
+    ) -> VariableList:
+        items = list(load_catalog().variables)
+        returned = items if limit is None else items[:limit]
+        return VariableList(
+            schema_version="1.0",
+            total=len(items),
+            returned=len(returned),
+            variables=returned,
+        )
+
+    @router.get("/catalog/validation")
+    def validation():
+        return validate_catalog()
+
+    @router.get("/samples/d21/observation", response_model=ObservationRecord)
+    def usgs_observation() -> ObservationRecord:
+        return load_usgs_observation()
+
+    @router.get("/samples/d21/asset", response_model=AssetRecord)
+    def usgs_asset() -> AssetRecord:
+        return load_usgs_asset()
+
+    @router.get("/samples/d02/asset", response_model=AssetRecord)
+    def smap_asset() -> AssetRecord:
+        return load_smap_asset()
+
+    @router.get("/signals", response_model=SignalQueryResult)
+    def signals(
+        phenomenon_id: Annotated[str, Query(pattern=r"^F\d{2}$")],
+        mode: Literal["real", "demo"],
+    ) -> SignalQueryResult:
+        document = load_catalog()
+        if phenomenon_id not in {item.id for item in document.modules}:
+            raise HTTPException(status_code=404, detail="El fenómeno no está en el catálogo.")
+        return query_signals(phenomenon_id, mode, datetime.now(timezone.utc))
+
+    return router
