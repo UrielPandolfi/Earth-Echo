@@ -412,6 +412,10 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 .chart-grid { stroke: var(--line); stroke-width: 1; }
 .chart-tick { fill: var(--text-faint); font-size: 9px; }
 .chart-observed { fill: none; stroke: var(--observed); stroke-width: 2; }
+.chart-trend { fill: none; stroke: #e7c56a; stroke-width: 1.8; }
+.swatch.trend { background: #e7c56a; }
+.trend-dialog { width: min(760px, 92vw); }
+.inspector-foot a.analysis { display: inline-grid; place-items: center; text-decoration: none; }
 .chart-forecast { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 4 3; }
 .chart-band { fill: rgba(62, 224, 207, 0.16); stroke: none; }
 .chart-dot { fill: var(--observed); }
@@ -453,6 +457,8 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
   background: rgba(0, 0, 0, 0.45);
   padding: 16px;
 }
+.dialog-backdrop.trend-backdrop { position: fixed; z-index: 30; }
+.dialog.trend-dialog { width: min(760px, 92vw); }
 .dialog {
   width: min(420px, 100%);
   padding: 16px;

@@ -21,6 +21,7 @@ interface GlobeColumnProps {
   onSelect: (id: string) => void;
   onCameraHeight: (heightMeters: number) => void;
   emptyText?: string;
+  trendNote?: string;
 }
 
 const sectionNote: Record<Exclude<Section, "explorar">, string> = {
@@ -42,10 +43,11 @@ export function GlobeColumn({
   onSelect,
   onCameraHeight,
   emptyText,
+  trendNote,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
-  const note = state.section === "explorar" ? null : sectionNote[state.section];
+  const note = state.section === "tendencias" && trendNote ? trendNote : state.section === "explorar" ? null : sectionNote[state.section];
 
   useEffect(() => {
     controls?.setSignals?.(markers);

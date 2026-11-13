@@ -72,5 +72,7 @@ describe("observatorio demo", () => {
     expect(screen.queryByRole("heading", { name: "Déficit de humedad" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "DEMO" }));
     expect(screen.getByRole("heading", { name: "Déficit de humedad" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Tendencias" }));
+    expect(screen.getByRole("heading", { name: "Sin análisis en DEMO" })).toBeTruthy();
   });
 });

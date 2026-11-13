@@ -143,6 +143,39 @@ D01, NASA GPM IMERG Early (`GPM_3IMERGHHE`, versión 07), pide Earthdata o PPS. 
 - No hay escala ni offset en este subconjunto. Si otro archivo los trae, la conversión ya los aplica.
 - D02 y D01 siguen sin el HDF o el GeoTIFF científico. PostGIS no se incorporó: el índice de esta fase cabe en SQLite.
 
+## Fase 06 — completada para la SST del recorte
+
+La tendencia se calcula en la API, no en el gráfico. El caso real es la misma colección y el mismo recorte de la fase 05, con historia mensual de 2014 a 2025.
+
+### Método, fijado antes del resultado
+
+- Día: promedio de celdas válidas ponderado por el coseno de la latitud.
+- Mes: promedio de esos días si hay al menos el 80 % de los días. Si no, el mes queda null.
+- Anomalía: diferencia en °C contra la media del mismo mes en 2014–2021. No es un porcentaje. No es una normal de treinta años.
+- Recta: mínimos cuadrados, en °C por año. El intervalo remuestrea los residuos en bloques de 12 meses, semilla 20261113.
+- Hacen falta 96 meses y ocho años de referencia en cada mes del calendario. Si falta eso, la pendiente queda null.
+- Umbral práctico de este caso: 0,02 °C por año. No es un límite de daño.
+- Una serie sintética aparte comprueba una pendiente de 0,04 °C por año, un hueco que no se vuelve cero y una serie corta que no se evalúa.
+
+### Resultado real
+
+- 144 meses, sin huecos después de reintentar las descargas que el proxy rechazó.
+- La anomalía sube 0,068 °C por año. El intervalo va de 0,024 a 0,109 y no incluye cero.
+- Eso no identifica la causa ni es un pronóstico. La climatología comparte años con la recta, así que una tendencia lineal uniforme puede quedar atenuada.
+- Ejecución `d707920451b5decd`. Exportación CSV en `/v1/analyses/d15-sst.csv`.
+
+### Evidencia
+
+- `uv run --directory services/api pytest`: 35 pruebas.
+- `npm --prefix apps/web test`: 17 pruebas. `npx tsc --noEmit` sin error.
+- En http://127.0.0.1:5173/, con REAL y Tendencias, el panel muestra la pendiente y la serie. El globo sigue en el recorte. DEMO dice que no calcula una tendencia.
+
+### Limitaciones
+
+- Una sola región y una sola variable. No hay corrección por muchas comparaciones.
+- Los archivos mensuales NetCDF quedan en disco y no en Git. La serie agregada sí está en `data/real/d15/monthly_series.json`, con el checksum de cada mes.
+- D01 sigue sin credencial.
+
 ## Siguiente paso
 
-Fase 06: series y tendencias sobre registros con huecos, sin tratar este promedio de SST como una anomalía ni como un pronóstico.
+Fase 07: más capas sobre este mismo contrato de consulta, sin tratar esta pendiente como un pronóstico ni como una causa.

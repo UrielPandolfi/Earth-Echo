@@ -9,6 +9,8 @@
     "typecheck": "npm --prefix apps/web run typecheck",
     "build:web": "npm --prefix apps/web run build",
     "contracts:check": "uv run --directory services/api python -m earth_echo.contracts.schema_export --check",
-    "ingest:d15": "uv run --directory services/api python -m earth_echo.tools.ingest_d15"
+    "ingest:d15": "uv run --directory services/api python -m earth_echo.tools.ingest_d15",
+    "ingest:d15-history": "uv run --directory services/api python -m earth_echo.tools.ingest_d15_history --download",
+    "ingest:d15-history": "uv run --directory services/api python -m earth_echo.tools.ingest_d15_history --download"
   }
 }

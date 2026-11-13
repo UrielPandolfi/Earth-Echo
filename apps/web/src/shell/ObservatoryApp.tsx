@@ -19,6 +19,7 @@ import { FilterPanel } from "./FilterPanel";
 import { GlobeColumn } from "./GlobeColumn";
 import { Inspector } from "./Inspector";
 import { RealInspector } from "./RealInspector";
+import { TrendPanel } from "./TrendPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 
@@ -36,7 +37,6 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [frameRequest, setFrameRequest] = useState<GeoExtent | null>(null);
   const [realView, setRealView] = useState<RealSourceView | null>(null);
   const [realError, setRealError] = useState<string | null>(null);
-  const [realLoading, setRealLoading] = useState(false);
   const [realField, setRealField] = useState<RealField | null>(null);
   const onCameraHeight = useCallback((height: number) => {
     setCameraHeight((current) => (Math.abs(current - height) < 250_000 ? current : height));
@@ -89,7 +89,6 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
     }
     const controller = new AbortController();
     setRealError(null);
-    setRealLoading(true);
     async function loadReal() {
       try {
         const response = await fetch(`${apiBase}/v1/sources/D15`, { signal: controller.signal });
@@ -101,7 +100,6 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           throw new Error("La respuesta real no tiene el contrato esperado.");
         }
         setRealView(body);
-        setRealLoading(false);
         if (body.status === "available" && body.coverage) {
           setFrameRequest({
             west: body.coverage.west,
@@ -116,7 +114,6 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           return;
         }
         setRealView(null);
-        setRealLoading(false);
         setRealError(caught instanceof Error ? caught.message : "No se pudo leer el subconjunto real.");
       }
     }
@@ -308,6 +305,13 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           frameRequest={frameRequest}
           onSelect={(id) => dispatch({ type: "select", id })}
           onCameraHeight={onCameraHeight}
+          trendNote={
+            state.section !== "tendencias"
+              ? undefined
+              : state.dataMode === "real"
+                ? "La tendencia de la SST real está en el panel derecho. El globo sigue en el recorte."
+                : "El escenario demo no calcula una tendencia climática."
+          }
         />
         <TimelineBar
           state={state}
@@ -317,7 +321,13 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onRealIndex={(index) => dispatch({ type: "real-index", index })}
         />
       </div>
-      {state.dataMode === "real" ? (
+      {state.section === "tendencias" ? (
+        <TrendPanel
+          mode={state.dataMode}
+          analysisOpen={state.analysisOpen}
+          onAnalysis={(open) => dispatch({ type: "analysis", open })}
+        />
+      ) : state.dataMode === "real" ? (
         <RealInspector
           view={realView}
           error={realError}

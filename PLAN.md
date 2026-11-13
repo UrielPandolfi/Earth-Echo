@@ -9,7 +9,7 @@ Diez fases. El estado real está en `PROGRESS.md`. Los criterios siguientes son 
 | 03 | Globo geográfico 3D integrado en esa interfaz | Completada con base GIBS y respaldo local |
 | 04 | Exploración completa con datos demo identificados | Completada sobre el escenario con semilla |
 | 05 | Primer flujo real, del proveedor al globo | Completada para SST de D15; D01 sigue bloqueado por credencial |
-| 06 | Series, tendencias e incertidumbre | Pendiente |
+| 06 | Series, tendencias e incertidumbre | Completada para la SST del Caribe occidental |
 | 07 | Más capas, capacidades y volumen | Pendiente |
 | 08 | Pronósticos y prueba histórica reproducible | Pendiente |
 | 09 | Asistente con herramientas | Pendiente |

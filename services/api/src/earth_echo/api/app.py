@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, FastAPI, HTTPException, Path, Query
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from earth_echo.api.limit import BodyLimitMiddleware
@@ -17,6 +18,7 @@ from earth_echo.contracts.api_models import HealthResponse, ProviderReport, Prov
 from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQueryResult
 from earth_echo.ingest.d15_sst import default_store
 from earth_echo.queries.real_sst import RealSourceView, SstField, d01_blocked, d15_field, d15_view
+from earth_echo.queries.trend import TrendView, trend_csv, trend_view
 from earth_echo.queries.signals import query_signals
 from earth_echo.settings import get_settings
 
@@ -34,6 +36,7 @@ def create_app() -> FastAPI:
     )
     app.include_router(_routes())
     app.include_router(_real_routes())
+    app.include_router(_analysis_routes())
     return app
 
 
@@ -193,5 +196,46 @@ def _real_routes() -> APIRouter:
         if found is None:
             raise HTTPException(status_code=404, detail="Ese activo no está en el índice.")
         return found
+
+    return router
+
+
+def _analysis_routes() -> APIRouter:
+    router = APIRouter(prefix="/v1/analyses")
+
+    @router.get("/d15-sst", response_model=TrendView)
+    def sst_trend(
+        region_id: str = "caribe-occidental",
+        cutoff_year: Annotated[int | None, Query(ge=1985, le=2100)] = None,
+        cutoff_month: Annotated[int | None, Query(ge=1, le=12)] = None,
+    ) -> TrendView:
+        if region_id != "caribe-occidental":
+            blocked = trend_view()
+            return blocked.model_copy(
+                update={
+                    "status": "unavailable",
+                    "reason": "Esa región no tiene cobertura en este subconjunto. No se usó el escenario DEMO.",
+                    "slope_c_per_year": None,
+                    "series": [],
+                    "trend_line": [],
+                    "interval_low_line": [],
+                    "interval_high_line": [],
+                    "narrative": "Esa región no tiene cobertura en este subconjunto. No se usó el escenario DEMO.",
+                }
+            )
+        if (cutoff_year is None) != (cutoff_month is None):
+            raise HTTPException(status_code=422, detail="El corte necesita año y mes.")
+        cutoff = None if cutoff_year is None or cutoff_month is None else (cutoff_year, cutoff_month)
+        return trend_view(cutoff)
+
+    @router.get("/d15-sst.csv")
+    def sst_trend_csv(region_id: str = "caribe-occidental") -> Response:
+        if region_id != "caribe-occidental":
+            raise HTTPException(status_code=404, detail="Esa región no tiene una serie exportable.")
+        return Response(
+            content=trend_csv(),
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=d15-sst-tendencia.csv"},
+        )
 
     return router

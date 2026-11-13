@@ -46,12 +46,37 @@ def logical_asset_key() -> str:
 
 
 def fetch_subset(destination: Path) -> None:
-    """Baja solo el recorte. Un reintento si el tiempo se agota. No hay respaldo mundial."""
-    url = subset_url()
+    """Baja solo el recorte reciente. Un reintento si el tiempo se agota."""
+    _fetch(subset_url(), destination, MAX_BYTES, TIMEOUT_SECONDS)
+
+
+def fetch_month(year: int, month: int, destination: Path) -> None:
+    last_day = __import__("calendar").monthrange(year, month)[1]
+    url = (
+        f"{GRIDDAP}?{VARIABLE}"
+        f"[({year:04d}-{month:02d}-01T12:00:00Z):({year:04d}-{month:02d}-{last_day:02d}T12:00:00Z)]"
+        f"[({REQUEST_SOUTH}):({REQUEST_NORTH})]"
+        f"[({REQUEST_WEST}):({REQUEST_EAST})]"
+    )
+    _fetch(url, destination, 500_000, 90)
+
+
+def fetch_year(year: int, destination: Path) -> None:
+    url = (
+        f"{GRIDDAP}?{VARIABLE}"
+        f"[({year}-01-01T12:00:00Z):({year}-12-31T12:00:00Z)]"
+        f"[({REQUEST_SOUTH}):({REQUEST_NORTH})]"
+        f"[({REQUEST_WEST}):({REQUEST_EAST})]"
+    )
+    _fetch(url, destination, 4_000_000, 180)
+
+
+def _fetch(url: str, destination: Path, max_bytes: int, timeout: int) -> None:
     last_error: Exception | None = None
     for _ in range(2):
         try:
-            destination.write_bytes(_read_limited(url))
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(_read_limited(url, max_bytes, timeout))
             return
         except TimeoutError as error:
             last_error = error
@@ -64,9 +89,9 @@ def fetch_subset(destination: Path) -> None:
     raise CrwError("Coral Reef Watch no respondió a tiempo.") from last_error
 
 
-def _read_limited(url: str) -> bytes:
+def _read_limited(url: str, max_bytes: int = MAX_BYTES, timeout: int = TIMEOUT_SECONDS) -> bytes:
     request = Request(url, headers={"User-Agent": "EarthEcho/0.1"})
-    with urlopen(request, timeout=TIMEOUT_SECONDS) as response:
+    with urlopen(request, timeout=timeout) as response:
         content_type = str(response.headers.get("Content-Type", ""))
         chunks: list[bytes] = []
         total = 0
@@ -75,8 +100,8 @@ def _read_limited(url: str) -> bytes:
             if not block:
                 break
             total += len(block)
-            if total > MAX_BYTES:
-                raise CrwError("El subconjunto supera el tamaño máximo de 2 MB.")
+            if total > max_bytes:
+                raise CrwError("La respuesta supera el tamaño máximo pedido.")
             chunks.append(block)
     body = b"".join(chunks)
     ensure_netcdf(content_type, body)
