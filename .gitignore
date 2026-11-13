@@ -22,6 +22,8 @@ __pycache__/
 # Datos pesados que no forman parte de la fase
 *.h5
 *.nc
+!data/samples/d15-crw/*.nc
+!data/real/d15/assets/*.nc
 *.grib
 *.grib2
 *.tif

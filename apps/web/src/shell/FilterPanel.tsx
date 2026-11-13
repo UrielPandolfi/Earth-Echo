@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { demoScenario } from "../demo/scenario";
 import { formatCount } from "../demo/queries";
+import type { RealSourceView } from "../real/view";
+import { freshnessLabel } from "../real/view";
 import type { ObservatoryState } from "./observatoryState";
 import { Icon, SymbolMark } from "./icons";
 
@@ -13,9 +15,33 @@ interface FilterPanelProps {
   onToggleLayer: (id: string) => void;
   onGroup: () => void;
   onWide: (wide: boolean) => void;
+  realView: RealSourceView | null;
+  realError: string | null;
 }
 
-export function FilterPanel({ state, categoryCounts, infoCounts, onToggleCategory, onToggleInfo, onToggleLayer, onGroup, onWide }: FilterPanelProps) {
+export function FilterPanel({ state, categoryCounts, infoCounts, onToggleCategory, onToggleInfo, onToggleLayer, onGroup, onWide, realView, realError }: FilterPanelProps) {
+  if (state.dataMode === "real") {
+    return (
+      <aside className="sidebar" aria-label="Consulta real">
+        <div className="sidebar-head">
+          <h2>Consulta real</h2>
+        </div>
+        {realError ? <p className="hint">{realError} El escenario DEMO no se usó como reemplazo.</p> : null}
+        {realView?.status === "unavailable" ? <p className="hint">{realView.reason} El escenario DEMO no se usó como reemplazo.</p> : null}
+        {realView?.status === "available" ? (
+          <div className="legend">
+            <p>
+              <strong>SST · CoralTemp {realView.product_version}</strong>
+              <span>Temperatura superficial del mar, no anomalía ni blanqueamiento.</span>
+            </p>
+            <p className="hint">Cadencia {realView.cadence}. {realView.freshness ? freshnessLabel(realView.freshness) : ""}</p>
+            <p className="hint">Última observación {realView.latest_observation?.replace(/\.\d+/, "")}. Última ingestión {realView.latest_ingest?.replace(/\.\d+/, "")}.</p>
+            <p className="hint">IMERG (D01) sigue bloqueado: hacen falta EARTHDATA_USERNAME y EARTHDATA_PASSWORD en .env.</p>
+          </div>
+        ) : null}
+      </aside>
+    );
+  }
   const [layersOpen, setLayersOpen] = useState(false);
   const activeLayer = demoScenario.layers.find((layer) => layer.id === state.activeLayerId) ?? null;
   const activeCategories = demoScenario.categories.filter((item) => state.enabledCategoryIds.includes(item.id));

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { demoScenario } from "../demo/scenario";
 import { timelineLabel } from "../demo/queries";
 import type { SearchHit } from "../demo/explore";
-import type { ObservatoryState } from "./observatoryState";
+import type { DataMode, ObservatoryState } from "./observatoryState";
 import { Icon } from "./icons";
 
 interface TopBarProps {
@@ -13,6 +13,8 @@ interface TopBarProps {
   onPick: (hit: SearchHit) => void;
   onTimeline: (days: number) => void;
   onPanel: (panel: "filters" | "inspector") => void;
+  onMode: (mode: DataMode) => void;
+  badge: string;
 }
 
 const sections = [
@@ -21,7 +23,7 @@ const sections = [
   { id: "historico", label: "Histórico" },
 ] as const;
 
-export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline, onPanel }: TopBarProps) {
+export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline, onPanel, onMode, badge }: TopBarProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const searchPending = state.searchText.trim().length >= 2;
   return (
@@ -75,7 +77,7 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
             {results.length === 0 ? (
               <p role="status">Sin coincidencias en el escenario demo.</p>
             ) : (
-              <ul id="search-results" role="listbox" aria-label="Resultados del escenario demo">
+              <ul id="search-results" role="listbox" aria-label={state.dataMode === "real" ? "Resultados del subconjunto real" : "Resultados del escenario demo"}>
                 {results.map((hit, index) => (
                   <li key={`${hit.kind}-${hit.id}`}>
                     <button
@@ -100,7 +102,7 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
           </span>
         )}
       </div>
-      <label className="time-preset">
+      {state.dataMode === "demo" ? <label className="time-preset">
         <span>Últimos datos</span>
         <select
           value={state.timelineDays}
@@ -113,8 +115,16 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
             </option>
           ))}
         </select>
-      </label>
-      <p className="demo-badge">{demoScenario.badge}</p>
+      </label> : null}
+      <div className="mode-switch" role="group" aria-label="Modo de datos">
+        <button type="button" aria-pressed={state.dataMode === "demo"} onClick={() => onMode("demo")}>
+          DEMO
+        </button>
+        <button type="button" aria-pressed={state.dataMode === "real"} onClick={() => onMode("real")}>
+          REAL
+        </button>
+      </div>
+      <p className="demo-badge">{badge}</p>
       <div className="top-tools" aria-label="Herramientas de la barra">
         <button type="button" className="icon-button panel-toggle" onClick={() => onPanel("filters")}>
           Filtros

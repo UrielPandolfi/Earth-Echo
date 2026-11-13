@@ -1,0 +1,15 @@
+{
+  "source_id": "D15",
+  "dataset_id": "noaacrwsstDaily",
+  "product_version": "3.1",
+  "variable": "analysed_sst",
+  "retrieved_at": "2026-11-13T06:36:13Z",
+  "request_url": "https://coastwatch.noaa.gov/erddap/griddap/noaacrwsstDaily.nc?analysed_sst[(2026-11-08T12:00:00Z):(2026-11-11T12:00:00Z)][(16.5):(17.5)][(-67.5):(-66.5)]",
+  "discovery": "https://coastwatch.noaa.gov/erddap/info/noaacrwsstDaily/index.json",
+  "http_status": 200,
+  "content_type": "application/x-netcdf",
+  "byte_size": 25120,
+  "sha256": "b190912a4f0a8f94ae0b4a5fa4e5254547fef88f93518559cae80b60954af231",
+  "science_file_retrieved": true,
+  "note": "Subconjunto ERDDAP del Caribe occidental. No es el NetCDF global ni un producto de blanqueamiento."
+}

@@ -20,6 +20,7 @@ interface GlobeColumnProps {
   frameRequest: GeoExtent | null;
   onSelect: (id: string) => void;
   onCameraHeight: (heightMeters: number) => void;
+  emptyText?: string;
 }
 
 const sectionNote: Record<Exclude<Section, "explorar">, string> = {
@@ -40,6 +41,7 @@ export function GlobeColumn({
   frameRequest,
   onSelect,
   onCameraHeight,
+  emptyText,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
@@ -71,7 +73,7 @@ export function GlobeColumn({
         <GlobeStage createGlobe={createGlobe} onControls={setControls} onSelect={onSelect} />
         {signalCount === 0 ? (
           <p className="empty-map" role="status">
-            No hay señales en este instante y con estos filtros. Activá una categoría o volvé a Ahora.
+            {emptyText ?? "No hay señales en este instante y con estos filtros. Activá una categoría o volvé a Ahora."}
           </p>
         ) : null}
         <div className="synthesis" aria-live="polite">

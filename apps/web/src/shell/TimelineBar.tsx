@@ -7,10 +7,30 @@ interface TimelineBarProps {
   state: ObservatoryState;
   onTimeline: (days: number) => void;
   onPlay: () => void;
+  realDates?: string[];
+  onRealIndex?: (index: number) => void;
 }
 
-export function TimelineBar({ state, onTimeline, onPlay }: TimelineBarProps) {
+export function TimelineBar({ state, onTimeline, onPlay, realDates = [], onRealIndex }: TimelineBarProps) {
   const kind = timelineKind(state.timelineDays);
+  if (state.dataMode === "real") {
+    return (
+      <div className="timeline" aria-label="Fechas del subconjunto real">
+        <button type="button" className="play" onClick={onPlay} aria-pressed={state.playing} disabled={realDates.length === 0}>
+          <Icon name={state.playing ? "pause" : "play"} />
+          <span className="sr-only">{state.playing ? "Pausar" : "Reproducir"} las fechas reales</span>
+        </button>
+        <div className="ticks">
+          {realDates.map((label, index) => (
+            <button key={label} type="button" className={state.realIndex === index ? "is-current" : undefined} onClick={() => onRealIndex?.(index)}>
+              {label}
+            </button>
+          ))}
+        </div>
+        <p className="timeline-note">Cadencia diaria. No hay pronóstico en este subconjunto.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="timeline" aria-label="Línea de tiempo del escenario demo">

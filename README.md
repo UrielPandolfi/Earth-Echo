@@ -52,6 +52,6 @@ uv run --directory services/api python -m earth_echo.contracts.schema_export --w
 
 ## Qué hay hoy
 
-La pantalla de escritorio monta el globo con Natural Earth II, incluido en CesiumJS, sin Cesium ion. El escenario visible es DEMO. La API distingue la salud del proceso de la disponibilidad de proveedores. El modo `real` no cae al modo `demo` cuando falta una fuente.
+La pantalla de escritorio monta el globo con Natural Earth II, incluido en CesiumJS, sin Cesium ion. El modo DEMO y el modo REAL se eligen en la barra. REAL muestra un subconjunto de SST de Coral Reef Watch ya ingerido. IMERG sigue bloqueado sin `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD` en `.env`, y no se reemplaza con DEMO.
 
 La documentación de decisiones está en `docs/arquitectura.md`. El estado de la fase está en `PROGRESS.md`.

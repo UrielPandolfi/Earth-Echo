@@ -3,6 +3,7 @@ import type { DemoSeriesPoint } from "../demo/scenario";
 interface AnomalyChartProps {
   points: DemoSeriesPoint[];
   caption: string;
+  domain?: { min: number; max: number; ticks: number[] };
 }
 
 const width = 320;
@@ -10,9 +11,7 @@ const height = 112;
 const padX = 28;
 const padY = 12;
 
-function yOf(value: number): number {
-  const max = 4;
-  const min = -48;
+function yOf(value: number, min: number, max: number): number {
   return padY + ((max - value) / (max - min)) * (height - padY * 2);
 }
 
@@ -27,11 +26,14 @@ function line(points: Array<{ x: number; y: number }>): string {
   return points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
 }
 
-export function AnomalyChart({ points, caption }: AnomalyChartProps) {
+export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
+  const min = domain?.min ?? -48;
+  const max = domain?.max ?? 4;
+  const ticks = domain?.ticks ?? [0, -20, -40];
   const placed = points.map((point, index) => ({
     ...point,
     x: xOf(index, points.length),
-    y: point.value === null ? null : yOf(point.value),
+    y: point.value === null ? null : yOf(point.value, min, max),
   }));
   const observed = placed.filter((point) => point.kind === "observed" && point.y !== null);
   const forecast = placed.filter((point) => point.kind === "forecast" && point.y !== null);
@@ -42,18 +44,18 @@ export function AnomalyChart({ points, caption }: AnomalyChartProps) {
   const band = placed.filter((point) => point.low !== undefined && point.high !== undefined && point.y !== null);
   const bandPath =
     band.length > 0
-      ? `${line(band.map((point) => ({ x: point.x, y: yOf(point.high ?? 0) })))} ${line(
-          [...band].reverse().map((point) => ({ x: point.x, y: yOf(point.low ?? 0) })),
+      ? `${line(band.map((point) => ({ x: point.x, y: yOf(point.high ?? 0, min, max) })))} ${line(
+          [...band].reverse().map((point) => ({ x: point.x, y: yOf(point.low ?? 0, min, max) })),
         ).replace("M", "L")} Z`
       : "";
 
   return (
     <figure className="chart">
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={caption}>
-        {[0, -20, -40].map((tick) => (
+        {ticks.map((tick) => (
           <g key={tick}>
-            <line className="chart-grid" x1={padX} x2={width - 4} y1={yOf(tick)} y2={yOf(tick)} />
-            <text className="chart-tick" x={2} y={yOf(tick) + 3}>
+            <line className="chart-grid" x1={padX} x2={width - 4} y1={yOf(tick, min, max)} y2={yOf(tick, min, max)} />
+            <text className="chart-tick" x={2} y={yOf(tick, min, max) + 3}>
               {tick}
             </text>
           </g>
@@ -84,8 +86,8 @@ export function AnomalyChart({ points, caption }: AnomalyChartProps) {
       </div>
       <figcaption className="chart-key">
         <span><i className="swatch observed" /> Observado</span>
-        <span><i className="swatch forecast" /> Pronóstico</span>
-        <span><i className="swatch band" /> Incertidumbre</span>
+        {points.some((point) => point.kind === "forecast") ? <span><i className="swatch forecast" /> Pronóstico</span> : null}
+        {points.some((point) => point.low !== undefined && point.high !== undefined) ? <span><i className="swatch band" /> Incertidumbre</span> : null}
       </figcaption>
     </figure>
   );

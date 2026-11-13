@@ -66,5 +66,11 @@ describe("observatorio demo", () => {
     expect(screen.getByRole("dialog").textContent).toMatch(/Déficit de humedad/);
     expect(screen.getByRole("dialog").textContent).toMatch(/Fuentes previstas/);
     expect(activeGlobeCount()).toBe(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "REAL" }));
+    expect((await screen.findAllByText(/El escenario DEMO no se usó como reemplazo/)).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("heading", { name: "Déficit de humedad" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "DEMO" }));
+    expect(screen.getByRole("heading", { name: "Déficit de humedad" })).toBeTruthy();
   });
 });

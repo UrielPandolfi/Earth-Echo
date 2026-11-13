@@ -15,6 +15,8 @@ from earth_echo.connectors.smap_metadata import load_smap_asset
 from earth_echo.connectors.usgs_comcat import load_usgs_asset, load_usgs_observation
 from earth_echo.contracts.api_models import HealthResponse, ProviderReport, ProviderStatus
 from earth_echo.contracts.records import AssetRecord, ObservationRecord, SignalQueryResult
+from earth_echo.ingest.d15_sst import default_store
+from earth_echo.queries.real_sst import RealSourceView, SstField, d01_blocked, d15_field, d15_view
 from earth_echo.queries.signals import query_signals
 from earth_echo.settings import get_settings
 
@@ -31,6 +33,7 @@ def create_app() -> FastAPI:
         allow_headers=["Accept", "Content-Type"],
     )
     app.include_router(_routes())
+    app.include_router(_real_routes())
     return app
 
 
@@ -155,5 +158,40 @@ def _routes() -> APIRouter:
         if phenomenon_id not in {item.id for item in document.modules}:
             raise HTTPException(status_code=404, detail="El fenómeno no está en el catálogo.")
         return query_signals(phenomenon_id, mode, datetime.now(timezone.utc))
+
+    return router
+
+
+def _real_routes() -> APIRouter:
+    router = APIRouter(prefix="/v1/sources")
+
+    @router.get("/D01", response_model=RealSourceView)
+    def imerg_status() -> RealSourceView:
+        return d01_blocked()
+
+    @router.get("/D15", response_model=RealSourceView)
+    def coral_status() -> RealSourceView:
+        return d15_view()
+
+    @router.get("/D15/observations/{observation_id}", response_model=ObservationRecord)
+    def coral_observation(observation_id: Annotated[str, Path(pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")]) -> ObservationRecord:
+        found = next((item for item in d15_view().observations if item.id == observation_id), None)
+        if found is None:
+            raise HTTPException(status_code=404, detail="Esa observación no está en el subconjunto vigente.")
+        return found
+
+    @router.get("/D15/observations/{observation_id}/field", response_model=SstField)
+    def coral_field(observation_id: Annotated[str, Path(pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")]) -> SstField:
+        field = d15_field(observation_id)
+        if field is None:
+            raise HTTPException(status_code=404, detail="No hay una malla vigente para esa observación.")
+        return field
+
+    @router.get("/D15/assets/{asset_id}", response_model=AssetRecord)
+    def coral_asset(asset_id: Annotated[str, Path(pattern=r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")]) -> AssetRecord:
+        found = default_store().asset(asset_id)
+        if found is None:
+            raise HTTPException(status_code=404, detail="Ese activo no está en el índice.")
+        return found
 
     return router

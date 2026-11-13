@@ -1,5 +1,12 @@
 {
   "sources": {
+    "D01": {
+      "integration_status": "credential_required",
+      "sample_kind": null,
+      "sample_path": null,
+      "credential_variables": ["EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"],
+      "detail": "IMERG Early en GES DISC (GPM_3IMERGHHE, versión 07) y el GeoTIFF de PPS piden Earthdata o una cuenta PPS. No hay credencial en este entorno. No se inventó una URL de archivo ni se reemplazó la precipitación con otro producto."
+    },
     "D02": {
       "integration_status": "credential_required",
       "sample_kind": "cmr_metadata",
@@ -13,6 +20,13 @@
       "sample_path": "data/samples/d21-usgs/event.geojson",
       "credential_variables": [],
       "detail": "Se guardó un GeoJSON público de un evento con limit=1. Es una muestra de viabilidad del contrato de observación, no una conexión operativa ni la fuente de humedad del suelo."
+    },
+    "D15": {
+      "integration_status": "connected",
+      "sample_kind": "netcdf_subset",
+      "sample_path": "data/samples/d15-crw/coraltemp-v3.1-caribe-20261108-20261111.nc",
+      "credential_variables": [],
+      "detail": "Subconjunto público de CoralTemp v3.1, SST en degree_C, Caribe occidental, 8 al 11 de noviembre de 2026. No es el planeta entero, no es HotSpot ni DHW, y no confirma blanqueamiento."
     }
   }
 }

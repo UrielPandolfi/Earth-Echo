@@ -113,6 +113,36 @@ La pantalla sigue en DEMO. Filtros, mapa, contadores, búsqueda, tiempo e inspec
 - El conjunto amplio sigue en memoria del navegador. No hay paginación ni un proveedor real.
 - Earthdata sigue faltando para el HDF de D02.
 
+## Fase 05 — completada para un subconjunto
+
+La primera fuente con archivo, decodificación, índice y mapa es CoralTemp. IMERG no se conectó porque no hay credencial.
+
+### Elección
+
+D01, NASA GPM IMERG Early (`GPM_3IMERGHHE`, versión 07), pide Earthdata o PPS. En este entorno `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD` no están definidas. No se inventó una URL de gránulo ni se mostró precipitación de demostración en su lugar. La alternativa con acceso público comprobado es D15, NOAA Coral Reef Watch CoralTemp v3.1: SST analizada (`analysed_sst`, `degree_C`), no HotSpot ni DHW.
+
+### Hecho
+
+- Recorte del Caribe occidental, 16,5°N–17,5°N y 67,5°O–66,5°O, cuatro análisis diarios del 8 al 11 de noviembre de 2026 a las 12:00 UTC.
+- El archivo original es el NetCDF clásico devuelto por ERDDAP `noaacrwsstDaily`, 25 120 bytes, sha256 `b190912a4f0a8f94ae0b4a5fa4e5254547fef88f93518559cae80b60954af231`.
+- La celda 16,525°, −67,175° del 11 de noviembre vale 29,73 °C, igual que la muestra CSV del mismo punto. El relleno −327,68 no se trata como temperatura.
+- El mapa y la ficha usan el promedio del recorte. El 11 de noviembre es 29,7295 °C, activo `d15-coraltemp-v3.1-caribe-r1`, observación `d15-sst-20261111T120000Z-r1`.
+- Ingerir el mismo archivo otra vez no duplica. Un checksum distinto crea la revisión 2 y conserva la 1.
+- La barra tiene DEMO y REAL. En REAL, una respuesta inválida no vuelve a mostrar «Déficit de humedad».
+
+### Evidencia
+
+- `uv run --directory services/api pytest`: 28 pruebas.
+- `npm --prefix apps/web test`: 17 pruebas. `npx tsc --noEmit` sin error.
+- `GET http://127.0.0.1:8000/v1/sources/D15` respondió `available` y frescura `recent_archive`. `GET /v1/sources/D01` respondió `credential_required`.
+- En http://127.0.0.1:5173/ el modo REAL mostró el recorte, la serie en °C, el checksum y la fecha 2026-11-11. Reiniciar la API no borró el índice SQLite.
+
+### Limitaciones
+
+- El recorte no es el producto global ni una actualización en vivo de cada visita. La cadencia diaria y la frescura salen del archivo guardado.
+- No hay escala ni offset en este subconjunto. Si otro archivo los trae, la conversión ya los aplica.
+- D02 y D01 siguen sin el HDF o el GeoTIFF científico. PostGIS no se incorporó: el índice de esta fase cabe en SQLite.
+
 ## Siguiente paso
 
-Fase 05: el primer flujo real, de un proveedor al globo, sin cambiar en silencio a DEMO si falta la credencial. `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD` siguen siendo el bloqueo de D02.
+Fase 06: series y tendencias sobre registros con huecos, sin tratar este promedio de SST como una anomalía ni como un pronóstico.

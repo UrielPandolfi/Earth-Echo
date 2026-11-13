@@ -3,6 +3,7 @@ import { demoScenario } from "../demo/scenario";
 
 export type Section = "explorar" | "tendencias" | "historico";
 export type InspectorTab = "resumen" | "datos" | "antecedentes";
+export type DataMode = "demo" | "real";
 
 export interface ObservatoryState {
   section: Section;
@@ -14,6 +15,8 @@ export interface ObservatoryState {
   timelineDays: number;
   playing: boolean;
   searchText: string;
+  dataMode: DataMode;
+  realIndex: number;
   wide: boolean;
   selectedId: string | null;
   tab: InspectorTab;
@@ -32,6 +35,9 @@ export type ObservatoryAction =
   | { type: "play" }
   | { type: "tick" }
   | { type: "search"; text: string }
+  | { type: "mode"; mode: DataMode }
+  | { type: "real-index"; index: number }
+  | { type: "real-tick"; count: number }
   | { type: "wide"; wide: boolean }
   | { type: "select"; id: string | null }
   | { type: "tab"; tab: InspectorTab }
@@ -53,6 +59,8 @@ export function initialObservatoryState(): ObservatoryState {
     timelineDays: 0,
     playing: false,
     searchText: "",
+    dataMode: "demo",
+    realIndex: 0,
     wide: false,
     selectedId: HERO_ID,
     tab: "resumen",
@@ -99,6 +107,15 @@ export function reduceObservatory(state: ObservatoryState, action: ObservatoryAc
     }
     case "search":
       return { ...state, searchText: action.text };
+    case "mode":
+      return { ...state, dataMode: action.mode, playing: false, searchText: "" };
+    case "real-index":
+      return { ...state, realIndex: Math.max(0, action.index), playing: false };
+    case "real-tick":
+      if (!state.playing || state.realIndex >= action.count - 1) {
+        return { ...state, playing: false };
+      }
+      return { ...state, realIndex: state.realIndex + 1 };
     case "wide":
       return { ...state, wide: action.wide };
     case "select":
