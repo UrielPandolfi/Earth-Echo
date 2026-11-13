@@ -130,6 +130,7 @@ def imported_kp() -> dict[str, Any]:
         "tool": "imported_kp",
         "available": True,
         "issued_at": payload["issued_at"],
+        "retrieved_at": payload.get('retrieved_at',payload.get('archived_at')),
         "valid_start": steps[0]["valid_start"],
         "valid_end": steps[-1]["valid_end"],
         "step_count": len(steps),

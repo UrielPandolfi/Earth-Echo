@@ -8,7 +8,7 @@ export interface GlobeMarker {
   latitude: number;
   priority: number;
   note: string;
-  symbol?: "observation" | "risk" | "forecast" | "cluster";
+  symbol?: "observation" | "risk" | "forecast" | "cluster" | "context";
   count?: number;
 }
 

@@ -57,6 +57,11 @@ def _ocean(key, now):
 def jobs() -> dict:
     from earth_echo.connectors.nasa_subsets import fetch_modis
     from earth_echo.connectors.ecmwf_fields import fetch_ecmwf
+    from earth_echo.connectors.oisst import fetch_oisst
+    from earth_echo.connectors.cneos import fetch_sentry
+    from earth_echo.connectors.geology_products import fetch_gvp, fetch_tsunami
+    from earth_echo.connectors.climate_indices import fetch_oni
+    from earth_echo.connectors.aftershocks import fetch_oaf
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -65,6 +70,9 @@ def jobs() -> dict:
         'd21-events':(3600, refresh_usgs), 'd28-kp':(10800, refresh_kp), 'd28-kp-forecast':(10800, refresh_kp_forecast),
         **{f'{p.lower()}-{r}':(86400, lambda now,p=p,r=r:modis(p,r,now)) for p in ['MOD13Q1','MOD11A2'] for r in ['pampa','amazonia']},
         'd07-ifs-24h':(43200,fetch_ecmwf),
+        'd13-oisst-global':(86400,fetch_oisst), 'd23-holocene-inventory':(604800,fetch_gvp),
+        'd29-sentry':(86400,fetch_sentry), 'd27-tsunami-messages':(900,fetch_tsunami),
+        'd48-oni-history':(604800,fetch_oni), 'd22-oaf-recent':(3600,fetch_oaf),
     }
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:

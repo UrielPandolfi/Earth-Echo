@@ -306,6 +306,21 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Pruebas añadidas de unidades, QA/nubes/agua/nieve, orientación y reproyección. No se habilita un detector de ola de calor por disponer de un campo de temperatura.
 - SMAP también figura en ORNL pero `/SPL3SMP_E/dates` respondió 400 en dos regiones; no se declara conectado. Su vía Earthdata y GLDAS/IMERG continúan bloqueadas por credencial.
 
+## Incremento 11C — OISST, geología, avisos y espacio
+
+- D13 OISST v2.1 mundial, preliminar del 12/11, NetCDF4 original de 1.526.178 bytes. Vista de 1° desde nativa 0,25°, relleno/escala/ejes decodificados. Fecha contra listado oficial y short escalado contra aritmética decimal; original conserva error de interpolación, hielo y anomalía.
+- D23: inventario GVP con 1.214 volcanes del Holoceno. El endpoint correcto es `webservices.volcano.si.edu`, enlazado por Smithsonian. WFS 1.0 `hits` devolvió cero; WFS 2.0 confirmó 1.214. Coordenadas GeoJSON cotejadas con atributos nativos. WFS no informa edición: se declara, sin inventar la versión. Es contexto estático, dibujado gris, sin inferir actividad o erupciones.
+- D22: OAF de USGS para `us7000txrk`, 20 probabilidades por magnitud y ventanas de día/semana/mes/año. SHA-256 y longitud coinciden con el manifiesto independiente del evento. Se conserva modelo/región/emisión/validez. No se aplica a los demás sismos.
+- D27: mensajes de ambos centros NTWC/PTWC, con CAP completo, emisor, estado, cancelación, vigencia y áreas originales. Atom updated coincide con CAP sent. Sin polígono disponible no se dibuja el epicentro como área alertada. Mensajes informativos no equivalen a peligro ni a pronóstico de llegada.
+- D29: 2.248 evaluaciones Sentry de objetos conocidos. La probabilidad acumulada de un objeto se contrastó con su endpoint de detalle; consultas secuenciales. Cada probabilidad tiene objeto, rango de años y definición; sin pines terrestres ni fechas de desastre.
+- D48: 921 valores ONI históricos; último período ASO 2026 (01/08–01/11), anomalía 2,46 °C. Ventanas móviles de tres meses verificadas, incluido cambio de año. No se etiqueta automáticamente como diagnóstico ENSO vigente ni se sustituye RONI.
+- Total en este incremento: 12 fuentes del catálogo con datos retenidos (10 en productos nuevos, más D21/D28), 22 productos nuevos y 17 campos. 37,07 MB en el almacén nuevo antes de nuevas revisiones; límite 128 MB. Los registros estáticos/orbitales no se cuentan como observaciones ambientales.
+- API, inspector, búsqueda y contadores usan esos activos. Agrupación real distingue clases y los lados del antimeridiano; selección de un punto superpuesto permanece accesible. Capturas auténticas en `docs/integraciones/`. `/ready` comprueba también los originales científicos nuevos.
+- Comprobación: 70 pruebas API pasaron; fixtures pequeños se extrajeron de respuestas reales (no registros DEMO), con comprobaciones específicas de OAF, Sentry, GVP, CAP y ONI. Kp volvió a descargarse a las 22:53 UTC: observado y forecast dieron `unchanged`, avanzó último éxito y se conservó última fecha de cambio.
+- Continúa trabajo viable sobre GeoTIFF y subconjuntos públicos. No se declara conectado LHASA por descubrir archivos de ~190 MiB, ni MHW por encontrar un archivo que excede el tope inicial de descarga. RAPID solicita correo/consentimiento: no se envió información del usuario.
+
+## Pendientes heredados
+
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
 2. Un Qwen local pequeño, solo para parafrasear herramientas, si se quiere texto de modelo.
 3. Una cuenta CDS si se va a leer caudal, sin convertirlo en profundidad de inundación.

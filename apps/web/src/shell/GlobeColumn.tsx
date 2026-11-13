@@ -91,6 +91,7 @@ export function GlobeColumn({
           )}
         </div>
         <ul className="symbol-legend">
+          {state.dataMode==='real' ? <li><span style={{color:'#acb5c3'}}>●</span> Inventario (si seleccionado)</li> : null}
           <li><SymbolMark kind="observation" /> Observación</li>
           <li><SymbolMark kind="risk" /> Riesgo</li>
           <li><SymbolMark kind="forecast" /> Pronóstico</li>

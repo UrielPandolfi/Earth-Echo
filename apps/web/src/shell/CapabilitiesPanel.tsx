@@ -20,6 +20,7 @@ const labels: Record<string, string> = {
   indicator: "Indicador",
   trend: "Tendencia",
   forecast: "Pronóstico",
+  experimental_model: "Modelo propio",
 };
 
 export function CapabilitiesPanel() {

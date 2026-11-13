@@ -1,15 +1,27 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-13T22:18:04Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-06T22%3A18%3A04Z&endtime=2026-11-13T22%3A18%3A04Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "7ede3178bf7866504cd63196be87bb5c7f3912786192fd670d5addf4a158e3f9",
-  "byte_size": 80983,
-  "raw_file": "assets\\d21-events\\7ede3178bf7866504cd63196be87bb5c7f3912786192fd670d5addf4a158e3f9.json",
+  "retrieved_at": "2026-11-13T22:53:40Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-06T22%3A53%3A40Z&endtime=2026-11-13T22%3A53%3A40Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "390cec51bdd6521010569d335fdbb514e736ae1e7fb2bf4014d36b606fb54568",
+  "byte_size": 80978,
+  "raw_file": "assets\\d21-events\\390cec51bdd6521010569d335fdbb514e736ae1e7fb2bf4014d36b606fb54568.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty4w",
+      "longitude": -178.6351,
+      "latitude": -32.746,
+      "depth_km": 36.931,
+      "magnitude": 4.9,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-13T22:49:17.040000Z",
+      "time": "2026-11-13T22:10:42Z",
+      "place": "south of the Kermadec Islands"
+    },
     {
       "id": "us7000ty43",
       "longitude": 149.9613,
@@ -1365,18 +1377,6 @@
       "updated_at": "2026-11-07T07:41:39.040000Z",
       "time": "2026-11-07T07:14:10Z",
       "place": "South Sandwich Islands region"
-    },
-    {
-      "id": "us7000twqm",
-      "longitude": 144.9932,
-      "latitude": 13.5679,
-      "depth_km": 113.394,
-      "magnitude": 4.6,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T12:19:52.255000Z",
-      "time": "2026-11-06T22:37:54Z",
-      "place": "11 km ENE of Yigo Village, Guam"
     }
   ]
 }

@@ -115,6 +115,18 @@ def capability_matrix() -> CapabilityMatrix:
     if 'd07-ifs-tp-24h' in available:
         overrides_by_id['F01']['forecast'] = ('partial','Precipitación determinista IFS acumulada 0–24 h, mundial, m convertidos a mm. Sin percentiles de extremo ni probabilidad calibrada.')
     overrides_by_id.setdefault('F19',{})['experimental_model'] = ('experimental','Experimento de anomalía mensual SST del Caribe, sin habilidad adicional frente a persistencia. No pronostica daño de coral.')
+    if 'd13-oisst-global' in available:
+        overrides_by_id.setdefault('F18',{})['observation'] = ('partial','SST diaria mundial OISST v2.1, preliminar; sin climatología diaria y duración no se diagnostica una ola de calor marina.')
+    if 'd48-oni-history' in available:
+        overrides_by_id.setdefault('F17',{})['indicator'] = ('partial','Historia ONI de CPC, media móvil de tres meses en Niño 3.4. No es diagnóstico operativo de fase ni pronóstico local; no se sustituye RONI.')
+    if 'd23-holocene-inventory' in available:
+        overrides_by_id.setdefault('F24',{})['observation'] = ('partial','Inventario geográfico GVP del Holoceno: contexto estático. No hay precursores ni predicción de erupciones.')
+    if 'd27-tsunami-messages' in available:
+        overrides_by_id.setdefault('F27',{})['observation'] = ('partial','Mensajes Atom/CAP de NTWC/PTWC con emisor, cancelación, vigencia y ámbito originales. No cubren todos los centros ni se infiere llegada desde el epicentro.')
+    if 'd22-oaf-recent' in available:
+        overrides_by_id['F28']['forecast'] = ('partial','OAF oficial de USGS para un evento reciente con producto publicado: probabilidades por magnitud y ventana, modelo/región definidos. Sin hora/lugar garantizados de la réplica.')
+    if 'd29-sentry' in available:
+        overrides_by_id.setdefault('F30',{})['forecast'] = ('partial','Evaluación orbital Sentry para objetos conocidos, con probabilidad acumulada y años de posibles impactos. No fecha/lugar terrestre ni cobertura de objetos no descubiertos.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

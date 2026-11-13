@@ -33,7 +33,7 @@ def all_products(root: Path | None = None) -> list[ScientificProduct]:
 
 def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | None = None) -> str:
     import hashlib
-    if hashlib.sha256(raw).hexdigest() != product.checksum_sha256:
+    if hashlib.sha256(raw).hexdigest() != product.checksum_sha256 or len(raw) != product.byte_size:
         raise ValueError('Raw checksum mismatch')
     active = root or products_root()
     current = read_product(product.id, active)

@@ -192,7 +192,7 @@ def _template(intro: str, used: list[dict[str, Any]], context: AssistantContext)
                 parts.append("No hay un pronóstico de Kp archivado.")
             else:
                 parts.append(
-                    f"Kp importado, emitido {item['issued_at']}, válido de {item['valid_start']} a {item['valid_end']}. "
+                    f"Kp importado, emisión {item['issued_at'] or 'no informada'}, recuperado {item.get('retrieved_at')}, válido de {item['valid_start']} a {item['valid_end']}. "
                     f"Primer valor {item['first_kp']} y último {item['last_kp']}. No es una probabilidad ni un aviso local."
                 )
         elif name == "quakes":

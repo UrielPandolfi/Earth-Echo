@@ -43,8 +43,18 @@ class ProductSample(ApiModel):
     longitude: float | None = Field(default=None, ge=-180, le=180)
     latitude: float | None = Field(default=None, ge=-90, le=90)
     value: float | None = None
+    probability: float | None = Field(default=None, ge=0, le=1)
+    probability_definition: str | None = None
     quality: str
     attributes: dict[str, str | None] = Field(default_factory=dict)
+
+    @model_validator(mode='after')
+    def check_probability(self):
+        if self.value is not None and not math.isfinite(self.value):
+            raise ValueError('Nonfinite sample must be missing')
+        if (self.probability is None) != (self.probability_definition is None):
+            raise ValueError('A probability needs its definition')
+        return self
 
 class Verification(ApiModel):
     method: str
@@ -81,7 +91,7 @@ class ScientificProduct(ApiModel):
     attribution: str
     checksum_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
     byte_size: int = Field(gt=0)
-    raw_file: str
+    raw_file: str = Field(pattern=r'^(?:shared|[a-z0-9-]+/assets)/[0-9a-f]{64}\.[a-z0-9]+$')
     coverage: str
     cadence_seconds: int = Field(gt=0)
     method_version: str

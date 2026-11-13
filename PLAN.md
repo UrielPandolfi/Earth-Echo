@@ -30,4 +30,13 @@ Diez fases. El estado real está en `PROGRESS.md`. Los criterios siguientes son 
 
 ## Dirección que ya quedó fijada
 
+## Integraciones posteriores a fase 10
+
+El pedido actual amplía las integraciones del catálogo completo, por incrementos con datos externos y commits. La matriz ejecutable de trabajo y sus evidencias están en `docs/integraciones.md`; las 48 referencias y 31 fenómenos originales permanecen intactos.
+
+- 11A: CRW mundial, sismos/Kp actualizados y planificador persistente.
+- 11B: subconjuntos científicos MODIS y campos públicos IFS +24 h.
+- 11C: OISST, inventario volcánico, OAF, CAP, Sentry y ONI histórico.
+- Siguiente: productos GeoTIFF y subconjuntos autorizados, manteniendo bloqueos por credencial, permiso, volumen o definición científica. Un paso no cierra otro producto del mismo proveedor.
+
 React, TypeScript y Vite en `apps/web`. CesiumJS como motor del globo, con Natural Earth II mientras no haya una decisión de imaginería con token. FastAPI en `services/api`. PostgreSQL con PostGIS es la dirección de almacenamiento geográfico para cuando exista una fase de datos persistidos; esta fase no lo exige. Redis y colas quedan fuera hasta que haya un trabajo asíncrono concreto.

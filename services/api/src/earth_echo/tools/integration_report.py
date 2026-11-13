@@ -40,16 +40,30 @@ def main():
         evidence = [f'/v1/products/{p.id}' for p in products if p.source_id == s['id']]
         if s['id'] == 'D21': evidence = ['/v1/layers/d21-events']
         if s['id'] == 'D28': evidence = ['/v1/layers/d28-kp','/v1/forecasts/d28-kp']
+        connected_products=[p for p in products if p.source_id==s['id']]
+        next_step = ' | '.join(dict.fromkeys(p.limitation for p in connected_products)) if connected_products else BLOCKS.get(s['id'],'Consultar producto real; descubrimiento no cuenta como integración')
         matrix.append({'id':s['id'],'name':s['name'],'classification':kinds, 'official_url':s['url'],
             'status':'connected_for_scope' if evidence else 'reference_only' if n in DOCS else 'pending',
-            'evidence':evidence,'blocker_or_next_step':BLOCKS.get(s['id'],'Consultar producto real; descubrimiento no cuenta como integración'),
+            'evidence':evidence,'blocker_or_next_step':next_step,
             'limits':s['limits']})
     (root/'data/operational/integration_matrix.json').write_text(json.dumps(matrix,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     text = '# Matriz de integraciones reales\n\nGenerada desde los 48 IDs originales con `python -m earth_echo.tools.integration_report`. Estado y evidencia son del alcance efectivamente descargado, no del proveedor entero. Accesos: [accesos.md](accesos.md).\n\n| ID | Fuente | Clasificación | Estado / evidencia | Bloqueo o siguiente paso |\n| --- | --- | --- | --- | --- |\n'
     for item in matrix:
         evidence = ', '.join(item['evidence']) or item['status']
-        text += f"| {item['id']} | {item['name']} | {'; '.join(item['classification'])} | {evidence} | {item['blocker_or_next_step']} |\n"
+        text += f"| {item['id']} | {item['name']} | {'; '.join(item['classification'])} | {evidence} | {item['blocker_or_next_step'].replace('|',';')} |\n"
+    from earth_echo.catalog.capabilities import capability_matrix
+    text+='\n## Capacidades de los 31 fenómenos\n\nObservación puede ser parcial; un dato de contexto no habilita un detector. «specified», «blocked» o «research» no son capacidades operativas. «partial» describe exactamente el alcance indicado en la API.\n\n| ID | Fenómeno | Observación | Indicador | Tendencia | Pronóstico externo | Modelo propio |\n| --- | --- | --- | --- | --- | --- | --- |\n'
+    for m in capability_matrix().phenomena:
+        statuses={o.kind:o.status for o in m.outputs}
+        text+=f"| {m.id} | {m.name} | "+' | '.join(statuses[k] for k in ['observation','indicator','trend','forecast','experimental_model'])+' |\n'
     (root/'docs/integraciones.md').write_text(text,encoding='utf-8')
+    overlay_path=root/'data/operational/source_integration.json'
+    overlay=json.loads(overlay_path.read_text(encoding='utf-8'))
+    for sid in {p.source_id for p in products}:
+        own=[p for p in products if p.source_id==sid]
+        overlay['sources'][sid]={'integration_status':'connected','sample_kind':'verified_scientific_product','sample_path':'data/real/products/'+own[0].id+'/current.json','credential_variables':[],
+            'detail':'; '.join(p.title+' ('+p.coverage+')' for p in own)}
+    overlay_path.write_text(json.dumps(overlay,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 if __name__ == '__main__':
     main()

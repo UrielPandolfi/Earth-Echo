@@ -254,11 +254,11 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
       const cluster = markers.get(id);
       if (cluster) {
         const framed = frameExtent({
-          west: cluster.longitude - 3,
-          south: cluster.latitude - 3,
-          east: cluster.longitude + 3,
-          north: cluster.latitude + 3,
-          crossesAntimeridian: false,
+          west: ((cluster.longitude - 3 + 540) % 360) - 180,
+          south: Math.max(-90, cluster.latitude - 3),
+          east: ((cluster.longitude + 3 + 540) % 360) - 180,
+          north: Math.min(90, cluster.latitude + 3),
+          crossesAntimeridian: cluster.longitude - 3 < -180 || cluster.longitude + 3 > 180,
         });
         if (framed.status === "framed") {
           flyToView(framed.view.longitude, framed.view.latitude, framed.view.heightMeters);
@@ -440,6 +440,7 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
 }
 
 function symbolColor(symbol: GlobeMarker["symbol"]): string {
+  if (symbol === 'context') return '#acb5c3';
   if (symbol === "risk") {
     return "#e07a62";
   }

@@ -1,13 +1,14 @@
 """Archivos locales de consulta. No sondea proveedores ni declara el planeta sano."""
 
 from pathlib import Path
+import json
 
 from earth_echo.contracts.api_models import ReadyResponse, StoreCheck
 
 REQUIRED_STORES = (
     ("Serie mensual de SST", "data/real/d15/monthly_series.json"),
     ("Índice del recorte D15", "data/real/d15/index.sqlite"),
-    ("Sismos M>=5", "data/real/feeds/d21-events.json"),
+    ("Sismos de consulta acotada", "data/real/feeds/d21-events.json"),
     ("Kp observado", "data/real/feeds/d28-kp.json"),
     ("Kp previsto", "data/real/forecasts/d28-kp-forecast.json"),
 )
@@ -18,6 +19,13 @@ def local_readiness(root: Path, assistant: str) -> ReadyResponse:
         StoreCheck(name=name, path=relative, present=(root / relative).is_file())
         for name, relative in REQUIRED_STORES
     ]
+    for current in sorted((root/'data/real/products').glob('*/current.json')):
+        try:
+            payload=json.loads(current.read_bytes())
+            original=root/'data/real/products'/payload['raw_file']
+            stores.append(StoreCheck(name=payload['id']+' · original científico',path=str(original.relative_to(root)),present=original.is_file()))
+        except (ValueError,KeyError,TypeError):
+            stores.append(StoreCheck(name=current.parent.name+' · manifiesto inválido',path=str(current.relative_to(root)),present=False))
     complete = all(item.present for item in stores)
     return ReadyResponse(
         schema_version="1.0",

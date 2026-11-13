@@ -1507,6 +1507,32 @@
           "default": null,
           "title": "Value"
         },
+        "probability": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probability"
+        },
+        "probability_definition": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probability Definition"
+        },
         "quality": {
           "title": "Quality",
           "type": "string"
@@ -2226,6 +2252,7 @@
           "type": "integer"
         },
         "raw_file": {
+          "pattern": "^(?:shared|[a-z0-9-]+/assets)/[0-9a-f]{64}\\.[a-z0-9]+$",
           "title": "Raw File",
           "type": "string"
         },

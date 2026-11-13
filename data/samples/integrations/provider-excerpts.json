@@ -1,0 +1,137 @@
+{
+  "d29-sentry": {
+    "original_url": "https://ssd-api.jpl.nasa.gov/sentry.api",
+    "original_sha256": "e519cf96ec6d1fdce81771d1e5a0b375324d98da7ebaf01f731514b18c58ed2c",
+    "excerpt": {
+      "signature": {
+        "version": "2.0",
+        "source": "NASA/JPL Sentry Data API"
+      },
+      "data": [
+        {
+          "n_imp": 1,
+          "h": "26.32",
+          "des": "2011 TO",
+          "last_obs": "2013-01-12",
+          "ip": "2.937e-06",
+          "ps_cum": "-6.15",
+          "id": "bK11T00O",
+          "ps_max": "-6.15",
+          "last_obs_jd": "2456304.5",
+          "v_inf": "8.55",
+          "diameter": "0.018",
+          "ts_max": "0",
+          "range": "2064-2064",
+          "fullname": "(2011 TO)"
+        },
+        {
+          "ps_cum": "-6.03",
+          "ip": "1.22522146e-05",
+          "last_obs": "2012-02-21",
+          "ps_max": "-6.27",
+          "last_obs_jd": "2455978.5",
+          "id": "bK12BA2A",
+          "des": "2012 BA102",
+          "h": "26.51",
+          "n_imp": 20,
+          "range": "2103-2122",
+          "fullname": "(2012 BA102)",
+          "diameter": "0.017",
+          "v_inf": "7.21203952320587",
+          "ts_max": "0"
+        }
+      ],
+      "count": 2
+    }
+  },
+  "d23-holocene-inventory": {
+    "original_url": "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Volcanoes&outputFormat=application/json&maxFeatures=2000",
+    "original_sha256": "2c34eae711745422003a67015d2c2192b09167d18ffff98577cdd17ec975d4a2",
+    "excerpt": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "id": "Smithsonian_VOTW_Holocene_Volcanoes.fid-bc1c4cb_1a1d70bd261_43b5",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              6.85,
+              50.17
+            ]
+          },
+          "geometry_name": "GeoLocation",
+          "properties": {
+            "Volcano_Number": 210010,
+            "Volcano_Name": "West Eifel Volcanic Field",
+            "Volcanic_Landform": "Cluster",
+            "Primary_Volcano_Type": "Volcanic field",
+            "Last_Eruption_Year": -8300,
+            "Country": "Germany",
+            "Region": "European Volcanic Regions",
+            "Subregion": "Central European Volcanic Province",
+            "Geological_Summary": "The West Eifel Volcanic Field of western Germany, SW of the city of Bonn, is a dominantly Pleistocene group of 240 scoria cones, maars, and small stratovolcanoes covering an area of about 600 km2. The smaller, but better known, East Eifel Volcanic Field is about 40 km NE. Individual vents spread across a broad NW-SE-trending area extending about 50 km from the towns of Ormont on the NW to Bad Bertrich on the SE. Eruptions originated from a mantle plume through Devonian sedimentary and metamorphic rocks. Two-thirds of the volcanic centers in the field are scoria cones; lava flows have been produced from about half of them. About 30% of the centers are maars or tuff rings, many of which are occupied by lakes. About 230 eruptions have occurred during the past 730,000 years. The latest eruptions formed the Ulmener, Pulvermaar, and Strohn maars around the end of the Pleistocene and the beginning of the Holocene.",
+            "Latitude": 50.17,
+            "Longitude": 6.85,
+            "Elevation": 600,
+            "Tectonic_Setting": "Rift zone / Continental crust (> 25 km)",
+            "Geologic_Epoch": "Holocene",
+            "Evidence_Category": "Eruption Dated",
+            "Primary_Photo_Link": "https://volcano.si.edu/gallery/photos/GVP-01501.jpg",
+            "Primary_Photo_Caption": "The lake-filled Weinfelder maar is one of about 80 maars of the West Eifel Volcanic Field in Germany, west of the Rhine River. The roughly 500-m-wide crater was formed during the late Pleistocene by explosions through non-volcanic bedrock. About 230 eruptions during the past 730,000 years formed a 600 km2 area that includes maars, scoria cones, and small stratovolcanoes.",
+            "Primary_Photo_Credit": "Photo by Richard Waitt, 1990 (U.S. Geological Survey).",
+            "Major_Rock_Type": "Foidite"
+          }
+        },
+        {
+          "type": "Feature",
+          "id": "Smithsonian_VOTW_Holocene_Volcanoes.fid-bc1c4cb_1a1d70bd261_43b6",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              2.981,
+              45.786
+            ]
+          },
+          "geometry_name": "GeoLocation",
+          "properties": {
+            "Volcano_Number": 210020,
+            "Volcano_Name": "Chaine des Puys",
+            "Volcanic_Landform": "Cluster",
+            "Primary_Volcano_Type": "Lava dome(s)",
+            "Last_Eruption_Year": -4040,
+            "Country": "France",
+            "Region": "European Volcanic Regions",
+            "Subregion": "Western European Volcanic Province",
+            "Geological_Summary": "The Chaîne des Puys, prominent in the history of volcanology, form a N-S-trending chain of basaltic and trachytic cinder cones, basaltic maars, and trachytic lava domes in France's Massif Central that has been active into the Holocene. Construction of the present-day Chaîne des Puys began about 70,000 years before present (BP), and was largely completed by the beginning of the Holocene. Holocene eruptions constructed lava domes such as the Puy de Dôme, whose growth was accompanied by pyroclastic flows, cinder cones that fed lengthy lava flows, and maars. The latest well-documented activity took place about 6,000 BP near Besse-en-Chandesse and included the powerful explosions that formed the Lac Pavin maar. The dating of younger tephras has not yet been confirmed, and reports of eruptions as late as 1,000 BP have been discredited.",
+            "Latitude": 45.786,
+            "Longitude": 2.981,
+            "Elevation": 1464,
+            "Tectonic_Setting": "Rift zone / Continental crust (> 25 km)",
+            "Geologic_Epoch": "Holocene",
+            "Evidence_Category": "Eruption Dated",
+            "Primary_Photo_Link": "https://volcano.si.edu/gallery/photos/GVP-08802.jpg",
+            "Primary_Photo_Caption": "The central part of the Chaîne des Puys volcanic chain in the Auvergne region of France from the SW. Puy de Dôme is the rounded peak in the center, Puy de Côme is at the left, and Puy de Laschamp is the scoria cone at the right. The N-S-trending chain of basaltic and trachytic cones, basaltic maars, and trachytic lava domes in France's Massif Central has been active into the Holocene. The latest well-documented activity took place about 6,000 years ago.",
+            "Primary_Photo_Credit": "Photo by Ichio Moriya (Kanazawa University).",
+            "Major_Rock_Type": "Basalt / Picro-Basalt"
+          }
+        }
+      ],
+      "totalFeatures": 2,
+      "numberMatched": 1214,
+      "numberReturned": 1214,
+      "timeStamp": "2026-11-13T22:40:43.454Z",
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "urn:ogc:def:crs:EPSG::4326"
+        }
+      }
+    }
+  },
+  "d27-tsunami-messages": {
+    "original_url": "https://www.tsunami.gov/?page=productRetrieval",
+    "original_sha256": "bc55b1447b02aa621d98d31b52f23be3e94486a789dd0c0fe2d290c4da6781c8",
+    "excerpt": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><alert xmlns=\"urn:oasis:names:tc:emergency:cap:1.2\">\n  <identifier>PAAQ-1-tobe7v</identifier>\n  <sender>ntwc@noaa.gov</sender>\n  <sent>2026-11-11T01:51:32-00:00</sent>\n  <status>Actual</status>\n  <msgType>Alert</msgType>\n  <source>NTWC</source>\n  <scope>Public</scope>\n  <code>IPAWSv1.0</code>\n  <incidents>tobe7v</incidents>\n  <info>\n    <category>Geo</category>\n    <event>Tsunami Information</event>\n    <responseType>None</responseType>\n    <urgency>Unknown</urgency>\n    <severity>Minor</severity>\n    <certainty>Unlikely</certainty>\n    <expires>2026-11-11T02:51:32-00:00</expires>\n    <senderName>NWS National Tsunami Warning Center Palmer AK</senderName>\n    <headline>This is a Tsunami Information Statement. </headline>\n    <description>This is a Tsunami Information Statement.  - Event details: Preliminary magnitude 4.7 (Ml) earthquake / Lat: 49.293, Lon: -127.676 at 2026-11-11T01:45:31 UTC An information statement indicates that an earthquake has occurred, but does not pose a tsunami threat, or that a tsunami warning, advisory, or watch has been issued for another section of the ocean. </description>\n    <instruction>  There is NO tsunami danger from this earthquake.  This will be the only U.S. National Tsunami Warning Center    message issued for this event unless additional information    becomes available.   The location and magnitude are based on preliminary information.   Further information will be issued by the United States    Geological Survey (earthquake.usgs.gov) or the appropriate    regional seismic network. </instruction>\n    <web>http://www.tsunami.gov/events/PAAQ/2026/11/11/tobe7v/1/WEAK53/WEAK53.txt</web>\n    <parameter>\n      <valueName>EventLocationName</valueName>\n      <value>65 miles SW of Port Alice, British Columbia</value>\n    </parameter>\n    <parameter>\n      <valueName>EventPreliminaryMagnitude</valueName>\n      <value>4.7</value>\n    </parameter>\n    <parameter>\n      <valueName>EventPreliminaryMagnitudeType</valueName>\n      <value>Ml</value>\n    </parameter>\n    <parameter>\n      <valueName>EventOriginTime</valueName>\n      <value>2026-11-11T01:45:31-00:00</value>\n    </parameter>\n    <parameter>\n      <valueName>EventDepth</valueName>\n      <value>12 kilometers</value>\n    </parameter>\n    <parameter>\n      <valueName>EventLatLon</valueName>\n      <value>49.293,-127.676 0.000</value>\n    </parameter>\n    <parameter>\n      <valueName>WEAK53</valueName>\n      <value>Public Tsunami Information Statements for AK, BC, and US West Coast</value>\n    </parameter>\n    <parameter>\n      <valueName>EAS-ORG</valueName>\n      <value>WXR</value>\n    </parameter>\n    <resource>\n      <resourceDesc>Event Data as a JSON document</resourceDesc>\n      <mimeType>application/json</mimeType>\n      <uri>http://www.tsunami.gov/events/PAAQ/2026/11/11/tobe7v/1/WEAK53/PAAQ.json</uri>\n    </resource>\n    <area>\n      <areaDesc>65 miles SW of Port Alice, British Columbia</areaDesc>\n      <circle>49.293,-127.676 0.0</circle>\n    </area>\n  </info>\n<Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo><CanonicalizationMethod Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments\"/><SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#dsa-sha1\"/><Reference URI=\"\"><Transforms><Transform Algorithm=\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"/><DigestValue>JC7T8uqbNA585Nq2BDsQMekZFZQ=</DigestValue></Reference></SignedInfo><SignatureValue>YkuDnJkX8NIOVBjQh6JbA7zN0sOP4+/X64+ESTKKhy8AnNb2m4iQ8A==</SignatureValue><KeyInfo><KeyValue><DSAKeyValue><P>/X9TgR11EilS30qcLuzk5/YRt1I870QAwx4/gLZRJmlFXUAiUftZPY1Y+r/F9bow9subVWzXgTuA&#13;\nHTRv8mZgt2uZUKWkn5/oBHsQIsJPu6nX/rfGG/g7V+fGqKYVDwT7g/bTxR7DAjVUE1oWkTL2dfOu&#13;\nK2HXKu/yIgMZndFIAcc=</P><Q>l2BQjxUjC8yykrmCouuEC/BYHPU=</Q><G>9+GghdabPd7LvKtcNrhXuXmUr7v6OuqC+VdMCz0HgmdRWVeOutRZT+ZxBxCBgLRJFnEj6EwoFhO3&#13;\nzwkyjMim4TwWeotUfI0o4KOuHiuzpnWRbqN/C/ohNWLx+2J6ASQ7zKTxvqhRkImog9/hWuWfBpKL&#13;\nZl6Ae1UlZAFMO/7PSSo=</G><Y>XonR3Yg1PO+Hpheh7NMm5UHT3amv+Z0OpCibPuHTwnyyfTUJQLaX249PGVvgM/CPS8MTN24lqbYx&#13;\nNI9dXJLAvIb16cW6eJx+kivl9ObemdndlUkM15quv7dN94sP5GF9RtppDXuq9BD/4lv3ya/TGxjX&#13;\niMTf93pJwabei82X7Fs=</Y></DSAKeyValue></KeyValue></KeyInfo></Signature></alert>\n"
+  }
+}

@@ -4,14 +4,20 @@
       "integration_status": "credential_required",
       "sample_kind": null,
       "sample_path": null,
-      "credential_variables": ["EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"],
+      "credential_variables": [
+        "EARTHDATA_USERNAME",
+        "EARTHDATA_PASSWORD"
+      ],
       "detail": "IMERG Early en GES DISC (GPM_3IMERGHHE, versión 07) y el GeoTIFF de PPS piden Earthdata o una cuenta PPS. No hay credencial en este entorno. No se inventó una URL de archivo ni se reemplazó la precipitación con otro producto."
     },
     "D02": {
       "integration_status": "credential_required",
       "sample_kind": "cmr_metadata",
       "sample_path": "data/samples/d02-smap/cmr-granule.json",
-      "credential_variables": ["EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"],
+      "credential_variables": [
+        "EARTHDATA_USERNAME",
+        "EARTHDATA_PASSWORD"
+      ],
       "detail": "La búsqueda pública de CMR devolvió metadatos de un gránulo SPL3SMP_E. El HDF científico no se descargó: el enlace está protegido y CMR informa un archivo de cientos de megabytes. Earth Echo no sustituye ese faltante con el modo DEMO."
     },
     "D21": {
@@ -30,10 +36,73 @@
     },
     "D15": {
       "integration_status": "connected",
-      "sample_kind": "netcdf_subset",
-      "sample_path": "data/samples/d15-crw/coraltemp-v3.1-caribe-20261108-20261111.nc",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d15-dhw-global/current.json",
       "credential_variables": [],
-      "detail": "Subconjunto público de CoralTemp v3.1, SST en degree_C, Caribe occidental, 8 al 11 de noviembre de 2026. No es el planeta entero, no es HotSpot ni DHW, y no confirma blanqueamiento."
+      "detail": "Degree Heating Weeks mundial (Océanos mundiales; extensión exacta en grid; tierra y hielo excluidos.); Coral HotSpot mundial (Océanos mundiales; extensión exacta en grid; tierra y hielo excluidos.); SST · CoralTemp mundial (Océanos mundiales; extensión exacta en grid; tierra y hielo excluidos.)"
+    },
+    "D48": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d48-oni-history/current.json",
+      "credential_variables": [],
+      "detail": "ONI · historia del Pacífico (Índice SST de Niño 3.4, Pacífico ecuatorial; no campo de impactos locales.)"
+    },
+    "D05": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d05-lst-day-amazonia/current.json",
+      "credential_variables": [],
+      "detail": "LST-DAY · amazonia (Amazonía central; entorno de -3°, -60°; subconjunto de ~40×40 km, no cobertura mundial.); LST-DAY · pampa (Pampa central; entorno de -35°, -62°; subconjunto de ~40×40 km, no cobertura mundial.); LST-NIGHT · amazonia (Amazonía central; entorno de -3°, -60°; subconjunto de ~40×40 km, no cobertura mundial.); LST-NIGHT · pampa (Pampa central; entorno de -35°, -62°; subconjunto de ~40×40 km, no cobertura mundial.)"
+    },
+    "D04": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d04-evi-amazonia/current.json",
+      "credential_variables": [],
+      "detail": "EVI · amazonia (Amazonía central; entorno de -3°, -60°; subconjunto de ~40×40 km, no cobertura mundial.); EVI · pampa (Pampa central; entorno de -35°, -62°; subconjunto de ~40×40 km, no cobertura mundial.); NDVI · amazonia (Amazonía central; entorno de -3°, -60°; subconjunto de ~40×40 km, no cobertura mundial.); NDVI · pampa (Pampa central; entorno de -35°, -62°; subconjunto de ~40×40 km, no cobertura mundial.)"
+    },
+    "D07": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d07-ifs-10u-24h/current.json",
+      "credential_variables": [],
+      "detail": "Viento zonal a 10 m · IFS +24 h (Mundial; malla de modelo atmosférico. No resuelve impactos locales.); Viento meridional a 10 m · IFS +24 h (Mundial; malla de modelo atmosférico. No resuelve impactos locales.); Punto de rocío a 2 m · IFS +24 h (Mundial; malla de modelo atmosférico. No resuelve impactos locales.); Temperatura del aire a 2 m · IFS +24 h (Mundial; malla de modelo atmosférico. No resuelve impactos locales.); Precipitación acumulada 0–24 h · IFS +24 h (Mundial; malla de modelo atmosférico. No resuelve impactos locales.)"
+    },
+    "D29": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d29-sentry/current.json",
+      "credential_variables": [],
+      "detail": "Sentry · objetos conocidos (Objetos detectados y evaluados por Sentry. No existe geometría de impacto terrestre en este resumen.)"
+    },
+    "D27": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d27-tsunami-messages/current.json",
+      "credential_variables": [],
+      "detail": "Tsunami · mensajes NTWC/PTWC (Ámbitos de responsabilidad de NTWC/PTWC, no cobertura mundial de todas las costas.)"
+    },
+    "D13": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d13-oisst-global/current.json",
+      "credential_variables": [],
+      "detail": "SST · OISST mundial (Océanos mundiales; tierra ausente; extensión exacta en grid.)"
+    },
+    "D23": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d23-holocene-inventory/current.json",
+      "credential_variables": [],
+      "detail": "Volcanes · inventario Holoceno (Inventario mundial de volcanes conocidos del Holoceno.)"
+    },
+    "D22": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d22-oaf-recent/current.json",
+      "credential_variables": [],
+      "detail": "Réplicas USGS · us7000txrk (Evento us7000txrk: región {\"regionType\": \"circle\", \"regionCenterLat\": 44.4539, \"regionCenterLon\": -129.6205, \"regionRadius\": 10.0}; no cobertura mundial.)"
     }
   }
 }

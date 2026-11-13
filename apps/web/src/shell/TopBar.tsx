@@ -77,7 +77,7 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
         {searchPending ? (
           <div id="search-note" className="search-note">
             {results.length === 0 ? (
-              <p role="status">Sin coincidencias en el escenario demo.</p>
+              <p role="status">{state.dataMode==='real' ? 'Sin coincidencias entre los productos reales.' : 'Sin coincidencias en el escenario demo.'}</p>
             ) : (
               <ul id="search-results" role="listbox" aria-label={state.dataMode === "real" ? "Resultados del subconjunto real" : "Resultados del escenario demo"}>
                 {results.map((hit, index) => (
@@ -100,7 +100,7 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
           </div>
         ) : (
           <span id="search-note" className="sr-only">
-            Escribí al menos dos letras para buscar en el escenario demo.
+            Escribí al menos dos letras para buscar {state.dataMode==='real' ? 'productos reales, fuentes o el archivo del Caribe.' : 'en el escenario demo.'}
           </span>
         )}
       </div>

@@ -18,6 +18,8 @@ MODIS usa subconjuntos científicos ORNL DAAC, con entero original, bandas QA y 
 
 IFS usa el índice público oficial para obtener cinco mensajes GRIB del paso +24 h por Range. ecCodes verifica parámetro/unidad, escaneo y tiempos contra el índice; la lluvia conserva 0–24 h y convierte m→mm. El GRIB original contiene la resolución científica; la UI recibe centros muestreados a 1°. Una misma corrida no se descarga para cada fenómeno. Los originales y JSON nuevos tienen presupuesto total de 128 MB; al agotarlo, una actualización falla explícitamente conservando lo válido.
 
+Las evaluaciones orbitales y probabilidades OAF no se convierten en puntos de impacto. `ProductSample` requiere definición si contiene probabilidad. OAF conserva la región y modelo del proveedor, y se coteja con el checksum del manifiesto ComCat. Los mensajes CAP preservan prueba/cancelación y expiración; sin polígono no se reutiliza el epicentro como geometría de aviso. GVP es inventario estático con símbolos grises, sin precursores. ONI es historia de medias móviles, separada del diagnóstico ENSO operativo.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

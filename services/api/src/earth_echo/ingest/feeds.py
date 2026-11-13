@@ -54,13 +54,19 @@ def _get(url: str) -> bytes:
 
 def _write_snapshot(name: str, payload: dict) -> str:
     target = feeds_dir() / f"{name}.json"
+    status = 'stored'
+    if target.is_file():
+        previous = json.loads(target.read_bytes())
+        field = 'events' if 'events' in payload else 'rows'
+        if field in payload and previous.get(field) == payload[field]:
+            status = 'unchanged'
     raw = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     if target.is_file() and file_sha256(target) == __import__("hashlib").sha256(raw).hexdigest():
         return "unchanged"
     temporary = target.with_suffix(".tmp")
     temporary.write_bytes(raw)
     temporary.replace(target)
-    return "stored"
+    return status
 
 
 def publish_parsed(name: str, payload: dict) -> str:
@@ -155,14 +161,20 @@ def refresh_kp_forecast(now: datetime | None = None) -> str:
     moment = now or datetime.now(timezone.utc)
     raw = _get(KP_FORECAST_URL)
     rows = parse_predicted_kp(loads_json(raw), moment)
+    for row in rows:
+        row['retrieval_lead_hours'] = row.pop('lead_time_hours')
+        row['lead_time_hours'] = None  # initialization/emission not supplied
     target = forecast_dir() / 'd28-kp-forecast.json'
     payload = {'source_id':'D28', 'product':'noaa-planetary-k-index-forecast', 'product_version':'SWPC-current',
         'retrieved_at':moment.isoformat().replace('+00:00','Z'), 'archived_at':moment.isoformat().replace('+00:00','Z'),
         'issued_at':None, 'initialized_at':None, 'issue_time_basis':'El feed no proporciona emisión ni inicialización; recuperación separada, no sustituye emisión.',
         'unit':'Kp', 'steps':rows, 'probability':None, 'validated_for_use':False,
         'note':'Solo filas predicted; validez de 3 horas. Índice planetario, sin intensidad local.', **_archive('d28-kp-forecast',raw,moment)}
+    old = json.loads(target.read_bytes()) if target.exists() else {}
+    fields = lambda items:[{k:r[k] for k in ['valid_start','valid_end','kp']} for r in items]
+    result = 'unchanged' if fields(old.get('steps',[]))==fields(rows) else 'stored'
     atomic_json(target,payload)
-    return 'stored'
+    return result
 
 
 def run_due(now: datetime | None = None, *, force: bool = False) -> list[dict[str, str]]:

@@ -18,7 +18,7 @@ def parse_predicted_kp(payload: Any, issued_at: datetime) -> list[dict[str, obje
             continue
         if "kp" not in item or "time_tag" not in item:
             raise FeedSchemaError("Una fila prevista no tiene kp o time_tag.")
-        if not isinstance(item["kp"], (int, float)):
+        if not isinstance(item["kp"], (int, float)) or not 0 <= item['kp'] <= 9:
             raise FeedSchemaError("El Kp previsto no es numérico.")
         start = datetime.fromisoformat(str(item["time_tag"]))
         if start.tzinfo is None:

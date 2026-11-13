@@ -49,7 +49,7 @@
       "/v1/products/d04-ndvi-amazonia",
       "/v1/products/d04-ndvi-pampa"
     ],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "blocker_or_next_step": "Índice de verdor; no confirma sequía ni rendimiento agrícola.",
     "limits": "Un cambio de verdor puede deberse a cosecha, estación, incendio o nubes. No prueba sequía, pérdida de rendimiento ni mortalidad por sí solo."
   },
   {
@@ -66,7 +66,7 @@
       "/v1/products/d05-lst-night-amazonia",
       "/v1/products/d05-lst-night-pampa"
     ],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "blocker_or_next_step": "Temperatura de superficie de cielo despejado, diurna/nocturna; no es temperatura del aire ni ola de calor.",
     "limits": "Contaminación por nubes y muestreo de cielo despejado. Temperatura de superficie y temperatura del aire tienen significados distintos."
   },
   {
@@ -96,7 +96,7 @@
       "/v1/products/d07-ifs-2t-24h",
       "/v1/products/d07-ifs-tp-24h"
     ],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "blocker_or_next_step": "Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación.  | Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación. Acumulado desde la inicialización, convertido m→mm; no es tasa ni profundidad de inundación.",
     "limits": "No todo parámetro de IFS está en el subconjunto abierto. Productos históricos, ensembles y servicios de entrega deben revisarse por separado."
   },
   {
@@ -167,9 +167,11 @@
       "Dataset histórico"
     ],
     "official_url": "https://www.ncei.noaa.gov/products/optimum-interpolation-sst",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d13-oisst-global"
+    ],
+    "blocker_or_next_step": "SST analizada e interpolada, preliminar cuando así lo identifica NOAA. No es temperatura del aire, un evento de calor marino ni diagnóstico ENSO.",
     "limits": "Campo interpolado y suavizado. No resuelve todos los estuarios, arrecifes ni cambios subsuperficiales."
   },
   {
@@ -198,7 +200,7 @@
       "/v1/products/d15-hotspot-global",
       "/v1/products/d15-sst-global"
     ],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "blocker_or_next_step": "HotSpot: diferencia positiva de SST respecto de Maximum Monthly Mean; DHW: acumulación del estrés ≥1 °C durante 12 semanas. Indicadores importados de NOAA, sin confirmar blanqueamiento biológico ni pronóstico. | SST analizada: no es temperatura del aire ni diagnóstico de ola de calor marina.",
     "limits": "Estrés térmico y riesgo de blanqueamiento no confirman daño biológico observado. No asignar automáticamente los 5 km al pronóstico de cuatro meses."
   },
   {
@@ -282,9 +284,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://earthquake.usgs.gov/data/oaf/overview.php",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d22-oaf-recent"
+    ],
+    "blocker_or_next_step": "Probabilidades importadas, no hora/lugar garantizados de la próxima réplica. Un solo evento reciente publicado; el producto no existe para todos los sismos. Modelo del proveedor: Reasenberg-Jones (1989, 1994) aftershock model (Bayesian Combination).",
     "limits": "Si se implementa un modelo propio en otras regiones, se necesita calibración tectónica y estimar el umbral de completitud."
   },
   {
@@ -295,9 +299,11 @@
       "Geometría o contexto estático"
     ],
     "official_url": "https://volcano.si.edu/database/webservices.cfm",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "WFS respondió HTTP 403; inventario no es precursor",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d23-holocene-inventory"
+    ],
+    "blocker_or_next_step": "Contexto estático, no una red de sensores ni un pronóstico de erupción. Elevación y año de última erupción conservan la definición del inventario.",
     "limits": "No incluye todos los datos locales necesarios de gases, deformación y sismicidad para pronosticar una erupción."
   },
   {
@@ -343,9 +349,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://www.tsunami.gov/?page=productRetrieval",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d27-tsunami-messages"
+    ],
+    "blocker_or_next_step": "Mensajes oficiales con emisor, estado, actualización/cancelación y expiración. Un mensaje informativo no confirma tsunami. No se infiere llegada ni área afectada desde el epicentro. Geometrías CAP originales preservadas en cada mensaje.",
     "limits": "La alerta suele comenzar después de detectarse la fuente. No predice el terremoto. La demora de difusión puede importar en costas cercanas."
   },
   {
@@ -371,9 +379,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://ssd-api.jpl.nasa.gov/doc/index.php",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d29-sentry"
+    ],
+    "blocker_or_next_step": "No incluye objetos no descubiertos. Un acercamiento no es un impacto; las evaluaciones pueden retirarse o cambiar. No se inventa una fecha o lugar de desastre.",
     "limits": "Acercamiento no significa impacto. Conservar fecha de solución y unidad. La documentación de cada API prevalece sobre supuestos de una clave NASA genérica."
   },
   {
@@ -598,9 +608,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d48-oni-history"
+    ],
+    "blocker_or_next_step": "Historia ONI, medias móviles de tres meses y climatología definida por CPC. No se convierte automáticamente en fase ENSO vigente, perspectiva probabilística ni lluvia local. El diagnóstico operativo puede usar otro índice como RONI.",
     "limits": "Una probabilidad de fase no es probabilidad de inundación local. Las asociaciones climáticas admiten excepciones y requieren validación regional."
   }
 ]

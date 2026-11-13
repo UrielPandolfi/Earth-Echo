@@ -1,6 +1,6 @@
 {
   "source_id": "D28",
-  "retrieved_at": "2026-11-13T22:18:04Z",
+  "retrieved_at": "2026-11-13T22:53:40Z",
   "query": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json",
   "checksum_sha256": "7fa8dd71dedbf8ac7b0391210a96ce36aa00129019956f4df95d204b7fc581b0",
   "byte_size": 4880,

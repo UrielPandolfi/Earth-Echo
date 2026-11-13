@@ -26,6 +26,7 @@ import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 import type { ProductList } from '../domain/generated';
 import { ProductsPanel, ProductInspector } from '../real/Products';
+import { groupMarkers } from '../globe/clustering';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 
@@ -263,8 +264,12 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   }, [state.dataMode, realObservation?.id]);
 
   const demoResults = searchDemo(state.searchText, records);
-  const results = state.dataMode === "real" ? searchReal(state.searchText, realView) : demoResults;
+  const productHits: SearchHit[] = state.searchText.trim().length<2 ? [] : (products?.products ?? []).filter(p=>`${p.title} ${p.source_id} ${p.variable}`.toLocaleLowerCase('es').includes(state.searchText.toLocaleLowerCase('es'))).slice(0,6).map(p=>({kind:'signal',id:`product:${p.id}`,label:p.title,detail:`${p.source_id} · ${p.kind}`,longitude:0,latitude:0,west:-180,east:180,north:90,south:-90,crossesAntimeridian:false}));
+  const results = state.dataMode === "real" ? [...productHits,...searchReal(state.searchText, realView)].slice(0,8) : demoResults;
   const onPick = (hit: SearchHit) => {
+    if (state.dataMode==='real' && hit.id.startsWith('product:')) {
+      setProductKey(hit.id.slice(8)); dispatch({type:'search',text:''}); dispatch({type:'real-select',id:null}); return;
+    }
     if (state.dataMode === "real") {
       if (hit.kind === "signal") {
         dispatch({ type: "real-index", index: Number(hit.id) });
@@ -282,8 +287,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   };
   const shownMarkers: GlobeMarker[] =
     state.dataMode === "real"
-      ? [
-          ...(realObservation?.spatial.geometry
+      ? groupMarkers([
+          ...(productKey === 'archive' && realObservation?.spatial.geometry
             ? [
                 {
                   id: realObservation.id,
@@ -296,6 +301,9 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 },
               ]
             : []),
+          ...(activeProduct?.representation === 'points' ? (activeProduct.samples ?? []).flatMap(s => s.longitude === null || s.longitude === undefined || s.latitude === null || s.latitude === undefined ? [] : [{
+            id:`product-point:${s.id}`,title:s.attributes?.nombre ?? s.id,longitude:s.longitude,latitude:s.latitude,priority:1,note:s.quality,symbol:activeProduct.kind === 'static_context' ? 'context' as const : 'observation' as const,
+          }]) : []),
           ...(state.realQuakes
             ? quakes.map((quake) => ({
                 id: quake.id,
@@ -307,14 +315,14 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 symbol: "observation" as const,
               }))
             : []),
-        ]
+        ],clusterDegreesFor(cameraHeight,state.groupOnZoom),state.realSelectedId)
       : markers;
   const shownField =
     state.dataMode === "real" ? (activeProduct?.grid ? paintSstField({...activeProduct.grid, observation_id: activeProduct.id, unit: activeProduct.unit}) : productKey === 'archive' && realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
   const badge =
     state.dataMode === "real"
       ? realView?.status === "available"
-        ? "REAL · CoralTemp v3.1"
+        ? activeProduct ? `REAL · ${activeProduct.source_id}` : "REAL · archivo CoralTemp"
         : "REAL · no disponible"
       : demoScenario.badge;
 
@@ -336,7 +344,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
       {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
         const g = activeProduct?.grid;
         if (g) setFrameRequest({west:g.west, east:g.east, north:g.north, south:g.south, crossesAntimeridian:false});
-      }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError}/> : <FilterPanel
+      }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError} grouped={state.groupOnZoom} onGroup={()=>dispatch({type:'group'})}/> : <FilterPanel
         state={state}
         onToggleCategory={(id) => dispatch({ type: "toggle-category", id })}
         onToggleInfo={(id) => dispatch({ type: "toggle-info", id })}
@@ -358,8 +366,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           createGlobe={createGlobe}
           catalogTotal={catalogTotal}
           catalogState={catalogState}
-          signalCount={state.dataMode === "real" ? shownMarkers.length : visible.length}
-          groupCount={state.dataMode === "real" ? 0 : grouped.clusters.length}
+          signalCount={state.dataMode === "real" ? shownMarkers.length + (shownField ? 1 : 0) : visible.length}
+          groupCount={state.dataMode === "real" ? shownMarkers.filter(m=>m.symbol==='cluster').length : grouped.clusters.length}
           markers={shownMarkers}
           field={shownField}
           fieldCredit={
@@ -411,7 +419,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
-      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct}/> : state.dataMode === "real" ? (
+      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} selectedId={state.realSelectedId?.replace('product-point:','') ?? null}/> : state.dataMode === "real" ? (
         <RealInspector
           view={realView}
           error={realError}

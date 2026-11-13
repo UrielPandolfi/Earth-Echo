@@ -245,6 +245,8 @@ export interface ProductSample {
   longitude?: number | null;
   latitude?: number | null;
   value?: number | null;
+  probability?: number | null;
+  probability_definition?: string | null;
   quality: string;
   attributes?: Record<string, string | null>;
 }
