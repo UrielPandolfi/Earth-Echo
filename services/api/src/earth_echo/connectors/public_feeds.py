@@ -1,6 +1,9 @@
 """Lectores de USGS y SWPC. No pronostican réplicas ni tormentas."""
 
 import json
+import os
+from datetime import timedelta
+from urllib.parse import urlencode
 from datetime import datetime, timezone
 from typing import Any
 
@@ -9,6 +12,14 @@ USGS_QUERY = (
     "?format=geojson&minmagnitude=5&limit=20&orderby=time"
 )
 SWPC_KP_URL = "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+
+def usgs_query(now: datetime) -> str:
+    days = min(30, max(1, int(os.getenv('EARTH_ECHO_USGS_DAYS', '7'))))
+    limit = min(2000, max(1, int(os.getenv('EARTH_ECHO_USGS_LIMIT', '500'))))
+    minimum = min(9, max(0, float(os.getenv('EARTH_ECHO_USGS_MIN_MAGNITUDE', '4.5'))))
+    return 'https://earthquake.usgs.gov/fdsnws/event/1/query?' + urlencode({
+        'format': 'geojson', 'starttime': (now - timedelta(days=days)).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'endtime': now.strftime('%Y-%m-%dT%H:%M:%SZ'), 'minmagnitude': minimum, 'limit': limit, 'orderby': 'time'})
 
 
 class FeedSchemaError(ValueError):
@@ -43,6 +54,9 @@ def parse_usgs_events(payload: dict[str, Any]) -> list[dict[str, Any]]:
                 "latitude": float(coordinates[1]),
                 "depth_km": None if depth is None else float(depth),
                 "magnitude": float(magnitude),
+                "magnitude_type": properties.get('magType'),
+                "review_status": properties.get('status'),
+                "updated_at": datetime.fromtimestamp(properties['updated'] / 1000, timezone.utc).isoformat().replace('+00:00','Z') if isinstance(properties.get('updated'), (int, float)) else None,
                 "time": moment.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "place": str(properties.get("place") or ""),
             }
@@ -60,11 +74,11 @@ def parse_planetary_kp(payload: Any) -> list[dict[str, Any]]:
         if "Kp" not in item or "time_tag" not in item:
             raise FeedSchemaError("Falta Kp o time_tag.")
         value = item["Kp"]
-        if not isinstance(value, (int, float)):
+        if not isinstance(value, (int, float)) or not 0 <= value <= 9:
             raise FeedSchemaError("Kp no es numérico.")
         rows.append(
             {
-                "time": str(item["time_tag"]).replace(" ", "T"),
+                "time": datetime.fromisoformat(str(item['time_tag']).replace('Z', '+00:00')).replace(tzinfo=timezone.utc).isoformat().replace('+00:00','Z'),
                 "kp": float(value),
                 "station_count": item.get("station_count") if isinstance(item.get("station_count"), int) else None,
             }

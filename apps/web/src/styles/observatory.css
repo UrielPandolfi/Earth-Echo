@@ -526,3 +526,7 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
   .nav, .time-preset { display: none; }
   .search { max-width: none; }
 }
+.product-table { overflow: auto; max-height: 25rem; }
+.product-table table { width: 100%; font-size: .8rem; border-collapse: collapse; }
+.product-table td, .product-table th { text-align: left; padding: .4rem; border-bottom: 1px solid var(--border, #334155); }
+.inspector .fine { overflow-wrap: anywhere; }

@@ -1,299 +1,329 @@
 {
   "source_id": "D28",
-  "retrieved_at": "2026-11-13T07:45:49Z",
+  "retrieved_at": "2026-11-13T22:18:04Z",
   "query": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json",
+  "checksum_sha256": "7fa8dd71dedbf8ac7b0391210a96ce36aa00129019956f4df95d204b7fc581b0",
+  "byte_size": 4880,
+  "raw_file": "assets\\d28-kp\\7fa8dd71dedbf8ac7b0391210a96ce36aa00129019956f4df95d204b7fc581b0.json",
+  "product_version": "provider-current-schema-v1",
+  "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "global_index",
   "unit": "Kp",
   "note": "Índice planetario. No es la intensidad local producida por una fulguración.",
   "rows": [
     {
-      "time": "2026-11-06T00:00:00",
+      "time": "2026-11-06T00:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T03:00:00",
+      "time": "2026-11-06T03:00:00Z",
       "kp": 0.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T06:00:00",
+      "time": "2026-11-06T06:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T09:00:00",
+      "time": "2026-11-06T09:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T12:00:00",
+      "time": "2026-11-06T12:00:00Z",
       "kp": 2.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T15:00:00",
+      "time": "2026-11-06T15:00:00Z",
       "kp": 2.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T18:00:00",
+      "time": "2026-11-06T18:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-06T21:00:00",
+      "time": "2026-11-06T21:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T00:00:00",
+      "time": "2026-11-07T00:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T03:00:00",
+      "time": "2026-11-07T03:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T06:00:00",
+      "time": "2026-11-07T06:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T09:00:00",
+      "time": "2026-11-07T09:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T12:00:00",
+      "time": "2026-11-07T12:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T15:00:00",
+      "time": "2026-11-07T15:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T18:00:00",
+      "time": "2026-11-07T18:00:00Z",
       "kp": 5.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-07T21:00:00",
+      "time": "2026-11-07T21:00:00Z",
       "kp": 4.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T00:00:00",
+      "time": "2026-11-08T00:00:00Z",
       "kp": 5.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T03:00:00",
+      "time": "2026-11-08T03:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T06:00:00",
+      "time": "2026-11-08T06:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T09:00:00",
+      "time": "2026-11-08T09:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T12:00:00",
+      "time": "2026-11-08T12:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T15:00:00",
+      "time": "2026-11-08T15:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T18:00:00",
+      "time": "2026-11-08T18:00:00Z",
       "kp": 4.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-08T21:00:00",
+      "time": "2026-11-08T21:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T00:00:00",
+      "time": "2026-11-09T00:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T03:00:00",
+      "time": "2026-11-09T03:00:00Z",
       "kp": 3.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T06:00:00",
+      "time": "2026-11-09T06:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T09:00:00",
+      "time": "2026-11-09T09:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T12:00:00",
+      "time": "2026-11-09T12:00:00Z",
       "kp": 2.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T15:00:00",
+      "time": "2026-11-09T15:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T18:00:00",
+      "time": "2026-11-09T18:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-09T21:00:00",
+      "time": "2026-11-09T21:00:00Z",
       "kp": 2.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T00:00:00",
+      "time": "2026-11-10T00:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T03:00:00",
+      "time": "2026-11-10T03:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T06:00:00",
+      "time": "2026-11-10T06:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T09:00:00",
+      "time": "2026-11-10T09:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T12:00:00",
+      "time": "2026-11-10T12:00:00Z",
       "kp": 1.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T15:00:00",
+      "time": "2026-11-10T15:00:00Z",
       "kp": 3.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T18:00:00",
+      "time": "2026-11-10T18:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-10T21:00:00",
+      "time": "2026-11-10T21:00:00Z",
       "kp": 2.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T00:00:00",
+      "time": "2026-11-11T00:00:00Z",
       "kp": 1.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T03:00:00",
+      "time": "2026-11-11T03:00:00Z",
       "kp": 0.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T06:00:00",
+      "time": "2026-11-11T06:00:00Z",
       "kp": 1.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T09:00:00",
+      "time": "2026-11-11T09:00:00Z",
       "kp": 2.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T12:00:00",
+      "time": "2026-11-11T12:00:00Z",
       "kp": 1.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T15:00:00",
+      "time": "2026-11-11T15:00:00Z",
       "kp": 1.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T18:00:00",
+      "time": "2026-11-11T18:00:00Z",
       "kp": 2.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-11T21:00:00",
+      "time": "2026-11-11T21:00:00Z",
       "kp": 1.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T00:00:00",
+      "time": "2026-11-12T00:00:00Z",
       "kp": 1.0,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T03:00:00",
+      "time": "2026-11-12T03:00:00Z",
       "kp": 1.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T06:00:00",
+      "time": "2026-11-12T06:00:00Z",
       "kp": 1.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T09:00:00",
+      "time": "2026-11-12T09:00:00Z",
       "kp": 0.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T12:00:00",
+      "time": "2026-11-12T12:00:00Z",
       "kp": 0.67,
       "station_count": 7
     },
     {
-      "time": "2026-11-12T15:00:00",
+      "time": "2026-11-12T15:00:00Z",
       "kp": 0.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T18:00:00",
+      "time": "2026-11-12T18:00:00Z",
       "kp": 1.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-12T21:00:00",
+      "time": "2026-11-12T21:00:00Z",
       "kp": 1.67,
       "station_count": 8
     },
     {
-      "time": "2026-11-13T00:00:00",
+      "time": "2026-11-13T00:00:00Z",
       "kp": 1.33,
       "station_count": 8
     },
     {
-      "time": "2026-11-13T03:00:00",
+      "time": "2026-11-13T03:00:00Z",
       "kp": 0.33,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-13T06:00:00Z",
+      "kp": 1.33,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-13T09:00:00Z",
+      "kp": 1.0,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-13T12:00:00Z",
+      "kp": 0.67,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-13T15:00:00Z",
+      "kp": 0.67,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-13T18:00:00Z",
+      "kp": 0.67,
       "station_count": 8
     }
   ]

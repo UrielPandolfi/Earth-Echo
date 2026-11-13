@@ -4,6 +4,16 @@ Decisión del 13 de noviembre de 2026. El repositorio no tenía aplicación prev
 
 ## Stack
 
+## Integraciones posteriores a fase 10
+
+Los productos científicos verificados se conservan en `data/real/products`, con originales por SHA-256, revisiones decodificadas y un puntero `current.json` publicado atómicamente después de validar. Las mallas regulares se sirven como campos; sus celdas no son señales. El contrato Pydantic `ScientificProduct` incluye unidad nativa, período, resolución, máscara, método de submuestreo y comprobación independiente; genera JSON Schema y TypeScript. El recorte/historia/experimento SST previo conserva su almacenamiento y su alcance.
+
+CRW mundial usa una muestra regular cada 20 centros (1° para visualización) de la malla nativa de 0,05°. Se conserva cada valor muestreado sin promediar ni atribuirle resolución mayor; la imagen interpola visualmente por vecino cercano. Los ejes se ordenan explícitamente y los bordes se deducen de los centros. HotSpot/DHW conservan `mask=0`; tierra, hielo y faltantes quedan transparentes. La descarga CSV de una celda comprueba la decodificación NetCDF.
+
+La actualización corre en el lifespan de la API o en `npm run refresh:watch`, con un lock de sistema operativo compartido y estado persistido antes de I/O. Tras una caída, el lock se libera por el sistema y la tarea vuelve a ser elegible en 15 minutos. No se agregan servidor ni base de datos. Cada producto tiene cadencia propia, dos intentos HTTP transitorios como máximo y hasta cuatro revisiones; cada descarga está acotada. Las fechas de intento, descarga satisfactoria y cambio son distintas; las del producto conservan observación, emisión, inicialización y validez cuando existen. SWPC no proporciona emisión/inicialización en el JSON: quedan null, sin copiar la recuperación como emisión.
+
+En REAL se conserva la cámara amplia; encuadrar un producto es una acción explícita. El inspector existente admite fichas de producto y originales descargables. El catálogo original permanece inmutable; `docs/integraciones.md` y `data/operational/integration_matrix.json` registran evidencia independiente.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

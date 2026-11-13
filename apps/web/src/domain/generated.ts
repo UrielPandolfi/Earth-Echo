@@ -228,6 +228,27 @@ export interface ProbabilityDefined {
   definition: string;
 }
 
+export interface ProductList {
+  data_mode?: "real";
+  connected_sources: number;
+  field_products: number;
+  observation_records: number;
+  calculated_signals: number;
+  catalog_phenomena: number;
+  products: ScientificProduct[];
+}
+
+export interface ProductSample {
+  id: string;
+  time?: string | null;
+  valid_to?: string | null;
+  longitude?: number | null;
+  latitude?: number | null;
+  value?: number | null;
+  quality: string;
+  attributes?: Record<string, string | null>;
+}
+
 export interface Provenance {
   source_ids: string[];
   asset_ids?: string[];
@@ -285,6 +306,64 @@ export interface ReferenceMention {
   owner_type: "variable" | "module";
   owner_id: string;
   source_id: string;
+}
+
+export interface ScientificGrid {
+  width: number;
+  height: number;
+  west: number;
+  east: number;
+  south: number;
+  north: number;
+  crosses_antimeridian?: false;
+  longitudes: number[];
+  latitudes: number[];
+  values: Array<number | null>;
+  minimum: number | null;
+  maximum: number | null;
+  missing_cells: number;
+  resolution: string;
+  sampling: string;
+  quality_mask: string;
+}
+
+export interface ScientificProduct {
+  schema_version?: "1.0";
+  data_mode?: "real";
+  id: string;
+  source_id: string;
+  title: string;
+  collection_id: string;
+  product_version: string;
+  variable: string;
+  unit: string;
+  native_unit: string;
+  kind: "observation" | "indicator" | "forecast" | "historical" | "static_context" | "orbital_assessment";
+  representation: "field" | "points" | "planetary" | "table" | "regions";
+  observed_at?: string | null;
+  observation_end?: string | null;
+  initialized_at?: string | null;
+  issued_at?: string | null;
+  issue_time_basis?: string | null;
+  valid_from?: string | null;
+  valid_to?: string | null;
+  retrieved_at: string;
+  ingested_at: string;
+  original_url: string;
+  license_url: string;
+  attribution: string;
+  checksum_sha256: string;
+  byte_size: number;
+  raw_file: string;
+  coverage: string;
+  cadence_seconds: number;
+  method_version: string;
+  limitation: string;
+  probability?: null;
+  validated_for_use?: false;
+  grid?: ScientificGrid | null;
+  samples?: ProductSample[];
+  verification: Verification;
 }
 
 export interface SignalQueryResult {
@@ -373,6 +452,15 @@ export interface VariableList {
   variables: CatalogVariable[];
 }
 
+export interface Verification {
+  method: string;
+  original_url: string;
+  checked_at: string;
+  expected: string;
+  actual: string;
+  passed: true;
+}
+
 export interface VerticalPosition {
   value: number;
   unit: string;
@@ -381,6 +469,7 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  scientific_products: ProductList;
   health: HealthResponse;
   ready: ReadyResponse;
   providers: ProviderReport;

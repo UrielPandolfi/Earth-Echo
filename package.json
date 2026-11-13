@@ -2,6 +2,8 @@
   "private": true,
   "name": "earth-echo",
   "scripts": {
+    "refresh": "uv run --directory services/api python -m earth_echo.tools.refresh",
+    "refresh:watch": "uv run --directory services/api python -m earth_echo.tools.refresh --watch",
     "dev:web": "npm --prefix apps/web run dev",
     "dev:api": "uv run --directory services/api uvicorn earth_echo.main:app --host 0.0.0.0 --port 8000",
     "test:api": "uv run --directory services/api pytest",

@@ -13,6 +13,9 @@ class QuakeFeature(ApiModel):
     latitude: float
     depth_km: float | None
     magnitude: float
+    magnitude_type: str | None = None
+    review_status: str | None = None
+    updated_at: str | None = None
     time: str
     place: str
 

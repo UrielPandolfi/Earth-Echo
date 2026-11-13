@@ -29,11 +29,16 @@ from earth_echo.queries.layers import KpLayer, QuakeLayer, kp_layer, quake_layer
 from earth_echo.queries.trend import TrendView, trend_csv, trend_view
 from earth_echo.queries.signals import query_signals
 from earth_echo.settings import get_settings
+from earth_echo.contracts.products import ProductList, ScientificProduct
+from earth_echo.queries.products import product_list
+from earth_echo.storage.products import read_product, products_root
+from fastapi.responses import FileResponse
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
-    app = FastAPI(title="Earth Echo", version="0.1.0")
+    from earth_echo.ops.refresh import lifespan
+    app = FastAPI(title="Earth Echo", version="0.1.0", lifespan=lifespan)
     app.add_middleware(BodyLimitMiddleware, max_bytes=settings.max_body_bytes)
     app.add_middleware(
         CORSMiddleware,
@@ -257,6 +262,29 @@ def _analysis_routes() -> APIRouter:
 
 def _scale_routes() -> APIRouter:
     router = APIRouter(prefix="/v1")
+
+    @router.get('/operations/refresh')
+    def refresh_status():
+        from earth_echo.ops.refresh import status
+        return status()
+
+    @router.get('/products', response_model=ProductList)
+    def products() -> ProductList:
+        return product_list()
+
+    @router.get('/products/{key}', response_model=ScientificProduct)
+    def product(key: Annotated[str, Path(pattern=r'^[a-z0-9-]+$')]) -> ScientificProduct:
+        found = read_product(key)
+        if found is None:
+            raise HTTPException(404, 'Producto real no disponible')
+        return found
+
+    @router.get('/products/{key}/original')
+    def original(key: Annotated[str, Path(pattern=r'^[a-z0-9-]+$')]):
+        found = read_product(key)
+        if found is None:
+            raise HTTPException(404, 'Archivo científico no disponible')
+        return FileResponse(products_root() / found.raw_file, filename=found.raw_file.split('/')[-1])
 
     @router.get("/capabilities", response_model=CapabilityMatrix)
     def capabilities() -> CapabilityMatrix:

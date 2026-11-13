@@ -47,12 +47,10 @@ class ClassicNetCdf:
     def values(self, name: str) -> list[float]:
         variable = self.variables[name]
         nc_type = variable["type"]
-        if nc_type == NC_DOUBLE:
-            code, size = "d", 8
-        elif nc_type == NC_FLOAT:
-            code, size = "f", 4
-        else:
+        codes = {NC_DOUBLE: ('d', 8), NC_FLOAT: ('f', 4), NC_INT: ('i', 4), NC_SHORT: ('h', 2), NC_BYTE: ('b', 1)}
+        if nc_type not in codes:
             raise NetCdfError(f"{name} no está guardada como número de punto flotante.")
+        code, size = codes[nc_type]
         count = 1
         for dim in variable["dimensions"]:
             count *= self.dimensions[dim]

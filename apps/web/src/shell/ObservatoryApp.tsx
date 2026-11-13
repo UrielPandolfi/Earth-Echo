@@ -24,6 +24,8 @@ import { TrendPanel } from "./TrendPanel";
 import { CapabilitiesPanel } from "./CapabilitiesPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
+import type { ProductList } from '../domain/generated';
+import { ProductsPanel, ProductInspector } from '../real/Products';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 
@@ -40,6 +42,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [realView, setRealView] = useState<RealSourceView | null>(null);
   const [realError, setRealError] = useState<string | null>(null);
   const [realField, setRealField] = useState<RealField | null>(null);
+  const [products, setProducts] = useState<ProductList | null>(null);
+  const [productKey, setProductKey] = useState('d15-sst-global');
+  const [productError, setProductError] = useState<string | null>(null);
+  const activeProduct = products?.products.find(p => p.id === productKey);
   const [quakes, setQuakes] = useState<Array<{ id: string; longitude: number; latitude: number; magnitude: number; place: string; time: string }>>([]);
   const [kpText, setKpText] = useState<string | null>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
@@ -106,15 +112,6 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           throw new Error("La respuesta real no tiene el contrato esperado.");
         }
         setRealView(body);
-        if (body.status === "available" && body.coverage) {
-          setFrameRequest({
-            west: body.coverage.west,
-            south: body.coverage.south,
-            east: body.coverage.east,
-            north: body.coverage.north,
-            crossesAntimeridian: Boolean(body.coverage.crosses_antimeridian),
-          });
-        }
       } catch (caught) {
         if (caught instanceof DOMException && caught.name === "AbortError") {
           return;
@@ -125,6 +122,23 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
     }
     void loadReal();
     return () => controller.abort();
+  }, [state.dataMode]);
+
+  useEffect(() => {
+    if (state.dataMode !== 'real') return;
+    const controller = new AbortController();
+    async function load() {
+      try {
+        const response = await fetch(`${apiBase}/v1/products`, { signal: controller.signal });
+        if (!response.ok) throw new Error('No respondió la consulta de productos reales.');
+        const body = await response.json() as ProductList;
+        if (!Array.isArray(body.products) || body.data_mode !== 'real') throw new Error('Contrato de productos inválido.');
+        setProducts(body); setProductError(null);
+      } catch (e) { if (!controller.signal.aborted) setProductError(e instanceof Error ? e.message : 'No disponible'); }
+    }
+    void load();
+    const timer = window.setInterval(() => void load(), 60_000);
+    return () => { controller.abort(); window.clearInterval(timer); };
   }, [state.dataMode]);
 
   useEffect(() => {
@@ -295,7 +309,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         ]
       : markers;
   const shownField =
-    state.dataMode === "real" ? (realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
+    state.dataMode === "real" ? (activeProduct?.grid ? paintSstField({...activeProduct.grid, observation_id: activeProduct.id, unit: activeProduct.unit}) : productKey === 'archive' && realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
   const badge =
     state.dataMode === "real"
       ? realView?.status === "available"
@@ -318,7 +332,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         assistantOpen={assistantOpen}
         badge={badge}
       />
-      <FilterPanel
+      {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
+        const g = activeProduct?.grid;
+        if (g) setFrameRequest({west:g.west, east:g.east, north:g.north, south:g.south, crossesAntimeridian:false});
+      }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError}/> : <FilterPanel
         state={state}
         onToggleCategory={(id) => dispatch({ type: "toggle-category", id })}
         onToggleInfo={(id) => dispatch({ type: "toggle-info", id })}
@@ -333,7 +350,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         quakeCount={quakes.length}
         kpText={kpText}
         onToggleQuakes={() => dispatch({ type: "toggle-quakes" })}
-      />
+      />}
       <div className="center">
         <GlobeColumn
           state={state}
@@ -346,7 +363,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           field={shownField}
           fieldCredit={
             state.dataMode === "real"
-              ? "NOAA Coral Reef Watch · CoralTemp v3.1 · SST"
+              ? activeProduct ? `${activeProduct.attribution} · ${activeProduct.variable}` : "NOAA Coral Reef Watch · CoralTemp v3.1 · SST"
               : activeLayer
                 ? `${activeLayer.legendTitle} · ilustrativo`
                 : "Campo ilustrativo DEMO"
@@ -364,7 +381,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           }
           frameRequest={frameRequest}
           onSelect={(id) => dispatch(state.dataMode === "real" ? { type: "real-select", id } : { type: "select", id })}
-          countLabel={state.dataMode === "real" ? `1 agregado SST · ${state.realQuakes ? quakes.length : 0} sismos` : undefined}
+          countLabel={state.dataMode === "real" ? `${products?.connected_sources ?? '—'} fuentes · ${products?.observation_records ?? '—'} observaciones · ${products?.calculated_signals ?? 0} señales calculadas` : undefined}
           onCameraHeight={onCameraHeight}
           trendNote={
             state.section === "tendencias"
@@ -393,7 +410,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
-      ) : state.dataMode === "real" ? (
+      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct}/> : state.dataMode === "real" ? (
         <RealInspector
           view={realView}
           error={realError}

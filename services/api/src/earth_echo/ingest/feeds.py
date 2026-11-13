@@ -14,6 +14,7 @@ from earth_echo.connectors.public_feeds import (
     loads_json,
     parse_planetary_kp,
     parse_usgs_events,
+    usgs_query,
 )
 from earth_echo.paths import repo_root
 
@@ -47,12 +48,8 @@ def classify_failure(error: Exception) -> str:
 
 
 def _get(url: str) -> bytes:
-    request = Request(url, headers={"User-Agent": "EarthEcho/0.1"})
-    with urlopen(request, timeout=30) as response:
-        body = response.read(1_000_000)
-        if len(body) >= 1_000_000:
-            raise FeedSchemaError("La respuesta supera el máximo de 1 MB.")
-        return body
+    from earth_echo.connectors.http import download
+    return download(url, max_bytes=4_000_000)[0]
 
 
 def _write_snapshot(name: str, payload: dict) -> str:
@@ -102,16 +99,19 @@ def seed_archived_feeds(now: datetime | None = None) -> None:
 
 def refresh_usgs(now: datetime | None = None) -> str:
     moment = now or datetime.now(timezone.utc)
-    payload = loads_json(_get(USGS_QUERY))
+    query = usgs_query(moment)
+    raw = _get(query)
+    payload = loads_json(raw)
     events = parse_usgs_events(payload)
     return _write_snapshot(
         "d21-events",
         {
             "source_id": "D21",
             "retrieved_at": moment.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "query": USGS_QUERY,
+            "query": query,
+            **_archive('d21-events', raw, moment),
             "geometry_kind": "points",
-            "note": "Sismos observados de magnitud mayor o igual a 5. No son pronósticos de réplicas.",
+            "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
             "events": events,
         },
     )
@@ -119,19 +119,50 @@ def refresh_usgs(now: datetime | None = None) -> str:
 
 def refresh_kp(now: datetime | None = None) -> str:
     moment = now or datetime.now(timezone.utc)
-    rows = parse_planetary_kp(loads_json(_get(SWPC_KP_URL)))
+    raw = _get(SWPC_KP_URL)
+    rows = parse_planetary_kp(loads_json(raw))
     return _write_snapshot(
         "d28-kp",
         {
             "source_id": "D28",
             "retrieved_at": moment.strftime("%Y-%m-%dT%H:%M:%SZ"),
             "query": SWPC_KP_URL,
+            **_archive('d28-kp', raw, moment),
             "geometry_kind": "global_index",
             "unit": "Kp",
             "note": "Índice planetario. No es la intensidad local producida por una fulguración.",
             "rows": rows,
         },
     )
+
+def _archive(name: str, raw: bytes, moment: datetime) -> dict:
+    from hashlib import sha256
+    checksum = sha256(raw).hexdigest()
+    folder = feeds_dir() / 'assets' / name
+    folder.mkdir(parents=True, exist_ok=True)
+    target = folder / f'{checksum}.json'
+    if not target.exists():
+        target.write_bytes(raw)
+    for old in sorted(folder.glob('*.json'), key=lambda p:p.stat().st_mtime, reverse=True)[4:]:
+        old.unlink()
+    return {'checksum_sha256': checksum, 'byte_size': len(raw), 'raw_file': str(target.relative_to(feeds_dir())),
+            'product_version': 'provider-current-schema-v1', 'verification': 'Raw provider JSON retained; normalized count/IDs and values tested independently.'}
+
+def refresh_kp_forecast(now: datetime | None = None) -> str:
+    from earth_echo.connectors.swpc_forecast import KP_FORECAST_URL, parse_predicted_kp
+    from earth_echo.queries.forecasts import forecast_dir
+    from earth_echo.storage.products import atomic_json
+    moment = now or datetime.now(timezone.utc)
+    raw = _get(KP_FORECAST_URL)
+    rows = parse_predicted_kp(loads_json(raw), moment)
+    target = forecast_dir() / 'd28-kp-forecast.json'
+    payload = {'source_id':'D28', 'product':'noaa-planetary-k-index-forecast', 'product_version':'SWPC-current',
+        'retrieved_at':moment.isoformat().replace('+00:00','Z'), 'archived_at':moment.isoformat().replace('+00:00','Z'),
+        'issued_at':None, 'initialized_at':None, 'issue_time_basis':'El feed no proporciona emisión ni inicialización; recuperación separada, no sustituye emisión.',
+        'unit':'Kp', 'steps':rows, 'probability':None, 'validated_for_use':False,
+        'note':'Solo filas predicted; validez de 3 horas. Índice planetario, sin intensidad local.', **_archive('d28-kp-forecast',raw,moment)}
+    atomic_json(target,payload)
+    return 'stored'
 
 
 def run_due(now: datetime | None = None, *, force: bool = False) -> list[dict[str, str]]:

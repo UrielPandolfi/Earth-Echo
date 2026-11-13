@@ -1,0 +1,590 @@
+[
+  {
+    "id": "D01",
+    "name": "NASA GPM IMERG",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://gpm.nasa.gov/data/imerg",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "limits": "Es precipitación estimada, no futura. Las diferencias entre Early y Final importan en pruebas históricas. No usar Final como si hubiese estado disponible ese día."
+  },
+  {
+    "id": "D02",
+    "name": "NASA SMAP SPL3SMP E",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://nsidc.org/data/spl3smp_e",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "limits": "No observa directamente toda la zona radicular. Excluir suelo congelado, nieve, agua y recuperaciones rechazadas. No rellenar huecos como mediciones reales."
+  },
+  {
+    "id": "D03",
+    "name": "NASA GLDAS",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://ldas.gsfc.nasa.gov/gldas/dataset",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "limits": "Es salida de un modelo con observaciones asimiladas o forzantes, no una medición satelital directa. No combinar series 2.0 y 2.1 sin evaluar discontinuidades."
+  },
+  {
+    "id": "D04",
+    "name": "NASA MODIS MOD13Q1",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD13Q1/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Un cambio de verdor puede deberse a cosecha, estación, incendio o nubes. No prueba sequía, pérdida de rendimiento ni mortalidad por sí solo."
+  },
+  {
+    "id": "D05",
+    "name": "NASA MODIS MOD11A2",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD11A2/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Contaminación por nubes y muestreo de cielo despejado. Temperatura de superficie y temperatura del aire tienen significados distintos."
+  },
+  {
+    "id": "D06",
+    "name": "NASA FIRMS",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://firms.modaps.eosdis.nasa.gov/api/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Detecta fuego o calor existente. Un punto no es el perímetro completo ni una predicción de ignición. Conservar identificador del sensor."
+  },
+  {
+    "id": "D07",
+    "name": "ECMWF Open Data",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://www.ecmwf.int/en/forecasts/datasets/open-data",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "No todo parámetro de IFS está en el subconjunto abierto. Productos históricos, ensembles y servicios de entrega deben revisarse por separado."
+  },
+  {
+    "id": "D08",
+    "name": "ERA5 histórico",
+    "classification": [
+      "Dataset histórico"
+    ],
+    "official_url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "CDSAPI_KEY + licencia manual ERA5",
+    "limits": "Reconstruye el pasado usando información posterior. Sirve como referencia histórica; no demuestra qué se podía saber en tiempo real. La precipitación acumulada necesita tratamiento temporal correcto."
+  },
+  {
+    "id": "D09",
+    "name": "C3S pronóstico estacional",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://cds.climate.copernicus.eu/datasets/seasonal-original-single-levels",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "CDSAPI_KEY + licencia manual estacional",
+    "limits": "Predice distribuciones estacionales. No permite afirmar qué día lloverá dentro de seis meses. Calibrar contra reforecasts compatibles."
+  },
+  {
+    "id": "D10",
+    "name": "Copernicus GloFAS",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://global-flood.emergency.copernicus.eu/general-information/about-glofas",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "EWDSAPI_KEY + licencia y colección GloFAS vigente",
+    "limits": "No es un pronóstico global de inundación urbana, costera ni de toda inundación repentina. Caudal alto no da automáticamente profundidad de agua sobre una calle."
+  },
+  {
+    "id": "D11",
+    "name": "Copernicus GWIS",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://gwis.jrc.ec.europa.eu/applications/data-and-services",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Exportación numérica GWIS/CEMS y licencia; no alcanza WMS",
+    "limits": "FWI no es probabilidad calibrada de que comience un incendio. Un servicio de mapas puede no permitir descargar toda la serie analítica."
+  },
+  {
+    "id": "D12",
+    "name": "CAMS composición atmosférica",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://ads.atmosphere.copernicus.eu/datasets/cams-global-atmospheric-composition-forecasts",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "ADSAPI_KEY + licencia CAMS",
+    "limits": "No reproduce exposición individual ni diferencias por calle. La conversión a índice de calidad del aire exige norma y ventana de promediado explícitas."
+  },
+  {
+    "id": "D13",
+    "name": "NOAA OISST",
+    "classification": [
+      "Fuente de observaciones",
+      "Dataset histórico"
+    ],
+    "official_url": "https://www.ncei.noaa.gov/products/optimum-interpolation-sst",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Campo interpolado y suavizado. No resuelve todos los estuarios, arrecifes ni cambios subsuperficiales."
+  },
+  {
+    "id": "D14",
+    "name": "Copernicus Marine física oceánica",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "COPERNICUSMARINE_SERVICE_USERNAME, COPERNICUSMARINE_SERVICE_PASSWORD",
+    "limits": "No convertir nivel marino modelado en inundación costera sin mareas, datum, batimetría y elevación local compatibles."
+  },
+  {
+    "id": "D15",
+    "name": "NOAA Coral Reef Watch",
+    "classification": [
+      "Fuente de observaciones",
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://coralreefwatch.noaa.gov/product/5km/index.php",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d15-dhw-global",
+      "/v1/products/d15-hotspot-global",
+      "/v1/products/d15-sst-global"
+    ],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Estrés térmico y riesgo de blanqueamiento no confirman daño biológico observado. No asignar automáticamente los 5 km al pronóstico de cuatro meses."
+  },
+  {
+    "id": "D16",
+    "name": "NOAA pronóstico de olas de calor marinas",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://psl.noaa.gov/marine-heatwaves/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Resolver archivo numérico de perspectivas, sin inferir datos desde imagen",
+    "limits": "En esta especificación está verificado el producto público, no la automatización del archivo numérico. Alternativa: desarrollar y validar un modelo con D09 y D13."
+  },
+  {
+    "id": "D17",
+    "name": "NASA Ocean Color",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://oceandata.sci.gsfc.nasa.gov/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "limits": "Clorofila alta no identifica una especie tóxica ni una toxina. El agua turbia costera puede sesgar las recuperaciones."
+  },
+  {
+    "id": "D18",
+    "name": "NOAA pronósticos ecológicos regionales",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://oceanservice.noaa.gov/ecoforecasting/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Seleccionar servicio regional, variable/especie y archivo numérico",
+    "limits": "La extrapolación mundial exige observaciones y calibración nuevas. No inferir toxicidad o enfermedad humana desde temperatura del agua."
+  },
+  {
+    "id": "D19",
+    "name": "FAO Locust Watch y Locust Hub",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://www.fao.org/locust-watch/activities/dlis-home/early-warning/en",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Resolver capa FAO exportable y términos; Schistocerca gregaria solamente",
+    "limits": "Un satélite no cuenta directamente las langostas. Ausencia de observaciones de campo no prueba ausencia de plaga."
+  },
+  {
+    "id": "D20",
+    "name": "FAO ASIS",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://www.fao.org/giews/earthobservation/access.jsp",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Resolver exportación numérica/máscara agrícola; imagen no acredita valor",
+    "limits": "Indicador de estrés no equivale a toneladas de cosecha perdidas. El rendimiento necesita estadísticas de producción y prácticas agrícolas."
+  },
+  {
+    "id": "D21",
+    "name": "USGS ComCat y FDSN",
+    "classification": [
+      "Fuente de observaciones"
+    ],
+    "official_url": "https://earthquake.usgs.gov/fdsnws/event/1/",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/layers/d21-events"
+    ],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Un catálogo de sismos no permite predecir el próximo terremoto. Guardar versión y completitud de la secuencia."
+  },
+  {
+    "id": "D22",
+    "name": "USGS pronóstico de réplicas",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://earthquake.usgs.gov/data/oaf/overview.php",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Si se implementa un modelo propio en otras regiones, se necesita calibración tectónica y estimar el umbral de completitud."
+  },
+  {
+    "id": "D23",
+    "name": "Smithsonian Global Volcanism Program",
+    "classification": [
+      "Dataset histórico",
+      "Geometría o contexto estático"
+    ],
+    "official_url": "https://volcano.si.edu/database/webservices.cfm",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "WFS respondió HTTP 403; inventario no es precursor",
+    "limits": "No incluye todos los datos locales necesarios de gases, deformación y sismicidad para pronosticar una erupción."
+  },
+  {
+    "id": "D24",
+    "name": "NASA LHASA",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://gpm.nasa.gov/applications/landslides",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Resolver versión y archivo numérico LHASA",
+    "limits": "No predice el colapso de cada ladera ni sustituye sensores geotécnicos locales. El inventario de eventos tiene sesgo de reporte."
+  },
+  {
+    "id": "D25",
+    "name": "Copernicus Data Space",
+    "classification": [
+      "Servicio de descubrimiento o visualización"
+    ],
+    "official_url": "https://documentation.dataspace.copernicus.eu/APIs.html",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Catálogo público; escena científica y procesamiento aún pendientes",
+    "limits": "InSAR necesita series SLC compatibles y correcciones. Una imagen SAR no es una medición directa de deformación. SO2 atmosférico no reemplaza el flujo de gas medido en un volcán."
+  },
+  {
+    "id": "D26",
+    "name": "Randolph Glacier Inventory",
+    "classification": [
+      "Geometría o contexto estático"
+    ],
+    "official_url": "https://rgidata.org/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Elegir edición y subconjunto RGI con época de geometría",
+    "limits": "No incluye nivel de cada lago, estabilidad de cada dique ni disparadores de una rotura. Es una capa de contexto."
+  },
+  {
+    "id": "D27",
+    "name": "NOAA Tsunami Warning Centers",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://www.tsunami.gov/?page=productRetrieval",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "La alerta suele comenzar después de detectarse la fuente. No predice el terremoto. La demora de difusión puede importar en costas cercanas."
+  },
+  {
+    "id": "D28",
+    "name": "NOAA SWPC",
+    "classification": [
+      "Fuente de observaciones",
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://www.swpc.noaa.gov/content/data-access",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/layers/d28-kp",
+      "/v1/forecasts/d28-kp"
+    ],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Una señal solar no determina exactamente la intensidad terrestre. Las previsiones dependen de trayectoria, orientación magnética y actualización del viento solar."
+  },
+  {
+    "id": "D29",
+    "name": "NASA JPL CNEOS",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://ssd-api.jpl.nasa.gov/doc/index.php",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Acercamiento no significa impacto. Conservar fecha de solución y unidad. La documentación de cada API prevalece sobre supuestos de una clave NASA genérica."
+  },
+  {
+    "id": "D30",
+    "name": "Copernicus DEM",
+    "classification": [
+      "Geometría o contexto estático"
+    ],
+    "official_url": "https://dataspace.copernicus.eu/explore-data/data-collections/copernicus-contributing-missions/collections-description/COP-DEM",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Seleccionar mosaico DSM/datum/licencia",
+    "limits": "Es DSM, incluye vegetación y construcciones. No sustituye un modelo de terreno urbano o una topografía hidráulica de alta precisión."
+  },
+  {
+    "id": "D31",
+    "name": "GEBCO",
+    "classification": [
+      "Geometría o contexto estático"
+    ],
+    "official_url": "https://www.gebco.net/data-products/gridded-bathymetry-data",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Subconjunto GEBCO y Type Identifier Grid con datum",
+    "limits": "Gran parte de la profundidad se estima o interpola. No es suficiente para resolver inundación en cada puerto. Revisar datum y licencia de la edición."
+  },
+  {
+    "id": "D32",
+    "name": "HydroATLAS",
+    "classification": [
+      "Geometría o contexto estático"
+    ],
+    "official_url": "https://www.hydrosheds.org/hydroatlas",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Subconjunto y licencia HydroATLAS; no son caudales",
+    "limits": "Un atributo estático no describe cambios recientes de cauce, obras, diques o drenaje urbano."
+  },
+  {
+    "id": "D33",
+    "name": "NASA GRACE asimilado para sequía",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://www.drought.gov/data-maps-tools/groundwater-and-soil-moisture-conditions-grace-data-assimilation",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "limits": "El satélite observa cambios integrados de masa. La estimación de agua subterránea depende de un modelo y no mide cada pozo."
+  },
+  {
+    "id": "D34",
+    "name": "RAPID AMOC",
+    "classification": [
+      "Fuente de observaciones",
+      "Dataset histórico"
+    ],
+    "official_url": "https://rapid.ac.uk/data/data-download",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Archivo RAPID y README/DOI pendientes",
+    "limits": "Serie relativamente corta para inferir un punto de quiebre secular. No produce una fecha confiable de colapso."
+  },
+  {
+    "id": "D35",
+    "name": "GDACS",
+    "classification": [],
+    "official_url": "https://www.gdacs.org/Documents/2025/GDACS_API_quickstart_v1.pdf",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Resolver productos, geometrias, cancelación y validez",
+    "limits": "Integrar una alerta no equivale a haber predicho el evento. Puede haber estimaciones automáticas y revisiones; no es verdad de referencia completa."
+  },
+  {
+    "id": "D36",
+    "name": "NASA GIBS",
+    "classification": [
+      "Servicio de descubrimiento o visualización"
+    ],
+    "official_url": "https://nasa-gibs.github.io/gibs-api-docs/access-basics/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Los colores de un PNG no reemplazan el archivo científico. Usar para el globo y descargar valores analíticos por la ruta del dataset."
+  },
+  {
+    "id": "D37",
+    "name": "NASA earthaccess y CMR",
+    "classification": [
+      "Servicio de descubrimiento o visualización"
+    ],
+    "official_url": "https://earthaccess.readthedocs.io/en/latest/api/",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "CMR es descubrimiento, no predictor ni API universal de series. Revisar el proveedor y las credenciales del dato final."
+  },
+  {
+    "id": "D38",
+    "name": "Qwen documentación oficial",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://github.com/QwenLM/Qwen3/blob/main/README.md",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "No valida causalidad ni fabrica probabilidades. La inferencia local evita tarifa de API pero consume hardware, energía y mantenimiento."
+  },
+  {
+    "id": "D39",
+    "name": "Validación temporal con scikit learn",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "La división cronológica por sí sola no evita fuga por reanálisis, normalización global, ventanas solapadas o selección de casos."
+  },
+  {
+    "id": "D40",
+    "name": "NASA Space Apps Earth System Trend Detective",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "La predicción multiamenaza es una ampliación del reto. Debe conservar selección de variables, visualización y análisis estadístico como funciones centrales."
+  },
+  {
+    "id": "D41",
+    "name": "C3S GTSM nivel costero histórico y escenarios",
+    "classification": [
+      "Dataset histórico"
+    ],
+    "official_url": "https://cds.climate.copernicus.eu/datasets/sis-water-level-change-timeseries-cmip6",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "CDSAPI_KEY + licencia GTSM",
+    "limits": "Una simulación hasta 2050 no predice la marejada de una fecha futura. Sirve para estudiar peligro y escenarios, o como referencia retrospectiva."
+  },
+  {
+    "id": "D42",
+    "name": "USGS señales precursoras volcánicas",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://www.usgs.gov/faqs/how-can-we-tell-when-a-volcano-will-erupt",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Algunas erupciones ocurren con poca o ninguna advertencia. La presencia de precursores no determina la fecha ni el tamaño de una erupción."
+  },
+  {
+    "id": "D43",
+    "name": "USGS límites de predicción sísmica",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://www.usgs.gov/faqs/can-you-predict-earthquakes",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "No existe un método fiable para predecir fecha, lugar y magnitud de un terremoto individual. Alerta temprana detecta un evento ya iniciado."
+  },
+  {
+    "id": "D44",
+    "name": "Estudio de predictibilidad de calor marino",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://repository.library.noaa.gov/view/noaa/45151",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Resultados favorables en algunas condiciones no garantizan habilidad uniforme para todos los océanos ni todos los horizontes."
+  },
+  {
+    "id": "D45",
+    "name": "Estudio de sequía agrícola argentina",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://hess.copernicus.org/articles/25/2475/2021/",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Relacionar indicadores con rendimiento requiere calendario y cultivo. No demuestra la precisión de un modelo que aún no construimos."
+  },
+  {
+    "id": "D46",
+    "name": "Met Office sobre AMOC",
+    "classification": [
+      "Documentación, método o referencia científica"
+    ],
+    "official_url": "https://weather.metoffice.gov.uk/learn-about/weather/oceans/amoc",
+    "status": "reference_only",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Separar debilitamiento, variabilidad y colapso. No convertir una señal estadística exploratoria en una fecha de colapso."
+  },
+  {
+    "id": "D47",
+    "name": "NOAA IBTrACS",
+    "classification": [
+      "Dataset histórico"
+    ],
+    "official_url": "https://www.ncei.noaa.gov/products/international-best-track-archive",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Best tracks históricos, versión y agencia pendientes",
+    "limits": "No contiene todos los pronósticos emitidos originalmente. No reemplaza un archivo histórico de forecasts para validar anticipación."
+  },
+  {
+    "id": "D48",
+    "name": "NOAA CPC ENSO",
+    "classification": [
+      "Pronóstico o producto científico existente"
+    ],
+    "official_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
+    "status": "pending",
+    "evidence": [],
+    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "limits": "Una probabilidad de fase no es probabilidad de inundación local. Las asociaciones climáticas admiten excepciones y requieren validación regional."
+  }
+]

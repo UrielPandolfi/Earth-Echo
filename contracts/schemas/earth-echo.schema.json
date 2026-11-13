@@ -1386,6 +1386,153 @@
       "title": "ProbabilityDefined",
       "type": "object"
     },
+    "ProductList": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "connected_sources": {
+          "title": "Connected Sources",
+          "type": "integer"
+        },
+        "field_products": {
+          "title": "Field Products",
+          "type": "integer"
+        },
+        "observation_records": {
+          "title": "Observation Records",
+          "type": "integer"
+        },
+        "calculated_signals": {
+          "title": "Calculated Signals",
+          "type": "integer"
+        },
+        "catalog_phenomena": {
+          "title": "Catalog Phenomena",
+          "type": "integer"
+        },
+        "products": {
+          "items": {
+            "$ref": "#/$defs/ScientificProduct"
+          },
+          "title": "Products",
+          "type": "array"
+        }
+      },
+      "required": [
+        "connected_sources",
+        "field_products",
+        "observation_records",
+        "calculated_signals",
+        "catalog_phenomena",
+        "products"
+      ],
+      "title": "ProductList",
+      "type": "object"
+    },
+    "ProductSample": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "time": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Time"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "longitude": {
+          "anyOf": [
+            {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Longitude"
+        },
+        "latitude": {
+          "anyOf": [
+            {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latitude"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "quality": {
+          "title": "Quality",
+          "type": "string"
+        },
+        "attributes": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Attributes",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "quality"
+      ],
+      "title": "ProductSample",
+      "type": "object"
+    },
     "Provenance": {
       "additionalProperties": false,
       "properties": {
@@ -1749,6 +1896,415 @@
         "source_id"
       ],
       "title": "ReferenceMention",
+      "type": "object"
+    },
+    "ScientificGrid": {
+      "additionalProperties": false,
+      "properties": {
+        "width": {
+          "exclusiveMinimum": 0,
+          "maximum": 4096,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "maximum": 2048,
+          "title": "Height",
+          "type": "integer"
+        },
+        "west": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "West",
+          "type": "number"
+        },
+        "east": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "East",
+          "type": "number"
+        },
+        "south": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "South",
+          "type": "number"
+        },
+        "north": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "North",
+          "type": "number"
+        },
+        "crosses_antimeridian": {
+          "const": false,
+          "default": false,
+          "title": "Crosses Antimeridian",
+          "type": "boolean"
+        },
+        "longitudes": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Longitudes",
+          "type": "array"
+        },
+        "latitudes": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Latitudes",
+          "type": "array"
+        },
+        "values": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Values",
+          "type": "array"
+        },
+        "minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Minimum"
+        },
+        "maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Maximum"
+        },
+        "missing_cells": {
+          "minimum": 0,
+          "title": "Missing Cells",
+          "type": "integer"
+        },
+        "resolution": {
+          "title": "Resolution",
+          "type": "string"
+        },
+        "sampling": {
+          "title": "Sampling",
+          "type": "string"
+        },
+        "quality_mask": {
+          "title": "Quality Mask",
+          "type": "string"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "west",
+        "east",
+        "south",
+        "north",
+        "longitudes",
+        "latitudes",
+        "values",
+        "minimum",
+        "maximum",
+        "missing_cells",
+        "resolution",
+        "sampling",
+        "quality_mask"
+      ],
+      "title": "ScientificGrid",
+      "type": "object"
+    },
+    "ScientificProduct": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[a-z0-9-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^D\\d{2}$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "collection_id": {
+          "title": "Collection Id",
+          "type": "string"
+        },
+        "product_version": {
+          "title": "Product Version",
+          "type": "string"
+        },
+        "variable": {
+          "title": "Variable",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "native_unit": {
+          "title": "Native Unit",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "observation",
+            "indicator",
+            "forecast",
+            "historical",
+            "static_context",
+            "orbital_assessment"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "representation": {
+          "enum": [
+            "field",
+            "points",
+            "planetary",
+            "table",
+            "regions"
+          ],
+          "title": "Representation",
+          "type": "string"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        },
+        "observation_end": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observation End"
+        },
+        "initialized_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initialized At"
+        },
+        "issued_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issued At"
+        },
+        "issue_time_basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issue Time Basis"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "ingested_at": {
+          "format": "date-time",
+          "title": "Ingested At",
+          "type": "string"
+        },
+        "original_url": {
+          "title": "Original Url",
+          "type": "string"
+        },
+        "license_url": {
+          "title": "License Url",
+          "type": "string"
+        },
+        "attribution": {
+          "title": "Attribution",
+          "type": "string"
+        },
+        "checksum_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checksum Sha256",
+          "type": "string"
+        },
+        "byte_size": {
+          "exclusiveMinimum": 0,
+          "title": "Byte Size",
+          "type": "integer"
+        },
+        "raw_file": {
+          "title": "Raw File",
+          "type": "string"
+        },
+        "coverage": {
+          "title": "Coverage",
+          "type": "string"
+        },
+        "cadence_seconds": {
+          "exclusiveMinimum": 0,
+          "title": "Cadence Seconds",
+          "type": "integer"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "limitation": {
+          "title": "Limitation",
+          "type": "string"
+        },
+        "probability": {
+          "default": null,
+          "title": "Probability",
+          "type": "null"
+        },
+        "validated_for_use": {
+          "const": false,
+          "default": false,
+          "title": "Validated For Use",
+          "type": "boolean"
+        },
+        "grid": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScientificGrid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "samples": {
+          "items": {
+            "$ref": "#/$defs/ProductSample"
+          },
+          "title": "Samples",
+          "type": "array"
+        },
+        "verification": {
+          "$ref": "#/$defs/Verification"
+        }
+      },
+      "required": [
+        "id",
+        "source_id",
+        "title",
+        "collection_id",
+        "product_version",
+        "variable",
+        "unit",
+        "native_unit",
+        "kind",
+        "representation",
+        "retrieved_at",
+        "ingested_at",
+        "original_url",
+        "license_url",
+        "attribution",
+        "checksum_sha256",
+        "byte_size",
+        "raw_file",
+        "coverage",
+        "cadence_seconds",
+        "method_version",
+        "limitation",
+        "verification"
+      ],
+      "title": "ScientificProduct",
       "type": "object"
     },
     "SignalQueryResult": {
@@ -2423,6 +2979,47 @@
       "title": "VariableList",
       "type": "object"
     },
+    "Verification": {
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "original_url": {
+          "title": "Original Url",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "expected": {
+          "title": "Expected",
+          "type": "string"
+        },
+        "actual": {
+          "title": "Actual",
+          "type": "string"
+        },
+        "passed": {
+          "const": true,
+          "title": "Passed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "method",
+        "original_url",
+        "checked_at",
+        "expected",
+        "actual",
+        "passed"
+      ],
+      "title": "Verification",
+      "type": "object"
+    },
     "VerticalPosition": {
       "additionalProperties": false,
       "properties": {
@@ -2461,6 +3058,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "scientific_products": {
+      "$ref": "#/$defs/ProductList"
+    },
     "health": {
       "$ref": "#/$defs/HealthResponse"
     },
@@ -2496,6 +3096,7 @@
     }
   },
   "required": [
+    "scientific_products",
     "health",
     "ready",
     "providers",

@@ -286,6 +286,16 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 
 ## Backlog
 
+## Incremento 11A — campos oceánicos y operación real
+
+- D15: SST CoralTemp mundial (2026-11-12T12:00Z), HotSpot y DHW (2026-11-10T12:00Z), cada uno 360×180 a paso 1° por submuestreo de centros nativos 0,05°. SST: 531344 bytes; 22006 faltantes. HotSpot: 30353 faltantes; DHW: 31089. No son 64800 señales ni observaciones puntuales. Cada producto conserva el NetCDF y cotejó una celda con otra petición CSV de NOAA.
+- API `/v1/products`, ficha por producto y descarga del original; modos separados. REAL abre amplio, con selector y leyenda/unidad/máscara/fecha. Se preservan historia y experimento del Caribe.
+- D21/D28 actualizados realmente el 13/11 a las 22:18 UTC. USGS usa ventana/umbral/límite configurables; conserva magType, revisión y última modificación. Kp observado normaliza UTC; forecast conserva validez y deja emisión e inicialización null si el feed no las informa.
+- Planificador persistente en API y `refresh:watch`, sin superposición mediante lock del SO, cadencias, reintento moderado, escritura atómica y retención de cuatro snapshots. Red caída conserva el producto y reintenta después de 15 minutos. La API debe estar encendida para esa cadencia; no es un servicio Windows instalado.
+- Accesos ausentes y configuración en `docs/accesos.md`; referencias originales intactas. Los servicios de descubrimiento no se cuentan como feeds.
+- Verificación: 61 pruebas API, 19 web y TypeScript pasaron. Las pruebas de scheduler incluyen cadencia, bloqueo concurrente, falla, conservación del último éxito y recuperación. Los temporales de pytest requieren `--basetemp` dentro del workspace en este entorno.
+- Continúa automáticamente con NASA MODIS y ECMWF públicos. El pronóstico SST propio sigue experimental y sin habilidad adicional demostrada.
+
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
 2. Un Qwen local pequeño, solo para parafrasear herramientas, si se quiere texto de modelo.
 3. Una cuenta CDS si se va a leer caudal, sin convertirlo en profundidad de inundación.
