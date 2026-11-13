@@ -40,5 +40,6 @@ Thumbs.db
 data/operational/discovery/
 data/real/refresh/*.lock
 data/real/products/*/assets/
+data/real/products/shared/
 data/real/feeds/assets/
 *.local

@@ -42,8 +42,13 @@
       "Fuente de observaciones"
     ],
     "official_url": "https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD13Q1/",
-    "status": "pending",
-    "evidence": [],
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d04-evi-amazonia",
+      "/v1/products/d04-evi-pampa",
+      "/v1/products/d04-ndvi-amazonia",
+      "/v1/products/d04-ndvi-pampa"
+    ],
     "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
     "limits": "Un cambio de verdor puede deberse a cosecha, estación, incendio o nubes. No prueba sequía, pérdida de rendimiento ni mortalidad por sí solo."
   },
@@ -54,8 +59,13 @@
       "Fuente de observaciones"
     ],
     "official_url": "https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MOD11A2/",
-    "status": "pending",
-    "evidence": [],
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d05-lst-day-amazonia",
+      "/v1/products/d05-lst-day-pampa",
+      "/v1/products/d05-lst-night-amazonia",
+      "/v1/products/d05-lst-night-pampa"
+    ],
     "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
     "limits": "Contaminación por nubes y muestreo de cielo despejado. Temperatura de superficie y temperatura del aire tienen significados distintos."
   },
@@ -78,8 +88,14 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://www.ecmwf.int/en/forecasts/datasets/open-data",
-    "status": "pending",
-    "evidence": [],
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d07-ifs-10u-24h",
+      "/v1/products/d07-ifs-10v-24h",
+      "/v1/products/d07-ifs-2d-24h",
+      "/v1/products/d07-ifs-2t-24h",
+      "/v1/products/d07-ifs-tp-24h"
+    ],
     "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
     "limits": "No todo parámetro de IFS está en el subconjunto abierto. Productos históricos, ensembles y servicios de entrega deben revisarse por separado."
   },

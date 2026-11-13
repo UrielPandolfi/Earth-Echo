@@ -11,7 +11,9 @@ dependencies = [
     "ecmwf-opendata>=0.3.35",
     "fastapi>=0.162.5",
     "jsonschema>=4.23",
+    "netcdf4>=1.7.5.1.post1",
     "pydantic>=2.14",
+    "pyproj>=3.8.0",
     "truststore>=0.10.5",
     "uvicorn>=0.54",
 ]

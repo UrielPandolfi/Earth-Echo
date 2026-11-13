@@ -296,6 +296,16 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Verificación: 61 pruebas API, 19 web y TypeScript pasaron. Las pruebas de scheduler incluyen cadencia, bloqueo concurrente, falla, conservación del último éxito y recuperación. Los temporales de pytest requieren `--basetemp` dentro del workspace en este entorno.
 - Continúa automáticamente con NASA MODIS y ECMWF públicos. El pronóstico SST propio sigue experimental y sin habilidad adicional demostrada.
 
+## Incremento 11B — NASA MODIS y pronóstico atmosférico
+
+- D04 MOD13Q1: NDVI y EVI con escala 0,0001 y QA conservadora; D05 MOD11A2: temperatura superficial diurna/nocturna con escala 0,02 K y conversión probada a °C. Subconjuntos de Pampa (-35,-62) y Amazonía (-3,-60) mediante ORNL DAAC, sin cuenta; no son cobertura mundial. Las ventanas de 16/8 días permanecen intervalos, no instantes. Se conserva `proc_date`/tile porque REST no declara el número mayor de colección. Datos recientes disponibles: 16/10 (vegetación) y 24/10 (LST), no observaciones de hoy.
+- La muestra inicial de ~10 km se amplía a ~40 km por región tras medir tamaño. Originales/QA/metadatos compartidos entre bandas, reproyección sinusoidal→WGS84 por vecino más cercano. Una segunda petición de banda única coteja valores y georreferenciación; aritmética decimal comprueba escala independientemente.
+- D07: IFS oper fc de 0,25°, ciclo 2026-11-13 12Z, plazo +24 h. Temperatura a 2 m, rocío, lluvia acumulada 0–24 h y u/v a 10 m. Solo cinco mensajes GRIB mediante HTTP Range (~2,8 MB), sin descargar la corrida. Malla visible de 1°, original con todos sus nodos; índice de mensajes y nearest-point de ecCodes cotejan tiempo/valor. La emisión no informada queda null.
+- Los campos se consultan por API y se seleccionan en el mismo inspector/globo. La franja temporal muestra el producto seleccionado, incluido el tramo futuro de IFS. Se corrigió la leyenda para que sus colores correspondan a los valores dibujados.
+- MODIS se revisa diariamente; IFS cada 12 horas, con las mismas garantías de exclusión, retención y persistencia. El hash científico evita que una fecha de descarga escrita por ERDDAP aparente una revisión del dato. Almacenamiento nuevo limitado a 128 MB, conserva cuatro revisiones por producto; si alcanza el límite, conserva lo válido.
+- Pruebas añadidas de unidades, QA/nubes/agua/nieve, orientación y reproyección. No se habilita un detector de ola de calor por disponer de un campo de temperatura.
+- SMAP también figura en ORNL pero `/SPL3SMP_E/dates` respondió 400 en dos regiones; no se declara conectado. Su vía Earthdata y GLDAS/IMERG continúan bloqueadas por credencial.
+
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
 2. Un Qwen local pequeño, solo para parafrasear herramientas, si se quiere texto de modelo.
 3. Una cuenta CDS si se va a leer caudal, sin convertirlo en profundidad de inundación.

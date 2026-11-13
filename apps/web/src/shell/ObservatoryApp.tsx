@@ -173,7 +173,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
       }
     }
     void loadLayers();
-    return () => controller.abort();
+    const timer = window.setInterval(() => void loadLayers(), 60_000);
+    return () => { controller.abort(); window.clearInterval(timer); };
   }, [state.dataMode]);
 
   const records = recordsFor(state.wide);
@@ -393,13 +394,13 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 : undefined
           }
         />
-        <TimelineBar
+        {state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{activeProduct.kind === 'forecast' ? 'Pronóstico externo' : 'Observado / producto científico'}</strong><span>{activeProduct.observed_at ?? activeProduct.valid_from ?? 'Fechas por registro'} UTC{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
           state={state}
           onTimeline={(days) => dispatch({ type: "timeline", days })}
           onPlay={() => dispatch({ type: "play" })}
           realDates={realView?.observations.map((item) => item.observed.start.slice(0, 10)) ?? []}
           onRealIndex={(index) => dispatch({ type: "real-index", index })}
-        />
+        />}
       </div>
       {state.section === "historico" ? (
         <CapabilitiesPanel />

@@ -530,3 +530,5 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 .product-table table { width: 100%; font-size: .8rem; border-collapse: collapse; }
 .product-table td, .product-table th { text-align: left; padding: .4rem; border-bottom: 1px solid var(--border, #334155); }
 .inspector .fine { overflow-wrap: anywhere; }
+.legend-real { background: linear-gradient(90deg, rgb(48,132,186), rgb(136,112,121), rgb(224,92,56)); }
+.product-time { display: flex; gap: 12px; align-items: center; padding: 14px; min-height: 78px; flex-wrap: wrap; }

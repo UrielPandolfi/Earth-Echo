@@ -14,6 +14,10 @@ La actualización corre en el lifespan de la API o en `npm run refresh:watch`, c
 
 En REAL se conserva la cámara amplia; encuadrar un producto es una acción explícita. El inspector existente admite fichas de producto y originales descargables. El catálogo original permanece inmutable; `docs/integraciones.md` y `data/operational/integration_matrix.json` registran evidencia independiente.
 
+MODIS usa subconjuntos científicos ORNL DAAC, con entero original, bandas QA y metadatos de escala incluidos en un mismo activo compartido por NDVI/EVI o LST día/noche. La proyección sinusoidal es esférica con R=6371007.181 m; pyproj reproyecta por vecino más cercano a WGS84, sin rellenar nubes. Se conserva el intervalo del compuesto y el identificador de procesamiento, sin inventar una versión que REST no informa.
+
+IFS usa el índice público oficial para obtener cinco mensajes GRIB del paso +24 h por Range. ecCodes verifica parámetro/unidad, escaneo y tiempos contra el índice; la lluvia conserva 0–24 h y convierte m→mm. El GRIB original contiene la resolución científica; la UI recibe centros muestreados a 1°. Una misma corrida no se descarga para cada fenómeno. Los originales y JSON nuevos tienen presupuesto total de 128 MB; al agotarlo, una actualización falla explícitamente conservando lo válido.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

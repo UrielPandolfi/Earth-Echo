@@ -10,7 +10,9 @@ interface KpStep {
 }
 
 interface KpForecast {
-  issued_at: string;
+  issued_at: string | null;
+  retrieved_at?: string;
+  issue_time_basis?: string;
   initialization_note: string;
   note: string;
   steps: KpStep[];
@@ -101,7 +103,7 @@ export function ForecastReplay({ onReplay }: ForecastReplayProps) {
       <h3>Pronóstico importado</h3>
       {forecast ? (
         <>
-          <p>Kp previsto por SWPC. Emitido {forecast.issued_at}. {forecast.initialization_note}</p>
+          <p>Kp previsto por SWPC. Emisión: {forecast.issued_at ?? 'no informada'}. Recuperado: {forecast.retrieved_at ?? 'ver archivo'}. {forecast.issue_time_basis ?? forecast.initialization_note}</p>
           <p className="fine">{forecast.note} No está validado para uso operativo.</p>
           <p>
             {forecast.steps[0]?.valid_start} → {forecast.steps[forecast.steps.length - 1]?.valid_end}:{" "}

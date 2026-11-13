@@ -7,10 +7,10 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D01 | NASA GPM IMERG | Fuente de observaciones | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
 | D02 | NASA SMAP SPL3SMP E | Fuente de observaciones | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
 | D03 | NASA GLDAS | Pronóstico o producto científico existente | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
-| D04 | NASA MODIS MOD13Q1 | Fuente de observaciones | pending | Consultar producto real; descubrimiento no cuenta como integración |
-| D05 | NASA MODIS MOD11A2 | Fuente de observaciones | pending | Consultar producto real; descubrimiento no cuenta como integración |
+| D04 | NASA MODIS MOD13Q1 | Fuente de observaciones | /v1/products/d04-evi-amazonia, /v1/products/d04-evi-pampa, /v1/products/d04-ndvi-amazonia, /v1/products/d04-ndvi-pampa | Consultar producto real; descubrimiento no cuenta como integración |
+| D05 | NASA MODIS MOD11A2 | Fuente de observaciones | /v1/products/d05-lst-day-amazonia, /v1/products/d05-lst-day-pampa, /v1/products/d05-lst-night-amazonia, /v1/products/d05-lst-night-pampa | Consultar producto real; descubrimiento no cuenta como integración |
 | D06 | NASA FIRMS | Fuente de observaciones | pending | Consultar producto real; descubrimiento no cuenta como integración |
-| D07 | ECMWF Open Data | Pronóstico o producto científico existente | pending | Consultar producto real; descubrimiento no cuenta como integración |
+| D07 | ECMWF Open Data | Pronóstico o producto científico existente | /v1/products/d07-ifs-10u-24h, /v1/products/d07-ifs-10v-24h, /v1/products/d07-ifs-2d-24h, /v1/products/d07-ifs-2t-24h, /v1/products/d07-ifs-tp-24h | Consultar producto real; descubrimiento no cuenta como integración |
 | D08 | ERA5 histórico | Dataset histórico | pending | CDSAPI_KEY + licencia manual ERA5 |
 | D09 | C3S pronóstico estacional | Pronóstico o producto científico existente | pending | CDSAPI_KEY + licencia manual estacional |
 | D10 | Copernicus GloFAS | Pronóstico o producto científico existente | pending | EWDSAPI_KEY + licencia y colección GloFAS vigente |

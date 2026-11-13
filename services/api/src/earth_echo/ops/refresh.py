@@ -55,9 +55,16 @@ def _ocean(key, now):
     return publish(*fetch_ocean(key, now))
 
 def jobs() -> dict:
+    from earth_echo.connectors.nasa_subsets import fetch_modis
+    from earth_echo.connectors.ecmwf_fields import fetch_ecmwf
+    def modis(product, region, now):
+        results = fetch_modis(product,region,now)
+        return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
     return {
         **{key:(86400, lambda now, key=key:_ocean(key, now)) for key in PRODUCTS},
         'd21-events':(3600, refresh_usgs), 'd28-kp':(10800, refresh_kp), 'd28-kp-forecast':(10800, refresh_kp_forecast),
+        **{f'{p.lower()}-{r}':(86400, lambda now,p=p,r=r:modis(p,r,now)) for p in ['MOD13Q1','MOD11A2'] for r in ['pampa','amazonia']},
+        'd07-ifs-24h':(43200,fetch_ecmwf),
     }
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:
@@ -81,6 +88,7 @@ def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] 
             try:
                 result = runner(moment)
                 entry.update(status=result, last_success_at=moment.isoformat(), error=None,
+                    kept_previous=False,
                     next_attempt_at=(moment+timedelta(seconds=seconds)).isoformat())
                 if result != 'unchanged':
                     entry['last_change_at'] = moment.isoformat()

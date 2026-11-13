@@ -16,7 +16,7 @@ export function ProductsPanel({ data, selected, onSelect, onFocus, quakesOn, qua
       </ul>
       {product && <figure className="legend"><figcaption><strong>{product.variable} · {product.unit}</strong><span>{product.kind} · {product.source_id}</span></figcaption>
         <p className="hint">{product.observed_at ?? product.valid_from ?? 'Fecha en cada registro'} UTC</p>
-        {product.grid && <><div className="legend-bar legend-temperature" /><div className="legend-scale"><span>{product.grid.minimum?.toFixed(2)} {product.unit}</span><span>{product.grid.maximum?.toFixed(2)} {product.unit}</span></div><p className="hint">{product.grid.resolution}. {product.grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p><button type="button" className="wide-toggle" onClick={onFocus}>Encuadrar cobertura</button></>}
+        {product.grid && <><div className="legend-bar legend-real" /><div className="legend-scale"><span>{product.grid.minimum?.toFixed(2)} {product.unit}</span><span>{product.grid.maximum?.toFixed(2)} {product.unit}</span></div><p className="hint">{product.grid.resolution}. {product.grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p><button type="button" className="wide-toggle" onClick={onFocus}>Encuadrar cobertura</button></>}
         <p className="hint">{product.coverage}</p>
       </figure>}
       <label className="row"><input type="checkbox" checked={quakesOn} onChange={onQuakes}/><span>Sismos observados</span><b>{quakeCount}</b></label>

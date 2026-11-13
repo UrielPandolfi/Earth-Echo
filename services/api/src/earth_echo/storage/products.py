@@ -37,8 +37,12 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
         raise ValueError('Raw checksum mismatch')
     active = root or products_root()
     current = read_product(product.id, active)
-    if current is not None and current.checksum_sha256 == product.checksum_sha256:
+    if current is not None and (current.checksum_sha256 == product.checksum_sha256 or scientific_fingerprint(current) == scientific_fingerprint(product)):
         return 'unchanged'
+    used = sum(p.stat().st_size for p in active.rglob('*') if p.is_file()) if active.exists() else 0
+    projected = used + len(raw) + 2*len(product.model_dump_json().encode())
+    if projected > 128_000_000:
+        raise OSError('Scientific product store reached its 128 MB budget; last valid products preserved')
     target = active / product.raw_file
     target.parent.mkdir(parents=True, exist_ok=True)
     if not target.exists():
@@ -52,6 +56,14 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
     revisions = sorted(revision.parent.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
     for old in revisions[4:]:
         previous = ScientificProduct.model_validate_json(old.read_bytes())
-        (active / previous.raw_file).unlink(missing_ok=True)
         old.unlink()
+        referenced = any(json.loads(p.read_bytes()).get('raw_file') == previous.raw_file for p in active.glob('*/revisions/*.json'))
+        if not referenced:
+            (active / previous.raw_file).unlink(missing_ok=True)
     return 'stored'
+
+def scientific_fingerprint(product: ScientificProduct) -> str:
+    """ERDDAP writes request time in history; it must not create scientific revisions."""
+    from hashlib import sha256
+    payload = product.model_dump(mode='json', include={'collection_id','product_version','variable','unit','native_unit','observed_at','observation_end','initialized_at','issued_at','valid_from','valid_to','grid','samples','method_version'})
+    return sha256(json.dumps(payload, sort_keys=True, separators=(',',':'),allow_nan=False).encode()).hexdigest()

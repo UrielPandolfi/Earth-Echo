@@ -69,7 +69,7 @@ export function paintSstField(field: RealField): FieldGrid {
     rgba[offset] = Math.round(48 + mix * 176);
     rgba[offset + 1] = Math.round(132 - mix * 40);
     rgba[offset + 2] = Math.round(186 - mix * 130);
-    rgba[offset + 3] = 168;
+    rgba[offset + 3] = 220;
   });
   return {
     width: field.width,

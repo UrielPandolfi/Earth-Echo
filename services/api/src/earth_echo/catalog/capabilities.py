@@ -93,14 +93,32 @@ _OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
     },
 }
 
-_KINDS = ("observation", "indicator", "trend", "forecast")
+_KINDS = ("observation", "indicator", "trend", "forecast", "experimental_model")
 
 
 def capability_matrix() -> CapabilityMatrix:
+    from earth_echo.storage.products import all_products
+    products = all_products()
+    available = {p.id for p in products}
+    overrides_by_id = {key:dict(value) for key,value in _OVERRIDES.items()}
+    if 'd15-sst-global' in available:
+        overrides_by_id['F19']['observation'] = ('partial','SST CoralTemp de cobertura oceánica mundial submuestreada a 1°. La SST no confirma blanqueamiento; historia y tendencia solo en el recorte del Caribe.')
+    if {'d15-dhw-global','d15-hotspot-global'} <= available:
+        overrides_by_id['F19']['indicator'] = ('partial','HotSpot y DHW numéricos importados de NOAA con máscara. Indicadores de estrés térmico observado, sin daño biológico confirmado.')
+    if any(p.source_id=='D04' for p in products):
+        overrides_by_id.setdefault('F16',{})['observation'] = ('partial','NDVI/EVI MODIS en subconjuntos de Pampa/Amazonía, con QA y compuesto de 16 días. No mide rendimiento ni identifica causa del estrés.')
+    if any(p.source_id=='D05' for p in products):
+        overrides_by_id.setdefault('F02',{})['observation'] = ('partial','MODIS LST diurna/nocturna en subconjuntos locales. Es temperatura superficial de cielo despejado; sigue faltando una observación de temperatura del aire para detectar olas de calor.')
+    if 'd07-ifs-2t-24h' in available:
+        for fid in ['F02','F03']:
+            overrides_by_id.setdefault(fid,{})['forecast'] = ('partial','IFS externo mundial de temperatura del aire a 2 m, plazo +24 h; no es un detector de ola de calor/frío ni de helada agrícola.')
+    if 'd07-ifs-tp-24h' in available:
+        overrides_by_id['F01']['forecast'] = ('partial','Precipitación determinista IFS acumulada 0–24 h, mundial, m convertidos a mm. Sin percentiles de extremo ni probabilidad calibrada.')
+    overrides_by_id.setdefault('F19',{})['experimental_model'] = ('experimental','Experimento de anomalía mensual SST del Caribe, sin habilidad adicional frente a persistencia. No pronostica daño de coral.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []
-        overrides = _OVERRIDES.get(module.id, {})
+        overrides = overrides_by_id.get(module.id, {})
         for kind in _KINDS:
             status, detail = overrides.get(
                 kind,
