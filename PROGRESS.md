@@ -1,5 +1,16 @@
 # Progreso
 
+## Estado actual — 14 noviembre 2026, incrementos 11A–11T
+
+- 25 IDs del catálogo con productos científicos reales para alcances explícitos; 44 productos nuevos retenidos, 28 campos (tres calculados) y un análisis descriptivo RAPID. GIBS visual y CMR de descubrimiento se contabilizan aparte. No son 31 detectores.
+- 16.208 registros de observación, 2.475 históricos, dos indicadores importados y cero señales de evento calculadas en la última consulta verificada. Los contadores cambian sólo con consultas/actualizaciones reales; contexto estático y celdas no los inflan.
+- Tarea Windows de actualización activa; cadencias y recuperación en [docs/actualizacion.md](docs/actualizacion.md). Almacén ~213 MB, límite 256 MB, cuatro revisiones por producto. Conserva el último válido ante falla, sin salir de REAL.
+- 104 pruebas API, 24 web, contratos y build comprobados; API/originales y SHA de referencias intactos. Evidencia reproducible en `data/operational/integration_evidence.json` y capturas REAL en `docs/integraciones/`.
+- Restan 13 fuentes numéricas sin conexión: D01/D02/D03/D17/D33 (Earthdata y autorización de cada DAAC), D08/D09/D41 (CDS y licencias), D10/D11 (EWDS/CEMS y licencias), D12 (ADS/CAMS), D14 (Marine) y D18 (producto numérico regional no acreditado o fuera de temporada). Las rutas alternativas públicas comprobadas no resuelven esos productos. Variables y enlaces exactos en [docs/accesos.md](docs/accesos.md); no hay cuentas creadas ni términos aceptados automáticamente.
+- También quedan ramas pendientes dentro de fuentes conectadas: Sentinel-1/2/5P autenticado, huellas RGI7 oficiales, ampliaciones MODIS, otras áreas/centros CAP, campos globales/regionales adicionales y validación científica de modelos. Se declara únicamente el producto/ámbito comprobado en la [matriz de 48 fuentes y 31 fenómenos](docs/integraciones.md). Las variables reservadas de acceso no equivalen a conectores implementados. El experimento SST sigue experimental.
+
+El historial de fases e incrementos sigue debajo; sus cifras describen cada momento, no el estado actual.
+
 ## Fase 01 — completada
 
 El repositorio solo tenía la especificación, el catálogo, el PNG y los prompts. No había Git ni aplicación. Quedó una base que arranca, con contratos y una prueba real del globo.
@@ -459,6 +470,13 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Planificador real repetido `unchanged`, último éxito 06:35:25 UTC; tarea Windows Running, revisión reciente y ningún trabajo fallido en ese instante. 104 pruebas API, contratos comprobados; 24 pruebas web y build previos siguen vigentes porque este incremento no modifica código web. Referencias originales intactas.
 - 44 productos / 25 fuentes, 28 campos (tres calculados), un análisis descriptivo, 2.475 registros históricos, dos indicadores importados y cero señales de evento. Verificador API/originales pasó: 34 activos / 86.108.038 bytes; resumen 106.662 bytes. Almacén medido 212.949.947 de 256.000.000 bytes.
 - Se descartó otra vez la ruta pública SMAP ORNL: lista bandas pero `dates` responde 400 sin datos en Pampa y el ejemplo norteamericano, además de Amazonía previamente. No se cuenta como integración. IMERG GIS requiere PPS en esa distribución; Marine sigue requiriendo cuenta. Se conservan los bloqueos exactos en accesos. La prueba visual a 900×650 confirmó inspector accesible y ancho sin desborde, pero halló contadores/controles cubiertos por el panel; se corrige a continuación.
+
+## Incremento 11T — paneles reducidos y controles accesibles
+
+- La verificación a 900×650 detectó contadores/zoom/leyenda cubiertos por el inspector. En el breakpoint existente se reserva el ancho del panel para esos controles y para el mensaje de producto sin geometría. La leyenda deja además espacio a los botones de zoom. No se mueve la cámara ni se añaden puntos.
+- Panel reducido con fondo opaco para que no atraviesen sus textos las etiquetas del mapa; proporciones/tokens de escritorio conservados. Botones Filtros/Detalle informan `aria-expanded`. La lista acotada de productos mantiene unidad/fecha/leyenda accesibles.
+- Medición REAL 900×650: inspector x560–900, contadores hasta548, zoom516–548, leyenda12–504, ancho documental900. A1100: inspector desde760, contadores/zoom hasta748; ambos paneles abiertos conservan espacio y sin desborde. Captura auténtica `real-inspector-900x650.jpg`, consola sin errores y tamaño temporal restaurado.
+- 24 pruebas web y build de producción pasaron tras el cambio. No cambió la ciencia ni se repitieron innecesariamente las 104 pruebas API ya aprobadas. Las ampliaciones restantes necesitan los accesos/productos listados arriba; no se declaran completas ni se sustituyen por imágenes o fixtures.
 
 ## Pendientes heredados
 

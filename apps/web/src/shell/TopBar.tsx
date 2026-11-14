@@ -128,10 +128,10 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
       </div>
       <p className="demo-badge">{badge}</p>
       <div className="top-tools" aria-label="Herramientas de la barra">
-        <button type="button" className="icon-button panel-toggle" onClick={() => onPanel("filters")}>
+        <button type="button" className="icon-button panel-toggle" aria-expanded={state.filtersOpen} onClick={() => onPanel("filters")}>
           Filtros
         </button>
-        <button type="button" className="icon-button panel-toggle" onClick={() => onPanel("inspector")}>
+        <button type="button" className="icon-button panel-toggle" aria-expanded={state.inspectorOpen} onClick={() => onPanel("inspector")}>
           Detalle
         </button>
         <button type="button" className="icon-button" disabled title="Sin avisos en esta fase">
