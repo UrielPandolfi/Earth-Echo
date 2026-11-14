@@ -114,6 +114,7 @@ def jobs() -> dict:
     from earth_echo.connectors.marine_currents import fetch_marine_currents
     from earth_echo.connectors.marine_temperature import fetch_marine_temperature
     from earth_echo.connectors.marine_level import fetch_marine_level
+    from earth_echo.connectors.marine_salinity import fetch_marine_salinity
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -153,6 +154,7 @@ def jobs() -> dict:
         'd14-smoc-native':(86400,fetch_marine_currents),
         'd14-thetao-native':(86400,fetch_marine_temperature),
         'd14-mol-native':(86400,fetch_marine_level),
+        'd14-so-native':(86400,fetch_marine_salinity),
     }
 
 def terminate_worker(child):
@@ -191,7 +193,8 @@ def job_timeout(name):
         'd12-cams-global': ('EARTH_ECHO_CAMS_TIMEOUT_SECONDS', '420'),
         'd14-smoc-native': ('EARTH_ECHO_SMOC_GLOBAL_TIMEOUT_SECONDS', '600'),
         'd14-thetao-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300'),
-        'd14-mol-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300')}
+        'd14-mol-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300'),
+        'd14-so-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300')}
     variable, default = limits.get(name, ('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
     timeout = int(os.getenv(variable, default))
     if not 30 <= timeout <= 600:

@@ -23,6 +23,7 @@ def ranges():
 
 def test_authentic_temperature_depth_axes_fill_and_instantaneous_cf_time(ranges):
     product,raw=module.product_from_ranges(ranges,DAY,NOW,NOW)
+    assert raw==FIXTURE.read_bytes()  # shared decoder preserves archived bytes
     assert product.kind=='forecast' and product.representation=='field' and product.unit=='°C' and product.samples==[]
     assert product.variable=='thetao / sea_water_potential_temperature'
     assert all(getattr(product,k) is None for k in ('initialized_at','issued_at','observed_at','valid_to','probability'))
@@ -47,7 +48,7 @@ def test_authentic_temperature_depth_axes_fill_and_instantaneous_cf_time(ranges)
 
 @pytest.mark.parametrize(('key','bad'),[('units',b'K'),('standard_name',b'sea_surface_skin_temperature'),('scale_factor',.01)])
 def test_changed_scientific_definition_is_rejected(ranges,monkeypatch,key,bad):
-    original=module.h5py.File
+    original=h5py.File
     class Dataset:
         def __init__(self,raw):self.raw=raw;self.attrs={**dict(raw.attrs),key:bad}
         def __getattr__(self,name):return getattr(self.raw,name)
@@ -57,7 +58,7 @@ def test_changed_scientific_definition_is_rejected(ranges,monkeypatch,key,bad):
     @contextmanager
     def altered(*args,**kwargs):
         with original(*args,**kwargs) as ds:yield Group(ds)
-    monkeypatch.setattr(module.h5py,'File',altered)
+    monkeypatch.setattr(h5py,'File',altered)
     with pytest.raises(ValueError,match='units/layout/meaning changed'):
         module.product_from_ranges(ranges,DAY,NOW,NOW)
 

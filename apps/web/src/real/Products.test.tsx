@@ -9,6 +9,7 @@ import discharge from '../../../../data/real/products/d10-glofas-rosario/current
 import smoc from '../../../../data/real/products/d14-smoc-u-total/current.json';
 import thetao from '../../../../data/real/products/d14-thetao-surface/current.json';
 import mol from '../../../../data/real/products/d14-mol-total/current.json';
+import so from '../../../../data/real/products/d14-so-surface/current.json';
 
 afterEach(cleanup);
 
@@ -79,4 +80,14 @@ it('conserva geoide y fecha CF de MOL sin presentarlo como inundación o GTSM',(
   expect(screen.getByText('Última consulta satisfactoria')).toBeTruthy();
   expect(screen.getByText('2026-11-14T22:20:00Z')).toBeTruthy();
   expect(screen.getByText('Fecha de validez 2026-11-15T00:30:00Z UTC')).toBeTruthy();
+});
+
+it('presenta salinidad práctica en unidad nativa y profundidad, sin inferir biología',()=>{
+  const product=so as unknown as ScientificProduct;
+  const refresh={jobs:{'d14-so-native':{status:'unchanged',last_success_at:'2026-11-14T23:20:00Z'}}} as unknown as RefreshStatus;
+  render(<ProductInspector product={product} selectedId={null} refreshStatus={refresh}/>);
+  expect(screen.getByRole('heading',{name:'Salinidad práctica marina · 0,494025m · Caribe/Atlántico'})).toBeTruthy();
+  expect(screen.getByText('so / sea_water_salinity · 1e-3')).toBeTruthy();
+  expect(screen.getByText('Última consulta satisfactoria')).toBeTruthy();
+  expect(screen.getByText('2026-11-14T23:20:00Z')).toBeTruthy();
 });
