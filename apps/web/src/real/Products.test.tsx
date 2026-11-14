@@ -1,9 +1,12 @@
-import { render,screen,within } from '@testing-library/react';
-import { expect,it } from 'vitest';
+import { cleanup,render,screen,within } from '@testing-library/react';
+import { afterEach,expect,it } from 'vitest';
 import { ProductInspector } from './Products';
 import type { ScientificProduct } from '../domain/generated';
 import native from '../../../../data/real/products/d26-rgi60-patagonia-outlines/current.json';
 import roni from '../../../../data/real/products/d48-roni-history/current.json';
+import seasonal from '../../../../data/real/products/d09-seas5-pampa-precipitacion/current.json';
+
+afterEach(cleanup);
 
 it('muestra el registro seleccionado arriba y conserva sus atributos nativos accesibles',()=>{
   const product=native as unknown as ScientificProduct;
@@ -26,4 +29,13 @@ it('mantiene la historia RONI como serie histórica y no la presenta como tabla 
   expect(screen.getByRole('region',{name:'Serie del producto'})).toBeTruthy();
   expect(screen.getByRole('heading',{name:'Serie histórica'})).toBeTruthy();
   expect(screen.queryByRole('region',{name:'Pronóstico oficial ENSO RONI'})).toBeNull();
+});
+
+it('presenta SEAS5 como pronóstico mensual, con crédito visible y fechas separadas',()=>{
+  const {container}=render(<ProductInspector product={seasonal as unknown as ScientificProduct} selectedId={null}/>);
+  expect(screen.getByRole('heading',{name:'Serie del pronóstico'})).toBeTruthy();
+  expect(screen.getByRole('link',{name:'Weather data by Open-Meteo.com'}).getAttribute('href')).toBe('https://open-meteo.com/');
+  expect(container.querySelector('.chart-key')?.textContent).toBe(' Pronóstico');
+  expect(screen.getByText('Inicialización')).toBeTruthy();
+  expect(screen.getByText('Emisión')).toBeTruthy();
 });

@@ -17,3 +17,10 @@ it('labels calculated aggregates explicitly',()=>{
   expect(container.querySelector('.chart-key')?.textContent).toContain('Agregado calculado');
   expect(container.querySelector('.chart-key')?.textContent).not.toContain('Observado');
 });
+
+it('identifica una serie enteramente pronosticada sin leyenda de observaciones',()=>{
+  const {container}=render(<AnomalyChart points={[{label:'2026-11',kind:'forecast',value:108.5},{label:'2026-12',kind:'forecast',value:null},{label:'2027-01',kind:'forecast',value:125.4}]} caption="total mensual SEAS5" domain={{min:0,max:130,ticks:[0,65,130]}}/>);
+  expect(container.querySelector('.chart-key')?.textContent).toContain('Pronóstico');
+  expect(container.querySelector('.chart-key')?.textContent).not.toContain('Observado');
+  expect(container.querySelectorAll('.chart-gap').length).toBe(1);
+});

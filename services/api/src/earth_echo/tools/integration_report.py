@@ -12,7 +12,7 @@ DOCS = {38,39,40,42,43,44,45,46}
 BLOCKS = {
     **{f'D{i:02}':'Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada' for i in [1,2,3,17]},
     'D33':'NASA/NDMC publica NetCDF y TIFF globales sin cuenta; ejecutar d33-grace-global. No equivale a forecasts CONUS ni a otras colecciones Earthdata.',
-    'D08':'ARCO ERA5 público permite una hora estable sin cuenta; ejecutar d08-era5-air-temperature. El cliente CDS y otras colecciones requieren CDSAPI_KEY/licencia y no están implementados por esa vía.', 'D09':'CDSAPI_KEY + licencia manual estacional',
+    'D08':'ARCO ERA5 público permite una hora estable sin cuenta; ejecutar d08-era5-air-temperature. El cliente CDS y otras colecciones requieren CDSAPI_KEY/licencia y no están implementados por esa vía.', 'D09':'SEAS5 mensual público no comercial mediante Open-Meteo: d09-seas5-monthly. CDSAPI_KEY/licencia siguen necesarios para la ruta CDS, otros centros, miembros e hindcasts; no se confunden distribuciones.',
     'D10':'EWDSAPI_KEY + licencia y colección GloFAS vigente', 'D11':'GWIS WMS público devuelve TIFF Float32, pero ceros de fondo oceánico no se distinguen de FWI=0: sin nodata/máscara científica. WCS no expone ecmwf.fwi y dos recortes nominalmente alineados no coincidieron; ciclo/remuestreo no resuelto. Evidencia real en data/samples/d11-gwis/evidence.json, sin publicar como producto. EWDSAPI_KEY y licencia permiten historia/estacionales CEMS-Fire; no acreditan ese forecast de tiempo real.',
     'D12':'ADSAPI_KEY + licencia CAMS', 'D14':'COPERNICUSMARINE_SERVICE_USERNAME, COPERNICUSMARINE_SERVICE_PASSWORD',
     'D16':'Resolver archivo numérico de perspectivas, sin inferir datos desde imagen',

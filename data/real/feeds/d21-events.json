@@ -1,15 +1,27 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T15:58:34Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T15%3A58%3A34Z&endtime=2026-11-14T15%3A58%3A34Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "c5a55d0ff3bde2b2e9f4fe3284ddb81bd0427e585730e62f5ac942d48d59a541",
-  "byte_size": 85968,
-  "raw_file": "assets\\d21-events\\c5a55d0ff3bde2b2e9f4fe3284ddb81bd0427e585730e62f5ac942d48d59a541.json",
+  "retrieved_at": "2026-11-14T16:59:19Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T16%3A59%3A19Z&endtime=2026-11-14T16%3A59%3A19Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "583852ebf23575889f260b77eab0efcf286d15d0a6f761c14be3ea1a0a33e323",
+  "byte_size": 85231,
+  "raw_file": "assets\\d21-events\\583852ebf23575889f260b77eab0efcf286d15d0a6f761c14be3ea1a0a33e323.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty9l",
+      "longitude": 126.2112,
+      "latitude": 8.3996,
+      "depth_km": 154.123,
+      "magnitude": 4.9,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T16:51:47.040000Z",
+      "time": "2026-11-14T16:04:22Z",
+      "place": "7 km SE of Tagbina, Philippines"
+    },
     {
       "id": "us7000ty90",
       "longitude": -178.3404,
@@ -246,7 +258,7 @@
       "magnitude": 5.8,
       "magnitude_type": "mww",
       "review_status": "reviewed",
-      "updated_at": "2026-11-14T06:47:15.040000Z",
+      "updated_at": "2026-11-14T16:51:50.018000Z",
       "time": "2026-11-13T16:43:02Z",
       "place": "79 km WSW of Changuillo, Peru"
     },
@@ -1437,30 +1449,6 @@
       "updated_at": "2026-11-07T17:37:15.040000Z",
       "time": "2026-11-07T17:17:38Z",
       "place": "45 km NNW of Salinas, Ecuador"
-    },
-    {
-      "id": "us7000twt0",
-      "longitude": 137.5969,
-      "latitude": 34.8969,
-      "depth_km": 37.07,
-      "magnitude": 5.5,
-      "magnitude_type": "mww",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-11T17:42:32.999000Z",
-      "time": "2026-11-07T16:04:35Z",
-      "place": "8 km E of Shinshiro, Japan"
-    },
-    {
-      "id": "us7000twsy",
-      "longitude": -79.921,
-      "latitude": 7.5067,
-      "depth_km": 10.0,
-      "magnitude": 4.5,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T19:53:11.040000Z",
-      "time": "2026-11-07T16:01:52Z",
-      "place": "11 km ESE of Pedasí, Panama"
     }
   ]
 }

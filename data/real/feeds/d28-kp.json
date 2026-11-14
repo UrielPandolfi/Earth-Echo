@@ -1,10 +1,10 @@
 {
   "source_id": "D28",
-  "retrieved_at": "2026-11-14T13:56:20Z",
+  "retrieved_at": "2026-11-14T16:56:24Z",
   "query": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json",
-  "checksum_sha256": "3935cff1d5902c18bde160064c4428acae7943526ba73c6a4ecf6d89fc0e5b4f",
-  "byte_size": 4647,
-  "raw_file": "assets\\d28-kp\\3935cff1d5902c18bde160064c4428acae7943526ba73c6a4ecf6d89fc0e5b4f.json",
+  "checksum_sha256": "a693fb23699a6e9f65016d1dea21dbe25be6c0488d7171ec10c70f51cc843f3f",
+  "byte_size": 4724,
+  "raw_file": "assets\\d28-kp\\a693fb23699a6e9f65016d1dea21dbe25be6c0488d7171ec10c70f51cc843f3f.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "global_index",
@@ -309,6 +309,11 @@
     {
       "time": "2026-11-14T09:00:00Z",
       "kp": 1.33,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-14T12:00:00Z",
+      "kp": 1.67,
       "station_count": 8
     }
   ]

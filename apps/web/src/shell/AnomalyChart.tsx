@@ -95,7 +95,7 @@ export function AnomalyChart({ points, caption, domain, observedLabel='Observado
         ))}
       </div>
       <figcaption className="chart-key">
-        <span><i className="swatch observed" /> {observedLabel}</span>
+        {observed.length > 0 ? <span><i className="swatch observed" /> {observedLabel}</span> : null}
         {points.some((point) => point.kind === "forecast") ? <span><i className="swatch forecast" /> Pronóstico</span> : null}
         {points.some((point) => point.low !== undefined && point.high !== undefined) ? <span><i className="swatch band" /> Incertidumbre</span> : null}
       </figcaption>

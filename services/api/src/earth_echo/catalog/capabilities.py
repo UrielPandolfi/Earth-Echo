@@ -180,6 +180,12 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F17',{})['forecast'] = ('partial','Probabilidades oficiales CPC de fase/intensidad ENSO y percentiles RONI para nueve trimestres solapados. Índice RONI ERSSTv6/base1991–2020, definición y ventanas propias; no se une con ONI histórico ni se interpreta como riesgo local. Emisión mensual sin hora UTC no inventada. Consenso externo importado, sin validación predictiva de modelo propio.')
     if 'd48-roni-history' in available:
         overrides_by_id.setdefault('F17',{})['indicator'] = ('partial','Historias publicadas ONI y RONI ERSSTv6 en productos separados. RONI usa base1991–2020, resta media tropical y ajusta varianza; tres temporadas no publicadas del año final permanecen null y las más recientes son revisables. No clasificación automática de episodio, unión de índices, tendencia o probabilidad de impacto local.')
+    if 'd09-seas5-pampa-temperatura' in available:
+        for fid in ['F01','F02','F03']:
+            previous=overrides_by_id.setdefault(fid,{}).get('forecast',('partial',''))[1]
+            overrides_by_id[fid]['forecast'] = ('partial',previous+' SEAS5 aporta medias mensuales de temperatura del aire a2m y totales de precipitación promediados sobre ensemble para dos celdas O320 Pampa/Amazonía, siete meses. Distribución pública Open-Meteo distinta de CDS, corrida/validez propias, sin miembros/dispersión/calibración. No predice días de lluvia extrema, olas de calor o heladas desde esas medias.')
+        for fid in ['F11','F16']:
+            overrides_by_id.setdefault(fid,{})['forecast'] = ('partial','Insumo climático externo: temperatura media mensual a2m y precipitación total mensual media del ensemble SEAS5, dos celdas Pampa/Amazonía y siete meses. Sin base/hindcasts compatibles, déficit, probabilidad de sequía o daño agrícola calculados. No es pronóstico local validado del fenómeno ni observación; modelos propios siguen no disponibles.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

@@ -128,9 +128,14 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://cds.climate.copernicus.eu/datasets/seasonal-original-single-levels",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "CDSAPI_KEY + licencia manual estacional",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d09-seas5-amazonia-precipitacion",
+      "/v1/products/d09-seas5-amazonia-temperatura",
+      "/v1/products/d09-seas5-pampa-precipitacion",
+      "/v1/products/d09-seas5-pampa-temperatura"
+    ],
+    "blocker_or_next_step": "Pronóstico externo ECMWF SEAS5, media mensual del ensemble, sin miembros individuales/dispersión ni calibración contra reforecasts. Distribución pública Open-Meteo distinta de cliente/dataset CDS C3S; uso gratuito local no comercial. models=ecmwf_seas5 evita mezcla EC46. Celda nativa más próxima, elevation=nan desactiva ajuste altitudinal; sin interpolación temporal/espacial por Earth Echo. precipitation_mean representa total de precipitación del mes en mm, promediado sobre el ensemble: proveedor integra tprate con segundos reales de cada mes; no tasa diaria. Meses civiles [inicio,fin) UTC, incluyendo el mes inicial que puede haber comenzado; no tiempo observado. Metadatos usan intervalo representativo31d, no duración fija de todos los meses. No hay climatología/anomalía, probabilidades de sequía/inundación/calor/helada ni habilidad predictiva local acreditada. null permanece ausente y cero válido. En fallo se conserva la corrida válida con su edad. | Pronóstico externo ECMWF SEAS5, media mensual del ensemble, sin miembros individuales/dispersión ni calibración contra reforecasts. Distribución pública Open-Meteo distinta de cliente/dataset CDS C3S; uso gratuito local no comercial. models=ecmwf_seas5 evita mezcla EC46. Celda nativa más próxima, elevation=nan desactiva ajuste altitudinal; sin interpolación temporal/espacial por Earth Echo. Temperatura del aire a2m media mensual; no SST, extremo diario o temperatura de superficie terrestre. Meses civiles [inicio,fin) UTC, incluyendo el mes inicial que puede haber comenzado; no tiempo observado. Metadatos usan intervalo representativo31d, no duración fija de todos los meses. No hay climatología/anomalía, probabilidades de sequía/inundación/calor/helada ni habilidad predictiva local acreditada. null permanece ausente y cero válido. En fallo se conserva la corrida válida con su edad.",
     "limits": "Predice distribuciones estacionales. No permite afirmar qué día lloverá dentro de seis meses. Calibrar contra reforecasts compatibles."
   },
   {
