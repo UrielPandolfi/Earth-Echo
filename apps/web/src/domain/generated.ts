@@ -396,6 +396,7 @@ export interface ScientificGrid {
   sampling: string;
   quality_mask: string;
   color_scale?: "linear" | "log10";
+  reverse_colors?: boolean;
   quality_values?: Array<number | null> | null;
   quality_legend?: Record<string, string>;
 }

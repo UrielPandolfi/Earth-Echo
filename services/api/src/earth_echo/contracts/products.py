@@ -23,6 +23,7 @@ class ScientificGrid(ApiModel):
     sampling: str
     quality_mask: str
     color_scale: Literal['linear','log10'] = 'linear'
+    reverse_colors: bool = False
     quality_values: list[int | None] | None = None
     quality_legend: dict[str,str] = Field(default_factory=dict)
 

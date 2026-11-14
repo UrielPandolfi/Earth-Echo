@@ -160,6 +160,10 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F20',{})['observation'] = ('partial','Clorofila OC4Me L3 Sentinel-3A vía NOAA, producto experimental con huecos y fechas reales. Fuente Copernicus, no sustituye OceanColor NASA D17. No confirma especie de alga, toxicidad ni un evento HAB; no hay detector o pronóstico biológico.')
     if 'd34-amoc-annual-trend' in available:
         overrides_by_id.setdefault('F31',{})['trend'] = ('partial','Medias anuales RAPID 2005–2023 ponderadas por días del mes y pendiente OLS descriptiva en Sv/década, con período/parámetros/versión/entradas SHA y comprobación aritmética independiente. Sin prueba de significación, atribución, extrapolación ni fecha/probabilidad de colapso.')
+    if 'd33-grace-root-zone' in available:
+        overrides_by_id.setdefault('F11',{})['indicator'] = ('partial','Percentiles globales terrestres GRACE/CLSM de humedad superficial, zona radicular y almacenamiento subterráneo somero, importados de modelo asimilado. Malla 0,25°, vista 1°, −60…90°, relleno y Groenlandia enmascarados. No son humedad volumétrica SMAP, nivel de un pozo, tendencia ni probabilidad de sequía futura; fecha de última observación satelital asimilada no acreditada por el atributo input.')
+        overrides_by_id.setdefault('F14',{})['indicator'] = ('partial','Percentil de almacenamiento subterráneo somero GRACE/CLSM en tierra global, con referencia de modelo y fecha propias. No confirma escasez de suministro, extracción, profundidad del agua, capacidad de embalse o pozo individual. Sin pronóstico global de escasez.')
+        overrides_by_id.setdefault('F16',{})['indicator'] = ('partial','ASI FAO de Pampa y percentil de humedad de zona radicular GRACE/CLSM global como insumos diferentes, con sus máscaras/fechas/referencias. No se combinan en un puntaje arbitrario ni confirman pérdida de rendimiento, causalidad o probabilidad de daño.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

@@ -2419,6 +2419,11 @@
           "title": "Color Scale",
           "type": "string"
         },
+        "reverse_colors": {
+          "default": false,
+          "title": "Reverse Colors",
+          "type": "boolean"
+        },
         "quality_values": {
           "anyOf": [
             {

@@ -458,9 +458,13 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://www.drought.gov/data-maps-tools/groundwater-and-soil-moisture-conditions-grace-data-assimilation",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d33-grace-groundwater",
+      "/v1/products/d33-grace-root-zone",
+      "/v1/products/d33-grace-surface-soil"
+    ],
+    "blocker_or_next_step": "Percentil de humedad/almacenamiento derivado de asimilación GRACE-FO en Catchment; no humedad volumétrica, altura/nivel de agua ni medición directa de cada pozo. Referencia global 1948–2012 por localización/época del año según Drought.gov; el NetCDF no repite esa climatología y no se recalculó. Valor alto/bajo no es probabilidad de inundación/sequía futura ni daño confirmado. Rejilla 0,25° no equivale a resolución observacional del satélite. Celda visual 1° toma un vecino nativo según regla explícita; no promedia rangos. Indicador global, no los forecasts CONUS de 30/60/90 días. El atributo input conserva una cadena terminada en 2019-08: no acredita la última observación GRACE asimilada, aunque la referencia del campo sea reciente; no se inventa actualización del satélite. Creación sin zona permanece literal, emisión UTC null. No incertidumbre o habilidad predictiva propia validada.",
     "limits": "El satélite observa cambios integrados de masa. La estimación de agua subterránea depende de un modelo y no mide cada pozo."
   },
   {

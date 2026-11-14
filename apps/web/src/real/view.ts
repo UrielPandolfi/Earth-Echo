@@ -46,6 +46,7 @@ export interface RealField {
   missing_cells: number;
   values: Array<number | null>;
   color_scale?: 'linear' | 'log10';
+  reverse_colors?: boolean;
 }
 
 export function isRealSourceView(value: unknown): value is RealSourceView {
@@ -67,7 +68,8 @@ export function paintSstField(field: RealField): FieldGrid {
     if (value === null) {
       return;
     }
-    const mix = Math.min(1, Math.max(0, (normalize(value) - low) / span));
+    const normalized = Math.min(1, Math.max(0, (normalize(value) - low) / span));
+    const mix = field.reverse_colors ? 1-normalized : normalized;
     const offset = index * 4;
     rgba[offset] = Math.round(48 + mix * 176);
     rgba[offset + 1] = Math.round(132 - mix * 40);
