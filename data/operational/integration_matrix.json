@@ -111,9 +111,11 @@
       "Dataset histórico"
     ],
     "official_url": "https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "CDSAPI_KEY + licencia manual ERA5",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d08-era5-air-temperature"
+    ],
+    "blocker_or_next_step": "Temperatura del aire a 2 m de reanálisis ERA5, combinación de modelo y observaciones; no SST, LST de satélite ni observación meteorológica directa. Sólo una hora estable: no tendencia, climatología ni detector de ola de calor/frío. ARCO redistribuye/remalla a 0,25°; se conserva el bloque completo y vista stride 4 a 1°, sin agregar interpolación. Epoch CF real 1900: valid_time_start=1940 limita datos calificados pero no es el inicio del eje reservado. No se usa ERA5T ni se supone que toda la forma Zarr esté poblada. Sin incertidumbre/ensemble ni QA por celda descargados. No se leyó el GRIB original de ECMWF; el original conservado es el conjunto exacto de bloques/metadatos ARCO. last_updated no es emisión del campo. Las rutas CDS y otras variables/horas siguen pendientes de ampliar con sus propios accesos/verificaciones.",
     "limits": "Reconstruye el pasado usando información posterior. Sirve como referencia histórica; no demuestra qué se podía saber en tiempo real. La precipitación acumulada necesita tratamiento temporal correcto."
   },
   {

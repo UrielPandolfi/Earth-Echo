@@ -194,6 +194,13 @@
       "sample_path": "data/real/products/d25-s3a-chlorophyll/current.json",
       "credential_variables": [],
       "detail": "Clorofila · Sentinel-3A OC4Me · experimental (Campo L3 de ámbito oceánico mundial; extensión exacta en grid y solo celdas válidas observadas/agregadas. Nubes/tierra/huecos quedan ausentes; no cobertura completa efectiva en cada día.)"
+    },
+    "D08": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d08-era5-air-temperature/current.json",
+      "credential_variables": [],
+      "detail": "ERA5 · temperatura del aire a 2 m · archivo estable (Campo mundial de una hora estable ERA5: 2026-06-30T00:00:00+00:00. No se descargó una serie temporal ni el archivo de petabytes.)"
     }
   }
 }

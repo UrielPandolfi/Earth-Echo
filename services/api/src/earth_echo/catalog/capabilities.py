@@ -109,6 +109,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F16',{})['observation'] = ('partial','NDVI/EVI MODIS en subconjuntos de Pampa/Amazonía, con QA y compuesto de 16 días. No mide rendimiento ni identifica causa del estrés.')
     if any(p.source_id=='D05' for p in products):
         overrides_by_id.setdefault('F02',{})['observation'] = ('partial','MODIS LST diurna/nocturna en subconjuntos locales. Es temperatura superficial de cielo despejado; sigue faltando una observación de temperatura del aire para detectar olas de calor.')
+    if 'd08-era5-air-temperature' in available:
+        overrides_by_id.setdefault('F02',{})['observation'] = ('partial','MODIS LST local disponible como observación superficial. Además hay una hora histórica de temperatura del aire a 2 m ERA5 estable, mundial, vía ARCO público: es reanálisis modelo/observaciones, no observación meteorológica directa. No hay serie/climatología suficiente ni detector de ola de calor; la tendencia sigue no disponible.')
     if 'd07-ifs-2t-24h' in available:
         for fid in ['F02','F03']:
             overrides_by_id.setdefault(fid,{})['forecast'] = ('partial','IFS externo mundial de temperatura del aire a 2 m, plazo +24 h; no es un detector de ola de calor/frío ni de helada agrícola.')
