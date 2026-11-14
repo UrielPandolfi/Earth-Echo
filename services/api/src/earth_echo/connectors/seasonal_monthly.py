@@ -15,7 +15,7 @@ import zipfile
 import numpy as np
 
 from earth_echo.connectors.http import download
-from earth_echo.connectors.open_meteo import number
+from earth_echo.connectors.open_meteo import number, reserve_calls
 from earth_echo.connectors.scientific_archive import pack_files
 from earth_echo.contracts.products import ScientificProduct, ProductSample, Verification
 from earth_echo.storage.products import publish
@@ -181,9 +181,11 @@ def fetch_seasonal_monthly(now):
     before, _ = download(META, max_bytes=20_000)
     init, *_ = run_metadata(before, now)
     url = request_url(init)
-    files = {'meta-before.json': before, 'monthly.json': download(url, max_bytes=200_000)[0],
-             'monthly.csv': download(url + '&format=csv', max_bytes=200_000)[0],
-             'meta-after.json': download(META, max_bytes=20_000)[0]}
+    files = {'meta-before.json': before}
+    for name, address in [('monthly.json', url), ('monthly.csv', url + '&format=csv')]:
+        reserve_calls(locations=2, variables=2, hours=(month_after(init, 7) - init).total_seconds() / 3600)
+        files[name] = download(address, max_bytes=200_000)[0]
+    files['meta-after.json'] = download(META, max_bytes=20_000)[0]
     products, raw = products_from_files(files, now)
     results = [publish(p, raw, '.zip') for p in products]
     return 'unchanged' if all(r == 'unchanged' for r in results) else 'stored'

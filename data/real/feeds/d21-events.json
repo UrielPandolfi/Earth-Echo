@@ -1,15 +1,51 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T16:59:19Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T16%3A59%3A19Z&endtime=2026-11-14T16%3A59%3A19Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "583852ebf23575889f260b77eab0efcf286d15d0a6f761c14be3ea1a0a33e323",
-  "byte_size": 85231,
-  "raw_file": "assets\\d21-events\\583852ebf23575889f260b77eab0efcf286d15d0a6f761c14be3ea1a0a33e323.json",
+  "retrieved_at": "2026-11-14T21:02:12Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T21%3A02%3A12Z&endtime=2026-11-14T21%3A02%3A12Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "9846097787b54496b69cff11bdcfc5c4f88f02104cf1c199d16258da1a0a9b1f",
+  "byte_size": 85280,
+  "raw_file": "assets\\d21-events\\9846097787b54496b69cff11bdcfc5c4f88f02104cf1c199d16258da1a0a9b1f.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty9z",
+      "longitude": -63.653,
+      "latitude": -22.2364,
+      "depth_km": 506.268,
+      "magnitude": 4.7,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T18:18:57.040000Z",
+      "time": "2026-11-14T18:04:01Z",
+      "place": "24 km S of Yacuiba, Bolivia"
+    },
+    {
+      "id": "us7000ty9v",
+      "longitude": 126.6097,
+      "latitude": 5.5982,
+      "depth_km": 65.399,
+      "magnitude": 4.6,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T18:15:02.040000Z",
+      "time": "2026-11-14T16:56:39Z",
+      "place": "96 km SSE of Pondaguitan, Philippines"
+    },
+    {
+      "id": "us7000ty9n",
+      "longitude": -66.9029,
+      "latitude": -24.049,
+      "depth_km": 197.571,
+      "magnitude": 4.6,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T17:57:54.040000Z",
+      "time": "2026-11-14T16:36:19Z",
+      "place": "62 km WNW of San Antonio de los Cobres, Argentina"
+    },
     {
       "id": "us7000ty9l",
       "longitude": 126.2112,
@@ -1413,42 +1449,6 @@
       "updated_at": "2026-11-08T23:22:51.933000Z",
       "time": "2026-11-07T23:17:05Z",
       "place": "central Mid-Atlantic Ridge"
-    },
-    {
-      "id": "us7000twu1",
-      "longitude": 128.5121,
-      "latitude": -3.905,
-      "depth_km": 136.656,
-      "magnitude": 4.7,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T21:19:02.040000Z",
-      "time": "2026-11-07T20:55:38Z",
-      "place": "43 km ESE of Ambon, Indonesia"
-    },
-    {
-      "id": "us7000twtv",
-      "longitude": -87.0544,
-      "latitude": 11.526,
-      "depth_km": 37.054,
-      "magnitude": 4.5,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T20:13:03.040000Z",
-      "time": "2026-11-07T19:55:10Z",
-      "place": "65 km WSW of Masachapa, Nicaragua"
-    },
-    {
-      "id": "us7000twt8",
-      "longitude": -81.1439,
-      "latitude": -1.8505,
-      "depth_km": 10.0,
-      "magnitude": 4.7,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T17:37:15.040000Z",
-      "time": "2026-11-07T17:17:38Z",
-      "place": "45 km NNW of Salinas, Ecuador"
     }
   ]
 }

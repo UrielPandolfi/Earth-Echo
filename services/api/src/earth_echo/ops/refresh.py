@@ -110,6 +110,7 @@ def jobs() -> dict:
     from earth_echo.connectors.enso_outlook import fetch_enso_outlook
     from earth_echo.connectors.seasonal_monthly import fetch_seasonal_monthly
     from earth_echo.connectors.glofas_discharge import fetch_glofas
+    from earth_echo.connectors.cams_fields import fetch_cams
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -145,11 +146,12 @@ def jobs() -> dict:
         'd48-roni-outlook-tables':(86400,fetch_enso_outlook),
         'd09-seas5-monthly':(86400,fetch_seasonal_monthly),
         'd10-glofas-discharge':(86400,fetch_glofas),
+        'd12-cams-global':(43200,fetch_cams),
     }
 
 def execute_job(name, runner, moment):
     """A socket timeout is not a total timeout (DNS and slow bodies can hang)."""
-    timeout = int(os.getenv('EARTH_ECHO_HYDROATLAS_TIMEOUT_SECONDS', '420') if name == 'd32-basins-south-america' else os.getenv('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
+    timeout = int(os.getenv('EARTH_ECHO_HYDROATLAS_TIMEOUT_SECONDS', '420') if name == 'd32-basins-south-america' else os.getenv('EARTH_ECHO_CAMS_TIMEOUT_SECONDS', '420') if name == 'd12-cams-global' else os.getenv('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
     if not 30 <= timeout <= 600:
         raise ValueError('Job timeout must be between 30 and 600 seconds')
     try:

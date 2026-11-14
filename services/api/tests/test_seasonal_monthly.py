@@ -75,6 +75,7 @@ def test_zero_and_null_are_distinct_and_no_double_conversion(files):
 
 
 def test_bounded_fetch_shared_asset_idempotence_outage_and_recovery(files, tmp_path, monkeypatch):
+    monkeypatch.setattr(module, 'reserve_calls', lambda **kwargs: None)
     offline = False
     requested = []
     def download(url, **kwargs):

@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 import zipfile
 
 from earth_echo.connectors.http import download
-from earth_echo.connectors.open_meteo import LICENSE, number, csv_sections
+from earth_echo.connectors.open_meteo import LICENSE, number, csv_sections, reserve_calls
 from earth_echo.connectors.scientific_archive import pack_files
 from earth_echo.contracts.products import ScientificProduct, ProductSample, Verification
 from earth_echo.storage.products import publish
@@ -154,8 +154,11 @@ def fetch_glofas(now):
     before, _ = download(META, max_bytes=20_000)
     init, *_ = run_metadata(before, now)
     url = request_url(init)
-    files = {'meta-before.json': before, 'discharge.json': download(url, max_bytes=200_000)[0],
-        'discharge.csv': download(url + '&format=csv', max_bytes=200_000)[0], 'meta-after.json': download(META, max_bytes=20_000)[0]}
+    files = {'meta-before.json': before}
+    for name, address in [('discharge.json', url), ('discharge.csv', url + '&format=csv')]:
+        reserve_calls(locations=2, variables=52, hours=168)
+        files[name] = download(address, max_bytes=200_000)[0]
+    files['meta-after.json'] = download(META, max_bytes=20_000)[0]
     products, raw = products_from_files(files, now)
     results = [publish(p, raw, '.zip') for p in products]
     return 'unchanged' if all(r == 'unchanged' for r in results) else 'stored'

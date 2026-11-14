@@ -189,6 +189,9 @@ def capability_matrix() -> CapabilityMatrix:
     if 'd10-glofas-rosario' in available:
         overrides_by_id.setdefault('F12',{})['observation'] = ('blocked','Hay caudales pronosticados GloFAS en dos celdas; no observaciones de aforos conectadas. Se necesitan registros/validación local para corrección, sin presentar modelo como medición.')
         overrides_by_id['F12']['forecast'] = ('partial','GloFAS familia v4, siete medias de24h por dos celdas0,05° en entorno Rosario/Manaus y51 miembros retenidos. Media externa cotejada independientemente. Distribución rolling forecast_v4 puede completar huecos con intermedio/estacional; sin ID de corrida individual ni versión menor operativa expuestos, asociación de inicialización única no acreditada. No cuenca mundial, río principal asignado, umbral de retorno, probabilidad de crecida o profundidad de inundación.')
+    if 'd12-cams-global-dust-bin3' in available:
+        overrides_by_id.setdefault('F09',{})['forecast'] = ('partial','CAMS global: concentración prevista de fracción de polvo aermr06(0,9–20μm), nivel137 con conversión de densidad fija del distribuidor, y AOD550 de aerosoles totales en columna. Vista mundial12° desde centros nativos0,4°, un plazo+24h. No polvo total, PM10 equivalente, detección observada de tormenta, probabilidad o pronóstico local validado.')
+        overrides_by_id.setdefault('F10',{})['forecast'] = ('partial','PM2,5/PM10 superficiales y AOD550 en columna CAMS, productos/definiciones separados y plazo+24h. Vista mundial12° de centros0,4°, sin estaciones/calibración local. No AQI sin norma/ventana, exposición individual, causalidad de humo/incendios o probabilidad de daño.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

@@ -85,6 +85,7 @@ def test_units_grid_run_and_independent_csv_disagreement_reject(files):
 
 
 def test_shared_ingestion_idempotence_network_failure_and_recovery(files, tmp_path, monkeypatch):
+    monkeypatch.setattr(module, 'reserve_calls', lambda **kwargs: None)
     offline = False
     def download(url, **kwargs):
         if offline: raise URLError('controlled outage')
