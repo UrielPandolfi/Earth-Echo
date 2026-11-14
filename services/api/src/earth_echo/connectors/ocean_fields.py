@@ -18,7 +18,7 @@ PRODUCTS = {
     'd15-dhw-global': ('D15', CRW, 'noaacrwdhwDaily', 'degree_heating_week', 'degree_Celsius_weeks', '°C·semana', 'Degree Heating Weeks mundial', 'indicator', 20),
 }
 
-def decode_grid(raw: bytes, variable: str, expected_unit: str, *, mask_name: str | None = None) -> tuple[ScientificGrid, datetime]:
+def decode_grid(raw: bytes, variable: str, expected_unit: str, *, mask_name: str | None = None, wrap_longitude: bool = False) -> tuple[ScientificGrid, datetime]:
     with tempfile.TemporaryDirectory() as temp:
         path = Path(temp) / 'field.nc'
         path.write_bytes(raw)
@@ -42,6 +42,9 @@ def decode_grid(raw: bytes, variable: str, expected_unit: str, *, mask_name: str
         missing = not math.isfinite(v) or v == attr.get('_FillValue') or (mask is not None and mask[i] != 0)
         missing |= ('valid_min' in attr and v < attr['valid_min']) or ('valid_max' in attr and v > attr['valid_max'])
         values.append(None if missing else v * attr.get('scale_factor', 1) + attr.get('add_offset', 0))
+    if wrap_longitude:
+        if any(not 0<=lon<360 for lon in lons):raise ValueError('Expected native longitude domain [0,360)')
+        lons=[(lon+180)%360-180 for lon in lons]
     rows = sorted(range(len(lats)), key=lambda i: lats[i], reverse=True)
     columns = sorted(range(len(lons)), key=lambda i: lons[i])
     values = [values[r * len(lons) + c] for r in rows for c in columns]

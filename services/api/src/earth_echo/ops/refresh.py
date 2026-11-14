@@ -106,6 +106,7 @@ def jobs() -> dict:
     from earth_echo.connectors.glacier_outlines import fetch_glacier_outlines
     from earth_echo.connectors.glacier_global import fetch_glacier_global
     from earth_echo.connectors.sentinel_vegetation import fetch_sentinel_vegetation
+    from earth_echo.connectors.nasa_ocean_color import fetch_nasa_chlorophyll
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -137,6 +138,7 @@ def jobs() -> dict:
         'd26-rgi60-patagonia-outlines':(2592000,fetch_glacier_outlines),
         'd26-rgi7-global-large-glaciers':(2592000,fetch_glacier_global),
         'd25-s2-pampa':(86400,fetch_sentinel_vegetation),
+        'd17-aqua-chlorophyll-archive':(2592000,fetch_nasa_chlorophyll),
     }
 
 def execute_job(name, runner, moment):

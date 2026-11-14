@@ -1,15 +1,39 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T11:57:59Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T11%3A57%3A59Z&endtime=2026-11-14T11%3A57%3A59Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "7cbc6991ef49f3f1d1d00c30ec70ed901fe5ae5ee6c97287dd28d0284c4e8273",
-  "byte_size": 85899,
-  "raw_file": "assets\\d21-events\\7cbc6991ef49f3f1d1d00c30ec70ed901fe5ae5ee6c97287dd28d0284c4e8273.json",
+  "retrieved_at": "2026-11-14T15:58:34Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T15%3A58%3A34Z&endtime=2026-11-14T15%3A58%3A34Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "c5a55d0ff3bde2b2e9f4fe3284ddb81bd0427e585730e62f5ac942d48d59a541",
+  "byte_size": 85968,
+  "raw_file": "assets\\d21-events\\c5a55d0ff3bde2b2e9f4fe3284ddb81bd0427e585730e62f5ac942d48d59a541.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty90",
+      "longitude": -178.3404,
+      "latitude": -33.0019,
+      "depth_km": 12.019,
+      "magnitude": 4.9,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T15:09:29.040000Z",
+      "time": "2026-11-14T13:17:20Z",
+      "place": "south of the Kermadec Islands"
+    },
+    {
+      "id": "us7000ty8u",
+      "longitude": 160.2984,
+      "latitude": 52.3603,
+      "depth_km": 17.439,
+      "magnitude": 4.5,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T13:07:55.040000Z",
+      "time": "2026-11-14T12:28:00Z",
+      "place": "137 km SE of Petropavlovsk-Kamchatsky, Russia"
+    },
     {
       "id": "us7000ty84",
       "longitude": -42.6346,
@@ -1437,30 +1461,6 @@
       "updated_at": "2026-11-07T19:53:11.040000Z",
       "time": "2026-11-07T16:01:52Z",
       "place": "11 km ESE of Pedasí, Panama"
-    },
-    {
-      "id": "us7000twss",
-      "longitude": 14.7685,
-      "latitude": -19.7325,
-      "depth_km": 10.0,
-      "magnitude": 4.9,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-11T17:37:30.321000Z",
-      "time": "2026-11-07T15:22:50Z",
-      "place": "73 km NNW of Khorixas, Namibia"
-    },
-    {
-      "id": "us7000twsp",
-      "longitude": -178.7119,
-      "latitude": -20.8363,
-      "depth_km": 571.898,
-      "magnitude": 4.5,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T16:13:31.040000Z",
-      "time": "2026-11-07T15:05:45Z",
-      "place": "Fiji region"
     }
   ]
 }

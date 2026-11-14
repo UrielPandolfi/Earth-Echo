@@ -236,9 +236,11 @@
       "Fuente de observaciones"
     ],
     "official_url": "https://oceandata.sci.gsfc.nasa.gov/",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d17-aqua-chlorophyll-archive"
+    ],
+    "blocker_or_next_step": "Archivo histórico NASA OceanColor de 31/05/2022; versión nativa 2018.1QLP prevalece sobre título comercial v2018.0. QLP/quicklook, no edición Science Quality R2022 actual. La distribución pública termina en 2022: no satisface clorofila NASA reciente, cuya ruta Earthdata sigue pendiente. Concentración de clorofila, no especie, toxicidad, HAB confirmado, hipoxia o enfermedad. Agregado L3 diario, máscara NaN/rango nativo, sin flags L2 por celda descargados. Colorbar no es máscara. Submuestreo de 4,64km a ~1° por centros; las áreas entre centros no son una nueva medición promediada. Longitudes normalizadas sin crear celdas/pines. Los valores científicos del subconjunto y dos CSV independientes están retenidos; no se descargó la colección nativa mundial o su historia completa. Sin tendencia, detector o validación predictiva.",
     "limits": "Clorofila alta no identifica una especie tóxica ni una toxina. El agua turbia costera puede sesgar las recuperaciones."
   },
   {

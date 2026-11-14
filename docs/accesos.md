@@ -1,5 +1,7 @@
 # Accesos del catálogo
 
+D17 incorpora un [archivo histórico NASA Aqua OCI en NOAA/PIFSC](https://oceanwatch.pifsc.noaa.gov/erddap/info/aqua_chla_1d_2018_0/index.html), sin cuenta/variables Earthdata. Identidad NASA/DOI/versión2018.1QLP comprobadas, campo31/05/2022 y CSV independientes. No se cuenta como NASA reciente: la réplica termina en2022, y la ruta OB.DAAC actual sigue con los requisitos de la tabla. [Evidencia](../data/samples/integrations/nasa-aqua-chlorophyll-2022.md).
+
 D25 también tiene Sentinel-2 C1 L2A público por [Earth Search / Element 84](https://registry.opendata.aws/sentinel-2-l2a-cogs/), sin cuenta AWS/CDSE ni variables de credencial. Se comprobaron XML, B04/B08 y SCL de una ventana Pampa ~7×7 km y se integraron reflectancias/NDVI con máscara. La ruta XML CDSE que devolvió 401 es diferente; ese rechazo no bloquea esta distribución pública. Sentinel-1/5P, otras áreas y servicios autenticados mantienen los requisitos de la tabla. Evidencia [Sentinel-2](../data/samples/integrations/sentinel2-pampa-c1.md).
 
 Comprobación local: 13 de noviembre de 2026. No se encontraron credenciales configuradas. Los secretos van exclusivamente en `.env` de la raíz (ignorado por Git), o en las variables de entorno del proceso servidor. Copiar `.env.example` a `.env`, completar localmente y reiniciar API/worker. Nunca usar `VITE_` ni enviar claves al chat.
