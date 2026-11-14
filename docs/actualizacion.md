@@ -1,5 +1,7 @@
 # Actualización local de productos reales
 
+`d25-s2-pampa` revisa diariamente una búsqueda pública Sentinel-2 C1 de 30 días y elige la pasada más reciente con nube de tesela≤40%. Una lectura B04/B08/SCL y XML alimenta tres productos compartidos. Cada activo≤8 MB/16 rangos de 512 KiB; ventana medida ~7×7 km. Si ítem/metadatos son idénticos y existen los tres productos, sólo consulta el catálogo: `unchanged` no significa nueva descarga/cálculo. `last_success_at` es esa comprobación; `retrieved_at` del original y fecha de pasada permanecen iguales. Cambio de escena/metadatos o lote incompleto fuerza lectura; falla conserva válido. No se rellenan huecos SCL. [Evidencia](../data/samples/integrations/sentinel2-pampa-c1.md).
+
 La tarea **Earth Echo - Public Data Refresh** está instalada y comprobada en ejecución en este equipo. Inicia con la sesión del usuario, mediante `pythonw.exe -m earth_echo.tools.refresh --watch` y directorio de trabajo del proyecto. No requiere que la interfaz esté abierta; el equipo debe estar encendido y la sesión iniciada. No es un servicio de arranque anterior al inicio de sesión.
 
 Desde PowerShell en la raíz, después de instalar dependencias:

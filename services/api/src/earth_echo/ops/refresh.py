@@ -105,6 +105,7 @@ def jobs() -> dict:
     from earth_echo.connectors.imerg_climatology import fetch_imerg_climatology
     from earth_echo.connectors.glacier_outlines import fetch_glacier_outlines
     from earth_echo.connectors.glacier_global import fetch_glacier_global
+    from earth_echo.connectors.sentinel_vegetation import fetch_sentinel_vegetation
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -135,6 +136,7 @@ def jobs() -> dict:
         'd01-imerg-grand-climatology':(2592000,fetch_imerg_climatology),
         'd26-rgi60-patagonia-outlines':(2592000,fetch_glacier_outlines),
         'd26-rgi7-global-large-glaciers':(2592000,fetch_glacier_global),
+        'd25-s2-pampa':(86400,fetch_sentinel_vegetation),
     }
 
 def execute_job(name, runner, moment):

@@ -170,6 +170,10 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F11',{})['indicator'] = ('partial','Percentiles globales terrestres GRACE/CLSM de humedad superficial, zona radicular y almacenamiento subterráneo somero, importados de modelo asimilado. Malla 0,25°, vista 1°, −60…90°, relleno y Groenlandia enmascarados. No son humedad volumétrica SMAP, nivel de un pozo, tendencia ni probabilidad de sequía futura; fecha de última observación satelital asimilada no acreditada por el atributo input.')
         overrides_by_id.setdefault('F14',{})['indicator'] = ('partial','Percentil de almacenamiento subterráneo somero GRACE/CLSM en tierra global, con referencia de modelo y fecha propias. No confirma escasez de suministro, extracción, profundidad del agua, capacidad de embalse o pozo individual. Sin pronóstico global de escasez.')
         overrides_by_id.setdefault('F16',{})['indicator'] = ('partial','ASI FAO de Pampa y percentil de humedad de zona radicular GRACE/CLSM global como insumos diferentes, con sus máscaras/fechas/referencias. No se combinan en un puntaje arbitrario ni confirman pérdida de rendimiento, causalidad o probabilidad de daño.')
+    if 'd25-s2-pampa-ndvi' in available:
+        overrides_by_id.setdefault('F16',{})['observation'] = ('partial','NDVI/EVI MODIS en Pampa/Amazonía y reflectancias de superficie roja/NIR Sentinel-2 C1 en ventana Pampa ~7×7 km, con fecha de pasada, offset BOA y máscara SCL. No rendimiento, humedad del suelo ni causalidad de estrés.')
+        previous=overrides_by_id['F16'].get('indicator',('partial',''))[1]
+        overrides_by_id['F16']['indicator'] = ('partial',previous+' NDVI local calculado de B04/B08 Sentinel-2 con parámetros/versión/insumos SHA y SCL4/5; dominio no negativo y suma positiva. Sin serie/anomalía ni diagnóstico de pérdida agrícola.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []
