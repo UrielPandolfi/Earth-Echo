@@ -462,9 +462,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://www.gdacs.org/Documents/2025/GDACS_API_quickstart_v1.pdf",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Resolver productos, geometrias, cancelación y validez",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d35-cyclone-cap-areas"
+    ],
+    "blocker_or_next_step": "Avisos/áreas publicados, incluidos mensajes pasados, actualizaciones y cancelaciones. Un nivel Green no declara seguridad; el puntaje no es probabilidad. Se conserva urgency/status/msgType y el área original. No es un pronóstico propio ni profundidad de inundación. La API SEARCH respondió vacía; un CAP de inundación devolvió HTML y esa capacidad queda pendiente.",
     "limits": "Integrar una alerta no equivale a haber predicho el evento. Puede haber estimaciones automáticas y revisiones; no es verdad de referencia completa."
   },
   {

@@ -1,10 +1,11 @@
-import type { ProductList, ScientificProduct,ProductTrack } from '../domain/generated';
+import type { ProductList, ScientificProduct,ProductTrack,ProductRegion,RefreshStatus } from '../domain/generated';
 import { AnomalyChart } from '../shell/AnomalyChart';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
-export function ProductsPanel({ data, selected, activeProduct, onSelect, onFocus, quakesOn, quakeCount, onQuakes, kpText, error, grouped, onGroup }: {
+export function ProductsPanel({ data, selected, activeProduct, refreshStatus, onSelect, onFocus, quakesOn, quakeCount, onQuakes, kpText, error, grouped, onGroup }: {
   data: ProductList | null; selected: string; onSelect: (key: string) => void; onFocus: () => void;
   activeProduct: ScientificProduct | undefined;
+  refreshStatus: RefreshStatus | null;
   quakesOn: boolean; quakeCount: number; onQuakes: () => void; kpText: string | null; error: string | null;
   grouped: boolean; onGroup: () => void;
 }) {
@@ -12,6 +13,7 @@ export function ProductsPanel({ data, selected, activeProduct, onSelect, onFocus
   return <aside className="sidebar" aria-label="Consulta real"><div className="sidebar-head"><h2>Observatorio · REAL</h2></div>
     <div className="sidebar-body">
       <p className="hint">{data?.connected_sources ?? '—'} fuentes con datos · {data?.field_products ?? '—'} campos científicos</p>
+      <p className="hint">Actualizador: {refreshStatus?.recent_scan ? 'revisión reciente' : 'sin revisión reciente comprobada'} · {refreshStatus?.last_scan_at ?? 'No disponible'} UTC</p>
       {error && <p role="status" className="hint">{error} Se conserva la última carga disponible.</p>}
       <h3>Productos reales</h3>
       <ul className="rows">{data?.products.map(p => <li key={p.id}><label className="row"><input type="radio" name="real-product" checked={selected === p.id} onChange={() => onSelect(p.id)} /><span>{p.title}</span></label></li>)}
@@ -30,18 +32,22 @@ export function ProductsPanel({ data, selected, activeProduct, onSelect, onFocus
     </div></aside>;
 }
 
-export function ProductInspector({ product, selectedId,onTrackFocus }: { product: ScientificProduct; selectedId: string | null; onTrackFocus?: (track:ProductTrack)=>void }) {
+export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocus,refreshStatus }: { product: ScientificProduct; selectedId: string | null; onTrackFocus?: (track:ProductTrack)=>void; onRegionFocus?: (region:ProductRegion)=>void; refreshStatus?: RefreshStatus | null }) {
   const p = product;
   const samples = p.samples ?? [];
   const selected = samples.find(s=>s.id===selectedId);
+  const jobKey=p.source_id==='D04' ? `mod13q1-${p.id.split('-').at(-1)}` : p.source_id==='D05' ? `mod11a2-${p.id.split('-').at(-1)}` : p.source_id==='D07' ? 'd07-ifs-24h' : p.source_id==='D16' ? 'd16-mhw-monthly' : p.id;
+  const job=refreshStatus?.jobs?.[jobKey];
   const chartSamples = p.representation === 'planetary' ? samples.slice(-60) : [];
   const present = chartSamples.flatMap(s=>s.value === null || s.value === undefined ? [] : [s.value]);
   const low = present.length ? Math.min(...present) : 0;
   const high = present.length ? Math.max(...present) : 1;
   return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {p.kind}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? `Recuperado ${p.retrieved_at}`} UTC</p></header>
     <div className="inspector-body"><p>{p.limitation}</p>
+      {job && <section><h3>Actualización · UTC</h3>{job.error && <p role="status">Falló el último intento: {job.error}. Se conserva el último producto válido en REAL.</p>}<dl className="facts"><div><dt>Último intento</dt><dd>{job.last_attempt_at} · {job.status}</dd></div><div><dt>Última descarga correcta</dt><dd>{job.last_success_at ?? 'No disponible'}</dd></div><div><dt>Último cambio</dt><dd>{job.last_change_at ?? 'Sin cambio nuevo registrado'}</dd></div><div><dt>Próximo intento</dt><dd>{job.next_attempt_at}</dd></div></dl></section>}
       {!!p.tracks?.length && <section><h3>{p.tracks.length} trayectorias históricas</h3><p className="fine">Línea dorada: centros publicados, no trayectoria futura. Seleccioná un sistema para encuadrarlo.</p><div className="product-table">{p.tracks.map(t=><button key={t.id} type="button" className="wide-toggle" onClick={()=>onTrackFocus?.(t)}>Encuadrar {t.name} · {t.sample_ids.length} posiciones</button>)}</div></section>}
-      {selected && <section><h3>{selected.attributes?.nombre ?? selected.id}</h3><p>{selected.value ?? 'Ausente'} {p.unit}</p><p>{selected.latitude}°, {selected.longitude}° WGS84</p><p className="fine">{Object.entries(selected.attributes ?? {}).map(([k,v])=>`${k}: ${v ?? 'ausente'}`).join(' · ')}</p><p className="fine">{selected.quality}</p></section>}
+      {!!p.regions?.length && <section><h3>Áreas publicadas</h3><p className="fine">Contorno del proveedor; la fecha del evento no determina vigencia del aviso. Consultá estado, urgencia y expiración en la ficha.</p>{p.regions.map(r=><button key={r.id} type="button" className="wide-toggle" onClick={()=>onRegionFocus?.(r)}>Encuadrar {r.name}</button>)}</section>}
+      {selected && <section><h3>{selected.attributes?.nombre ?? selected.id}</h3><p>{selected.value ?? 'Ausente'} {p.unit}</p>{selected.latitude!=null && selected.longitude!=null && <p>{selected.latitude}°, {selected.longitude}° WGS84</p>}<p className="fine">{Object.entries(selected.attributes ?? {}).map(([k,v])=>`${k}: ${v ?? 'ausente'}`).join(' · ')}</p><p className="fine">{selected.quality}</p></section>}
       {chartSamples.length > 0 && <AnomalyChart points={chartSamples.map(s=>({label:s.time?.slice(0,10) ?? s.id,kind:p.kind==='forecast'?'forecast':'observed',value:s.value ?? null}))} domain={{min:low-.1,max:high+.1,ticks:[high,(low+high)/2,low]}} caption={`${p.variable} · ${p.unit}; últimos ${chartSamples.length} registros. UTC; los huecos siguen ausentes.`}/>}
       <dl className="facts"><div><dt>Variable</dt><dd>{p.variable} · {p.unit}</dd></div><div><dt>Producto</dt><dd>{p.collection_id} · {p.product_version}</dd></div>
         <div><dt>Recuperado</dt><dd>{p.retrieved_at} UTC</dd></div><div><dt>Emisión</dt><dd>{p.issued_at ?? 'No proporcionada'}</dd></div><div><dt>Validez</dt><dd>{p.valid_from ?? 'No aplica'} — {p.valid_to ?? 'No aplica'}</dd></div>

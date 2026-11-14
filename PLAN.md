@@ -39,6 +39,7 @@ El pedido actual amplía las integraciones del catálogo completo, por increment
 - 11C: OISST, inventario volcánico, OAF, CAP, Sentry y ONI histórico.
 - 11D: LHASA nativo regional, MHW mensual mundial, DSM GLO-90, rangos reproducibles y actualización al iniciar sesión Windows.
 - 11E: trayectorias IBTrACS recientes, con calidad nativa y corte del antimeridiano.
-- Siguiente: avisos/áreas GDACS y siguientes productos públicos viables, manteniendo bloqueos por credencial, permiso, volumen o definición científica. Un paso no cierra otro producto del mismo proveedor.
+- 11F: polígonos CAP de ciclones GDACS y estado operativo en el inspector.
+- Siguiente: indicadores sobre insumos retenidos y productos públicos numéricos viables. Mantener bloqueos por credencial, permiso, volumen o definición científica; un paso no cierra otro producto del mismo proveedor.
 
 React, TypeScript y Vite en `apps/web`. CesiumJS como motor del globo, con Natural Earth II mientras no haya una decisión de imaginería con token. FastAPI en `services/api`. PostgreSQL con PostGIS es la dirección de almacenamiento geográfico para cuando exista una fase de datos persistidos; esta fase no lo exige. Redis y colas quedan fuera hasta que haya un trabajo asíncrono concreto.

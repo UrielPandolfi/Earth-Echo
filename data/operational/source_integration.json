@@ -131,6 +131,13 @@
       "sample_path": "data/real/products/d47-cyclone-tracks/current.json",
       "credential_variables": [],
       "detail": "Ciclones · trayectorias recientes IBTrACS (15 trayectorias de sistemas con última posición en los últimos 30 días, sin recorte por cuenca. Original conserva tres años; no es cobertura exhaustiva.)"
+    },
+    "D35": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d35-cyclone-cap-areas/current.json",
+      "credential_variables": [],
+      "detail": "GDACS · áreas CAP de ciclones (2 CAP de ciclón en el RSS consultado, máximo tres. No cubre todos los avisos ni otros tipos de amenaza.)"
     }
   }
 }

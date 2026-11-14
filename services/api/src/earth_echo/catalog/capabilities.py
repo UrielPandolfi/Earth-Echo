@@ -49,7 +49,7 @@ _OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
     "F12": {
         "observation": (
             "blocked",
-            "GloFAS está en CDS y no hay cuenta. Un caudal no se convirtió en profundidad de inundación.",
+            "GloFAS requiere acceso EWDS/CEMS y licencia del producto. Un caudal no se convirtió en profundidad de inundación.",
         )
     },
     "F15": {
@@ -132,7 +132,9 @@ def capability_matrix() -> CapabilityMatrix:
     if any(p.source_id=='D16' for p in products):
         overrides_by_id.setdefault('F18',{})['forecast'] = ('partial','Probabilidades mensuales NMME de NOAA PSL sobre umbral p90, producto externo experimental con tendencia retenida y ventanas mensuales. Habilidad desigual; sin daño biológico confirmado.')
     if 'd47-cyclone-tracks' in available:
-        overrides_by_id.setdefault('F04',{})['observation'] = ('partial','Trayectorias históricas/provisionales IBTrACS de sistemas con posición en los últimos 30 días. Conservan agencia, viento nativo y calidad. No hay trayectoria futura ni validación de forecasts emitidos.')
+        overrides_by_id.setdefault('F06',{})['observation'] = ('partial','Trayectorias históricas/provisionales IBTrACS de sistemas con posición en los últimos 30 días. Conservan agencia, viento nativo y calidad. No hay trayectoria futura ni validación de forecasts emitidos.')
+    if 'd35-cyclone-cap-areas' in available:
+        overrides_by_id.setdefault('F06',{})['indicator'] = ('partial','Mensajes/áreas CAP de ciclón GDACS, incluidos estados pasados y cancelaciones. Puntaje importado, no probabilidad ni detector propio; vigencia por mensaje.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

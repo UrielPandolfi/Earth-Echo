@@ -68,6 +68,7 @@ def jobs() -> dict:
     from earth_echo.connectors.lhasa import fetch_lhasa
     from earth_echo.connectors.marine_heatwaves import fetch_mhw
     from earth_echo.connectors.ibtracs import fetch_ibtracs
+    from earth_echo.connectors.gdacs import fetch_gdacs
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -81,6 +82,7 @@ def jobs() -> dict:
         'd48-oni-history':(604800,fetch_oni), 'd22-oaf-recent':(3600,fetch_oaf),
         'd30-dem-pampa':(2592000,fetch_dem), 'd24-lhasa-bc':(43200,fetch_lhasa), 'd16-mhw-monthly':(86400,fetch_mhw),
         'd47-cyclone-tracks':(86400,fetch_ibtracs),
+        'd35-cyclone-cap-areas':(21600,fetch_gdacs),
     }
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:
@@ -98,18 +100,20 @@ def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] 
             if not force and due and datetime.fromisoformat(due) > moment:
                 continue
             # Persist BEFORE I/O, so a killed process retries after a bounded delay.
-            entry = {**previous, 'last_attempt_at':moment.isoformat(), 'status':'running', 'next_attempt_at':(moment+timedelta(minutes=15)).isoformat()}
+            attempt=now or datetime.now(timezone.utc)
+            entry = {**previous, 'last_attempt_at':attempt.isoformat(), 'status':'running', 'next_attempt_at':(attempt+timedelta(minutes=15)).isoformat()}
             state['jobs'][name] = entry
             atomic_json(path, state)
             try:
-                result = runner(moment)
-                entry.update(status=result, last_success_at=moment.isoformat(), error=None,
+                result = runner(attempt)
+                completed=now or datetime.now(timezone.utc)
+                entry.update(status=result, last_success_at=completed.isoformat(), error=None,
                     kept_previous=False,
-                    next_attempt_at=(moment+timedelta(seconds=seconds)).isoformat())
+                    next_attempt_at=(completed+timedelta(seconds=seconds)).isoformat())
                 if result != 'unchanged':
-                    entry['last_change_at'] = moment.isoformat()
+                    entry['last_change_at'] = completed.isoformat()
             except Exception as error:
-                entry.update(status='failed', error=f'{type(error).__name__}: {error}', kept_previous=True)
+                entry.update(status='failed', error=f'{type(error).__name__}: {error}', kept_previous=previous.get('last_success_at') is not None)
             state['heartbeat_at'] = datetime.now(timezone.utc).isoformat()
             atomic_json(path, state)
         state['last_scan_at']=(now or datetime.now(timezone.utc)).isoformat()

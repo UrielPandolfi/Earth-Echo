@@ -9,6 +9,8 @@ import {
   ImageryLayer,
   Material,
   PolylineCollection,
+  PolygonHierarchy,
+  Entity,
   Math as CesiumMath,
   Rectangle,
   SceneTransforms,
@@ -99,6 +101,7 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
   scene.primitives.add(billboards);
   const paths = new PolylineCollection();
   scene.primitives.add(paths);
+  const regionEntities: Entity[]=[];
   const globe = scene.globe;
   const camera = viewer.camera;
   const controller = scene.screenSpaceCameraController;
@@ -250,7 +253,7 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     const picked = scene.pick(new Cartesian2(x, y)) as { id?: unknown } | undefined;
-    const id = typeof picked?.id === "string" ? picked.id : null;
+    const id = typeof picked?.id === "string" ? picked.id : picked?.id instanceof Entity ? picked.id.id : null;
     if (!id) {
       return;
     }
@@ -427,6 +430,19 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
             material:Material.fromType('Color',{color:Color.fromCssColorString('#e7bf74')}),
             id:`product-point:${track.sample_ids[track.sample_ids.length-1]}`});
         }
+      }
+      scene.requestRender();
+    },
+    setRegions(regions) {
+      for (const entity of regionEntities) viewer.entities.remove(entity);
+      regionEntities.length=0;
+      for (const region of regions) {
+        region.geometry.coordinates.forEach((rings,index)=>{
+          const ring=(positions:number[][])=>positions.map(p=>Cartesian3.fromDegrees(p[0],p[1]));
+          regionEntities.push(viewer.entities.add({id:`product-point:${region.sample_id}:area:${region.id}:${index}`,
+            polygon:{hierarchy:new PolygonHierarchy(ring(rings[0]),rings.slice(1).map(h=>new PolygonHierarchy(ring(h)))),
+              material:Color.fromCssColorString('#e7bf74').withAlpha(.23),outline:true,outlineColor:Color.fromCssColorString('#e7bf74'),height:1000}}));
+        });
       }
       scene.requestRender();
     },

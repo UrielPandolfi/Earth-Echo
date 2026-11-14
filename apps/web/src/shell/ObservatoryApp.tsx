@@ -24,7 +24,7 @@ import { TrendPanel } from "./TrendPanel";
 import { CapabilitiesPanel } from "./CapabilitiesPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
-import type { ProductList, ScientificProduct } from '../domain/generated';
+import type { ProductList, ScientificProduct,RefreshStatus } from '../domain/generated';
 import { ProductsPanel, ProductInspector } from '../real/Products';
 import { groupMarkers } from '../globe/clustering';
 
@@ -47,6 +47,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [productKey, setProductKey] = useState('d15-sst-global');
   const [productError, setProductError] = useState<string | null>(null);
   const [productDetails, setProductDetails] = useState<ScientificProduct | null>(null);
+  const [refreshStatus,setRefreshStatus]=useState<RefreshStatus|null>(null);
+  const [layerError,setLayerError]=useState<string|null>(null);
   const activeProduct = productDetails?.id === productKey ? productDetails : products?.products.find(p => p.id === productKey);
   const [quakes, setQuakes] = useState<Array<{ id: string; longitude: number; latitude: number; magnitude: number; place: string; time: string }>>([]);
   const [kpText, setKpText] = useState<string | null>(null);
@@ -137,6 +139,13 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         if (!Array.isArray(body.products) || body.data_mode !== 'real') throw new Error('Contrato de productos inválido.');
         setProducts(body); setProductError(null);
       } catch (e) { if (!controller.signal.aborted) setProductError(e instanceof Error ? e.message : 'No disponible'); }
+      try {
+        const response=await fetch(`${apiBase}/v1/operations/refresh`,{signal:controller.signal});
+        if (!response.ok) throw new Error('Estado de actualización no disponible');
+        const body=await response.json() as RefreshStatus;
+        if (!body.jobs || typeof body.recent_scan!=='boolean') throw new Error('Estado inválido');
+        setRefreshStatus(body);
+      } catch { if (!controller.signal.aborted) setRefreshStatus(null); }
     }
     void load();
     const timer = window.setInterval(() => void load(), 60_000);
@@ -181,12 +190,13 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
               : `Kp ${body.latest_kp} · ${body.latest_time ?? "sin hora"} · índice planetario, no un aviso local`,
           );
         }
+        if (!quakeResponse.ok || !kpResponse.ok) throw new Error('Consulta de capas no disponible');
+        setLayerError(null);
       } catch (caught) {
         if (caught instanceof DOMException && caught.name === "AbortError") {
           return;
         }
-        setQuakes([]);
-        setKpText("La capa adicional no respondió. El escenario DEMO no se usó como reemplazo.");
+        setLayerError('No se pudieron actualizar sismos/Kp. Se conserva la última carga disponible.');
       }
     }
     void loadLayers();
@@ -357,10 +367,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         assistantOpen={assistantOpen}
         badge={badge}
       />
-      {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} activeProduct={activeProduct} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
+      {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} activeProduct={activeProduct} refreshStatus={refreshStatus} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
         const g = activeProduct?.grid;
         if (g) setFrameRequest({west:g.west, east:g.east, north:g.north, south:g.south, crossesAntimeridian:false});
-      }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError} grouped={state.groupOnZoom} onGroup={()=>dispatch({type:'group'})}/> : <FilterPanel
+      }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError ?? layerError} grouped={state.groupOnZoom} onGroup={()=>dispatch({type:'group'})}/> : <FilterPanel
         state={state}
         onToggleCategory={(id) => dispatch({ type: "toggle-category", id })}
         onToggleInfo={(id) => dispatch({ type: "toggle-info", id })}
@@ -382,11 +392,12 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           createGlobe={createGlobe}
           catalogTotal={catalogTotal}
           catalogState={catalogState}
-          signalCount={state.dataMode === "real" ? shownMarkers.length + (shownField ? 1 : 0) : visible.length}
+          signalCount={state.dataMode === "real" ? shownMarkers.length + (shownField ? 1 : 0) + (activeProduct?.regions?.length ?? 0) + (activeProduct?.tracks?.length ?? 0) : visible.length}
           groupCount={state.dataMode === "real" ? shownMarkers.filter(m=>m.symbol==='cluster').length : grouped.clusters.length}
           markers={shownMarkers}
           field={shownField}
           tracks={state.dataMode==='real' ? activeProduct?.tracks : undefined}
+          regions={state.dataMode==='real' ? activeProduct?.regions : undefined}
           fieldCredit={
             state.dataMode === "real"
               ? activeProduct ? `${activeProduct.attribution} · ${activeProduct.variable}` : "NOAA Coral Reef Watch · CoralTemp v3.1 · SST"
@@ -436,7 +447,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
-      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} selectedId={state.realSelectedId?.replace('product-point:','') ?? null} onTrackFocus={track=>{
+      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} refreshStatus={refreshStatus} selectedId={state.realSelectedId?.replace('product-point:','').split(':area:')[0] ?? null} onRegionFocus={region=>{
+        dispatch({type:'real-select',id:`product-point:${region.sample_id}`});
+        setFrameRequest({west:region.extent.west,east:region.extent.east,south:region.extent.south,north:region.extent.north,crossesAntimeridian:region.extent.crosses_antimeridian});
+      }} onTrackFocus={track=>{
         dispatch({type:'real-select',id:`product-point:${track.sample_ids[track.sample_ids.length-1]}`});
         setFrameRequest({west:track.extent.west,east:track.extent.east,south:track.extent.south,north:track.extent.north,crossesAntimeridian:track.extent.crosses_antimeridian});
       }}/> : state.dataMode === "real" ? (

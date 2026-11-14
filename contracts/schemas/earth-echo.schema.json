@@ -1434,6 +1434,43 @@
       "title": "ProductList",
       "type": "object"
     },
+    "ProductRegion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "sample_id": {
+          "title": "Sample Id",
+          "type": "string"
+        },
+        "geometry": {
+          "$ref": "#/$defs/GeoMultiPolygon"
+        },
+        "extent": {
+          "$ref": "#/$defs/GeographicExtent"
+        },
+        "quality": {
+          "title": "Quality",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "sample_id",
+        "geometry",
+        "extent",
+        "quality"
+      ],
+      "title": "ProductRegion",
+      "type": "object"
+    },
     "ProductSample": {
       "additionalProperties": false,
       "properties": {
@@ -2506,6 +2543,13 @@
             "$ref": "#/$defs/ProductTrack"
           },
           "title": "Tracks",
+          "type": "array"
+        },
+        "regions": {
+          "items": {
+            "$ref": "#/$defs/ProductRegion"
+          },
+          "title": "Regions",
           "type": "array"
         },
         "verification": {

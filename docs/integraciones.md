@@ -38,7 +38,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D32 | HydroATLAS | Geometría o contexto estático | pending | Subconjunto y licencia HydroATLAS; no son caudales |
 | D33 | NASA GRACE asimilado para sequía | Pronóstico o producto científico existente | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
 | D34 | RAPID AMOC | Fuente de observaciones; Dataset histórico | pending | Archivo RAPID y README/DOI pendientes |
-| D35 | GDACS | Pronóstico o producto científico existente | pending | Resolver productos, geometrias, cancelación y validez |
+| D35 | GDACS | Pronóstico o producto científico existente | /v1/products/d35-cyclone-cap-areas | Avisos/áreas publicados, incluidos mensajes pasados, actualizaciones y cancelaciones. Un nivel Green no declara seguridad; el puntaje no es probabilidad. Se conserva urgency/status/msgType y el área original. No es un pronóstico propio ni profundidad de inundación. La API SEARCH respondió vacía; un CAP de inundación devolvió HTML y esa capacidad queda pendiente. |
 | D36 | NASA GIBS | Servicio de descubrimiento o visualización | pending | Consultar producto real; descubrimiento no cuenta como integración |
 | D37 | NASA earthaccess y CMR | Servicio de descubrimiento o visualización | pending | Consultar producto real; descubrimiento no cuenta como integración |
 | D38 | Qwen documentación oficial | Documentación, método o referencia científica | reference_only | Consultar producto real; descubrimiento no cuenta como integración |
@@ -62,9 +62,9 @@ Observación puede ser parcial; un dato de contexto no habilita un detector. «s
 | F01 | Lluvias extremas | blocked | specified | specified | partial | specified |
 | F02 | Olas de calor | partial | specified | specified | partial | specified |
 | F03 | Olas de frío y heladas | specified | specified | specified | partial | specified |
-| F04 | Tormentas severas y granizo | partial | specified | specified | specified | specified |
+| F04 | Tormentas severas y granizo | specified | specified | specified | specified | specified |
 | F05 | Tornados | specified | specified | specified | specified | specified |
-| F06 | Ciclones tropicales | specified | specified | specified | specified | specified |
+| F06 | Ciclones tropicales | partial | partial | specified | specified | specified |
 | F07 | Marejadas e inundación costera | specified | specified | specified | specified | specified |
 | F08 | Nieve y tormentas de hielo | specified | specified | specified | specified | specified |
 | F09 | Tormentas de polvo | specified | specified | specified | specified | specified |

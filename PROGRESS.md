@@ -338,6 +338,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - 76 pruebas API pasaron, contratos generados y build de producción. Fixture numérico pequeño extraído de cuatro sistemas reales y CSV original conservados para verificar calidad, faltantes y cruces. Captura auténtica `real-ibtracs-antimeridiano-1672x941.jpg`.
 - Continúa GDACS: API SEARCH respondió vacía; RSS público sí entregó registros. Un enlace CAP de inundación devolvió HTML; CAP de ciclón entregó geometría real. Esa diferencia no se oculta ni se convierte en área inventada.
 
+## Incremento 11F — áreas CAP y estado operativo visible
+
+- D35: dos CAP originales de ciclones GDACS (CEMPAKA-26 v22, PENA-26 v24), con polígonos WGS84, emisor, emisión, estado, tipo, urgencia, severidad, modificaciones y referencias. Ambos mensajes declaran `Past`; no se presentan como peligro vigente ni como predicción propia. Expiración ausente permanece null; `todate` no se usa como expiración. RSS/CAP coinciden en eventid, versión, nivel y modificación.
+- Los polígonos viven en el mismo adaptador Cesium y se seleccionan en el inspector. GEOS/Shapely se usa para partición geométrica al antimeridiano, sin otro mapa/servidor. Geometría inválida se rechaza en lugar de repararse sin evidencia. Pruebas de corte conservan partes cerca de ±180° y no dibujan cruces por Greenwich.
+- Alcance: máximo tres CAP de ciclón por consulta, cada seis horas. No se declara conectada la inundación cuyo CAP respondió HTML, ni la API SEARCH que devolvió cuerpo vacío. Segunda ingestión real `unchanged`.
+- Inspector muestra intento, descarga correcta, cambio y próximo intento separados, además de emisión y fecha científica. Se conserva la última carga de sismos/Kp si falla una consulta de interfaz. El planificador registra la finalización real de cada descarga y no anuncia conservación de un producto que nunca tuvo éxito.
+- Se corrigió la asignación de las nuevas capacidades de ciclones: corresponde al ID original F06, no F04 (tormentas severas/granizo). Los 31 IDs y referencias permanecen intactos.
+- 17 fuentes con datos, 29 productos nuevos, 22 campos; almacén 66.418.367 bytes. 78 pruebas API, 20 web, contratos y build pasaron. Captura REAL `real-gdacs-cap-1672x941.jpg`, con área y estado Past accesibles. Continúa trabajo numérico viable sin credenciales.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

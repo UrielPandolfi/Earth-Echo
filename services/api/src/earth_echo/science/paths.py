@@ -1,6 +1,29 @@
 """WGS84 display paths; boundary interpolation does not create observations."""
 from earth_echo.contracts.geometry import GeoMultiLineString,GeographicExtent
 
+def split_polygon(ring: list[list[float]]):
+    from shapely.geometry import Polygon,box
+    from shapely.affinity import translate
+    from earth_echo.contracts.geometry import GeoMultiPolygon
+    if len(ring)<4 or ring[0]!=ring[-1]: raise ValueError('CAP polygon must be closed')
+    unwrapped=[ring[0]]
+    for lon,lat in ring[1:]:
+        previous=unwrapped[-1][0]
+        while lon-previous>180: lon-=360
+        while lon-previous<-180: lon+=360
+        unwrapped.append([lon,lat])
+    poly=Polygon(unwrapped)
+    if not poly.is_valid or poly.is_empty: raise ValueError('Invalid original polygon; no automatic repair')
+    parts=[]
+    for offset in (-360,0,360):
+        clipped=poly.intersection(box(-180+offset,-90,180+offset,90))
+        polygons=[clipped] if clipped.geom_type=='Polygon' else list(clipped.geoms) if clipped.geom_type=='MultiPolygon' else []
+        for p in polygons:
+            if p.area==0: continue
+            shifted=translate(p,xoff=-offset)
+            parts.append([list(map(list,shifted.exterior.coords)),*[list(map(list,h.coords)) for h in shifted.interiors]])
+    return GeoMultiPolygon(type='MultiPolygon',coordinates=parts)
+
 def split_dateline(positions: list[list[float]]) -> GeoMultiLineString:
     parts=[]; line=[positions[0]]
     for start,end in zip(positions,positions[1:]):

@@ -6,7 +6,7 @@ import type { FieldGrid } from "../demo/explore";
 import type { ObservatoryState, Section } from "./observatoryState";
 import { amazoniaFrame, type GeoExtent } from "../globe/geography";
 import { Icon, SymbolMark } from "./icons";
-import type { ProductTrack } from '../domain/generated';
+import type { ProductTrack,ProductRegion } from '../domain/generated';
 
 interface GlobeColumnProps {
   state: ObservatoryState;
@@ -18,6 +18,7 @@ interface GlobeColumnProps {
   markers: GlobeMarker[];
   field: FieldGrid | null;
   tracks?: ProductTrack[];
+  regions?: ProductRegion[];
   fieldCredit: string;
   frameRequest: GeoExtent | null;
   onSelect: (id: string) => void;
@@ -42,6 +43,7 @@ export function GlobeColumn({
   markers,
   field,
   tracks,
+  regions,
   fieldCredit,
   frameRequest,
   onSelect,
@@ -63,6 +65,7 @@ export function GlobeColumn({
   }, [controls, field, fieldCredit]);
 
   useEffect(() => { controls?.setTracks?.(tracks ?? []); },[controls,tracks]);
+  useEffect(() => { controls?.setRegions?.(regions ?? []); },[controls,regions]);
 
   useEffect(() => {
     controls?.setCameraListener?.(onCameraHeight);
@@ -98,6 +101,7 @@ export function GlobeColumn({
         <ul className="symbol-legend">
           {state.dataMode==='real' ? <li><span style={{color:'#acb5c3'}}>●</span> Inventario (si seleccionado)</li> : null}
           {tracks?.length ? <li><span style={{color:'#e7bf74'}}>━</span> Trayectoria histórica</li> : null}
+          {regions?.length ? <li><span style={{color:'#e7bf74'}}>▱</span> Área publicada · ver vigencia</li> : null}
           <li><SymbolMark kind="observation" /> Observación</li>
           <li><SymbolMark kind="risk" /> Riesgo</li>
           <li><SymbolMark kind="forecast" /> Pronóstico</li>

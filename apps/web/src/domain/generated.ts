@@ -238,6 +238,15 @@ export interface ProductList {
   products: ScientificProduct[];
 }
 
+export interface ProductRegion {
+  id: string;
+  name: string;
+  sample_id: string;
+  geometry: GeoMultiPolygon;
+  extent: GeographicExtent;
+  quality: string;
+}
+
 export interface ProductSample {
   id: string;
   time?: string | null;
@@ -396,6 +405,7 @@ export interface ScientificProduct {
   grid?: ScientificGrid | null;
   samples?: ProductSample[];
   tracks?: ProductTrack[];
+  regions?: ProductRegion[];
   verification: Verification;
 }
 

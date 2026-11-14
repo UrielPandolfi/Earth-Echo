@@ -28,6 +28,8 @@ En Windows, `ops/windows/install-refresh.ps1` registra e inicia una tarea local 
 
 Las trayectorias importadas reutilizan GeoJSON y extensión existentes, con tiempos/calidad en registros vinculados. IBTrACS conserva centros, agencia y período nativo del viento sin armonización. Se cortan las líneas al antimeridiano; los vértices de borde son solo dibujo. La colección de polilíneas vive dentro del mismo adaptador Cesium, sin otro visor. La cámara cambia solo por acción explícita y el inspector sirve también para seleccionar los sistemas.
 
+Las áreas CAP conservan estado y urgencia aunque el mensaje sea pasado; `todate` describe el evento y no reemplaza `expires`. Se cotejan revisiones entre RSS y CAP. Partición de polígonos usa GEOS/Shapely, rechaza originales inválidos y conserva anillos/partes, sin reparar ni usar bbox como área afectada. Las fechas operativas se muestran en el inspector por trabajo concreto; una falla mantiene el producto científico, con su fecha y error visibles.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

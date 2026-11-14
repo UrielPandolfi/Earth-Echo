@@ -3,7 +3,7 @@ import math
 from typing import Literal
 from pydantic import Field, model_validator
 from earth_echo.contracts.types import ApiModel, CatalogSourceId, UtcDateTime
-from earth_echo.contracts.geometry import GeoMultiLineString,GeographicExtent
+from earth_echo.contracts.geometry import GeoMultiLineString,GeoMultiPolygon,GeographicExtent
 
 class ScientificGrid(ApiModel):
     width: int = Field(gt=0, le=4096)
@@ -65,6 +65,14 @@ class ProductTrack(ApiModel):
     sample_ids: list[str] = Field(min_length=2)
     quality: str
 
+class ProductRegion(ApiModel):
+    id: str
+    name: str
+    sample_id: str
+    geometry: GeoMultiPolygon
+    extent: GeographicExtent
+    quality: str
+
 class Verification(ApiModel):
     method: str
     original_url: str
@@ -111,6 +119,7 @@ class ScientificProduct(ApiModel):
     grid: ScientificGrid | None = None
     samples: list[ProductSample] = Field(default_factory=list)
     tracks: list[ProductTrack] = Field(default_factory=list)
+    regions: list[ProductRegion] = Field(default_factory=list)
     verification: Verification
 
 class ProductList(ApiModel):
