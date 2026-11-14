@@ -242,7 +242,7 @@
     "official_url": "https://oceanservice.noaa.gov/ecoforecasting/",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Seleccionar servicio regional, variable/especie y archivo numérico",
+    "blocker_or_next_step": "Vibrio regional: servicio consultado publica imágenes, sin distribución numérica acreditada. Hipoxia Erie terminó temporada 07/10/2026; no hay forecast vigente conectado",
     "limits": "La extrapolación mundial exige observaciones y calibración nuevas. No inferir toxicidad o enfermedad humana desde temperatura del agua."
   },
   {
@@ -339,7 +339,7 @@
     "official_url": "https://documentation.dataspace.copernicus.eu/APIs.html",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Catálogo público; escena científica y procesamiento aún pendientes",
+    "blocker_or_next_step": "STAC público verificado con escena Sentinel-2 L2A real; metadatos científicos HTTPS respondieron 401. CDSE_CLIENT_ID/CDSE_CLIENT_SECRET para la ruta OAuth elegida; sin píxeles acreditados",
     "limits": "InSAR necesita series SLC compatibles y correcciones. Una imagen SAR no es una medición directa de deformación. SO2 atmosférico no reemplaza el flujo de gas medido en un volcán."
   },
   {
@@ -351,7 +351,7 @@
     "official_url": "https://rgidata.org/",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Elegir edición y subconjunto RGI con época de geometría",
+    "blocker_or_next_step": "RGI 7 resuelto por DOI/CMR NSIDC-0770; distribución redirige a Earthdata. EARTHDATA_USERNAME/EARTHDATA_PASSWORD; no hay geometría descargada",
     "limits": "No incluye nivel de cada lago, estabilidad de cada dique ni disparadores de una rotura. Es una capa de contexto."
   },
   {
@@ -433,9 +433,11 @@
       "Geometría o contexto estático"
     ],
     "official_url": "https://www.hydrosheds.org/hydroatlas",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Subconjunto y licencia HydroATLAS; no son caudales",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d32-basins-south-america"
+    ],
+    "blocker_or_next_step": "Contexto estático: no caudal, almacenamiento de agua ni inundación. COAST=1 agrupa cuencas costeras y ENDO conserva conexiones virtuales. Época específica del polígono no declarada: fecha nula. Base 15 arcsec, nivel 03; simplificación topológica 0.01° de 297382 vértices nativos a 61330 dibujados; áreas km² originales. Anillos nativos que se tocan se normalizan sólo para visualizar mediante GEOS make_valid(structure), con diferencia relativa de área planar <=1e-10 y bbox <=1e-10°; calidad por cuenca lo declara. 0 geometrías fuera de ese criterio permanecen sin dibujo. Se retienen cuatro miembros nativos del ZIP (31686187 bytes de rangos), no la colección de 4276492333 bytes. Los restantes atributos DBF quedan en el original sin asignarles unidades o interpretación. CRC32 de miembros verificado; MD5 de la colección completa no comprobado porque no se descargó completa.",
     "limits": "Un atributo estático no describe cambios recientes de cauce, obras, diques o drenaje urbano."
   },
   {
@@ -460,7 +462,7 @@
     "official_url": "https://rapid.ac.uk/data/data-download",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Archivo RAPID y README/DOI pendientes",
+    "blocker_or_next_step": "RAPID solicita correo y consentimiento en formulario oficial. Falta archivo de transporte/README; no se enviaron datos personales ni aceptaron condiciones",
     "limits": "Serie relativamente corta para inferir un punto de quiebre secular. No produce una fecha confiable de colapso."
   },
   {

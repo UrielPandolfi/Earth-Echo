@@ -21,3 +21,9 @@ D30 ya dispone de una tesela GLO-90 pública sin cuenta AWS/CDSE. Las credencial
 La documentación de [ECMWF Open Data](https://www.ecmwf.int/en/forecasts/datasets/open-data) publica un subconjunto gratuito por HTTPS, bajo CC BY 4.0 y términos ECMWF: no necesita cuenta CDS para esa distribución. La historia ERA5 y los ensembles estacionales siguen siendo vías diferentes.
 
 La confianza TLS usa el almacén de certificados del sistema mediante `truststore`. No se desactiva la comprobación de certificados. Los resultados de descubrimiento no cuentan como productos integrados.
+
+También comprobados sin cuenta: IBTrACS NCEI, CAP GDACS, subconjuntos GEBCO con TID, ASIS FAO F32, reportes RAMSES y BasinATLAS v1 nivel 03 (HydroATLAS) vía Figshare. Este último usa sólo cuatro miembros del ZIP, con licencia CC BY 4.0; una redirección pública puede expirar y se renueva una vez si el error declara `ExpiredRequest`, sin credenciales.
+
+D25: STAC público entregó Sentinel-2 L2A `S2B_MSIL2A_20261111T135749_N0513_R067_T20HNG_20261111T191733`; el XML científico del activo respondió HTTP 401. Descubrimiento, thumbnail o URL S3 no acreditan reflectancia descargada. D26: DOI `10.5067/F6JMOVY5NAVZ` resolvió colección NSIDC-0770 (RGI 7); su distribución exige Earthdata. Es inventario de geometrías con época, sin implicar tendencia de retroceso glaciar.
+
+D18: la página oficial de [hipoxia de Erie](https://coastalscience.noaa.gov/forecasting-and-modeling/lake-erie-hypoxia-forecast/) informa fin de temporada el 07/10/2026. El [producto regional de Vibrio](https://products.coastalscience.noaa.gov/vibrioforecast/ngc/default.aspx) ofrece imágenes para especie/ámbito específicos; no se acreditó distribución numérica. Es un bloqueo de producto científico disponible, no una credencial inventada.

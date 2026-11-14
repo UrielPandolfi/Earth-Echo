@@ -44,6 +44,8 @@ El pedido actual amplía las integraciones del catálogo completo, por increment
 - 11H: ASIS numérico nativo de Pampa, con estación/máscara y rechazo de overview discrepante.
 - 11I: reportes categóricos RAMSES de langosta del desierto, incluidas ausencias, con consulta y selección completa.
 - 11J: rapidez del viento y VPD físicos derivados de IFS, trazables y con dominio explícito.
+- 11K: límite total por trabajo de actualización, con aislamiento y continuidad tras vencimiento.
+- 11L: BasinATLAS nivel 03 de Sudamérica, miembros ZIP acotados y topología visual declarada.
 - Siguiente: subconjuntos de contexto y accesos científicos numéricos pendientes. Mantener bloqueos por credencial, permiso, volumen o definición científica; un paso no cierra otro producto del mismo proveedor.
 
 React, TypeScript y Vite en `apps/web`. CesiumJS como motor del globo, con Natural Earth II mientras no haya una decisión de imaginería con token. FastAPI en `services/api`. PostgreSQL con PostGIS es la dirección de almacenamiento geográfico para cuando exista una fase de datos persistidos; esta fase no lo exige. Redis y colas quedan fuera hasta que haya un trabajo asíncrono concreto.

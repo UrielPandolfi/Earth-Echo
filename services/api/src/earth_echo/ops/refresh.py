@@ -74,6 +74,7 @@ def jobs() -> dict:
     from earth_echo.connectors.gebco import fetch_gebco
     from earth_echo.connectors.asis import fetch_asis
     from earth_echo.connectors.locusts import fetch_locusts
+    from earth_echo.connectors.hydroatlas import fetch_hydroatlas
     from earth_echo.ingest.derived_fields import derive_ifs_fields
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
@@ -93,11 +94,12 @@ def jobs() -> dict:
         'd20-asi-s1':(86400,fetch_asis),
         'd19-desert-locust-surveys':(86400,fetch_locusts),
         'd07-derived-fields':(43200,derive_ifs_fields),
+        'd32-basins-south-america':(2592000,fetch_hydroatlas),
     }
 
 def execute_job(name, runner, moment):
     """A socket timeout is not a total timeout (DNS and slow bodies can hang)."""
-    timeout = int(os.getenv('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
+    timeout = int(os.getenv('EARTH_ECHO_HYDROATLAS_TIMEOUT_SECONDS', '420') if name == 'd32-basins-south-america' else os.getenv('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
     if not 30 <= timeout <= 600:
         raise ValueError('Job timeout must be between 30 and 600 seconds')
     try:

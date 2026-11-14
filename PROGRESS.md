@@ -388,6 +388,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - No se agregaron servidores, base de datos ni colas. El hijo solo ejecuta el ID registrado; secretos heredados por entorno, sin argumentos. La última revisión válida permanece REAL. Prueba de vencimiento comprueba conservación del éxito previo y ejecución posterior de otra fuente; cadencia, bloqueo, fallo/recuperación siguen comprobados.
 - 86 pruebas API pasaron. Tarea Windows reiniciada con el código nuevo; ejecución Kp real por hijo terminó `stored` a las 01:27:06 UTC del 14/11, con intento/éxito/cambio distintos y sin solapamiento. Continúa HydroATLAS: atributos nativos completos leídos y geometría comprimida obtenida; algunas geometrías originales son inválidas y requieren máscara explícita, sin reparación silenciosa ni declaración de capa ya integrada.
 
+## Incremento 11L — cuencas HydroATLAS reales
+
+- D32 BasinATLAS 1.0, nivel 03: 31 unidades sudamericanas (HYBAS_ID 603…), geometría, SUB_AREA y UP_AREA en km² y topología nativos. DBF tiene 292 registros/294 campos globales; los restantes atributos quedan en el original sin interpretación. COAST agrupa cuencas costeras y ENDO conserva conexiones virtuales; no se declara caudal, almacenamiento ni inundación.
+- Cuatro miembros SHP/SHX/DBF/PRJ de Figshare 20087237, 31.686.187 bytes de rangos frente al ZIP de 4.276.492.333 bytes; archivo de replay 42.248.961 bytes, CRC32 y PRJ WGS84 comprobados. Áreas cotejadas por dBASE/Decimal y bbox por SHX/SHP binarios/coordenadas. Un 403 declaró ExpiredRequest: renovación única de redirección pública, sin reintentar rechazos de autorización.
+- 23 originales contienen anillos que se tocan. Transformación explícita sólo para dibujo con GEOS make_valid(structure), diferencias de área planar relativa menores de 5e-15 y bbox conservada (criterios 1e-10). Simplificación topológica 0.01°: 297.382 vértices nativos a 61.330 visuales; áreas científicas intactas, calidad por unidad y originales accesibles. No se oculta esa transformación ni se usa la geometría visual para cálculos.
+- API/inspector/polígonos reutilizados; cámara amplia conservada. Segunda ingestión `unchanged`, revisión mensual preparada en el mismo worker, caché nativa evita repetir 31 MB al verificar la identidad del archivo. Primer acceso dispone de límite específico de 420 s. Almacén nuevo 125.353.224 bytes, dentro de 256 MB; una caché acotada adicional de 42,3 MB.
+- 21 fuentes con datos, 35 productos nuevos y 26 campos. 89 pruebas API, 20 web, contratos y build pasaron. Fixture de dos cuencas auténticas incluye anillo que se toca; pruebas de CRC/rangos/expiración y de rechazo a lectura completa. Captura REAL `real-hydroatlas-1672x941.jpg`.
+- Descubrimiento adicional dejó bloqueos precisos de Sentinel (401 en activo), RGI 7 (Earthdata), RAPID (formulario de correo/consentimiento) y productos ecológicos regionales, sin convertir portales o imágenes en feeds. Continúa FIRMS NOAA-20 público: CSV regional con 15.977 registros y shapefile original ya obtenidos para cotejo.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
