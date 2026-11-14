@@ -194,7 +194,7 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
   color: var(--text-faint);
   font-size: 11px;
 }
-.legend { margin: 12px; }
+.legend { margin: 12px; overflow-wrap: anywhere; }
 .legend figcaption { display: flex; flex-direction: column; gap: 2px; }
 .legend-temperature {
   background: linear-gradient(90deg, #4678be, #c45c30);

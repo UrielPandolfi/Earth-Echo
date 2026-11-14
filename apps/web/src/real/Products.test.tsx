@@ -1,12 +1,13 @@
 import { cleanup,render,screen,within } from '@testing-library/react';
 import { afterEach,expect,it } from 'vitest';
 import { ProductInspector,productTimeLabel } from './Products';
-import type { ScientificProduct } from '../domain/generated';
+import type { ScientificProduct,RefreshStatus } from '../domain/generated';
 import native from '../../../../data/real/products/d26-rgi60-patagonia-outlines/current.json';
 import roni from '../../../../data/real/products/d48-roni-history/current.json';
 import seasonal from '../../../../data/real/products/d09-seas5-pampa-precipitacion/current.json';
 import discharge from '../../../../data/real/products/d10-glofas-rosario/current.json';
 import smoc from '../../../../data/real/products/d14-smoc-u-total/current.json';
+import thetao from '../../../../data/real/products/d14-thetao-surface/current.json';
 
 afterEach(cleanup);
 
@@ -57,4 +58,14 @@ it('preserva la coordenada temporal de una media horaria sin inventar el inicio 
   expect(productTimeLabel(product)).toBe('Fecha de validez 2026-11-15T00:30:00Z');
   expect(screen.getByText('Fecha de validez 2026-11-15T00:30:00Z UTC')).toBeTruthy();
   expect(screen.queryByText(/Validez desde/)).toBeNull();
+});
+
+it('presenta temperatura potencial en su profundidad y separa consulta de recuperación original',()=>{
+  const product=thetao as unknown as ScientificProduct;
+  const refresh={jobs:{'d14-thetao-native':{status:'unchanged',last_success_at:'2026-11-14T22:10:00Z'}}} as unknown as RefreshStatus;
+  render(<ProductInspector product={product} selectedId={null} refreshStatus={refresh}/>);
+  expect(screen.getByRole('heading',{name:'Temperatura potencial marina · 0,494025m · Caribe/Atlántico'})).toBeTruthy();
+  expect(screen.getByText('Última consulta satisfactoria')).toBeTruthy();
+  expect(screen.getByText('2026-11-14T22:10:00Z')).toBeTruthy();
+  expect(screen.getByText('Fecha de validez 2026-11-15T00:00:00Z UTC')).toBeTruthy();
 });
