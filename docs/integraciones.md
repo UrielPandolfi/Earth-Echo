@@ -14,7 +14,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D08 | ERA5 histórico | Dataset histórico | pending | CDSAPI_KEY + licencia manual ERA5 |
 | D09 | C3S pronóstico estacional | Pronóstico o producto científico existente | pending | CDSAPI_KEY + licencia manual estacional |
 | D10 | Copernicus GloFAS | Pronóstico o producto científico existente | pending | EWDSAPI_KEY + licencia y colección GloFAS vigente |
-| D11 | Copernicus GWIS | Pronóstico o producto científico existente | pending | Exportación numérica GWIS/CEMS y licencia; no alcanza WMS |
+| D11 | Copernicus GWIS | Pronóstico o producto científico existente | pending | GWIS WMS público devuelve TIFF Float32, pero ceros de fondo oceánico no se distinguen de FWI=0: sin nodata/máscara científica. WCS no expone ecmwf.fwi y dos recortes nominalmente alineados no coincidieron; ciclo/remuestreo no resuelto. Evidencia real en data/samples/d11-gwis/evidence.json, sin publicar como producto. EWDSAPI_KEY y licencia permiten historia/estacionales CEMS-Fire; no acreditan ese forecast de tiempo real. |
 | D12 | CAMS composición atmosférica | Pronóstico o producto científico existente | pending | ADSAPI_KEY + licencia CAMS |
 | D13 | NOAA OISST | Fuente de observaciones; Dataset histórico | connected_for_scope: /v1/products/d13-oisst-global | SST analizada e interpolada, preliminar cuando así lo identifica NOAA. No es temperatura del aire, un evento de calor marino ni diagnóstico ENSO. |
 | D14 | Copernicus Marine física oceánica | Pronóstico o producto científico existente | pending | COPERNICUSMARINE_SERVICE_USERNAME, COPERNICUSMARINE_SERVICE_PASSWORD |

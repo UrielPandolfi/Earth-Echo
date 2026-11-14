@@ -1,0 +1,3 @@
+# Preserve exact provider response bytes used by scientific access evidence.
+data/samples/d11-gwis/*.xml -text
+data/samples/integrations/sentinel3-check.csv -text

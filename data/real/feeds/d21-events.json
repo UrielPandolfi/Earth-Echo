@@ -1,15 +1,27 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T04:54:57Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T04%3A54%3A57Z&endtime=2026-11-14T04%3A54%3A57Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "72cfb0072bcf5a442f1ccf437161d81ffc4c462b42580b9925fc3d46710b9e61",
-  "byte_size": 85906,
-  "raw_file": "assets\\d21-events\\72cfb0072bcf5a442f1ccf437161d81ffc4c462b42580b9925fc3d46710b9e61.json",
+  "retrieved_at": "2026-11-14T06:55:59Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T06%3A55%3A59Z&endtime=2026-11-14T06%3A55%3A59Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "91b8bddd0597f516a8e067ebbbfe211457c615387b07fa313fe336e77c1fd602",
+  "byte_size": 87305,
+  "raw_file": "assets\\d21-events\\91b8bddd0597f516a8e067ebbbfe211457c615387b07fa313fe336e77c1fd602.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty73",
+      "longitude": 139.6657,
+      "latitude": -50.3735,
+      "depth_km": 10.0,
+      "magnitude": 4.5,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T05:15:11.040000Z",
+      "time": "2026-11-14T04:59:00Z",
+      "place": "western Indian-Antarctic Ridge"
+    },
     {
       "id": "us7000ty6p",
       "longitude": -66.7642,
@@ -162,7 +174,7 @@
       "magnitude": 5.8,
       "magnitude_type": "mww",
       "review_status": "reviewed",
-      "updated_at": "2026-11-13T22:14:35.953000Z",
+      "updated_at": "2026-11-14T06:47:15.040000Z",
       "time": "2026-11-13T16:43:02Z",
       "place": "79 km WSW of Changuillo, Peru"
     },
@@ -345,6 +357,18 @@
       "updated_at": "2026-11-13T00:01:52.287000Z",
       "time": "2026-11-12T21:53:42Z",
       "place": "117 km S of Akureyri, Iceland"
+    },
+    {
+      "id": "us7000txyl",
+      "longitude": 139.7962,
+      "latitude": -51.4999,
+      "depth_km": 10.0,
+      "magnitude": 4.9,
+      "magnitude_type": "mww",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T04:58:42.040000Z",
+      "time": "2026-11-12T21:15:56Z",
+      "place": "western Indian-Antarctic Ridge"
     },
     {
       "id": "us7000txw9",

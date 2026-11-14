@@ -149,7 +149,7 @@
     "official_url": "https://gwis.jrc.ec.europa.eu/applications/data-and-services",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Exportación numérica GWIS/CEMS y licencia; no alcanza WMS",
+    "blocker_or_next_step": "GWIS WMS público devuelve TIFF Float32, pero ceros de fondo oceánico no se distinguen de FWI=0: sin nodata/máscara científica. WCS no expone ecmwf.fwi y dos recortes nominalmente alineados no coincidieron; ciclo/remuestreo no resuelto. Evidencia real en data/samples/d11-gwis/evidence.json, sin publicar como producto. EWDSAPI_KEY y licencia permiten historia/estacionales CEMS-Fire; no acreditan ese forecast de tiempo real.",
     "limits": "FWI no es probabilidad calibrada de que comience un incendio. Un servicio de mapas puede no permitir descargar toda la serie analítica."
   },
   {

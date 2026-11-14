@@ -55,6 +55,7 @@ El pedido actual amplía las integraciones del catálogo completo, por increment
 - 11S: humedad relativa del aire a 2 m derivada de T/Td IFS, con dominio líquido, porcentaje y máscara explícitos; reutiliza el original VPD.
 - 11T: contadores/zoom/leyenda accesibles junto al inspector en ventanas reducidas, comprobados a 900×650 y 1100×720.
 - 11U: cotejo independiente completo de Sentinel-3 y conservación comprobada ante un 502 real, sin cambio a DEMO.
-- Siguiente: subconjuntos de contexto y accesos científicos numéricos pendientes. Mantener bloqueos por credencial, permiso, volumen o definición científica; un paso no cierra otro producto del mismo proveedor.
+- 11V: recuperación automática externa comprobada y exportación pública GWIS retenida como evidencia no calificada; máscara/ciclo aún bloquean su integración.
+- Siguiente: credenciales/autorizar productos NASA, CDS/EWDS/ADS y Marine; resolver máscara/ciclo nativos GWIS y disponibilidad numérica regional D18. Las ramas Sentinel autenticadas y las ampliaciones de cobertura siguen separadas. Mantener bloqueos por credencial, permiso, volumen o definición científica; un paso no cierra otro producto del mismo proveedor.
 
 React, TypeScript y Vite en `apps/web`. CesiumJS como motor del globo, con Natural Earth II mientras no haya una decisión de imaginería con token. FastAPI en `services/api`. PostgreSQL con PostGIS es la dirección de almacenamiento geográfico para cuando exista una fase de datos persistidos; esta fase no lo exige. Redis y colas quedan fuera hasta que haya un trabajo asíncrono concreto.

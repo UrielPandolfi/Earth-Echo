@@ -12,7 +12,7 @@ DOCS = {38,39,40,42,43,44,45,46}
 BLOCKS = {
     **{f'D{i:02}':'Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada' for i in [1,2,3,17,33]},
     'D08':'CDSAPI_KEY + licencia manual ERA5', 'D09':'CDSAPI_KEY + licencia manual estacional',
-    'D10':'EWDSAPI_KEY + licencia y colección GloFAS vigente', 'D11':'Exportación numérica GWIS/CEMS y licencia; no alcanza WMS',
+    'D10':'EWDSAPI_KEY + licencia y colección GloFAS vigente', 'D11':'GWIS WMS público devuelve TIFF Float32, pero ceros de fondo oceánico no se distinguen de FWI=0: sin nodata/máscara científica. WCS no expone ecmwf.fwi y dos recortes nominalmente alineados no coincidieron; ciclo/remuestreo no resuelto. Evidencia real en data/samples/d11-gwis/evidence.json, sin publicar como producto. EWDSAPI_KEY y licencia permiten historia/estacionales CEMS-Fire; no acreditan ese forecast de tiempo real.',
     'D12':'ADSAPI_KEY + licencia CAMS', 'D14':'COPERNICUSMARINE_SERVICE_USERNAME, COPERNICUSMARINE_SERVICE_PASSWORD',
     'D16':'Resolver archivo numérico de perspectivas, sin inferir datos desde imagen',
     'D18':'Vibrio regional: servicio consultado publica imágenes, sin distribución numérica acreditada. Hipoxia Erie terminó temporada 07/10/2026; no hay forecast vigente conectado',

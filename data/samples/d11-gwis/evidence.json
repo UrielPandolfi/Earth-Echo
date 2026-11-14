@@ -1,0 +1,64 @@
+{
+  "status": "not_integrated",
+  "source_id": "D11",
+  "data_mode": "real",
+  "requested_valid_date": "2026-11-15",
+  "endpoint": "https://maps.effis.emergency.copernicus.eu/gwis",
+  "license": "https://gwis.jrc.ec.europa.eu/about-gwis/data-license",
+  "scientific_values_published": false,
+  "export_dtype": "float32",
+  "bands": 1,
+  "nodata": null,
+  "mask_values": [
+    255
+  ],
+  "zero_cells": 51330,
+  "ocean_control_lon_lat": [
+    -29.5,
+    -0.5
+  ],
+  "ocean_control_value": 0.0,
+  "blocker": "Numeric Float32 exists, but export background and physical zero are not distinguished; no native quality mask. WCS does not expose ecmwf.fwi. Requested date has no embedded issue/cycle. Native scientifically qualified export still needed. No values published to scientific API.",
+  "nested_request_comparison": {
+    "different_cells": 192,
+    "max_absolute_difference": 3.097341775894165,
+    "interpretation": "Different delivered values for nominally aligned grids; upstream cycle change or server sampling unresolved. No claim of independent agreement."
+  },
+  "assets": [
+    {
+      "file": "capabilities.xml",
+      "bytes": 319841,
+      "sha256": "7ac56f697f9eb945c7c1c9e25cf0c98d28f0ac12af516059675e7f6221174266"
+    },
+    {
+      "file": "wcs-capabilities.xml",
+      "bytes": 5809,
+      "sha256": "2744504e8c5f4c8399b055f96fa700ab2e3784c0b9582e493ff83d81e21d722d"
+    },
+    {
+      "file": "fwi-description.xml",
+      "bytes": 566,
+      "sha256": "59ff67cbb68a21cc9e83ba108ae284c03de8e3eb1e2fec5b6ba437e0e207328e"
+    },
+    {
+      "file": "fwi-metadata.xml",
+      "bytes": 12672,
+      "sha256": "ac4047be47cc31ba38032f81a5d4c79d27184e72e677f1dade0bfe1de05d158f"
+    },
+    {
+      "file": "fwi-global.tif",
+      "bytes": 259834,
+      "sha256": "3984e6f78904e21ffeb6ed29fe7d6149e55615a812fbb8c915dc3d09a7a0c46c"
+    },
+    {
+      "file": "fwi-pampa-probe.tif",
+      "bytes": 1442,
+      "sha256": "16662e56e868ab1cf988d6b3a77c7370ca5fe4a69c90e8e047f7653e5c744eca"
+    },
+    {
+      "file": "fwi-pampa-expanded.tif",
+      "bytes": 4514,
+      "sha256": "7fe3f69d861360497cc4c01b910d4097d40e6cffd330e8611fd02599cb6ed3e6"
+    }
+  ]
+}
