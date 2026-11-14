@@ -62,9 +62,9 @@ def test_authentic_ingestion_shared_asset_idempotence_outage_and_recovery(files,
     monkeypatch.setattr(module,'download',download)
     monkeypatch.setattr(module,'publish',lambda p,raw,suffix:publish(p,raw,suffix,tmp_path))
     assert module.fetch_enso_outlook(NOW)=='stored'
-    before=[read_product('d48-roni-'+k,tmp_path) for k in ('probabilities','strengths','outlook')]
+    before=[read_product('d48-roni-'+k,tmp_path) for k in ('probabilities','strengths','outlook','history')]
     assert module.fetch_enso_outlook(NOW)=='unchanged'
-    assert len(list(tmp_path.glob('shared/*.zip')))==1 and len(list(tmp_path.glob('*/revisions/*.json')))==3
+    assert len(list(tmp_path.glob('shared/*.zip')))==1 and len(list(tmp_path.glob('*/revisions/*.json')))==4
     offline=True
     with pytest.raises(URLError):module.fetch_enso_outlook(NOW)
     assert [read_product(p.id,tmp_path) for p in before]==before

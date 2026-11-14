@@ -1,5 +1,7 @@
 # Accesos del catálogo
 
+D48 suma además la historia publicada [RONI ERSSTv6](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/), sin cuenta, reutilizando la página ya descargada como definición de los pronósticos. 921 valores publicados y tres temporadas no publicadas en null, 1950–2026. Índice distinto del ONI; no se empalman. [Evidencia histórica](../data/samples/integrations/cpc-roni-history.md).
+
 D48: probabilidades de fase/intensidad ENSO y percentiles RONI oficiales de [CPC](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/probabilities/) tienen tablas HTML numéricas públicas, sin cuenta ni variables. Tres productos de edición mensual con revisión diaria; definición ERSSTv6/base1991–2020 y fechas propias, separados de ONI histórico. [Evidencia](../data/samples/integrations/cpc-roni-outlook-202611.md). La página IRI consultada dice que dejó de proporcionar archivos de forecast; no se extrajeron probabilidades de imágenes ni se usó IRI como equivalente al producto CPC/RONI.
 
 D17 incorpora un [archivo histórico NASA Aqua OCI en NOAA/PIFSC](https://oceanwatch.pifsc.noaa.gov/erddap/info/aqua_chla_1d_2018_0/index.html), sin cuenta/variables Earthdata. Identidad NASA/DOI/versión2018.1QLP comprobadas, campo31/05/2022 y CSV independientes. No se cuenta como NASA reciente: la réplica termina en2022, y la ruta OB.DAAC actual sigue con los requisitos de la tabla. [Evidencia](../data/samples/integrations/nasa-aqua-chlorophyll-2022.md).

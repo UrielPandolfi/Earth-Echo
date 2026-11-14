@@ -30,18 +30,26 @@ class CpcTable(HTMLParser):
         self.table_id=table_id
         self.depth=0;self.found=0;self.rows=[];self.row=None;self.cell=None;self.text=[]
 
+    def finish_cell(self):
+        if self.cell is not None:
+            if self.row is None:raise ValueError('CPC cell outside a row')
+            self.row.append(' '.join(''.join(self.cell).split()));self.cell=None
+
+    def finish_row(self):
+        self.finish_cell()
+        if self.row is not None:self.rows.append(self.row);self.row=None
+
     def handle_starttag(self,tag,attrs):
         if tag=='table':
             if self.depth:self.depth+=1
             elif dict(attrs).get('id')==self.table_id:self.depth=1;self.found+=1
-        if self.depth and tag=='tr':self.row=[]
-        if self.depth and tag in ('td','th'):self.cell=[]
+        if self.depth and tag=='tr':self.finish_row();self.row=[]
+        if self.depth and tag in ('td','th'):self.finish_cell();self.cell=[]
 
     def handle_endtag(self,tag):
-        if self.depth and tag in ('td','th') and self.cell is not None:
-            self.row.append(' '.join(''.join(self.cell).split()));self.cell=None
-        if self.depth and tag=='tr' and self.row is not None:
-            self.rows.append(self.row);self.row=None
+        if self.depth and tag in ('td','th'):self.finish_cell()
+        # HTML permits an omitted final </tr> before </tbody>; CPC uses it.
+        if self.depth and (tag in ('tr','tbody') or tag=='table' and self.depth==1):self.finish_row()
         if self.depth and tag=='table':self.depth-=1
 
     def handle_data(self,data):
@@ -131,5 +139,7 @@ def fetch_enso_outlook(now:datetime):
     files={name+'.html':download(BASE+name+'/',max_bytes=100_000)[0] for name in ('probabilities','strengths','outlook')}
     files['definition.html']=download(BASE,max_bytes=150_000)[0]
     products,raw=products_from_files(files,now)
+    from earth_echo.connectors.roni_history import history_from_shared_archive
+    products.append(history_from_shared_archive(files['definition.html'],products[0],now))
     results=[publish(p,raw,'.zip') for p in products]
     return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'

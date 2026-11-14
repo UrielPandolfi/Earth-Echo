@@ -178,6 +178,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F20',{})['observation'] = ('partial','Clorofila Sentinel-3A OC4Me experimental y archivo histórico mundial NASA Aqua MODIS OCI L3 de31/05/2022, versión2018.1QLP. Productos/fechas separados; NASA reciente sigue pendiente. Ninguno identifica especie, toxicidad, hipoxia o HAB confirmado; sin detector/pronóstico biológico.')
     if 'd48-roni-probabilities' in available:
         overrides_by_id.setdefault('F17',{})['forecast'] = ('partial','Probabilidades oficiales CPC de fase/intensidad ENSO y percentiles RONI para nueve trimestres solapados. Índice RONI ERSSTv6/base1991–2020, definición y ventanas propias; no se une con ONI histórico ni se interpreta como riesgo local. Emisión mensual sin hora UTC no inventada. Consenso externo importado, sin validación predictiva de modelo propio.')
+    if 'd48-roni-history' in available:
+        overrides_by_id.setdefault('F17',{})['indicator'] = ('partial','Historias publicadas ONI y RONI ERSSTv6 en productos separados. RONI usa base1991–2020, resta media tropical y ajusta varianza; tres temporadas no publicadas del año final permanecen null y las más recientes son revisables. No clasificación automática de episodio, unión de índices, tendencia o probabilidad de impacto local.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []
