@@ -1,6 +1,6 @@
 import math
 import pytest
-from earth_echo.science.meteorology import wind_speed,saturation_vapour_pressure,vapour_pressure_deficit
+from earth_echo.science.meteorology import wind_speed,saturation_vapour_pressure,vapour_pressure_deficit,relative_humidity
 
 def test_vector_speed_keeps_missing_and_native_units():
     assert wind_speed(-3,4)==5
@@ -18,3 +18,10 @@ def test_fao56_published_example_and_conservative_liquid_domain():
     assert vapour_pressure_deficit(-5,-10) is None
     assert vapour_pressure_deficit(51,20) is None
     assert vapour_pressure_deficit(20,None) is None
+
+
+def test_relative_humidity_native_percentage_and_no_supersaturation_clipping():
+    assert relative_humidity(24.5,15)==pytest.approx(100*1.705/3.075,abs=.02)
+    assert relative_humidity(15,15)==100
+    for t,td in [(10,11),(-5,-10),(51,20),(20,None),(20,float('nan'))]:
+        assert relative_humidity(t,td) is None

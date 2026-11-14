@@ -1,5 +1,7 @@
 # Arquitectura
 
+La humedad relativa derivada IFS usa la razón de presión de vapor a Td y saturación a T de FAO-56, ecuaciones 10/11/14, en %. Comparte con VPD los dos mensajes GRIB completos y su archivo SHA; no agrega otra descarga. Es instantánea respecto de agua líquida, limitada conservadoramente a 0 ≤ Td ≤ T ≤ 50 °C; hielo, supersaturación y faltantes son null, sin recorte a 0/100 %. No representa humedad del suelo, del combustible ni probabilidad.
+
 El análisis RAPID `rapid-annual-ols-2005-2023-v1` vive en ciencia/ingestión, separado de la interfaz. Usa medias mensuales nativas del activo ya retenido, años calendario completos 2005–2023 y pesos por días gregorianos. Un año con un mes ausente permanece null; pendiente OLS sólo con al menos 15 de los 19 años válidos, todos con igual peso. Conserva período, fórmula, parámetros, entrada SHA y resultado escalar con unidad en el contrato. Es análisis descriptivo regional, sin significación estadística o pronóstico. Los contadores separan campos calculados, análisis calculados, indicadores importados y señales de evento. No hay otra descarga ni duplicación del NetCDF compartido.
 
 Decisión del 13 de noviembre de 2026. El repositorio no tenía aplicación previa.

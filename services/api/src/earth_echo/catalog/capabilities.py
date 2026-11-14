@@ -143,6 +143,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F04',{})['indicator'] = ('partial','Magnitud del viento a 10 m calculada de u/v IFS +24 h, mundial a 1°, con fórmula e insumos trazables. No aporta CAPE, cizalladura ni detección/pronóstico de tormentas o granizo.')
     if 'd07-ifs-vpd-24h' in available:
         overrides_by_id.setdefault('F15',{})['indicator'] = ('partial','VPD instantáneo sobre agua líquida calculado de T/Td IFS +24 h en dominio conservador 0–50 °C. Variable meteorológica de entorno; no FWI, humedad de combustible ni probabilidad de ignición. GWIS numérico sigue pendiente.')
+    if 'd07-ifs-rh-24h' in available:
+        overrides_by_id.setdefault('F15',{})['indicator'] = ('partial','VPD y humedad relativa del aire a 2 m derivados de los mismos T/Td IFS +24 h, con fórmula FAO-56 y dominio líquido conservador 0 ≤ Td ≤ T ≤ 50 °C. Variables de entorno; no humedad del suelo/combustible, FWI ni probabilidad de ignición. GWIS numérico sigue pendiente.')
     if 'd06-viirs-noaa20-sa' in available:
         overrides_by_id.setdefault('F15',{})['observation'] = ('partial','Detecciones térmicas VIIRS NOAA-20 C2 en Sudamérica, con FRP MW, tiempos UTC y calidad nativa. Low permanece en tabla y se excluye del mapa. Puede incluir volcanes/antorchas; no incendios únicos, área quemada ni probabilidad de ignición.')
     if 'd23-weekly-activity-reports' in available:

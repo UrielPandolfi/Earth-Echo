@@ -13,3 +13,9 @@ def vapour_pressure_deficit(temperature_c: float | None,dewpoint_c: float | None
     if temperature_c is None or dewpoint_c is None or not all(math.isfinite(v) for v in (temperature_c,dewpoint_c)) or not 0<=dewpoint_c<=temperature_c<=50:
         return None
     return saturation_vapour_pressure(temperature_c)-saturation_vapour_pressure(dewpoint_c)
+
+
+def relative_humidity(temperature_c: float | None,dewpoint_c: float | None) -> float | None:
+    # Same conservative liquid-water domain as VPD; never clip ice/supersaturation to 100%.
+    if vapour_pressure_deficit(temperature_c,dewpoint_c) is None:return None
+    return 100*saturation_vapour_pressure(dewpoint_c)/saturation_vapour_pressure(temperature_c)

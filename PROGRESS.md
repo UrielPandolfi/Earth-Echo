@@ -451,6 +451,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Ejecución real del planificador e idempotencia `unchanged`, último éxito 06:21:43 UTC. Tarea Windows reiniciada y comprobada Running con trabajo semanal nuevo. Pruebas de años incompletos, bisiestos, pendiente conocida, mínima cobertura, corrupción de entrada/conservación y recuperación; muestra científica auténtica existente, sin fixture inventado de proveedor.
 - 43 productos / 25 fuentes, 27 campos (dos calculados), un análisis descriptivo, 2.475 registros históricos, dos indicadores importados y cero señales de evento. Contadores y verificador distinguen estos tipos; originales únicos siguen siendo 34 / 86.108.038 bytes. API/original/valores comprobados; resumen 103.266 bytes, referencias intactas. 103 pruebas API, 24 web, contratos y build pasaron. Captura REAL `real-rapid-annual-trend.jpg`, consola sin errores.
 
+## Incremento 11S — humedad relativa del aire desde IFS retenido
+
+- D07: `d07-ifs-rh-24h`, humedad relativa a 2 m (%) mediante FAO-56 10/11/14, 100 e_s(Td)/e_s(T). Comparte exactamente el activo GRIB T/Td de VPD: 34 originales únicos se conservan, sin nueva descarga. No es humedad del suelo/combustible, FWI ni probabilidad.
+- Dominio conservador respecto de agua líquida 0 ≤ Td ≤ T ≤ 50 °C. 36.923 centros válidos y 27.877 ausentes en la vista mundial de 1°; rango real 9,2559–98,9956 %. Hielo/supersaturación/faltantes permanecen null, sin recortar a 0/100 %. Ciclo 13/11 12Z, validez 14/11 12Z; emisión desconocida no se reemplaza por recuperación.
+- Valor nativo GRIB consultado por coordenada y calculado con Decimal 40 dígitos: 88,64196419540082 %, frente a float 88,64196419540083 %. Originales y máscaras accesibles por API/inspector, método/parámetros/entradas SHA documentados. Captura REAL `real-ifs-relative-humidity.jpg`.
+- Planificador real repetido `unchanged`, último éxito 06:35:25 UTC; tarea Windows Running, revisión reciente y ningún trabajo fallido en ese instante. 104 pruebas API, contratos comprobados; 24 pruebas web y build previos siguen vigentes porque este incremento no modifica código web. Referencias originales intactas.
+- 44 productos / 25 fuentes, 28 campos (tres calculados), un análisis descriptivo, 2.475 registros históricos, dos indicadores importados y cero señales de evento. Verificador API/originales pasó: 34 activos / 86.108.038 bytes; resumen 106.662 bytes. Almacén medido 212.949.947 de 256.000.000 bytes.
+- Se descartó otra vez la ruta pública SMAP ORNL: lista bandas pero `dates` responde 400 sin datos en Pampa y el ejemplo norteamericano, además de Amazonía previamente. No se cuenta como integración. IMERG GIS requiere PPS en esa distribución; Marine sigue requiriendo cuenta. Se conservan los bloqueos exactos en accesos. La prueba visual a 900×650 confirmó inspector accesible y ancho sin desborde, pero halló contadores/controles cubiertos por el panel; se corrige a continuación.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
