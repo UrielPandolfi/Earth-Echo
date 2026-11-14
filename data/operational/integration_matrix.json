@@ -671,9 +671,12 @@
     "official_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
     "status": "connected_for_scope",
     "evidence": [
-      "/v1/products/d48-oni-history"
+      "/v1/products/d48-oni-history",
+      "/v1/products/d48-roni-outlook",
+      "/v1/products/d48-roni-probabilities",
+      "/v1/products/d48-roni-strengths"
     ],
-    "blocker_or_next_step": "Historia ONI, medias móviles de tres meses y climatología definida por CPC. No se convierte automáticamente en fase ENSO vigente, perspectiva probabilística ni lluvia local. El diagnóstico operativo puede usar otro índice como RONI.",
+    "blocker_or_next_step": "Historia ONI, medias móviles de tres meses y climatología definida por CPC. No se convierte automáticamente en fase ENSO vigente, perspectiva probabilística ni lluvia local. El diagnóstico operativo puede usar otro índice como RONI. | Pronóstico externo oficial CPC con edición mensual; revisión diaria conserva cada edición retenida sin rejuvenecer ventanas. RONI resta media tropical y ajusta varianza: no es ONI histórico ni se pega a esa serie. Referencia1991–2020/ERSSTv6 del índice de verificación; consenso de expertos y múltiples modelos con inicializaciones distintas/no única acreditada. Algunas estaciones ya comenzaron cuando se emite; son períodos civiles solapados, no nueve meses independientes ni fecha de desastre. Probabilidades de fase/intensidad no son probabilidades de inundación, sequía o daño local. Cero/cien publicados son aproximados; se conservan sin inventar épsilon o certeza. Los percentiles son valores de RONI en°C, no una nueva probabilidad calculada. No se deriva diagnóstico de evento de cinco estaciones desde estas probabilidades. No demuestra habilidad local o validación predictiva de modelo propio. RONI ERSSTv6: media móvil de tres meses de anomalías SST Niño3.4 (5°N–5°S,170–120°W), menos anomalía media tropical20°N–20°S y ajuste de varianza a Niño3.4. Base1991–2020. Fase de un trimestre: La Niña RONI≤−0,5°C, Neutral −0,5<RONI<0,5°C, El Niño RONI≥0,5°C. No se convierte automáticamente en episodio histórico de cinco estaciones consecutivas.",
     "limits": "Una probabilidad de fase no es probabilidad de inundación local. Las asociaciones climáticas admiten excepciones y requieren validación regional."
   }
 ]

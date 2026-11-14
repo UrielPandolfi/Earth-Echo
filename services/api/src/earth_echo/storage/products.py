@@ -62,9 +62,12 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
     revision = active / product.id / 'revisions' / (product.checksum_sha256 + '-' + metadata_hash + '.json')
     atomic_json(revision, product.model_dump(mode='json'))
     atomic_json(active / product.id / 'current.json', product.model_dump(mode='json'))
-    # Keep four bounded snapshots per product. Historical experiment assets live elsewhere.
+    # Monthly CPC forecasts cover nine overlapping seasons. Retain enough
+    # emissions for later horizon/season verification, still under the same
+    # byte budget. Other products keep four; experiment assets live elsewhere.
+    retention=24 if product.id in {'d48-roni-probabilities','d48-roni-strengths','d48-roni-outlook'} else 4
     revisions = sorted(revision.parent.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
-    for old in revisions[4:]:
+    for old in revisions[retention:]:
         previous = ScientificProduct.model_validate_json(old.read_bytes())
         old.unlink()
         referenced = any(json.loads(p.read_bytes()).get('raw_file') == previous.raw_file for p in active.glob('*/revisions/*.json'))

@@ -565,6 +565,11 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 .record-link { border: 0; padding: 0; color: var(--accent); background: transparent; text-align: left; cursor: pointer; }
 .record-pages { display: flex; gap: 8px; margin: 8px 12px; }
 .product-table table { width: 100%; font-size: .8rem; border-collapse: collapse; }
+.cpc-enso-table caption { text-align: left; padding: .4rem 0; color: var(--text); }
+.cpc-enso-table td { position: relative; font-variant-numeric: tabular-nums; min-width: 3rem; }
+.cpc-enso-table th { min-width: 3rem; }
+.cpc-enso-table th:first-child { min-width: 5.5rem; }
+.cpc-prob-bar { position: absolute; bottom: 1px; left: 0; height: 2px; background: var(--accent); }
 .product-table td, .product-table th { text-align: left; padding: .4rem; border-bottom: 1px solid var(--border, #334155); }
 .inspector .fine { overflow-wrap: anywhere; }
 .legend-real { background: linear-gradient(90deg, rgb(48,132,186), rgb(136,112,121), rgb(224,92,56)); }

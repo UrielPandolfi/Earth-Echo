@@ -1,0 +1,17 @@
+# Pronósticos oficiales ENSO/RONI de CPC
+
+Acceso anónimo a tablas numéricas HTML, no lectura de PNG. Se siguieron enlaces oficiales del [boletín NOAA CPC](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml) a [fase](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/probabilities/), [intensidad](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/strengths/) y [percentiles](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/outlook/). Definición del índice en [RONI](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/).
+
+Edición declarada **noviembre 2026**, sin día/hora UTC publicados para las tablas: issued_at/initialized_at=null. No se inventa medianoche ni se usa recuperación como emisión. Nueve trimestres solapados, OND 2026…JJA 2027; intervalos civiles UTC de 01/10/2026 a 01/09/2027 exclusivo. Algunos ya iniciaron al emitirse. Se exigen meses, etiquetas, límites y edición coincidentes; mezcla de meses rechazada.
+
+**RONI ERSSTv6/base 1991–2020** usa anomalía SST Niño 3.4 (5°N–5°S, 170–120°W), resta media tropical 20°N–20°S y ajusta varianza. Se mantiene separado del ONI histórico y de perspectivas IRI del índice tradicional.
+
+- 27 probabilidades de fase, porcentaje publicado y fracción 0…1 con definición por registro. FMA 2027: La Niña 0%, Neutral 2%, El Niño 98%. CPC advierte que 0% es aproximado. No es probabilidad de impacto local o diagnóstico de episodio de cinco estaciones.
+- 81 probabilidades de nueve intervalos de intensidad, límites originales preservados. DJF 2026–2027: 79% en RONI≥2°C. Cada estación suma 100%; cuatro clases frías/cuatro cálidas y neutral coinciden exactamente con fase, sin renormalizar.
+- 63 valores de percentiles 5/15/25/50/75/85/95 en °C: OND 2026 p50=2,5; JJA 2027 p50=−0,25. Son valores del índice, sin probabilidad de evento o intervalo de confianza de observaciones. Orden comprobado.
+
+Todas las celdas numéricas se comparan entre HTMLParser y extracción independiente directa de TD originales. Un ZIP compartido de31.348B, SHA `76ea6e80915a863bd3a3994fc7f25b58c696ce314c2cf98c0491948777124ff8`, conserva los cuatro HTML auténticos y manifiesto. El archivo de definición incluye una tabla histórica que en este incremento sólo se conserva como referencia: todavía no se cuenta como otro feed. Checksum científico cubre tablas/edición/definición/método, excluyendo navegación/documentación mutable ajena al pronóstico.
+
+Revisión automática diaria; primera comprobación programada16:31:10UTC unchanged después de la muestra externa inicial. Límite100KB por tabla/150KB definición, dos intentos transitorios, plazo180s y lock existente. Fallo/desacuerdo conserva válido REAL. Retención específica de24 revisiones por producto para futuras comprobaciones por horizonte/estación, dentro del mismo presupuesto512MB; otros productos mantienen cuatro. No se declara habilidad predictiva por pasar software.
+
+Cuatro pruebas con bytes auténticos: números/ventanas/definición, mezcla de emisiones/celdas incoherentes, idempotencia/activo compartido/falla/recuperación y retención sin borrar activo compartido. Inspector reutilizado con tres tablas y registros completos; sin pines ENSO. A900×650 fase cabe324px; intensidad desplaza434px dentro de309px, accesible por teclado, documento900px. Capturas REAL `real-cpc-enso-phase.jpg`, `real-cpc-enso-phase-900x650.jpg`, `real-cpc-enso-strength-900x650.jpg`.
