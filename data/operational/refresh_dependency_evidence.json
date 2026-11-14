@@ -1,0 +1,70 @@
+{
+  "automatic_job": {
+    "last_attempt_at": "2026-11-14T10:54:05.047080+00:00",
+    "status": "stored",
+    "next_attempt_at": "2026-11-14T22:54:07.753592+00:00",
+    "last_success_at": "2026-11-14T10:54:07.753592+00:00",
+    "error": null,
+    "kept_previous": false,
+    "last_change_at": "2026-11-14T10:54:07.753592+00:00",
+    "attempted_input_revisions": {
+      "d07-ifs-10u-24h": "b072dcdbe71fbbf6bb657f2ee2600d81b70351ee32a84d813d2c3475fb879157",
+      "d07-ifs-10v-24h": "6909b14898658d944f8a6188b960884991109403f4314751e34921d3220ba5cd",
+      "d07-ifs-2t-24h": "21edf859ebafe78ac55cfe02093ea1826c8283f519488805da80dcd0d348575c",
+      "d07-ifs-2d-24h": "7054f8152288e6201b269649963c27473dfe87242fa33e2ebb3e239495dfbbd6"
+    },
+    "successful_input_revisions": {
+      "d07-ifs-10u-24h": "b072dcdbe71fbbf6bb657f2ee2600d81b70351ee32a84d813d2c3475fb879157",
+      "d07-ifs-10v-24h": "6909b14898658d944f8a6188b960884991109403f4314751e34921d3220ba5cd",
+      "d07-ifs-2t-24h": "21edf859ebafe78ac55cfe02093ea1826c8283f519488805da80dcd0d348575c",
+      "d07-ifs-2d-24h": "7054f8152288e6201b269649963c27473dfe87242fa33e2ebb3e239495dfbbd6"
+    }
+  },
+  "products": [
+    {
+      "product_id": "d07-ifs-wind10-24h",
+      "initialized_at": "2026-11-14T00:00:00+00:00",
+      "valid_from": "2026-11-15T00:00:00+00:00",
+      "native_inputs_current": true,
+      "independent_verification": {
+        "method": "Componentes consultadas por coordenada desde los GRIB nativos retenidos; norma sqrt independiente de hypot",
+        "original_url": "https://data.ecmwf.int/forecasts/20261114/00z/ifs/0p25/oper/20261114000000-24h-oper-fc.grib2",
+        "checked_at": "2026-11-14T10:54:05.047080Z",
+        "expected": "5.109304929269748",
+        "actual": "5.109304929269748",
+        "passed": true
+      }
+    },
+    {
+      "product_id": "d07-ifs-vpd-24h",
+      "initialized_at": "2026-11-14T00:00:00+00:00",
+      "valid_from": "2026-11-15T00:00:00+00:00",
+      "native_inputs_current": true,
+      "independent_verification": {
+        "method": "Componentes consultadas por coordenada desde los GRIB nativos retenidos; aritmética Decimal de 40 dígitos independiente del cálculo float",
+        "original_url": "https://data.ecmwf.int/forecasts/20261114/00z/ifs/0p25/oper/20261114000000-24h-oper-fc.grib2",
+        "checked_at": "2026-11-14T10:54:05.047080Z",
+        "expected": "0.10692404773459897",
+        "actual": "0.10692404773459963",
+        "passed": true
+      }
+    },
+    {
+      "product_id": "d07-ifs-rh-24h",
+      "initialized_at": "2026-11-14T00:00:00+00:00",
+      "valid_from": "2026-11-15T00:00:00+00:00",
+      "native_inputs_current": true,
+      "independent_verification": {
+        "method": "Componentes consultadas por coordenada desde los GRIB nativos retenidos; aritmética Decimal de 40 dígitos independiente del cálculo float",
+        "original_url": "https://data.ecmwf.int/forecasts/20261114/00z/ifs/0p25/oper/20261114000000-24h-oper-fc.grib2",
+        "checked_at": "2026-11-14T10:54:05.047080Z",
+        "expected": "85.3642230874485",
+        "actual": "85.36422308744842",
+        "passed": true
+      }
+    }
+  ],
+  "store_bytes": 236336230,
+  "default_budget_bytes": 512000000,
+  "note": "Triggered by restarted scheduled watcher, no manual force or new input download. Checkpoints fingerprint persisted decoded revisions, not original assets."
+}

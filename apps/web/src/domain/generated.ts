@@ -355,6 +355,8 @@ export interface RefreshJob {
   last_change_at?: string | null;
   error?: string | null;
   kept_previous?: boolean;
+  attempted_input_revisions?: Record<string, string>;
+  successful_input_revisions?: Record<string, string>;
 }
 
 export interface RefreshStatus {

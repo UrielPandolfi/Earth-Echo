@@ -2158,6 +2158,20 @@
           "default": false,
           "title": "Kept Previous",
           "type": "boolean"
+        },
+        "attempted_input_revisions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Attempted Input Revisions",
+          "type": "object"
+        },
+        "successful_input_revisions": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Successful Input Revisions",
+          "type": "object"
         }
       },
       "required": [

@@ -1,5 +1,6 @@
 """Single local scheduler, persistent due times and OS lock released on process death."""
 import asyncio
+import hashlib
 import json
 import os
 import subprocess
@@ -8,9 +9,26 @@ from contextlib import contextmanager, asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from earth_echo.paths import repo_root
-from earth_echo.storage.products import atomic_json, publish
+from earth_echo.storage.products import atomic_json, publish, products_root
 from earth_echo.connectors.ocean_fields import PRODUCTS, fetch_ocean
 from earth_echo.ingest.feeds import refresh_usgs, refresh_kp, refresh_kp_forecast
+
+# Fixed scientific dependencies, in upstream-before-derived order in jobs().
+# Fingerprint the committed inputs rather than download times: this also catches
+# a parent process dying after publish but before its success state was saved.
+DERIVED_INPUTS = {
+    'd07-derived-fields': tuple(f'd07-ifs-{p}-24h' for p in ('10u', '10v', '2t', '2d')),
+    'd34-amoc-annual-trend': ('d34-amoc-monthly',),
+}
+
+def input_revisions(name: str) -> dict[str, str]:
+    revisions = {}
+    for key in DERIVED_INPUTS.get(name, ()):
+        try:
+            revisions[key] = hashlib.sha256((products_root()/key/'current.json').read_bytes()).hexdigest()
+        except OSError as error:
+            revisions[key] = f'unavailable:{type(error).__name__}'
+    return revisions
 
 def state_path() -> Path:
     return repo_root() / 'data/real/refresh/state.json'
@@ -147,11 +165,17 @@ def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] 
                 continue
             previous = state['jobs'].get(name, {})
             due = previous.get('next_attempt_at')
-            if not force and due and datetime.fromisoformat(due) > moment:
+            inputs = input_revisions(name)
+            changed_inputs = bool(inputs) and inputs != previous.get('attempted_input_revisions')
+            if not force and not changed_inputs and due and datetime.fromisoformat(due) > moment:
                 continue
             # Persist BEFORE I/O, so a killed process retries after a bounded delay.
             attempt=now or datetime.now(timezone.utc)
             entry = {**previous, 'last_attempt_at':attempt.isoformat(), 'status':'running', 'next_attempt_at':(attempt+timedelta(minutes=15)).isoformat()}
+            if inputs:
+                # An unsuccessful attempt on the SAME revision respects the retry
+                # delay. A genuinely new input may trigger one earlier attempt.
+                entry['attempted_input_revisions'] = inputs
             state['jobs'][name] = entry
             atomic_json(path, state)
             try:
@@ -160,6 +184,8 @@ def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] 
                 entry.update(status=result, last_success_at=completed.isoformat(), error=None,
                     kept_previous=False,
                     next_attempt_at=(completed+timedelta(seconds=seconds)).isoformat())
+                if inputs:
+                    entry['successful_input_revisions'] = inputs
                 if result != 'unchanged':
                     entry['last_change_at'] = completed.isoformat()
             except Exception as error:

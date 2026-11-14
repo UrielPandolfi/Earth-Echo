@@ -48,7 +48,7 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
         return 'unchanged'
     used = sum(p.stat().st_size for p in active.rglob('*') if p.is_file()) if active.exists() else 0
     projected = used + (0 if (active/product.raw_file).exists() else len(raw)) + 2*len(product.model_dump_json().encode())
-    budget=int(os.getenv('EARTH_ECHO_PRODUCT_STORE_MAX_BYTES','256000000'))
+    budget=int(os.getenv('EARTH_ECHO_PRODUCT_STORE_MAX_BYTES','512000000'))
     if not 32_000_000<=budget<=2_000_000_000: raise ValueError('Product store budget must be between 32 MB and 2 GB')
     if projected > budget:
         raise OSError(f'Scientific product store reached its {budget} byte budget; last valid products preserved')

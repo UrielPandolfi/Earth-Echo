@@ -10,6 +10,8 @@ class RefreshJob(ApiModel):
     last_change_at: UtcDateTime | None = None
     error: str | None = None
     kept_previous: bool = False
+    attempted_input_revisions: dict[str, str] = Field(default_factory=dict)
+    successful_input_revisions: dict[str, str] = Field(default_factory=dict)
 
 class RefreshStatus(ApiModel):
     enabled: bool
