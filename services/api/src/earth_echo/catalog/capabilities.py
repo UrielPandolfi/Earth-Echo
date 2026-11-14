@@ -139,6 +139,10 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F16',{})['indicator'] = ('partial','ASI FAO numérico nativo de Pampa, Cropland/Season 1: porcentaje agrícola afectado desde inicio del ciclo. Códigos especiales enmascarados; no probabilidad ni rendimiento. Vista mundial gruesa rechazada por discrepancia con píxel nativo.')
     if 'd19-desert-locust-surveys' in available:
         overrides_by_id.setdefault('F23',{})['observation'] = ('partial','Reportes RAMSES públicos de langosta del desierto, incluidos muestreos de ausencia. Consulta reciente acotada, muestra actual de Mauritania. Sin traslado a Sudamérica, número de individuos o pronóstico de migración.')
+    if 'd07-ifs-wind10-24h' in available:
+        overrides_by_id.setdefault('F04',{})['indicator'] = ('partial','Magnitud del viento a 10 m calculada de u/v IFS +24 h, mundial a 1°, con fórmula e insumos trazables. No aporta CAPE, cizalladura ni detección/pronóstico de tormentas o granizo.')
+    if 'd07-ifs-vpd-24h' in available:
+        overrides_by_id.setdefault('F15',{})['indicator'] = ('partial','VPD instantáneo sobre agua líquida calculado de T/Td IFS +24 h en dominio conservador 0–50 °C. Variable meteorológica de entorno; no FWI, humedad de combustible ni probabilidad de ignición. GWIS numérico sigue pendiente.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

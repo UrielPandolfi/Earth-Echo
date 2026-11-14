@@ -10,7 +10,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D04 | NASA MODIS MOD13Q1 | Fuente de observaciones | /v1/products/d04-evi-amazonia, /v1/products/d04-evi-pampa, /v1/products/d04-ndvi-amazonia, /v1/products/d04-ndvi-pampa | Índice de verdor; no confirma sequía ni rendimiento agrícola. |
 | D05 | NASA MODIS MOD11A2 | Fuente de observaciones | /v1/products/d05-lst-day-amazonia, /v1/products/d05-lst-day-pampa, /v1/products/d05-lst-night-amazonia, /v1/products/d05-lst-night-pampa | Temperatura de superficie de cielo despejado, diurna/nocturna; no es temperatura del aire ni ola de calor. |
 | D06 | NASA FIRMS | Fuente de observaciones | pending | Consultar producto real; descubrimiento no cuenta como integración |
-| D07 | ECMWF Open Data | Pronóstico o producto científico existente | /v1/products/d07-ifs-10u-24h, /v1/products/d07-ifs-10v-24h, /v1/products/d07-ifs-2d-24h, /v1/products/d07-ifs-2t-24h, /v1/products/d07-ifs-tp-24h | Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación.  ; Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación. Acumulado desde la inicialización, convertido m→mm; no es tasa ni profundidad de inundación. |
+| D07 | ECMWF Open Data | Pronóstico o producto científico existente | /v1/products/d07-ifs-10u-24h, /v1/products/d07-ifs-10v-24h, /v1/products/d07-ifs-2d-24h, /v1/products/d07-ifs-2t-24h, /v1/products/d07-ifs-tp-24h, /v1/products/d07-ifs-vpd-24h, /v1/products/d07-ifs-wind10-24h | Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación.  ; Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación. Acumulado desde la inicialización, convertido m→mm; no es tasa ni profundidad de inundación. ; Variable física derivada de un pronóstico externo; no detector ni probabilidad de tormenta, granizo, ignición o sequía. VPD es instantáneo sobre agua líquida en el dominio declarado; no evapotranspiración, humedad del suelo o estrés agrícola confirmado. ; Variable física derivada de un pronóstico externo; no detector ni probabilidad de tormenta, granizo, ignición o sequía. Rapidez a 10 m, sin ráfaga máxima, cizalladura vertical ni umbral de impacto. |
 | D08 | ERA5 histórico | Dataset histórico | pending | CDSAPI_KEY + licencia manual ERA5 |
 | D09 | C3S pronóstico estacional | Pronóstico o producto científico existente | pending | CDSAPI_KEY + licencia manual estacional |
 | D10 | Copernicus GloFAS | Pronóstico o producto científico existente | pending | EWDSAPI_KEY + licencia y colección GloFAS vigente |
@@ -62,7 +62,7 @@ Observación puede ser parcial; un dato de contexto no habilita un detector. «s
 | F01 | Lluvias extremas | blocked | specified | specified | partial | specified |
 | F02 | Olas de calor | partial | specified | specified | partial | specified |
 | F03 | Olas de frío y heladas | specified | specified | specified | partial | specified |
-| F04 | Tormentas severas y granizo | specified | specified | specified | specified | specified |
+| F04 | Tormentas severas y granizo | specified | partial | specified | specified | specified |
 | F05 | Tornados | specified | specified | specified | specified | specified |
 | F06 | Ciclones tropicales | partial | partial | specified | specified | specified |
 | F07 | Marejadas e inundación costera | specified | specified | specified | specified | specified |
@@ -73,7 +73,7 @@ Observación puede ser parcial; un dato de contexto no habilita un detector. «s
 | F12 | Crecidas fluviales | blocked | specified | specified | specified | specified |
 | F13 | Inundaciones repentinas | specified | specified | specified | specified | specified |
 | F14 | Escasez de agua | specified | specified | specified | specified | specified |
-| F15 | Peligro de incendios | specified | specified | specified | specified | specified |
+| F15 | Peligro de incendios | specified | partial | specified | specified | specified |
 | F16 | Estrés agrícola | partial | partial | specified | specified | specified |
 | F17 | El Niño y La Niña | specified | partial | specified | specified | specified |
 | F18 | Olas de calor marinas | partial | specified | specified | partial | specified |

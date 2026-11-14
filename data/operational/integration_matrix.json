@@ -94,9 +94,11 @@
       "/v1/products/d07-ifs-10v-24h",
       "/v1/products/d07-ifs-2d-24h",
       "/v1/products/d07-ifs-2t-24h",
-      "/v1/products/d07-ifs-tp-24h"
+      "/v1/products/d07-ifs-tp-24h",
+      "/v1/products/d07-ifs-vpd-24h",
+      "/v1/products/d07-ifs-wind10-24h"
     ],
-    "blocker_or_next_step": "Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación.  | Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación. Acumulado desde la inicialización, convertido m→mm; no es tasa ni profundidad de inundación.",
+    "blocker_or_next_step": "Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación.  | Pronóstico determinista externo, un plazo +24 h. Sin probabilidades ni detector de ola de calor, tormenta o inundación. Acumulado desde la inicialización, convertido m→mm; no es tasa ni profundidad de inundación. | Variable física derivada de un pronóstico externo; no detector ni probabilidad de tormenta, granizo, ignición o sequía. VPD es instantáneo sobre agua líquida en el dominio declarado; no evapotranspiración, humedad del suelo o estrés agrícola confirmado. | Variable física derivada de un pronóstico externo; no detector ni probabilidad de tormenta, granizo, ignición o sequía. Rapidez a 10 m, sin ráfaga máxima, cizalladura vertical ni umbral de impacto.",
     "limits": "No todo parámetro de IFS está en el subconjunto abierto. Productos históricos, ensembles y servicios de entrega deben revisarse por separado."
   },
   {

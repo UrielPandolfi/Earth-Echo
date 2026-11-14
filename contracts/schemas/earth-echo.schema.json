@@ -214,6 +214,36 @@
       "title": "AvailabilityUnknown",
       "type": "object"
     },
+    "CalculationInput": {
+      "additionalProperties": false,
+      "properties": {
+        "product_id": {
+          "title": "Product Id",
+          "type": "string"
+        },
+        "variable": {
+          "title": "Variable",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "checksum_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checksum Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "product_id",
+        "variable",
+        "unit",
+        "checksum_sha256"
+      ],
+      "title": "CalculationInput",
+      "type": "object"
+    },
     "CatalogSourceView": {
       "additionalProperties": false,
       "properties": {
@@ -1403,6 +1433,11 @@
           "title": "Field Products",
           "type": "integer"
         },
+        "calculated_field_products": {
+          "default": 0,
+          "title": "Calculated Field Products",
+          "type": "integer"
+        },
         "observation_records": {
           "title": "Observation Records",
           "type": "integer"
@@ -2158,6 +2193,56 @@
       "title": "RefreshStatus",
       "type": "object"
     },
+    "ScientificCalculation": {
+      "additionalProperties": false,
+      "properties": {
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "formula": {
+          "title": "Formula",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/CalculationInput"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "reference_url": {
+          "title": "Reference Url",
+          "type": "string"
+        },
+        "reference_period": {
+          "title": "Reference Period",
+          "type": "string"
+        },
+        "applicability": {
+          "title": "Applicability",
+          "type": "string"
+        }
+      },
+      "required": [
+        "method_version",
+        "formula",
+        "parameters",
+        "inputs",
+        "reference_url",
+        "reference_period",
+        "applicability"
+      ],
+      "title": "ScientificCalculation",
+      "type": "object"
+    },
     "ScientificGrid": {
       "additionalProperties": false,
       "properties": {
@@ -2603,6 +2688,17 @@
           },
           "title": "Regions",
           "type": "array"
+        },
+        "calculation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScientificCalculation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "verification": {
           "$ref": "#/$defs/Verification"

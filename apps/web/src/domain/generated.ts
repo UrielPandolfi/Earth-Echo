@@ -31,6 +31,13 @@ export interface AvailabilityUnknown {
   status: "unknown";
 }
 
+export interface CalculationInput {
+  product_id: string;
+  variable: string;
+  unit: string;
+  checksum_sha256: string;
+}
+
 export interface CatalogSourceView {
   id: string;
   name: string;
@@ -232,6 +239,7 @@ export interface ProductList {
   data_mode?: "real";
   connected_sources: number;
   field_products: number;
+  calculated_field_products?: number;
   observation_records: number;
   calculated_signals: number;
   catalog_phenomena: number;
@@ -349,6 +357,16 @@ export interface RefreshStatus {
   note: string;
 }
 
+export interface ScientificCalculation {
+  method_version: string;
+  formula: string;
+  parameters: Record<string, number>;
+  inputs: CalculationInput[];
+  reference_url: string;
+  reference_period: string;
+  applicability: string;
+}
+
 export interface ScientificGrid {
   width: number;
   height: number;
@@ -410,6 +428,7 @@ export interface ScientificProduct {
   samples?: ProductSample[];
   tracks?: ProductTrack[];
   regions?: ProductRegion[];
+  calculation?: ScientificCalculation | null;
   verification: Verification;
 }
 

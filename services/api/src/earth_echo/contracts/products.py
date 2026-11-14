@@ -86,6 +86,21 @@ class Verification(ApiModel):
     actual: str
     passed: Literal[True]
 
+class CalculationInput(ApiModel):
+    product_id: str
+    variable: str
+    unit: str
+    checksum_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
+
+class ScientificCalculation(ApiModel):
+    method_version: str
+    formula: str
+    parameters: dict[str,float]
+    inputs: list[CalculationInput]
+    reference_url: str
+    reference_period: str
+    applicability: str
+
 class ScientificProduct(ApiModel):
     schema_version: Literal['1.0'] = '1.0'
     data_mode: Literal['real'] = 'real'
@@ -126,12 +141,14 @@ class ScientificProduct(ApiModel):
     samples: list[ProductSample] = Field(default_factory=list)
     tracks: list[ProductTrack] = Field(default_factory=list)
     regions: list[ProductRegion] = Field(default_factory=list)
+    calculation: ScientificCalculation | None = None
     verification: Verification
 
 class ProductList(ApiModel):
     data_mode: Literal['real'] = 'real'
     connected_sources: int
     field_products: int
+    calculated_field_products: int = 0
     observation_records: int
     calculated_signals: int
     catalog_phenomena: int

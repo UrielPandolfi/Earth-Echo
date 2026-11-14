@@ -373,6 +373,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Repetición final `unchanged`: tres revisiones de desarrollo antes/después, sin duplicado nuevo; identidad incluye todos los reportes y excluye solo los límites de petición variables. Cadencia diaria en tarea Windows. 20 fuentes con datos, 32 productos nuevos y 24 campos.
 - 83 pruebas API, 20 web, contratos y build pasaron. Fixture GeoJSON auténtico comprueba categorías, fecha, fiabilidad y posición; captura REAL de Mauritania con reporte NO LOCUST seleccionado. Continúa con indicadores reproducibles sobre IFS retenido y accesos numéricos pendientes.
 
+## Incremento 11J — indicadores físicos reproducibles de IFS
+
+- Rapidez del viento a 10 m: `sqrt(u10²+v10²)`, m/s, del mismo ciclo y +24 h. VPD a 2 m: `e_s(T)-e_s(Td)`, kPa, ecuaciones 11/14 FAO-56 con a=0,6108, b=17,27, c=237,3. Dominio conservador 0≤Td≤T≤50 °C; hielo/supersaturación/faltantes permanecen ausentes, no se recortan a cero. Es instantáneo, no VPD diario, ETo, FWI, humedad del suelo o estrés de cultivo confirmado.
+- Dos campos derivados a 1°, con fórmula, parámetros, unidades, intervalo, versión y SHA de entradas en contrato/API/inspector. Conservan ambos mensajes GRIB completos en el activo; lectura de originales ya retenidos, cero nuevas descargas por cálculo. Cotejo por coordenada desde el GRIB con sqrt independiente de hypot y Decimal de 40 dígitos para VPD. No se promociona el experimento SST ni otro modelo.
+- Viento: 0,014074–26,680106 m/s, sin faltantes en estos componentes. VPD: 0,007750–6,429819 kPa, 27.877 centros fuera del dominio/faltantes. Repetición `unchanged`. Cadencia 12 h en tarea Windows; cálculo y descarga se etiquetan por separado.
+- 20 fuentes con datos, 34 productos nuevos, 26 campos, dos calculados. Cero señales/eventos calculados; los centros de campos no inflan ese contador. Insumos de entorno parciales para F04/F15, sin detector de tormenta ni probabilidad de ignición.
+- Medición previa: 71.521.479 bytes en almacén, 16.469.328 bytes de JSON actual, 31.336.860 de originales únicos actuales; 177.620.832.256 bytes libres en E:. Presupuesto ampliado a 256 MB configurable para soportar revisiones de las integraciones nuevas, manteniendo cuatro por producto y conservación del válido si llega al tope.
+- 85 pruebas API, contratos y build pasaron. Prueba independiente contra ejemplo FAO publicado 24,5 °C→3,075 kPa y 15 °C→1,705 kPa; pruebas de ausencia/dominio y vector 3–4–5. RGI se resolvió por DOI/CMR pero su distribución NSIDC redirige a Earthdata: D26 requiere las mismas variables NASA, sin iniciar sesión ni crear cuenta.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
