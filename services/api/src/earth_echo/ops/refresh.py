@@ -109,6 +109,7 @@ def jobs() -> dict:
     from earth_echo.connectors.nasa_ocean_color import fetch_nasa_chlorophyll
     from earth_echo.connectors.enso_outlook import fetch_enso_outlook
     from earth_echo.connectors.seasonal_monthly import fetch_seasonal_monthly
+    from earth_echo.connectors.glofas_discharge import fetch_glofas
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -143,6 +144,7 @@ def jobs() -> dict:
         'd17-aqua-chlorophyll-archive':(2592000,fetch_nasa_chlorophyll),
         'd48-roni-outlook-tables':(86400,fetch_enso_outlook),
         'd09-seas5-monthly':(86400,fetch_seasonal_monthly),
+        'd10-glofas-discharge':(86400,fetch_glofas),
     }
 
 def execute_job(name, runner, moment):

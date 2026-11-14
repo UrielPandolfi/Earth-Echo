@@ -9,13 +9,13 @@ from functools import lru_cache
 import hashlib
 import io
 import json
-import math
 from urllib.parse import urlencode
 import zipfile
 
 import numpy as np
 
 from earth_echo.connectors.http import download
+from earth_echo.connectors.open_meteo import number
 from earth_echo.connectors.scientific_archive import pack_files
 from earth_echo.contracts.products import ScientificProduct, ProductSample, Verification
 from earth_echo.storage.products import publish
@@ -80,17 +80,6 @@ def check_native_cell(lat, lon, requested_lat, requested_lon):
     # One Float32 ULP near360 plus decimal formatting is <4e-5 degrees.
     if abs(lat - lats[ring]) > 4e-5 or abs(lon - expected_lon) > 4e-5:
         raise ValueError('SEAS5 coordinates do not match independently calculated O320 nearest cell')
-
-
-def number(value):
-    if value is None or value in ('', 'NaN', 'nan'):
-        return None
-    if isinstance(value, bool):
-        raise ValueError('Boolean is not a SEAS5 numeric value')
-    result = float(value)
-    if not math.isfinite(result):
-        raise ValueError('Nonfinite SEAS5 value; explicit missing required')
-    return result
 
 
 def products_from_files(files, now):

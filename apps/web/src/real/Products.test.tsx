@@ -5,6 +5,7 @@ import type { ScientificProduct } from '../domain/generated';
 import native from '../../../../data/real/products/d26-rgi60-patagonia-outlines/current.json';
 import roni from '../../../../data/real/products/d48-roni-history/current.json';
 import seasonal from '../../../../data/real/products/d09-seas5-pampa-precipitacion/current.json';
+import discharge from '../../../../data/real/products/d10-glofas-rosario/current.json';
 
 afterEach(cleanup);
 
@@ -38,4 +39,13 @@ it('presenta SEAS5 como pronóstico mensual, con crédito visible y fechas separ
   expect(container.querySelector('.chart-key')?.textContent).toBe(' Pronóstico');
   expect(screen.getByText('Inicialización')).toBeTruthy();
   expect(screen.getByText('Emisión')).toBeTruthy();
+});
+
+it('mantiene fechas diarias distintas para caudal sin concatenar miembros del ensemble',()=>{
+  const {container}=render(<ProductInspector product={discharge as unknown as ScientificProduct} selectedId={null}/>);
+  const labels=[...container.querySelectorAll('.chart-labels span')].map(e=>e.textContent);
+  expect(labels).toEqual(['2026-11-14','2026-11-16','2026-11-18','2026-11-20']);
+  expect(container.querySelectorAll('.chart-dot-forecast').length).toBe(7);
+  expect(container.querySelector('.chart-key')?.textContent).toBe(' Pronóstico');
+  expect(screen.getByRole('link',{name:'Weather data by Open-Meteo.com'})).toBeTruthy();
 });

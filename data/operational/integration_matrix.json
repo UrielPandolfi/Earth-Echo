@@ -145,9 +145,12 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://global-flood.emergency.copernicus.eu/general-information/about-glofas",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "EWDSAPI_KEY + licencia y colección GloFAS vigente",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d10-glofas-manaus",
+      "/v1/products/d10-glofas-rosario"
+    ],
+    "blocker_or_next_step": "Caudal modelado, pronóstico externo GloFAS familia v4 por distribución pública Open-Meteo; versión operativa menor no expuesta. No cliente EWDS ni GRIB nativo con corrida aislada. forecast_v4 prioriza forecast diario pero puede completar huecos con intermedio/estacional: se limita la petición a primeros7 días del dominio diario y conserva esa incertidumbre de procedencia; metadata estable no garantiza origen único por valor. 51 miembros00control+01…50, media publicada sin recalibrar; redondeo0,01m³/s y compresión del distribuidor, no precisión de aforo. Todos los miembros retenidos en API/original para inspección, sin líneas concatenadas entre miembros. Celda nearest explícita, sin ajuste de elevación; nombre sólo localiza entorno, no acredita cauce/gauge o representa el río principal de Manaus/Rosario. Caudal no es profundidad/área de inundación, umbral de retorno, aviso ni probabilidad. No hay observaciones de aforos, calibración local, tendencia o habilidad predictiva demostrada. Uso gratuito local no comercial. null/incompletos quedan ausentes, cero válido.",
     "limits": "No es un pronóstico global de inundación urbana, costera ni de toda inundación repentina. Caudal alto no da automáticamente profundidad de agua sobre una calle."
   },
   {

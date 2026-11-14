@@ -186,6 +186,9 @@ def capability_matrix() -> CapabilityMatrix:
             overrides_by_id[fid]['forecast'] = ('partial',previous+' SEAS5 aporta medias mensuales de temperatura del aire a2m y totales de precipitación promediados sobre ensemble para dos celdas O320 Pampa/Amazonía, siete meses. Distribución pública Open-Meteo distinta de CDS, corrida/validez propias, sin miembros/dispersión/calibración. No predice días de lluvia extrema, olas de calor o heladas desde esas medias.')
         for fid in ['F11','F16']:
             overrides_by_id.setdefault(fid,{})['forecast'] = ('partial','Insumo climático externo: temperatura media mensual a2m y precipitación total mensual media del ensemble SEAS5, dos celdas Pampa/Amazonía y siete meses. Sin base/hindcasts compatibles, déficit, probabilidad de sequía o daño agrícola calculados. No es pronóstico local validado del fenómeno ni observación; modelos propios siguen no disponibles.')
+    if 'd10-glofas-rosario' in available:
+        overrides_by_id.setdefault('F12',{})['observation'] = ('blocked','Hay caudales pronosticados GloFAS en dos celdas; no observaciones de aforos conectadas. Se necesitan registros/validación local para corrección, sin presentar modelo como medición.')
+        overrides_by_id['F12']['forecast'] = ('partial','GloFAS familia v4, siete medias de24h por dos celdas0,05° en entorno Rosario/Manaus y51 miembros retenidos. Media externa cotejada independientemente. Distribución rolling forecast_v4 puede completar huecos con intermedio/estacional; sin ID de corrida individual ni versión menor operativa expuestos, asociación de inicialización única no acreditada. No cuenca mundial, río principal asignado, umbral de retorno, probabilidad de crecida o profundidad de inundación.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

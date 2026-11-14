@@ -16,11 +16,11 @@ function yOf(value: number, min: number, max: number): number {
   return padY + ((max - value) / (max - min)) * (height - padY * 2);
 }
 
-function xOf(index: number, count: number): number {
+function xOf(index: number, count: number, left=padX): number {
   if (count <= 1) {
-    return padX;
+    return left;
   }
-  return padX + (index / (count - 1)) * (width - padX - 8);
+  return left + (index / (count - 1)) * (width - left - 8);
 }
 
 function line(points: Array<{ x: number; y: number }>): string {
@@ -40,9 +40,11 @@ export function AnomalyChart({ points, caption, domain, observedLabel='Observado
   const min = domain?.min ?? -48;
   const max = domain?.max ?? 4;
   const ticks = domain?.ticks ?? [0, -20, -40];
+  const tickLabels=ticks.map(t=>t.toLocaleString('es',{maximumFractionDigits:2}));
+  const plotLeft=Math.max(padX,Math.max(0,...tickLabels.map(t=>t.length))*5+8);
   const placed = points.map((point, index) => ({
     ...point,
-    x: xOf(index, points.length),
+    x: xOf(index, points.length,plotLeft),
     y: point.value === null ? null : yOf(point.value, min, max),
   }));
   const observed = placed.filter((point) => point.kind === "observed" && point.y !== null);
@@ -50,7 +52,9 @@ export function AnomalyChart({ points, caption, domain, observedLabel='Observado
   const firstForecast=placed.findIndex(p=>p.kind==='forecast' && p.y!==null);
   const previous=placed[firstForecast-1];
   const bridge=previous?.kind==='observed' && previous.y!==null ? [previous,placed[firstForecast]] : [];
-  const labelIndices=new Set(Array.from({length:6},(_,i)=>Math.round(i*(points.length-1)/5)));
+  const longestLabel=Math.max(0,...points.map(p=>p.label.length));
+  const labelSlots=longestLabel>10 ? 3 : longestLabel>7 ? 4 : 6;
+  const labelIndices=new Set(Array.from({length:labelSlots},(_,i)=>Math.round(i*(points.length-1)/(labelSlots-1))));
   const band = placed.filter((point) => point.low !== undefined && point.high !== undefined && point.y !== null);
   const bandPath =
     band.length > 0
@@ -62,11 +66,11 @@ export function AnomalyChart({ points, caption, domain, observedLabel='Observado
   return (
     <figure className="chart">
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={caption}>
-        {ticks.map((tick) => (
+        {ticks.map((tick,index) => (
           <g key={tick}>
-            <line className="chart-grid" x1={padX} x2={width - 4} y1={yOf(tick, min, max)} y2={yOf(tick, min, max)} />
+            <line className="chart-grid" x1={plotLeft} x2={width - 4} y1={yOf(tick, min, max)} y2={yOf(tick, min, max)} />
             <text className="chart-tick" x={2} y={yOf(tick, min, max) + 3}>
-              {tick.toLocaleString('es',{maximumFractionDigits:2})}
+              {tickLabels[index]}
             </text>
           </g>
         ))}
@@ -90,7 +94,7 @@ export function AnomalyChart({ points, caption, domain, observedLabel='Observado
         )}
       </svg>
       <div className="chart-labels">
-        {points.filter((_,i)=>points.length<=6 || labelIndices.has(i)).map((point) => (
+        {points.filter((_,i)=>points.length<=labelSlots || labelIndices.has(i)).map((point) => (
           <span key={point.label}>{point.label}</span>
         ))}
       </div>
