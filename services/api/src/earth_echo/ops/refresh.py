@@ -155,23 +155,54 @@ def jobs() -> dict:
         'd14-mol-native':(86400,fetch_marine_level),
     }
 
-def execute_job(name, runner, moment):
-    """A socket timeout is not a total timeout (DNS and slow bodies can hang)."""
+def terminate_worker(child):
+    """Terminate only this registered worker's tree, including venv redirectors."""
+    if os.name=='nt':
+        killer=Path(os.environ.get('SystemRoot',r'C:\Windows'))/'System32/taskkill.exe'
+        result=subprocess.run([str(killer),'/PID',str(child.pid),'/T','/F'],capture_output=True,timeout=10,creationflags=subprocess.CREATE_NO_WINDOW)
+        if result.returncode and child.poll() is None:raise RuntimeError('Could not terminate registered source worker tree')
+    else:
+        import signal
+        try:os.killpg(child.pid,signal.SIGKILL)
+        except ProcessLookupError:pass
+    # EOF proves no surviving redirector/child is still holding captured pipes.
+    child.communicate(timeout=10)
+
+
+def run_source_worker(args,timeout):
+    child=subprocess.Popen(args,cwd=repo_root(),stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,
+        creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0,start_new_session=os.name!='nt')
+    try:
+        try:out,err=child.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            try:terminate_worker(child)
+            except Exception as error:raise RuntimeError(f'Source exceeded {timeout} seconds; tree termination unconfirmed, child lock prevents overlap') from error
+            raise TimeoutError(f'Source exceeded {timeout} seconds; worker tree terminated, previous retained') from None
+        return subprocess.CompletedProcess(args,child.returncode,out,err)
+    finally:
+        # Do not use Popen.__exit__ here: on an OS termination error it would
+        # wait without a timeout. The child also owns its independent deadline.
+        if child.poll() is not None:
+            child.stdout.close();child.stderr.close()
+
+
+def job_timeout(name):
     limits = {'d32-basins-south-america': ('EARTH_ECHO_HYDROATLAS_TIMEOUT_SECONDS', '420'),
         'd12-cams-global': ('EARTH_ECHO_CAMS_TIMEOUT_SECONDS', '420'),
-        'd14-smoc-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300'),
+        'd14-smoc-native': ('EARTH_ECHO_SMOC_GLOBAL_TIMEOUT_SECONDS', '600'),
         'd14-thetao-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300'),
         'd14-mol-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300')}
     variable, default = limits.get(name, ('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
     timeout = int(os.getenv(variable, default))
     if not 30 <= timeout <= 600:
         raise ValueError('Job timeout must be between 30 and 600 seconds')
-    try:
-        child = subprocess.run([sys.executable, '-m', 'earth_echo.tools.refresh_job', name, moment.isoformat()],
-            cwd=repo_root(), capture_output=True, text=True, timeout=timeout,
-            creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
-    except subprocess.TimeoutExpired:
-        raise TimeoutError(f'Source exceeded {timeout} seconds; child terminated, previous retained') from None
+    return timeout
+
+
+def execute_job(name, runner, moment):
+    """A socket timeout is not a total timeout (DNS and slow bodies can hang)."""
+    timeout=job_timeout(name)
+    child = run_source_worker([sys.executable, '-m', 'earth_echo.tools.refresh_job', name, moment.isoformat()],timeout)
     try:
         result = json.loads(child.stdout)
     except (ValueError, TypeError):
@@ -184,6 +215,9 @@ def execute_job(name, runner, moment):
 
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None, executor=None) -> dict:
+    if now is not None:
+        if now.utcoffset() is None:raise ValueError('Refresh attempt requires an aware timestamp')
+        now=now.astimezone(timezone.utc)
     moment = now or datetime.now(timezone.utc)
     path = state_path()
     with execution_lock(path.with_suffix('.lock')) as acquired:

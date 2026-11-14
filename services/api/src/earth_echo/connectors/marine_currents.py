@@ -20,6 +20,7 @@ COLLECTION = 'cmems_mod_glo_phy_anfc_merged-uv_PT1H-i_202211'
 DOC = 'https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description'
 LICENSE = 'https://marine.copernicus.eu/user-corner/service-commitments-and-licence'
 METHOD = 'cmems-smoc-native-northwest-1deg-v1'
+GLOBAL_METHOD = 'cmems-smoc-native-global-1deg-v2'
 VARIABLES = {
     'utotal': ('u-total', 'Componente este · corriente total SMOC', 'surface_sea_water_x_velocity'),
     'vtotal': ('v-total', 'Componente norte · corriente total SMOC', 'surface_sea_water_y_velocity'),
@@ -49,7 +50,7 @@ def scientific_url(day):
     return ROOT + COLLECTION + f'/{valid:%Y/%m}/SMOC_{valid:%Y%m%d}_R{day:%Y%m%d}.nc'
 
 
-def decode(source, day):
+def decode(source, day, *, worldwide=False):
     if source.url != scientific_url(day) or not source.etag or source.etag.startswith('W/'):
         raise ValueError('SMOC native URL/strong object version missing')
     with source.open() as reader, h5py.File(reader, 'r') as ds:
@@ -70,11 +71,11 @@ def decode(source, day):
         independent = netCDF4.num2date(time, units, calendar='gregorian', only_use_cftime_datetimes=False, only_use_python_datetimes=True)
         if times != [t.replace(tzinfo=timezone.utc) for t in independent] or times != [day + timedelta(days=1, minutes=30, hours=i) for i in range(24)]:
             raise ValueError('SMOC native CF timestamp/filename do not agree')
-        # The four measured compressed chunks cover this entire native quadrant.
-        # Compare ALL8,812,800 float values, then select exact centers every12steps.
-        r0, r1, c0, c1 = 1021, 2041, 0, 2160
-        rows = np.array([int(np.argmin(abs(lat - y))) for y in np.arange(89.5, 5.4, -1)])
-        cols = np.array([int(np.argmin(abs(lon - x))) for x in np.arange(-179.5, 0, 1)])
+        # Keep the qualified northwest edition reproducible from its frozen
+        # archive; production now requests one global surface hour, not3D/time.
+        r0, r1, c0, c1 = (0,2041,0,4320) if worldwide else (1021,2041,0,2160)
+        rows = np.array([int(np.argmin(abs(lat-y))) for y in np.arange(89.5,-79.6 if worldwide else 5.4,-1)])
+        cols = np.array([int(np.argmin(abs(lon-x))) for x in np.arange(-179.5,180 if worldwide else 0,1)])
         values = {}; fills = {}
         for name in VARIABLES:
             variable = ds[name]
@@ -95,32 +96,33 @@ def decode(source, day):
             'production_day_from_filename': day.date().isoformat(), 'initialization_time': None, 'issued_at': None,
             'native_latitude_limits': [float(lat[r0]), float(lat[r1-1])], 'native_longitude_limits': [float(lon[c0]), float(lon[c1-1])],
             'retained_components': list(VARIABLES), 'native_values_bitwise_checked': 4 * (r1-r0) * (c1-c0),
-            'sampling': '1-degree view uses exact native1/12-degree centers, no spatial averaging. Northwest quadrant only, not worldwide coverage.',
-            'fills': fills, 'method': METHOD}
+            'sampling': '1-degree view uses exact native1/12-degree centers, no spatial averaging. '+('Global model ocean domain80S–90N; original missing mask, not observations or local predictive validation.' if worldwide else 'Northwest quadrant only, not worldwide coverage.'),
+            'fills': fills, 'method': GLOBAL_METHOD if worldwide else METHOD}
     return values, lon[cols].tolist(), lat[rows].tolist(), times[0], metadata
 
 
-def products_from_ranges(range_bytes, day, retrieved_at, now):
+def products_from_ranges(range_bytes, day, retrieved_at, now, *, worldwide=False):
     source = UsedRanges(range_bytes)
-    values, lons, lats, stamp, metadata = decode(source, day)
+    values, lons, lats, stamp, metadata = decode(source, day, worldwide=worldwide)
     # Retain only bytes actually needed to replay this qualified decoding.
     source.cache = {offset: source.cache[offset] for offset in sorted(source.used)}
     native = source.archive(metadata)
     raw = pack_files({'smoc.ranges.json': native}, {'schema_version': '1', 'assets': {'smoc.ranges.json': {
         'url': source.url, 'original_object_bytes': source.size, 'etag': source.etag, 'last_modified': source.modified,
         'retained_range_bytes': sum(len(v) for v in source.cache.values()), 'range_blocks': len(source.cache),
-        'sha256': hashlib.sha256(native).hexdigest()}}, 'method': METHOD, 'native_metadata': metadata}, compression=zipfile.ZIP_DEFLATED)
+        'sha256': hashlib.sha256(native).hexdigest()}}, 'method': metadata['method'], 'native_metadata': metadata}, compression=zipfile.ZIP_DEFLATED)
     sha = hashlib.sha256(raw).hexdigest(); products = []
     for name, (suffix, title, standard_name) in VARIABLES.items():
         field = values[name]; present = [v for v in field if v is not None]
-        grid = ScientificGrid(width=len(lons), height=len(lats), west=-180, east=0, south=5, north=90,
+        grid = ScientificGrid(width=len(lons), height=len(lats), west=-180, east=180 if worldwide else 0, south=-80 if worldwide else 5, north=90,
             longitudes=lons, latitudes=lats, values=field, minimum=min(present) if present else None, maximum=max(present) if present else None, missing_cells=field.count(None),
-            resolution='Nativo1/12° (~8–9km); vista1° (180×85centros)', sampling=metadata['sampling']+' Centros lon−179,5…−0,5/lat89,5…5,5; sólo hora0/depth0.494025m. Posiciones CF originales.',
+            resolution=f'Nativo1/12° (~8–9km); vista1° ({len(lons)}×{len(lats)}centros)', sampling=metadata['sampling']+(' Centros lon−179,5…179,5/lat89,5…−79,5.' if worldwide else ' Centros lon−179,5…−0,5/lat89,5…5,5.')+' Sólo hora0/depth0.494025m. Posiciones CF originales.',
             quality_mask=f'_FillValue nativo {metadata["fills"][name]} o no finito→missing transparente. Cero y componentes negativas válidas. Sin flags de calidad adicionales; máscara de soporte no significa validación local.')
-        verification = Verification(method='HDF5/h5py frente a decodificación independiente de chunks crudos con zlib y deshacer shuffle;8.812.800Float32 coinciden bit a bit, incluidos rellenos. Ejes nativos completos cotejados con fórmula regular1/12°; tiempos CF1950 con timedelta y netCDF4 independientes. Profundidad, unidades, objetoETag y coordenadas conservados.',
-            original_url=source.url, checked_at=now, expected='4×1020×2160Float32 bitwise; CF/time/depth y relleno nativos',
-            actual=f'8.812.800valores coincidentes; {name}: {len(present)} centros visibles válidos/{len(field)}; tiempo {stamp.isoformat()}; depth {metadata["depth_m"]}m', passed=True)
-        products.append(ScientificProduct(id='d14-smoc-' + suffix, source_id='D14', title=title + ' · océano norte occidental',
+        count=metadata['native_values_bitwise_checked']
+        verification = Verification(method=f'HDF5/h5py frente a decodificación independiente de chunks crudos con zlib y deshacer shuffle;{count}Float32 coinciden bit a bit, incluidos rellenos. Ejes nativos completos cotejados con fórmula regular1/12°; tiempos CF1950 con timedelta y netCDF4 independientes. Profundidad, unidades, objetoETag y coordenadas conservados.',
+            original_url=source.url, checked_at=now, expected=f'{count}Float32 bitwise; CF/time/depth y relleno nativos',
+            actual=f'{count}valores coincidentes; {name}: {len(present)} centros visibles válidos/{len(field)}; tiempo {stamp.isoformat()}; depth {metadata["depth_m"]}m', passed=True)
+        products.append(ScientificProduct(id='d14-smoc-' + suffix, source_id='D14', title=title + (' · mundial' if worldwide else ' · océano norte occidental'),
             collection_id='GLOBAL_ANALYSISFORECAST_PHY_001_024 / ' + COLLECTION, product_version=f'edition202211 / filename R{day:%Y%m%d} / ETag{source.etag} / CF1.6',
             variable=name + ' / ' + standard_name, unit='m/s', native_unit='m s-1; Float32, sin escala/offset, least_significant_digit3 nativo', kind='forecast', representation='field',
             initialized_at=None, issued_at=None, observed_at=None, valid_from=stamp, valid_to=None,
@@ -128,11 +130,11 @@ def products_from_ranges(range_bytes, day, retrieved_at, now):
             retrieved_at=retrieved_at, ingested_at=now, original_url=DOC, license_url=LICENSE,
             attribution='E.U. Copernicus Marine Service Information (CMEMS), Mercator Ocean; fuentes nativas MERCATOR GLO12, mfwamglo, FES2014. Subconjunto y selección de centros por Earth Echo, originales por rangos conservados.',
             checksum_sha256=sha, scientific_checksum_sha256=hashlib.sha256(json.dumps({'etag': source.etag, 'url': source.url, 'variable': name, 'values': field, 'metadata': metadata}, sort_keys=True).encode()).hexdigest(),
-            byte_size=len(raw), raw_file=f'shared/{sha}.zip', coverage='Subconjunto norte occidental del modelo global:5–90°N,180–0°O, vista1° desde centros1/12°, una media horaria superficial a0,494025m. No cobertura mundial, perfiles verticales ni toda una sección de transporte.',
-            cadence_seconds=86400, method_version=METHOD, grid=grid, verification=verification,
+            byte_size=len(raw), raw_file=f'shared/{sha}.zip', coverage=('Dominio oceánico mundial del modelo:80°S–90°N,180°O–180°E, vista360×170centros1° desde malla1/12°, una media horaria superficial a0,494025m. Máscara nativa; sin perfiles verticales, otras horas o transporte de sección completo.' if worldwide else 'Subconjunto norte occidental del modelo global:5–90°N,180–0°O, vista1° desde centros1/12°, una media horaria superficial a0,494025m. No cobertura mundial, perfiles verticales ni toda una sección de transporte.'),
+            cadence_seconds=86400, method_version=metadata['method'], grid=grid, verification=verification,
             limitation='Pronóstico físico externo SMOC nativo, medias horarias superficiales; no corriente observada, trayectoria de objeto o modelo propio validado. '+
                 ('Componente total incluye circulación euleriana, deriva de oleaje y marea; no se confunde con corriente euleriana sola. ' if name in ('utotal', 'vtotal') else 'Componente euleriana separada de marea/deriva de oleaje; no se sustituye por componente total SMOC. ')+
-                f'Profundidad real0,494025m y coordenada temporal00:30UTC del archivo conservadas, sin asignar inicialización/emisión a medianoche desde nombre R. Máscara de relleno no acredita calidad local o ausencia de error. Vista1° no conserva extremos entre centros; valores nativos pertinentes reproducibles desde rangos de cuatro chunks. El objeto completo tiene{source.size}B y no se descarga completo; ETag multipart fuerte conserva versión, no se afirma SHA del archivo completo. No salinidad/temperatura, oxígeno, HAB/toxicidad, inundación costera, transporte AMOC o colapso inferidos de estas componentes.'))
+                f'Profundidad real0,494025m y coordenada temporal00:30UTC del archivo conservadas, sin asignar inicialización/emisión a medianoche desde nombre R. Máscara de relleno no acredita calidad local o ausencia de error. Vista1° no conserva extremos entre centros; valores nativos pertinentes reproducibles desde rangos de {16 if worldwide else 4} chunks. El objeto completo tiene{source.size}B y no se descarga completo; ETag multipart fuerte conserva versión, no se afirma SHA del archivo completo. No salinidad/temperatura, oxígeno, HAB/toxicidad, inundación costera, transporte AMOC o colapso inferidos de estas componentes.'))
     for suffix, pair, title in [('speed-total', ('utotal', 'vtotal'), 'Norma de corriente media total SMOC'), ('speed-eulerian', ('uo', 'vo'), 'Norma de corriente media euleriana')]:
         first, second = [products[list(VARIABLES).index(k)] for k in pair]
         field = [mean_velocity_norm(a, b) for a, b in zip(first.grid.values, second.grid.values, strict=True)]
@@ -162,7 +164,7 @@ def fetch_marine_currents(now):
     # Official product updates daily; before12UTC keep using preceding production day.
     day = now.replace(hour=0, minute=0, second=0, microsecond=0) - (timedelta(days=1) if now.hour < 12 else timedelta())
     url = scientific_url(day)
-    source = RangeSource(url, max_bytes=16_777_216, max_requests=128, deadline_seconds=240)
+    source = RangeSource(url, max_bytes=41_943_040, max_requests=320, deadline_seconds=540)
     current = read_product('d14-smoc-u-total', products_root())
     retrieved_at = now
     if current:
@@ -173,8 +175,8 @@ def fetch_marine_currents(now):
         previous = ArchivedRangeSource(cached)
         if (previous.url, previous.size, previous.etag) == (source.url, source.size, source.etag):
             source.cache.update(previous.cache); retrieved_at = current.retrieved_at
-    # Reading the four principal chunks once is enough for every field/analysis.
-    decode(source, day)
-    products, raw = products_from_ranges(source.archive({}), day, retrieved_at, now)
+    # Six outputs share16native compressed surface chunks, not the whole file.
+    decode(source, day, worldwide=True)
+    products, raw = products_from_ranges(source.archive({}), day, retrieved_at, now, worldwide=True)
     results = [publish(p, raw, '.zip') for p in products]
     return 'unchanged' if all(r == 'unchanged' for r in results) else 'stored'

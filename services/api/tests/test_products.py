@@ -82,6 +82,28 @@ def test_scheduler_cadence_failure_recovery_and_os_lock(tmp_path, monkeypatch):
         assert refresh.run_due(force=True)['status'] == 'already_running'
 
 
+def test_smoc_two_revision_retention_preserves_assets_referenced_by_other_fields(tmp_path):
+    import hashlib
+    stamp=datetime(2026,11,14,tzinfo=timezone.utc)
+    def edition(key,index):
+        raw=f'isolated storage exercise edition{index}'.encode();sha=hashlib.sha256(raw).hexdigest()
+        p=ScientificProduct(id=key,source_id='D14',title='Storage test fixture',collection_id='isolated-test',product_version=str(index),
+            variable='isolated-test',unit='m/s',native_unit='m/s',kind='forecast',representation='table',retrieved_at=stamp,ingested_at=stamp,
+            original_url='https://example.org/isolated-test',license_url='https://example.org',attribution='Test only',checksum_sha256=sha,byte_size=len(raw),raw_file=f'shared/{sha}.txt',
+            coverage='Isolated storage test only',cadence_seconds=86400,method_version='test',limitation='Never scientific/app data',
+            verification=Verification(method='storage fixture',original_url='https://example.org',checked_at=stamp,expected='fixture',actual='fixture',passed=True))
+        publish(p,raw,'.txt',tmp_path)
+        return p
+    v=edition('d14-smoc-v-total',1)
+    for i in range(1,4):u=edition('d14-smoc-u-total',i)
+    assert len(list((tmp_path/u.id/'revisions').glob('*.json')))==2
+    assert (tmp_path/v.raw_file).exists()  # old u revision pruned; v still needs it
+    edition(v.id,2);edition(v.id,3)
+    assert not (tmp_path/v.raw_file).exists()
+    assert len(list(tmp_path.glob('shared/*.txt')))==2
+    assert read_product(u.id,tmp_path).product_version=='3'
+
+
 def test_total_job_deadline_keeps_valid_and_continues_other_source(tmp_path, monkeypatch):
     import subprocess
     from types import SimpleNamespace
@@ -92,17 +114,17 @@ def test_total_job_deadline_keeps_valid_and_continues_other_source(tmp_path, mon
     monkeypatch.setattr(refresh, 'state_path', lambda:path)
     monkeypatch.setattr(refresh, 'jobs', lambda:{'slow':(3600,None), 'other':(3600,None)})
     calls = []
-    def spawn(args, **kwargs):
-        calls.append((args, kwargs))
+    def spawn(args, timeout):
+        calls.append((args, {'timeout':timeout}))
         if args[-2] == 'slow':
-            raise subprocess.TimeoutExpired(args, kwargs['timeout'])
+            raise TimeoutError(f'Source exceeded {timeout} seconds; worker tree terminated, previous retained')
         return SimpleNamespace(returncode=0, stdout='{"status":"unchanged"}')
-    monkeypatch.setattr(refresh.subprocess, 'run', spawn)
+    monkeypatch.setattr(refresh, 'run_source_worker', spawn)
     state = refresh.run_due(now=moment)
     assert state['jobs']['slow']['status'] == 'failed'
     assert state['jobs']['slow']['kept_previous'] is True
     assert state['jobs']['slow']['last_success_at'] == previous
-    assert 'child terminated' in state['jobs']['slow']['error']
+    assert 'worker tree terminated' in state['jobs']['slow']['error']
     assert state['jobs']['other']['status'] == 'unchanged'
     assert len(calls) == 2 and calls[0][1]['timeout'] == 180
     assert calls[0][0][-2:] == ['slow', moment.isoformat()]

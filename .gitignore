@@ -41,6 +41,7 @@ Thumbs.db
 .cache/
 data/operational/discovery/
 data/real/refresh/*.lock
+data/real/refresh/job-locks/
 data/real/refresh/state.json
 data/real/refresh/open-meteo-budget.json
 data/real/products/*/assets/

@@ -10,7 +10,7 @@ from earth_echo.connectors.http import download
 
 class RangeSource:
     def __init__(self,url: str,*,max_bytes=8_000_000,max_requests=48,deadline_seconds=120):
-        if not 30<=deadline_seconds<=420:raise ValueError('Scientific range deadline must be30…420seconds')
+        if not 30<=deadline_seconds<=600:raise ValueError('Scientific range deadline must be30…600seconds')
         self.url=url; self.max_bytes=max_bytes; self.max_requests=max_requests
         with urlopen(Request(url,method='HEAD',headers={'User-Agent':'EarthEcho/0.2'}),timeout=25,context=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)) as response:
             self.size=int(response.headers['Content-Length'])

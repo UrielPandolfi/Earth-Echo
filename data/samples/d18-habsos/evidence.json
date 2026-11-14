@@ -1,0 +1,35 @@
+{
+  "source_id": "D18",
+  "status": "pending_scientific_qualification",
+  "published_as_product": false,
+  "metadata_url": "https://gis.ncdc.noaa.gov/arcgis/rest/services/ms/HABSOS_CellCounts/MapServer/0?f=pjson",
+  "query_url": "https://gis.ncdc.noaa.gov/arcgis/rest/services/ms/HABSOS_CellCounts/MapServer/0/query?f=json&where=1%3D1&outFields=%2A&orderByFields=SAMPLE_DATE+DESC%2COBJECTID+DESC&resultRecordCount=10&outSR=4326&returnGeometry=true",
+  "assets": {
+    "layer.json": {
+      "sha256": "26ea54052bfdfdb5882cc23084511834d824083668ba64e3252c351e625888d2",
+      "bytes": 9090,
+      "retrieved_at": "2026-11-14T22:22:28.021014+00:00"
+    },
+    "latest-ten.json": {
+      "sha256": "9bd635b850883885830c860a44dd919dea3d812ab29fbfb1331519b5100b315f",
+      "bytes": 9133,
+      "retrieved_at": "2026-11-14T22:22:29.511061+00:00"
+    },
+    "empty-layer-metadata.xml": {
+      "sha256": "5a9f70ae7f098378514801b4168da6f7fb3a20c4cff9118710cb3bfcf4ceb720",
+      "bytes": 561,
+      "retrieved_at": "2026-11-14T22:24:26.568069+00:00"
+    }
+  },
+  "verified_facts": [
+    "Ten actual Karenia brevis records, units cells/L, all counts0 and CELLCOUNT_QA1 in this sample.",
+    "JSON geometry is WGS84; original latitude/longitude attributes also retained.",
+    "Metadata defines QA field as integer without coded domain; no timeInfo/dateFieldsTimeReference."
+  ],
+  "blockers": [
+    "No authoritative codebook for CELLCOUNT_QA found; do not label1 as good from another product convention.",
+    "Source collection-time convention needs confirmation beyond ArcGIS serialization; no unqualified collection UTC claimed.",
+    "Official NCCOS-linked https://habforecast.gcoos.org/ refused connection (WinError10061); no imported respiratory-risk forecast."
+  ],
+  "note": "Read-only access evidence; not an observation product, event, detector, or connected-source count. No credentials requested or accounts created."
+}

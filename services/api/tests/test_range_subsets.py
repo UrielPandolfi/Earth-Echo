@@ -36,3 +36,14 @@ def test_marine_monthly_horizon_includes_lead_definition_and_year_boundary():
     assert start==datetime(2027,1,1,tzinfo=timezone.utc)
     assert end==datetime(2027,2,1,tzinfo=timezone.utc)
     with pytest.raises(ValueError): month_window(initial,1.2)
+
+
+def test_extended_measured_deadline_remains_bounded_and_cached_reads_do_not_fetch(monkeypatch):
+    monkeypatch.setattr(ranges,'urlopen',lambda *a,**kw:Head())
+    source=ranges.RangeSource('https://example.org/data',deadline_seconds=540)
+    assert source.deadline_seconds==540
+    source.deadline=ranges.time.monotonic()-1
+    with pytest.raises(TimeoutError,match='540 seconds'):source.read_at(0,1)
+    source.cache[0]=b'abcdefghijkl'
+    assert source.read_at(0,1)==b'a' and source.requests==0
+    with pytest.raises(ValueError,match='30.*600'):ranges.RangeSource('https://example.org/data',deadline_seconds=601)

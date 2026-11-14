@@ -1,3 +1,6 @@
 # Preserve exact provider response bytes used by scientific access evidence.
 data/samples/d11-gwis/*.xml -text
 data/samples/integrations/sentinel3-check.csv -text
+data/samples/d18-habsos/layer.json -text
+data/samples/d18-habsos/latest-ten.json -text
+data/samples/d18-habsos/empty-layer-metadata.xml -text

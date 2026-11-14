@@ -64,8 +64,9 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
     atomic_json(active / product.id / 'current.json', product.model_dump(mode='json'))
     # Monthly CPC forecasts cover nine overlapping seasons. Retain enough
     # emissions for later horizon/season verification, still under the same
-    # byte budget. Other products keep four; experiment assets live elsewhere.
-    retention=24 if product.id in {'d48-roni-probabilities','d48-roni-strengths','d48-roni-outlook'} else 4
+    # byte budget. Large global SMOC archives keep two revisions; other
+    # products keep four. Experiment assets live elsewhere.
+    retention=24 if product.id in {'d48-roni-probabilities','d48-roni-strengths','d48-roni-outlook'} else 2 if product.id.startswith('d14-smoc-') else 4
     revisions = sorted(revision.parent.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
     for old in revisions[retention:]:
         previous = ScientificProduct.model_validate_json(old.read_bytes())

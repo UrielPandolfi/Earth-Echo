@@ -1,0 +1,380 @@
+{
+ "extent": {
+  "ymin": 2643944.5823528427,
+  "xmin": -10872057.030146839,
+  "ymax": 3696331.8067530147,
+  "xmax": -8713967.2878575791,
+  "spatialReference": {
+   "falseM": -100000,
+   "xyTolerance": 0.001,
+   "mUnits": 10000,
+   "zUnits": 10000,
+   "latestWkid": 3857,
+   "zTolerance": 0.001,
+   "wkid": 102100,
+   "xyUnits": 148923141.928385377,
+   "mTolerance": 0.001,
+   "falseX": -20037700,
+   "falseY": -30241100,
+   "falseZ": -100000
+  }
+ },
+ "maxRecordCount": 350000,
+ "datesInUnknownTimezone": false,
+ "ownershipBasedAccessControlForFeatures": {"allowOthersToQuery": true},
+ "type": "Feature Layer",
+ "maxSelectionCount": 2000,
+ "subtypes": [],
+ "relationships": [],
+ "cimVersion": "3.7.0",
+ "isDataArchived": false,
+ "id": 0,
+ "archivingInfo": {
+  "startArchivingMoment": -1,
+  "supportsQueryWithHistoricMoment": false
+ },
+ "spatialReference": {
+  "falseM": -100000,
+  "xyTolerance": 0.001,
+  "mUnits": 10000,
+  "zUnits": 10000,
+  "latestWkid": 3857,
+  "zTolerance": 0.001,
+  "wkid": 102100,
+  "xyUnits": 148923141.928385377,
+  "mTolerance": 0.001,
+  "falseX": -20037700,
+  "falseY": -30241100,
+  "falseZ": -100000
+ },
+ "subtypeFieldName": null,
+ "supportsStatistics": true,
+ "hasLastEditTime": false,
+ "uniqueIdInfo": {
+  "type": "simple",
+  "fields": ["OBJECTID"],
+  "OIDFieldContainsHashValue": false
+ },
+ "standardMaxRecordCount": 32000,
+ "isDataVersioned": false,
+ "supportsAdvancedQueries": true,
+ "parentLayer": null,
+ "subLayers": [],
+ "currentVersion": 12.1,
+ "referenceScale": 0,
+ "canScaleSymbols": false,
+ "name": "Cell Counts",
+ "displayField": "DESCRIPTION",
+ "fields": [
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "DESCRIPTION",
+   "length": 128,
+   "alias": "DESCRIPTION",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "LATITUDE",
+   "alias": "LATITUDE",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "LONGITUDE",
+   "alias": "LONGITUDE",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "STATE_ID",
+   "length": 2,
+   "alias": "STATE_ID",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SAMPLE_DATE",
+   "length": 8,
+   "alias": "SAMPLE_DATE",
+   "type": "esriFieldTypeDate"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SAMPLE_DEPTH",
+   "alias": "SAMPLE_DEPTH",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "GENUS",
+   "length": 32,
+   "alias": "GENUS",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SPECIES",
+   "length": 32,
+   "alias": "SPECIES",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "CATEGORY",
+   "length": 32,
+   "alias": "CATEGORY",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "CELLCOUNT",
+   "alias": "CELLCOUNT",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "CELLCOUNT_UNIT",
+   "length": 16,
+   "alias": "CELLCOUNT_UNIT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "CELLCOUNT_QA",
+   "alias": "CELLCOUNT_QA",
+   "type": "esriFieldTypeInteger"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SALINITY",
+   "alias": "SALINITY",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SALINITY_UNIT",
+   "length": 16,
+   "alias": "SALINITY_UNIT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SALINITY_QA",
+   "alias": "SALINITY_QA",
+   "type": "esriFieldTypeInteger"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WATER_TEMP",
+   "alias": "WATER_TEMP",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WATER_TEMP_UNIT",
+   "length": 16,
+   "alias": "WATER_TEMP_UNIT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WATER_TEMP_QA",
+   "alias": "WATER_TEMP_QA",
+   "type": "esriFieldTypeInteger"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WIND_DIR",
+   "alias": "WIND_DIR",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WIND_DIR_UNIT",
+   "length": 16,
+   "alias": "WIND_DIR_UNIT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WIND_DIR_QA",
+   "alias": "WIND_DIR_QA",
+   "type": "esriFieldTypeInteger"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WIND_SPEED",
+   "alias": "WIND_SPEED",
+   "type": "esriFieldTypeDouble"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WIND_SPEED_UNIT",
+   "length": 16,
+   "alias": "WIND_SPEED_UNIT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "WIND_SPEED_QA",
+   "alias": "WIND_SPEED_QA",
+   "type": "esriFieldTypeInteger"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "QA_COMMENT",
+   "length": 256,
+   "alias": "QA_COMMENT",
+   "type": "esriFieldTypeString"
+  },
+  {
+   "nullable": true,
+   "domain": null,
+   "name": "SHAPE",
+   "alias": "SHAPE",
+   "type": "esriFieldTypeGeometry"
+  },
+  {
+   "nullable": false,
+   "domain": null,
+   "name": "OBJECTID",
+   "alias": "OBJECTID",
+   "type": "esriFieldTypeOID"
+  }
+ ],
+ "maxRecordCountFactor": 1,
+ "dateFieldsTimeReference": null,
+ "preferredTimeReference": null,
+ "useStandardizedQueries": true,
+ "sourceSpatialReference": {
+  "wkt": "GEOGCS[\"Longitude / Latitude (NAD 83)\",DATUM[\"NAD 83\",SPHEROID[\"GRS 80\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Decimal Degree\",0.0174532925199433]]",
+  "falseM": -100000,
+  "xyTolerance": 8.983152841195215E-9,
+  "mUnits": 10000,
+  "wkt2": "GEOGCRS[\"Longitude / Latitude (NAD 83)\",DATUM[\"NAD 83\",ELLIPSOID[\"GRS 80\",6378137.0,298.257222101]],PRIMEM[\"Greenwich\",0.0],CS[ellipsoidal,2],AXIS[\"Longitude (lon)\",east,ORDER[1]],AXIS[\"Latitude (lat)\",north,ORDER[2]],ANGLEUNIT[\"Decimal Degree\",0.0174532925199433]]",
+  "zUnits": 10000,
+  "zTolerance": 0.001,
+  "xyUnits": 999999999.99999988,
+  "mTolerance": 0.001,
+  "falseX": -400,
+  "falseY": -400,
+  "falseZ": -100000
+ },
+ "description": "",
+ "maxUniqueIDCount": 100000,
+ "canModifyLayer": true,
+ "supportedSpatialRelationships": [
+  "esriSpatialRelIntersects",
+  "esriSpatialRelContains",
+  "esriSpatialRelCrosses",
+  "esriSpatialRelEnvelopeIntersects",
+  "esriSpatialRelIndexIntersects",
+  "esriSpatialRelOverlaps",
+  "esriSpatialRelTouches",
+  "esriSpatialRelWithin",
+  "esriSpatialRelRelation"
+ ],
+ "standardMaxRecordCountNoGeometry": 32000,
+ "indexes": null,
+ "htmlPopupType": "esriServerHTMLPopupTypeAsHTMLText",
+ "supportsDatumTransformation": true,
+ "minScale": 0,
+ "supportsDynamicLegends": true,
+ "hasAttachments": false,
+ "advancedQueryCapabilities": {
+  "supportsSqlExpression": true,
+  "supportsQueryWithResultType": true,
+  "supportsQueryRelatedPagination": true,
+  "supportsSqlFormat": false,
+  "useStandardizedQueries": true,
+  "supportsResultPaginationToken": false,
+  "supportsQueryWithCacheHint": false,
+  "supportsQueryWithDatumTransformation": true,
+  "supportsCurrentUserQueries": true,
+  "supportsQueryWithLodSR": false,
+  "supportsPagination": true,
+  "supportsMaxRecordCountFactor": false,
+  "supportsStatistics": true,
+  "supportsTrueCurve": true,
+  "supportsOrderBy": true,
+  "supportsLod": false,
+  "supportsQueryWithDistance": true,
+  "supportsCountDistinct": true,
+  "supportsAdvancedQueryRelated": true,
+  "supportsReturningQueryExtent": true,
+  "supportsDistinct": true,
+  "supportsTimeRelation": true,
+  "supportsQueryAnalytic": true,
+  "supportsPercentileStatistics": true,
+  "supportsHavingClause": true
+ },
+ "subtypeField": null,
+ "supportsCoordinatesQuantization": true,
+ "capabilities": "Map,Query,Data",
+ "maxScale": 0,
+ "supportsExceedsLimitStatistics": true,
+ "defaultVisibility": true,
+ "advancedQueryAnalyticCapabilities": {
+  "supportsAsync": false,
+  "supportsLinearRegression": true,
+  "supportsPercentileAnalytic": true
+ },
+ "hasMetadata": true,
+ "tileMaxRecordCount": 8000,
+ "typeIdField": null,
+ "defaultSubtypeCode": null,
+ "supportedQueryFormats": "JSON, geoJSON, PBF",
+ "hasLabels": false,
+ "drawingInfo": {
+  "renderer": {
+   "symbol": {
+    "imageData": "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAeUlEQVQYlZ3QsQlCUQyF4S/4lnAHVxGxsLWydg8bxVK0cALXUkR0hIgWcrn3FQ8PpEj4k5OkM1DdX2CmKea4Yx/h2oCZVjgWfctMkwjPeuK6chtjgUMNjnpW+9VK8IRtkX8sLw0YYZfphRke2ES49V4d4cw3Gg3+4xtsqBdNQiEBKQAAAABJRU5ErkJggg==",
+    "yoffset": 0,
+    "width": 7,
+    "xoffset": 0,
+    "angle": 0,
+    "type": "esriPMS",
+    "contentType": "image/png",
+    "url": "a25d01e9a8e1b6acc4f4de49572fcfbb",
+    "height": 7
+   },
+   "type": "simple"
+  },
+  "scaleSymbols": true,
+  "transparency": 0,
+  "labelingInfo": null
+ },
+ "geometryField": {
+  "name": "SHAPE",
+  "alias": "SHAPE",
+  "type": "esriFieldTypeGeometry"
+ },
+ "copyrightText": "",
+ "geometryType": "esriGeometryPoint"
+}
