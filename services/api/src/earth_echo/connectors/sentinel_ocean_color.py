@@ -16,6 +16,19 @@ BASE='https://coastwatch.noaa.gov/erddap'
 DATASET='noaacwS3AOLCIchlaDaily'
 
 
+def verify_csv(raw,stamp,lat,lon,expected):
+    rows=[row for row in csv.reader(io.StringIO(raw.decode())) if row]
+    if len(rows)!=3 or rows[0]!=['time','altitude','latitude','longitude','chlor_a'] or rows[1]!=['UTC','m','degrees_north','degrees_east','mg m^-3']:
+        raise ValueError('Independent Sentinel CSV columns/units disagree')
+    row=rows[2]
+    if len(row)!=5 or row[0]!=stamp or float(row[1])!=0 or not math.isclose(float(row[2]),lat,abs_tol=1e-7,rel_tol=0) or not math.isclose(float(row[3]),lon,abs_tol=1e-7,rel_tol=0):
+        raise ValueError('Independent Sentinel CSV date/altitude/coordinates disagree')
+    value=float(row[4])
+    if not math.isfinite(value) or not math.isclose(value,expected,rel_tol=1e-6,abs_tol=1e-6):
+        raise ValueError('Independent CSV disagrees with native Sentinel NetCDF')
+    return value
+
+
 def decode_sentinel(raw):
     ds=ClassicNetCdf(raw)
     if ds.attributes.get('platform')!='Sentinel-3A' or ds.attributes.get('institution')!='Copernicus Program':
@@ -59,9 +72,7 @@ def fetch_sentinel_chlorophyll(now:datetime):
     lat,lon=grid.latitudes[index//grid.width],grid.longitudes[index%grid.width]
     check_url=f'{BASE}/griddap/{DATASET}.csv?chlor_a[({stamp})][0][({lat})][({lon})]'
     csv_raw,_=download(check_url,max_bytes=10_000)
-    check=list(csv.reader(io.StringIO(csv_raw.decode())))
-    reference=float(check[2][check[0].index('chlor_a')])
-    if not math.isclose(reference,grid.values[index],rel_tol=1e-6,abs_tol=1e-6):raise ValueError('Independent CSV disagrees with native Sentinel NetCDF')
+    reference=verify_csv(csv_raw,stamp,lat,lon,grid.values[index])
     sha=hashlib.sha256(raw).hexdigest()
     return publish(ScientificProduct(id='d25-s3a-chlorophyll',source_id='D25',title='Clorofila · Sentinel-3A OC4Me · experimental',collection_id=DATASET,
         product_version=ds.attributes.get('history','').splitlines()[0]+'; OC4Me Experimental; baseline ESA no informado',
@@ -71,7 +82,7 @@ def fetch_sentinel_chlorophyll(now:datetime):
         attribution='Contains modified Copernicus Sentinel data. Copernicus Program / Sentinel-3A OLCI; procesamiento y distribución NOAA/NESDIS/STAR/CoastWatch.',
         checksum_sha256=sha,scientific_checksum_sha256=science_sha,byte_size=len(raw),raw_file=f'd25-s3a-chlorophyll/assets/{sha}.nc',
         coverage='Campo L3 de ámbito oceánico mundial; extensión exacta en grid y solo celdas válidas observadas/agregadas. Nubes/tierra/huecos quedan ausentes; no cobertura completa efectiva en cada día.',
-        cadence_seconds=86400,method_version='sentinel3a-oc4me-noaa-stride24-v1',grid=grid,
+        cadence_seconds=86400,method_version='sentinel3a-oc4me-noaa-stride24-v2',grid=grid,
         limitation='Producto Experimental OC4Me de Sentinel-3A, agregado geométrico L3 redistribuido/modificado por NOAA; no producto NASA OceanColor D17 ni escena Sentinel-2/InSAR. Es concentración de clorofila, no especie de alga, toxicidad, hipoxia ni enfermedad humana. La fecha es baseline del producto diario; se conserva aun con demora del proveedor. Resolución nativa publicada 0.0375° y vista cada 24 centros (0.9°), sin interpolar faltantes. Valores por encima de colorBarMaximum=64.7 se conservan: colorBar no es rango válido ni control de calidad. Escala log10 modifica solo color, no datos. No hay flags QA individuales en este subconjunto; graphics no se usó como calidad. No habilita detección de HAB ni pronóstico biológico. Otras rutas Sentinel-1/2/5P y descarga/procesamiento CDSE siguen pendientes de credenciales/permisos.',
-        verification=Verification(method='Máximo del NetCDF científico cotejado con CSV independiente por fecha/altitud/latitud/longitud; plataforma, unidades, algoritmo/estado experimental y ausencia NaN comprobados. Fuente Copernicus distinta de NASA, con atribución obligatoria conservada.',
+        verification=Verification(method='Máximo del NetCDF científico cotejado con CSV independiente; columnas y unidades UTC/m/degrees_north/degrees_east/mg m^-3, fecha, altitud cero y coordenadas devueltas comprobadas antes del valor. Plataforma, algoritmo/estado experimental y ausencia NaN comprobados. Fuente Copernicus distinta de NASA, con atribución obligatoria conservada.',
             original_url=check_url,checked_at=now,expected=str(reference)+' mg/m³',actual=str(grid.values[index])+' mg/m³',passed=True)),raw,'.nc')

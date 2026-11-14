@@ -32,3 +32,41 @@ def test_idempotence_ignores_request_history_but_keeps_original_processing_histo
     assert altered!=raw and decode_sentinel(altered)[3]==original
     processing=raw.replace(b'cwutils 3.6.1.3',b'cwutils 3.6.1.4')
     assert decode_sentinel(processing)[3]!=original
+
+
+def test_independent_csv_verifies_units_time_and_returned_coordinates():
+    from earth_echo.connectors.sentinel_ocean_color import verify_csv
+    raw=(ROOT/'sentinel3-check.csv').read_bytes()
+    args=('2026-11-10T12:00:00Z',36.65625,-87.28125,315.0909729003906)
+    assert verify_csv(raw,*args)==315.09097
+    for changed in [raw.replace(b'mg m^-3',b'g m^-3'),raw.replace(b'2026-11-10',b'2026-11-11'),raw.replace(b'36.65625',b'35.65625'),raw.replace(b'315.09097',b'999.00000')]:
+        with pytest.raises(ValueError):verify_csv(changed,*args)
+
+
+def test_full_ingestion_preserves_real_data_through_network_failure_and_recovery(tmp_path,monkeypatch):
+    import json
+    from datetime import datetime,timezone
+    from urllib.error import URLError
+    import earth_echo.connectors.sentinel_ocean_color as module
+    from earth_echo.storage.products import publish,read_product
+    raw=(ROOT/'sentinel3-chlorophyll.nc').read_bytes()
+    csv_raw=(ROOT/'sentinel3-check.csv').read_bytes()
+    stamp=decode_sentinel(raw)[1]
+    # Minimal discovery control response; scientific values and CSV are authentic fixtures.
+    info=json.dumps({'table':{'rows':[['attribute','time','actual_range','double',str(stamp.timestamp())]]}}).encode()
+    offline=False
+    def download(url,**kwargs):
+        if offline:raise URLError('offline verification')
+        return (info if '/info/' in url else csv_raw if '.csv?' in url else raw),{}
+    monkeypatch.setattr(module,'download',download)
+    monkeypatch.setattr(module,'publish',lambda p,data,suffix:publish(p,data,suffix,tmp_path))
+    now=datetime(2026,11,14,tzinfo=timezone.utc)
+    assert module.fetch_sentinel_chlorophyll(now)=='stored'
+    product=read_product('d25-s3a-chlorophyll',tmp_path)
+    assert module.fetch_sentinel_chlorophyll(now)=='unchanged'
+    offline=True
+    with pytest.raises(URLError):module.fetch_sentinel_chlorophyll(now)
+    assert read_product(product.id,tmp_path)==product
+    offline=False
+    assert module.fetch_sentinel_chlorophyll(now)=='unchanged'
+    assert len(list((tmp_path/product.id/'revisions').glob('*.json')))==1

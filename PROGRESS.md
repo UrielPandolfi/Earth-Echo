@@ -1,11 +1,11 @@
 # Progreso
 
-## Estado actual — 14 noviembre 2026, incrementos 11A–11T
+## Estado actual — 14 noviembre 2026, incrementos 11A–11U
 
 - 25 IDs del catálogo con productos científicos reales para alcances explícitos; 44 productos nuevos retenidos, 28 campos (tres calculados) y un análisis descriptivo RAPID. GIBS visual y CMR de descubrimiento se contabilizan aparte. No son 31 detectores.
 - 16.208 registros de observación, 2.475 históricos, dos indicadores importados y cero señales de evento calculadas en la última consulta verificada. Los contadores cambian sólo con consultas/actualizaciones reales; contexto estático y celdas no los inflan.
 - Tarea Windows de actualización activa; cadencias y recuperación en [docs/actualizacion.md](docs/actualizacion.md). Almacén ~213 MB, límite 256 MB, cuatro revisiones por producto. Conserva el último válido ante falla, sin salir de REAL.
-- 104 pruebas API, 24 web, contratos y build comprobados; API/originales y SHA de referencias intactos. Evidencia reproducible en `data/operational/integration_evidence.json` y capturas REAL en `docs/integraciones/`.
+- 106 pruebas API, 24 web, contratos y build comprobados; API/originales y SHA de referencias intactos. Evidencia reproducible en `data/operational/integration_evidence.json` y capturas REAL en `docs/integraciones/`. Sentinel-3 recibió un 502 después de una descarga válida: permanece en REAL, conserva esa descarga y tiene reintento programado.
 - Restan 13 fuentes numéricas sin conexión: D01/D02/D03/D17/D33 (Earthdata y autorización de cada DAAC), D08/D09/D41 (CDS y licencias), D10/D11 (EWDS/CEMS y licencias), D12 (ADS/CAMS), D14 (Marine) y D18 (producto numérico regional no acreditado o fuera de temporada). Las rutas alternativas públicas comprobadas no resuelven esos productos. Variables y enlaces exactos en [docs/accesos.md](docs/accesos.md); no hay cuentas creadas ni términos aceptados automáticamente.
 - También quedan ramas pendientes dentro de fuentes conectadas: Sentinel-1/2/5P autenticado, huellas RGI7 oficiales, ampliaciones MODIS, otras áreas/centros CAP, campos globales/regionales adicionales y validación científica de modelos. Se declara únicamente el producto/ámbito comprobado en la [matriz de 48 fuentes y 31 fenómenos](docs/integraciones.md). Las variables reservadas de acceso no equivalen a conectores implementados. El experimento SST sigue experimental.
 
@@ -477,6 +477,13 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Panel reducido con fondo opaco para que no atraviesen sus textos las etiquetas del mapa; proporciones/tokens de escritorio conservados. Botones Filtros/Detalle informan `aria-expanded`. La lista acotada de productos mantiene unidad/fecha/leyenda accesibles.
 - Medición REAL 900×650: inspector x560–900, contadores hasta548, zoom516–548, leyenda12–504, ancho documental900. A1100: inspector desde760, contadores/zoom hasta748; ambos paneles abiertos conservan espacio y sin desborde. Captura auténtica `real-inspector-900x650.jpg`, consola sin errores y tamaño temporal restaurado.
 - 24 pruebas web y build de producción pasaron tras el cambio. No cambió la ciencia ni se repitieron innecesariamente las 104 pruebas API ya aprobadas. Las ampliaciones restantes necesitan los accesos/productos listados arriba; no se declaran completas ni se sustituyen por imágenes o fixtures.
+
+## Incremento 11U — cotejo completo y falla externa real de Sentinel-3
+
+- La muestra CSV independiente se conserva tal como la devolvió el proveedor. El conector v2 exige columnas/unidades UTC/m/degrees_north/degrees_east/mg m^-3, fecha, altitud y coordenadas devueltas, antes de cotejar concentración. Rechaza una coincidencia numérica que corresponda a otra ubicación/fecha/unidad.
+- Prueba de ingestión completa con NetCDF/CSV auténticos: repetición sin duplicados, falla de transporte, conservación del producto anterior y recuperación. El control mínimo de descubrimiento del test es sintético explícito; no contiene valores científicos inventados. 106 pruebas API pasaron; código web y contratos no cambiaron desde sus comprobaciones aprobadas.
+- Verificación externa v2 satisfactoria 06:45:32 UTC. El siguiente intento, 06:46:19, recibió un 502 Proxy Error aun con los reintentos moderados. Se comprobó después por API que campo, original y valores válidos siguen disponibles; modo REAL sin sustitución. Tarea Windows sigue Running, reintento fijado a 07:01:19 UTC. No se afirma recuperación externa todavía; la prueba de recuperación controlada sí pasó.
+- Captura auténtica `real-sentinel3-network-failure.jpg` muestra campo, antigüedad, fallo, último éxito y próximo intento. Verificador pasó después del fallo para los 44 productos y 34 originales/86.108.038 bytes; resumen 106.752 bytes y contadores coherentes. La fecha científica continúa 10/11/2026, no se actualizó por la consulta ni se ocultó la demora.
 
 ## Pendientes heredados
 
