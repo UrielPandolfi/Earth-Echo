@@ -23,7 +23,7 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 | D17 | NASA Ocean Color | Fuente de observaciones | pending | Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada |
 | D18 | NOAA pronósticos ecológicos regionales | Pronóstico o producto científico existente | pending | Seleccionar servicio regional, variable/especie y archivo numérico |
 | D19 | FAO Locust Watch y Locust Hub | Fuente de observaciones | pending | Resolver capa FAO exportable y términos; Schistocerca gregaria solamente |
-| D20 | FAO ASIS | Pronóstico o producto científico existente | pending | Resolver exportación numérica/máscara agrícola; imagen no acredita valor |
+| D20 | FAO ASIS | Pronóstico o producto científico existente | /v1/products/d20-asi-pampa-s1 | Indicador externo de porcentaje de área agrícola con VHI<35 desde el comienzo del ciclo, con ponderación fenológica, según FAO. No es probabilidad, rendimiento, causa demostrada ni humedad del suelo. Solo Cropland/Season 1; referencia climatológica declarada por el ítem 1984–2024. La ventana nominal dekadal identifica la edición, no limita el período acumulado del índice. Los códigos especiales se conservan y enmascaran conservadoramente; su correspondencia individual con clases de leyenda no está publicada en la tabla consultada. La vista mundial gruesa no pasó el cotejo contra píxel nativo (overviews del proveedor): no se publica. |
 | D21 | USGS ComCat y FDSN | Fuente de observaciones | /v1/layers/d21-events | Consultar producto real; descubrimiento no cuenta como integración |
 | D22 | USGS pronóstico de réplicas | Pronóstico o producto científico existente | /v1/products/d22-oaf-recent | Probabilidades importadas, no hora/lugar garantizados de la próxima réplica. Un solo evento reciente publicado; el producto no existe para todos los sismos. Modelo del proveedor: Reasenberg-Jones (1989, 1994) aftershock model (Bayesian Combination). |
 | D23 | Smithsonian Global Volcanism Program | Dataset histórico; Geometría o contexto estático | /v1/products/d23-holocene-inventory | Contexto estático, no una red de sensores ni un pronóstico de erupción. Elevación y año de última erupción conservan la definición del inventario. |
@@ -74,7 +74,7 @@ Observación puede ser parcial; un dato de contexto no habilita un detector. «s
 | F13 | Inundaciones repentinas | specified | specified | specified | specified | specified |
 | F14 | Escasez de agua | specified | specified | specified | specified | specified |
 | F15 | Peligro de incendios | specified | specified | specified | specified | specified |
-| F16 | Estrés agrícola | partial | specified | specified | specified | specified |
+| F16 | Estrés agrícola | partial | partial | specified | specified | specified |
 | F17 | El Niño y La Niña | specified | partial | specified | specified | specified |
 | F18 | Olas de calor marinas | partial | specified | specified | partial | specified |
 | F19 | Estrés térmico de corales | partial | partial | partial | specified | experimental |

@@ -41,6 +41,7 @@ El pedido actual amplía las integraciones del catálogo completo, por increment
 - 11E: trayectorias IBTrACS recientes, con calidad nativa y corte del antimeridiano.
 - 11F: polígonos CAP de ciclones GDACS y estado operativo en el inspector.
 - 11G: batimetría GEBCO_2026 y TID nativos por celda en un recorte verificable.
-- Siguiente: ASIS numérico e indicadores sobre insumos retenidos. Mantener bloqueos por credencial, permiso, volumen o definición científica; un paso no cierra otro producto del mismo proveedor.
+- 11H: ASIS numérico nativo de Pampa, con estación/máscara y rechazo de overview discrepante.
+- Siguiente: observaciones FAO de langosta del desierto e indicadores sobre insumos retenidos. Mantener bloqueos por credencial, permiso, volumen o definición científica; un paso no cierra otro producto del mismo proveedor.
 
 React, TypeScript y Vite en `apps/web`. CesiumJS como motor del globo, con Natural Earth II mientras no haya una decisión de imaginería con token. FastAPI en `services/api`. PostgreSQL con PostGIS es la dirección de almacenamiento geográfico para cuando exista una fase de datos persistidos; esta fase no lo exige. Redis y colas quedan fuera hasta que haya un trabajo asíncrono concreto.

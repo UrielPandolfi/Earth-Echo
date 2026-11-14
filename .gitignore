@@ -29,6 +29,7 @@ __pycache__/
 *.grib2
 *.tif
 *.tiff
+!data/samples/integrations/asis-native-excerpt.tif
 *.grb
 
 # Sistema y editores

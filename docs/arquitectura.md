@@ -32,6 +32,8 @@ Las áreas CAP conservan estado y urgencia aunque el mensaje sea pasado; `todate
 
 GEBCO usa subconjuntos numéricos OPeNDAP y TID de la misma edición/coordenadas. La comprobación binaria detecta magic HDF5/CDF antes de elegir lector; no intenta abrir un NetCDF clásico como HDF5 recorriendo el archivo. `quality_values` se alinea por celda y su leyenda identifica tipo de fuente, sin convertirlo en confianza. El datum nominal MSL y su heterogeneidad se conservan; no se usa la grilla para navegación ni hidráulica.
 
+ASIS se resuelve desde el catálogo FAO y se bloquea por OBJECTID, estación y máscara de cultivo. Solo se publican exportaciones F32 sin renderer que coinciden con getSamples, a centros nativos. Los overviews del servicio no se tratan como valores nativos cuando el cotejo discrepa. Códigos especiales fuera del dominio porcentual se conservan por celda y enmascaran sin adivinar categorías. Una ventana dekadal de edición no reemplaza el período acumulado del indicador desde el comienzo del ciclo.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

@@ -135,6 +135,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F06',{})['observation'] = ('partial','Trayectorias históricas/provisionales IBTrACS de sistemas con posición en los últimos 30 días. Conservan agencia, viento nativo y calidad. No hay trayectoria futura ni validación de forecasts emitidos.')
     if 'd35-cyclone-cap-areas' in available:
         overrides_by_id.setdefault('F06',{})['indicator'] = ('partial','Mensajes/áreas CAP de ciclón GDACS, incluidos estados pasados y cancelaciones. Puntaje importado, no probabilidad ni detector propio; vigencia por mensaje.')
+    if any(p.source_id=='D20' for p in products):
+        overrides_by_id.setdefault('F16',{})['indicator'] = ('partial','ASI FAO numérico nativo de Pampa, Cropland/Season 1: porcentaje agrícola afectado desde inicio del ciclo. Códigos especiales enmascarados; no probabilidad ni rendimiento. Vista mundial gruesa rechazada por discrepancia con píxel nativo.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

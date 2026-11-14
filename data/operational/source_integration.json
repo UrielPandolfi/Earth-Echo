@@ -145,6 +145,13 @@
       "sample_path": "data/real/products/d31-gebco-caribe/current.json",
       "credential_variables": [],
       "detail": "Batimetría y TID GEBCO · Caribe (Recorte del Caribe 85–84° O, 17–18° N; original nominal mundial no descargado completo.)"
+    },
+    "D20": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d20-asi-pampa-s1/current.json",
+      "credential_variables": [],
+      "detail": "ASI FAO · pampa · estación 1 (Cropland, Season 1; recorte nativo ~2° de Pampa. Bordes exactos en grid; no cobertura mundial acreditada.)"
     }
   }
 }

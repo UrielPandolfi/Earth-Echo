@@ -262,9 +262,11 @@
       "Pronóstico o producto científico existente"
     ],
     "official_url": "https://www.fao.org/giews/earthobservation/access.jsp",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Resolver exportación numérica/máscara agrícola; imagen no acredita valor",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d20-asi-pampa-s1"
+    ],
+    "blocker_or_next_step": "Indicador externo de porcentaje de área agrícola con VHI<35 desde el comienzo del ciclo, con ponderación fenológica, según FAO. No es probabilidad, rendimiento, causa demostrada ni humedad del suelo. Solo Cropland/Season 1; referencia climatológica declarada por el ítem 1984–2024. La ventana nominal dekadal identifica la edición, no limita el período acumulado del índice. Los códigos especiales se conservan y enmascaran conservadoramente; su correspondencia individual con clases de leyenda no está publicada en la tabla consultada. La vista mundial gruesa no pasó el cotejo contra píxel nativo (overviews del proveedor): no se publica.",
     "limits": "Indicador de estrés no equivale a toneladas de cosecha perdidas. El rendimiento necesita estadísticas de producción y prácticas agrícolas."
   },
   {

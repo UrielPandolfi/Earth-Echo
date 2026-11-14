@@ -36,7 +36,7 @@ export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocu
   const p = product;
   const samples = p.samples ?? [];
   const selected = samples.find(s=>s.id===selectedId);
-  const jobKey=p.source_id==='D04' ? `mod13q1-${p.id.split('-').at(-1)}` : p.source_id==='D05' ? `mod11a2-${p.id.split('-').at(-1)}` : p.source_id==='D07' ? 'd07-ifs-24h' : p.source_id==='D16' ? 'd16-mhw-monthly' : p.id;
+  const jobKey=p.source_id==='D04' ? `mod13q1-${p.id.split('-').at(-1)}` : p.source_id==='D05' ? `mod11a2-${p.id.split('-').at(-1)}` : p.source_id==='D07' ? 'd07-ifs-24h' : p.source_id==='D16' ? 'd16-mhw-monthly' : p.source_id==='D20' ? 'd20-asi-s1' : p.id;
   const job=refreshStatus?.jobs?.[jobKey];
   const chartSamples = p.representation === 'planetary' ? samples.slice(-60) : [];
   const present = chartSamples.flatMap(s=>s.value === null || s.value === undefined ? [] : [s.value]);
@@ -53,7 +53,7 @@ export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocu
         <div><dt>Recuperado</dt><dd>{p.retrieved_at} UTC</dd></div><div><dt>Emisión</dt><dd>{p.issued_at ?? 'No proporcionada'}</dd></div><div><dt>Validez</dt><dd>{p.valid_from ?? 'No aplica'} — {p.valid_to ?? 'No aplica'}</dd></div>
         <div><dt>Cadencia</dt><dd>{p.cadence_seconds / 3600} h; se conserva el dato si falla la actualización</dd></div></dl>
       {p.grid && <><h3>Campo geográfico</h3><p>{p.grid.width} × {p.grid.height} · {p.grid.resolution}</p><p className="fine">{p.grid.sampling}</p><p className="fine">Máscara: {p.grid.quality_mask}</p></>}
-      {p.grid?.quality_values && <section><h3>Tipo de fuente por celda</h3><p className="fine">Códigos alineados con la malla, accesibles en la API y el original conservado. No son confianza.</p>{Object.entries(p.grid.quality_legend ?? {}).map(([code,label])=><p key={code} className="fine">{code}: {label} · {p.grid!.quality_values!.filter(v=>v===Number(code)).length.toLocaleString('es')} celdas</p>)}</section>}
+      {p.grid?.quality_values && <section><h3>Calidad y códigos por celda</h3><p className="fine">Códigos alineados con la malla, accesibles en la API y el original conservado. No son confianza.</p>{Object.entries(p.grid.quality_legend ?? {}).map(([code,label])=><p key={code} className="fine">{code}: {label} · {p.grid!.quality_values!.filter(v=>v===Number(code)).length.toLocaleString('es')} celdas</p>)}</section>}
       {samples.length > 0 && <><h3>{samples.length} registros · {p.unit}</h3><div className="product-table"><table><thead><tr><th>Registro / UTC</th><th>Valor</th></tr></thead><tbody>{samples.slice(-40).map(s => <tr key={s.id}><td>{s.time ?? s.id}{s.valid_to ? ` → ${s.valid_to}` : ''}<br/><small>{Object.entries(s.attributes ?? {}).slice(0, 4).map(([k,v]) => `${k}: ${v ?? 'ausente'}`).join(' · ')}</small>{s.probability_definition && <details><summary>Definición de probabilidad</summary>{s.probability_definition}</details>}</td><td>{s.value === null ? 'Ausente' : s.value}</td></tr>)}</tbody></table></div></>}
       <h3>Comprobación independiente</h3><p className="fine">{p.verification.method}. Original: {p.verification.expected}; decodificado: {p.verification.actual}.</p>
       <h3>Procedencia</h3><p className="fine">{p.attribution} · {p.byte_size.toLocaleString('es')} bytes · SHA-256 {p.checksum_sha256}</p>

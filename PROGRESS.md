@@ -355,6 +355,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - API, campo, leyenda, calidad por celda, original e inspector disponibles. Actualización mensual en tarea Windows; repetición e idempotencia registradas. 18 fuentes con datos, 30 productos nuevos y 23 campos. No habilita profundidad de inundación, simulación costera ni navegación.
 - 79 pruebas API, contratos y build de producción pasaron. Se conservan dos respuestas ASCII auténticas pequeñas para probar valores y ejes. Continúa FAO ASIS: GeoTIFF flotante y `getSamples` ya entregaron el mismo 58,5; máscara/estación/período todavía en implementación.
 
+## Incremento 11H — ASIS agrícola numérico
+
+- D20 FAO ASIS: `ASI_D/8457`, `ASIS.ASI-D.2026-11-D1.GS1.LC-C`, Cropland/Season 1. Se resolvieron catálogo oficial, metadatos, nombre/estación, origen nativo y exportación F32 sin renderer. Muestra inicial de Pampa de 66 kB cotejada contra getSamples (58,5 %). La ampliación mundial a 1° no coincidió con el píxel nativo por selección de overviews del servicio: se rechazó, sin publicarla como campo científico verificado.
+- Producto publicado: recorte nativo ~2° de Pampa, 224×224 (~1 km), bordes alineados al origen. Valores 0–43,5 %, 10.186 faltantes; máximo 43,5 cotejado con consulta independiente al mismo OBJECTID. 251/253/254 conservados como códigos especiales y transparentes, sin asignarles significados individuales no publicados en la tabla consultada. Cero porcentual válido permanece cero.
+- ASI es porcentaje de superficie agrícola afectada en unidades administrativas desde el inicio del ciclo, con VHI<35 y ponderación fenológica según FAO. No es observación independiente por celda, probabilidad, rendimiento ni humedad del suelo. La ventana 01–11 noviembre UTC identifica la edición dekadal, no el comienzo del período acumulado ni una emisión conocida.
+- Original GeoTIFF, metadatos, leyenda, consulta y comprobación compartidos en un activo de 374.275 bytes. Repetición `unchanged`, una revisión, aunque la URL temporal de exportación cambia: identidad basada en el GeoTIFF completo y contexto científico. Revisión diaria en tarea instalada; acceso sin cuenta. Conserva limitación regional y estación elegida.
+- 19 fuentes con datos, 31 productos nuevos y 24 campos. 81 pruebas API, contratos y build pasaron; fixture GeoTIFF auténtico comprueba rango, códigos, faltantes y coordenadas. Captura REAL de Pampa en `docs/integraciones/`.
+- Continúa la búsqueda numérica de langosta del desierto y los indicadores reproducibles sobre insumos retenidos. No se declara conectada una capa por aparecer en ArcGIS.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
