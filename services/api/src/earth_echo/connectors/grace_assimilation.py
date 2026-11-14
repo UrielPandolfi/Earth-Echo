@@ -11,6 +11,7 @@ from netCDF4 import num2date
 from earth_echo.connectors.http import download
 from earth_echo.contracts.products import ScientificProduct,ScientificGrid,Verification
 from earth_echo.storage.products import publish
+from earth_echo.connectors.scientific_archive import pack_files as pack
 
 PAGE='https://nasagrace.unl.edu/GlobalData.aspx?p=current'
 BASE='https://nasagrace.unl.edu/globaldata/current/'
@@ -29,14 +30,6 @@ def text(value):
 
 def scalar(value):
     return np.asarray(value).reshape(-1).item(0)
-
-
-def pack(files,manifest):
-    out=io.BytesIO()
-    with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_STORED) as z:
-        for name,raw in sorted({**files,'manifest.json':json.dumps(manifest,sort_keys=True).encode()}.items()):
-            z.writestr(zipfile.ZipInfo(name,date_time=(1980,1,1,0,0,0)),raw)
-    return out.getvalue()
 
 
 def decode_grace(raw):

@@ -116,6 +116,8 @@ def capability_matrix() -> CapabilityMatrix:
             overrides_by_id.setdefault(fid,{})['forecast'] = ('partial','IFS externo mundial de temperatura del aire a 2 m, plazo +24 h; no es un detector de ola de calor/frío ni de helada agrícola.')
     if 'd07-ifs-tp-24h' in available:
         overrides_by_id['F01']['forecast'] = ('partial','Precipitación determinista IFS acumulada 0–24 h, mundial, m convertidos a mm. Sin percentiles de extremo ni probabilidad calibrada.')
+    if 'd01-imerg-grand-climatology' in available:
+        overrides_by_id['F01']['observation'] = ('blocked','Hay una climatología mundial IMERG Final V07B de junio 2000–mayo 2023, en mm/año, como referencia histórica agregada. No es lluvia reciente ni la colección Early; la observación actual requiere todavía acceso Earthdata/PPS y un conector separado. No habilita detector/anomalía de precipitación por sí sola.')
     overrides_by_id.setdefault('F19',{})['experimental_model'] = ('experimental','Experimento de anomalía mensual SST del Caribe, sin habilidad adicional frente a persistencia. No pronostica daño de coral.')
     if 'd13-oisst-global' in available:
         overrides_by_id.setdefault('F18',{})['observation'] = ('partial','SST diaria mundial OISST v2.1, preliminar; sin climatología diaria y duración no se diagnostica una ola de calor marina.')

@@ -1,14 +1,11 @@
 {
   "sources": {
     "D01": {
-      "integration_status": "credential_required",
-      "sample_kind": null,
-      "sample_path": null,
-      "credential_variables": [
-        "EARTHDATA_USERNAME",
-        "EARTHDATA_PASSWORD"
-      ],
-      "detail": "IMERG Early en GES DISC (GPM_3IMERGHHE, versión 07) y el GeoTIFF de PPS piden Earthdata o una cuenta PPS. No hay credencial en este entorno. No se inventó una URL de archivo ni se reemplazó la precipitación con otro producto."
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d01-imerg-grand-climatology/current.json",
+      "credential_variables": [],
+      "detail": "Precipitación media anual · climatología IMERG Final · 2000–2023 (Climatología mundial de precipitación media anual, junio 2000–mayo 2023; no todas las celdas polares cumplen la cobertura mínima. Un campo histórico agregado, no observaciones actuales.)"
     },
     "D02": {
       "integration_status": "credential_required",
@@ -172,7 +169,7 @@
       "sample_kind": "verified_scientific_product",
       "sample_path": "data/real/products/d06-viirs-noaa20-sa/current.json",
       "credential_variables": [],
-      "detail": "FIRMS · anomalías térmicas NOAA-20 · Sudamérica (15977 detecciones únicas del archivo regional Sudamérica 24h publicado; 15176 cumplen máscara visual. El intervalo real se conserva aunque el archivo publicado tenga demora. Cero registros significa archivo vacío comprobado, no ausencia regional de fuego.)"
+      "detail": "FIRMS · anomalías térmicas NOAA-20 · Sudamérica (10244 detecciones únicas del archivo regional Sudamérica 24h publicado; 9822 cumplen máscara visual. El intervalo real se conserva aunque el archivo publicado tenga demora. Cero registros significa archivo vacío comprobado, no ausencia regional de fuego.)"
     },
     "D26": {
       "integration_status": "connected",

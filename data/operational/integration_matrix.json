@@ -3,12 +3,15 @@
     "id": "D01",
     "name": "NASA GPM IMERG",
     "classification": [
-      "Fuente de observaciones"
+      "Fuente de observaciones",
+      "Dataset histórico"
     ],
     "official_url": "https://gpm.nasa.gov/data/imerg",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d01-imerg-grand-climatology"
+    ],
+    "blocker_or_next_step": "Referencia histórica de precipitación media anual IMERG Final V07B, junio 2000–mayo 2023. No representa lluvia reciente, el acumulado de un año concreto, tendencia ni pronóstico. Final incorpora calibración tardía: no reproduce la información disponible en tiempo real. Sin observaciones recientes compatibles no habilita anomalías, SPI, probabilidades ni detección de extremos/sequía. NASA exige ≥90% de entradas válidas; no se descargaron conteos o incertidumbre por celda. Se cotejaron todos los valores, máscaras y coordenadas NetCDF/TIFF. Un archivo auxiliar WorldFile defectuoso se conserva y excluye; los ejes CF y la georreferenciación interna del TIFF coinciden. IMERG Early/Late/Final recientes siguen pendientes de acceso Earthdata/PPS y conector separado.",
     "limits": "Es precipitación estimada, no futura. Las diferencias entre Early y Final importan en pruebas históricas. No usar Final como si hubiese estado disponible ese día."
   },
   {
