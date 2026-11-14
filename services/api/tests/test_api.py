@@ -81,6 +81,21 @@ def test_catalog_counts_come_from_the_file(client: TestClient) -> None:
     assert missing.status_code == 404
 
 
+def test_provider_report_reads_an_atomically_updated_integration_without_restart(client,tmp_path,monkeypatch):
+    import earth_echo.catalog.overlay as overlay
+    from earth_echo.storage.products import atomic_json
+    path=tmp_path/'data/operational/source_integration.json'
+    monkeypatch.setattr(overlay,'repo_root',lambda:tmp_path)
+    atomic_json(path,{'sources':{'D01':{'integration_status':'credential_required','detail':'Recent rain requires authorization'}}})
+    first=client.get('/providers').json()
+    assert first['providers'][0]['integration_status']=='credential_required'
+    atomic_json(path,{'sources':{'D01':{'integration_status':'connected','detail':'Published historical climatology only; recent rain still pending'}}})
+    second=client.get('/providers').json()
+    assert second['providers'][0]['integration_status']=='connected'
+    assert 'climatology only' in second['providers'][0]['detail']
+    assert second['live_probe']=='not_performed'  # No network health claim.
+
+
 def test_signal_modes_stay_separate(client: TestClient) -> None:
     real = client.get("/signals", params={"phenomenon_id": "F11", "mode": "real"})
     demo = client.get("/signals", params={"phenomenon_id": "F11", "mode": "demo"})

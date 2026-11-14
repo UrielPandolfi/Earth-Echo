@@ -1,7 +1,7 @@
 """Regenerate the working matrix from the unchanged original catalogue and local evidence."""
 import json
 from earth_echo.paths import repo_root
-from earth_echo.storage.products import all_products
+from earth_echo.storage.products import all_products,atomic_json
 
 OBS = {1,2,4,5,6,13,15,17,19,21,25,28,34}
 SCI = {3,7,9,10,11,12,14,15,16,18,20,22,24,27,28,29,33,35,48}
@@ -79,7 +79,7 @@ def main():
     if (root/'data/real/feeds/d28-kp.json').exists():
         overlay['sources']['D28']={'integration_status':'connected','sample_kind':'retained_observation_and_forecast','sample_path':'data/real/feeds/d28-kp.json','credential_variables':[],
             'detail':'Kp planetario observado y forecast SWPC de filas predicted, actualización separada de observación/validez. Emisión e inicialización no proporcionadas quedan null; recuperación no las sustituye. Sin intensidad local ni validación de modelo propio.'}
-    overlay_path.write_text(json.dumps(overlay,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    atomic_json(overlay_path,overlay)
 
 if __name__ == '__main__':
     main()

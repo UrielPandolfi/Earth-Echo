@@ -158,6 +158,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto RGI7 de áreas y puntos representativos nativos en una muestra de Alaska. No se descargaron huellas ni observaciones de lagunas, diques o vaciamientos; ese inventario no habilita observación/predicción GLOF.')
     if 'd26-rgi60-patagonia-outlines' in available:
         overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto de áreas/puntos RGI7 en Alaska y contornos históricos RGI 6.0 de una selección de 38 glaciares grandes en Patagonia, con épocas de imagen 2000–2003. Versiones separadas, sin compararlas para inferir retroceso. No hay observaciones de lagunas, diques o vaciamientos y los inventarios no habilitan observación/predicción GLOF.')
+    if 'd26-rgi7-global-large-glaciers' in available:
+        overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto RGI7 mundial de áreas y puntos nativos de glaciares ≥50 km², seleccionado de 274531 registros completos en el original, y contornos históricos RGI6 de Patagonia. No son observaciones actuales de lagunas, diques o vaciamientos. Versiones separadas, sin inferir retroceso o GLOF por comparar sus áreas; predicción de vaciamiento sigue no disponible.')
     if 'd34-amoc-monthly' in available:
         overrides_by_id.setdefault('F31',{})['observation'] = ('partial','Serie observacional procesada RAPID v2024-2, 248 medias mensuales abril 2004–noviembre 2024 en 26,5° N, con transporte AMOC/calor/agua dulce. No observación mundial o actual ni fecha de colapso; tendencia/inferencia científica siguen separadas.')
     if 'd25-s3a-chlorophyll' in available:

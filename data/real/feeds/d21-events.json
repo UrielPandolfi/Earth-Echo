@@ -1,10 +1,10 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T10:57:11Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T10%3A57%3A11Z&endtime=2026-11-14T10%3A57%3A11Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "3c47e88c55630aa249b2fa5d450996c088e1bb5965b12d55adbeec66f9e54a61",
-  "byte_size": 87321,
-  "raw_file": "assets\\d21-events\\3c47e88c55630aa249b2fa5d450996c088e1bb5965b12d55adbeec66f9e54a61.json",
+  "retrieved_at": "2026-11-14T11:57:59Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T11%3A57%3A59Z&endtime=2026-11-14T11%3A57%3A59Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "7cbc6991ef49f3f1d1d00c30ec70ed901fe5ae5ee6c97287dd28d0284c4e8273",
+  "byte_size": 85899,
+  "raw_file": "assets\\d21-events\\7cbc6991ef49f3f1d1d00c30ec70ed901fe5ae5ee6c97287dd28d0284c4e8273.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
@@ -18,7 +18,7 @@
       "magnitude": 5.5,
       "magnitude_type": "mww",
       "review_status": "reviewed",
-      "updated_at": "2026-11-14T10:42:06.040000Z",
+      "updated_at": "2026-11-14T11:32:21.086000Z",
       "time": "2026-11-14T09:26:13Z",
       "place": "northern Mid-Atlantic Ridge"
     },
@@ -774,7 +774,7 @@
       "magnitude": 4.5,
       "magnitude_type": "mb",
       "review_status": "reviewed",
-      "updated_at": "2026-11-12T00:23:39.040000Z",
+      "updated_at": "2026-11-14T11:11:08.117000Z",
       "time": "2026-11-10T22:09:07Z",
       "place": "61 km ENE of Blangpidie, Indonesia"
     },
@@ -1461,30 +1461,6 @@
       "updated_at": "2026-11-07T16:13:31.040000Z",
       "time": "2026-11-07T15:05:45Z",
       "place": "Fiji region"
-    },
-    {
-      "id": "us7000twrt",
-      "longitude": -12.8595,
-      "latitude": -18.1601,
-      "depth_km": 10.0,
-      "magnitude": 4.9,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-14T08:31:04.040000Z",
-      "time": "2026-11-07T11:35:38Z",
-      "place": "southern Mid-Atlantic Ridge"
-    },
-    {
-      "id": "us7000twrq",
-      "longitude": 141.4515,
-      "latitude": 36.2184,
-      "depth_km": 28.0,
-      "magnitude": 5.5,
-      "magnitude_type": "mww",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-14T08:40:35.566000Z",
-      "time": "2026-11-07T11:07:42Z",
-      "place": "77 km NE of Hasaki, Japan"
     }
   ]
 }

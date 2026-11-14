@@ -32,6 +32,7 @@ import {
   type PlacedMarker,
 } from "./geography";
 import type { GlobeHandle, GlobeMarker } from "./lifecycle";
+import { visibleSymbols } from './screen-symbols';
 import type { FieldGrid } from "../demo/explore";
 
 export type GlobeStatus =
@@ -183,8 +184,7 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     occluder.cameraPosition = camera.positionWC;
     const width = container.clientWidth;
     const height = container.clientHeight;
-    const selected = selectedId ? markers.get(selectedId) : undefined;
-    const projected = (selected ? [selected] : []).map((marker) => {
+    const projected = [...markers.values()].map((marker) => {
       const position = Cartesian3.fromDegrees(marker.longitude, marker.latitude, 0, globe.ellipsoid, scratch);
       const visibleToCamera = occluder.isPointVisible(position);
       const screen = SceneTransforms.worldToWindowCoordinates(scene, position, windowPosition);
@@ -200,9 +200,16 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
           marker.latitude,
         ),
         priority: marker.priority,
+        width: marker.symbol==='cluster' ? 48 : 12,
+        height: marker.symbol==='cluster' ? 32 : 12,
       };
     });
-    overlayListener?.(placeMarkers(projected, width, height));
+    const visible=visibleSymbols(projected,width,height,selectedId);
+    for(let index=0;index<billboards.length;index++){
+      const billboard=billboards.get(index);
+      billboard.show=visible.has(String(billboard.id));
+    }
+    overlayListener?.(placeMarkers(projected.filter(p=>p.id===selectedId), width, height));
   };
 
   const onFrame = () => publishOverlays();

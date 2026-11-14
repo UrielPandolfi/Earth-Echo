@@ -49,7 +49,7 @@ export function ProductsPanel({ data, selected, activeProduct, refreshStatus, on
       {forceGrouping && <p className="hint">Este conjunto requiere agrupación para limitar el globo a 1.500 símbolos. Cada grupo conserva su cantidad real; todos los registros siguen seleccionables en la tabla.</p>}
       <p className="hint">{kpText ?? 'Kp no disponible'}</p>
       <p className="hint">31 fenómenos especificados en el catálogo. Las celdas de los campos no se cuentan como señales.</p>
-      <p className="hint">IMERG reciente, SMAP y GLDAS: acceso Earthdata/PPS pendiente. La climatología IMERG es una referencia histórica. Detalles en docs/accesos.md.</p>
+      <p className="hint">Al superponerse símbolos se prioriza uno en pantalla; todos los registros permanecen en la tabla y pueden seleccionarse.</p><p className="hint">IMERG reciente, SMAP y GLDAS: acceso Earthdata/PPS pendiente. La climatología IMERG es una referencia histórica. Detalles en docs/accesos.md.</p>
     </div></aside>;
 }
 

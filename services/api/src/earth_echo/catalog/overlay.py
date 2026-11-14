@@ -2,6 +2,7 @@
 
 import json
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field
 
@@ -21,11 +22,18 @@ class IntegrationOverlay(ApiModel):
     sources: dict[CatalogSourceId, SourceIntegration]
 
 
-@lru_cache
-def load_overlay() -> IntegrationOverlay:
-    path = repo_root() / "data" / "operational" / "source_integration.json"
+@lru_cache(maxsize=2)
+def _load_revision(path: Path, revision: tuple[int,int,int]) -> IntegrationOverlay:
+    # The version key includes the atomic replacement's file identity as well as
+    # mtime/size. Repeated per-source lookups share parsing, not stale status.
     payload = json.loads(path.read_text(encoding="utf-8"))
     return IntegrationOverlay.model_validate(payload)
+
+
+def load_overlay() -> IntegrationOverlay:
+    path = repo_root() / "data" / "operational" / "source_integration.json"
+    info=path.stat()
+    return _load_revision(path,(info.st_mtime_ns,info.st_size,info.st_ino))
 
 
 def integration_status_for(source_id: str) -> IntegrationStatus:
