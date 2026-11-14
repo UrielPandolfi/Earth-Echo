@@ -250,9 +250,11 @@
       "Fuente de observaciones"
     ],
     "official_url": "https://www.fao.org/locust-watch/activities/dlis-home/early-warning/en",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Resolver capa FAO exportable y términos; Schistocerca gregaria solamente",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d19-desert-locust-surveys"
+    ],
+    "blocker_or_next_step": "Reportes de campo de Schistocerca gregaria, incluidos NO LOCUST/ABSENT. Cada punto es un reporte y no un enjambre detectado; no se cuenta número de individuos ni se infiere riesgo fuera del muestreo. Categorías y calidad son originales. Sin trayectoria migratoria futura, probabilidad ni reproducción inferida. Fecha reportada UTC; la hora textual no se convierte sin definición adicional. El servicio público no publica licencia específica en el ítem: se conserva esa limitación y atribución FAO.",
     "limits": "Un satélite no cuenta directamente las langostas. Ausencia de observaciones de campo no prueba ausencia de plaga."
   },
   {

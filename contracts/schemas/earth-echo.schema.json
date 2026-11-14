@@ -1544,6 +1544,18 @@
           "default": null,
           "title": "Value"
         },
+        "category": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category"
+        },
         "probability": {
           "anyOf": [
             {
@@ -2524,6 +2536,17 @@
         "coverage": {
           "title": "Coverage",
           "type": "string"
+        },
+        "extent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GeographicExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "cadence_seconds": {
           "exclusiveMinimum": 0,

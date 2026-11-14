@@ -48,6 +48,7 @@ class ProductSample(ApiModel):
     longitude: float | None = Field(default=None, ge=-180, le=180)
     latitude: float | None = Field(default=None, ge=-90, le=90)
     value: float | None = None
+    category: str | None = None
     probability: float | None = Field(default=None, ge=0, le=1)
     probability_definition: str | None = None
     quality: str
@@ -115,6 +116,7 @@ class ScientificProduct(ApiModel):
     byte_size: int = Field(gt=0)
     raw_file: str = Field(pattern=r'^(?:shared|[a-z0-9-]+/assets)/[0-9a-f]{64}\.[a-z0-9]+$')
     coverage: str
+    extent: GeographicExtent | None = None
     cadence_seconds: int = Field(gt=0)
     method_version: str
     limitation: str

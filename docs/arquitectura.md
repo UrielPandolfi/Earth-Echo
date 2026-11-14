@@ -34,6 +34,8 @@ GEBCO usa subconjuntos numéricos OPeNDAP y TID de la misma edición/coordenadas
 
 ASIS se resuelve desde el catálogo FAO y se bloquea por OBJECTID, estación y máscara de cultivo. Solo se publican exportaciones F32 sin renderer que coinciden con getSamples, a centros nativos. Los overviews del servicio no se tratan como valores nativos cuando el cotejo discrepa. Códigos especiales fuera del dominio porcentual se conservan por celda y enmascaran sin adivinar categorías. Una ventana dekadal de edición no reemplaza el período acumulado del indicador desde el comienzo del ciclo.
 
+Las observaciones categóricas usan `ProductSample.category`, sin codificar presencia/ausencia como un número físico inventado. RAMSES conserva incluso los reportes de ausencia y separa fecha UTC publicada de hora textual sin definición adicional. Extensión por producto habilita foco explícito de reportes regionales. Búsqueda/paginación del inspector permiten seleccionar cualquier registro aun si varios puntos comparten coordenadas; el contador sigue contando reportes de la consulta, no individuos o enjambres.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

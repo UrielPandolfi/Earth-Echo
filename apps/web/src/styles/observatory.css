@@ -533,6 +533,10 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
   .search { max-width: none; }
 }
 .product-table { overflow: auto; max-height: 25rem; }
+.record-search { display: grid; gap: 5px; margin: 10px 12px; color: var(--text-dim); }
+.record-search input { width: 100%; box-sizing: border-box; padding: 6px; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--bg-sunken); color: var(--text); }
+.record-link { border: 0; padding: 0; color: var(--accent); background: transparent; text-align: left; cursor: pointer; }
+.record-pages { display: flex; gap: 8px; margin: 8px 12px; }
 .product-table table { width: 100%; font-size: .8rem; border-collapse: collapse; }
 .product-table td, .product-table th { text-align: left; padding: .4rem; border-bottom: 1px solid var(--border, #334155); }
 .inspector .fine { overflow-wrap: anywhere; }

@@ -364,6 +364,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - 19 fuentes con datos, 31 productos nuevos y 24 campos. 81 pruebas API, contratos y build pasaron; fixture GeoTIFF auténtico comprueba rango, códigos, faltantes y coordenadas. Captura REAL de Pampa en `docs/integraciones/`.
 - Continúa la búsqueda numérica de langosta del desierto y los indicadores reproducibles sobre insumos retenidos. No se declara conectada una capa por aparecer en ArcGIS.
 
+## Incremento 11I — observaciones RAMSES de langosta del desierto
+
+- D19 FAO Locust Hub: se siguió el WebMap oficial hasta `Ramses_Observations_Dashboard_View/0` (ítem `ed8228a11a2547178cdf4ab002464efb`, propietario `faodlis_hqfao`). El grupo genérico del Hub contenía elementos ajenos; no se usaron como evidencia. Consulta UTC de siete días, máximo 200: 49 reportes actuales de Mauritania (20 ADULT, 19 HOPPER y 10 NO LOCUST).
+- Categoría biológica explícita, sin cantidad de individuos inventada. Las ausencias reportadas no son enjambres ni seguridad regional. Coordenadas GeoJSON cotejadas con atributos nativos y una consulta Esri JSON por OBJECTID; coordenadas inválidas quedan sin pin. `Obs_Date` se conserva UTC y `Observation_Time` permanece texto, sin inventar una hora de observación. Confirmación/fiabilidad son etiquetas del proveedor, no probabilidades.
+- API, puntos, agrupación e inspector reutilizados. Encuadre de Mauritania solo al pulsar cobertura; selección por tabla/búsqueda accede también a registros superpuestos. Tabla paginada de 40 permite acceder a todos los registros conservados, incluyendo los más recientes; ya no se limita a los últimos cuarenta del array.
+- Original y metadatos retenidos (57.292 bytes en revisión final). El ítem no declara licencia específica; se conserva esa limitación, la atribución y el enlace a condiciones FAO. No se extrapola a langostas sudamericanas ni se integra migración futura por tener observaciones. Una consulta sin reportes se coteja por count=0 sin inferir ausencia de la especie.
+- Repetición final `unchanged`: tres revisiones de desarrollo antes/después, sin duplicado nuevo; identidad incluye todos los reportes y excluye solo los límites de petición variables. Cadencia diaria en tarea Windows. 20 fuentes con datos, 32 productos nuevos y 24 campos.
+- 83 pruebas API, 20 web, contratos y build pasaron. Fixture GeoJSON auténtico comprueba categorías, fecha, fiabilidad y posición; captura REAL de Mauritania con reporte NO LOCUST seleccionado. Continúa con indicadores reproducibles sobre IFS retenido y accesos numéricos pendientes.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

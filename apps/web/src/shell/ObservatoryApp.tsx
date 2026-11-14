@@ -370,6 +370,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
       {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} activeProduct={activeProduct} refreshStatus={refreshStatus} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
         const g = activeProduct?.grid;
         if (g) setFrameRequest({west:g.west, east:g.east, north:g.north, south:g.south, crossesAntimeridian:false});
+        else if (activeProduct?.extent) {
+          const e=activeProduct.extent;
+          setFrameRequest({west:e.west,east:e.east,south:e.south,north:e.north,crossesAntimeridian:e.crosses_antimeridian});
+        }
       }} quakesOn={state.realQuakes} quakeCount={quakes.length} onQuakes={() => dispatch({type:'toggle-quakes'})} kpText={kpText} error={productError ?? layerError} grouped={state.groupOnZoom} onGroup={()=>dispatch({type:'group'})}/> : <FilterPanel
         state={state}
         onToggleCategory={(id) => dispatch({ type: "toggle-category", id })}
@@ -447,7 +451,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
-      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} refreshStatus={refreshStatus} selectedId={state.realSelectedId?.replace('product-point:','').split(':area:')[0] ?? null} onRegionFocus={region=>{
+      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} refreshStatus={refreshStatus} selectedId={state.realSelectedId?.replace('product-point:','').split(':area:')[0] ?? null} onSampleSelect={id=>dispatch({type:'real-select',id:`product-point:${id}`})} onRegionFocus={region=>{
         dispatch({type:'real-select',id:`product-point:${region.sample_id}`});
         setFrameRequest({west:region.extent.west,east:region.extent.east,south:region.extent.south,north:region.extent.north,crossesAntimeridian:region.extent.crosses_antimeridian});
       }} onTrackFocus={track=>{

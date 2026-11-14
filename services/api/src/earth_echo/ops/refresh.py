@@ -71,6 +71,7 @@ def jobs() -> dict:
     from earth_echo.connectors.gdacs import fetch_gdacs
     from earth_echo.connectors.gebco import fetch_gebco
     from earth_echo.connectors.asis import fetch_asis
+    from earth_echo.connectors.locusts import fetch_locusts
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -87,6 +88,7 @@ def jobs() -> dict:
         'd35-cyclone-cap-areas':(21600,fetch_gdacs),
         'd31-gebco-caribe':(2592000,fetch_gebco),
         'd20-asi-s1':(86400,fetch_asis),
+        'd19-desert-locust-surveys':(86400,fetch_locusts),
     }
 
 def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:

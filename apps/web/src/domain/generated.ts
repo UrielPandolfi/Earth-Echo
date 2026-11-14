@@ -254,6 +254,7 @@ export interface ProductSample {
   longitude?: number | null;
   latitude?: number | null;
   value?: number | null;
+  category?: string | null;
   probability?: number | null;
   probability_definition?: string | null;
   quality: string;
@@ -399,6 +400,7 @@ export interface ScientificProduct {
   byte_size: number;
   raw_file: string;
   coverage: string;
+  extent?: GeographicExtent | null;
   cadence_seconds: number;
   method_version: string;
   limitation: string;

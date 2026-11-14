@@ -152,6 +152,13 @@
       "sample_path": "data/real/products/d20-asi-pampa-s1/current.json",
       "credential_variables": [],
       "detail": "ASI FAO · pampa · estación 1 (Cropland, Season 1; recorte nativo ~2° de Pampa. Bordes exactos en grid; no cobertura mundial acreditada.)"
+    },
+    "D19": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d19-desert-locust-surveys/current.json",
+      "credential_variables": [],
+      "detail": "Langosta del desierto · reportes RAMSES (Consulta de siete días, máximo 200 reportes. Muestra actual: 49 registros en Mauritania. Ámbito de langosta del desierto; no traslada el riesgo a Sudamérica.)"
     }
   }
 }
