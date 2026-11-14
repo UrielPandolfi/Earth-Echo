@@ -17,3 +17,16 @@ export function groupMarkers(points: GlobeMarker[], degrees: number, selected: s
   }
   return singles;
 }
+
+/** Bound GPU symbols, preserving every record in counts and the selected point. */
+export function realMarkersForView(points: GlobeMarker[], height: number, enabled: boolean, selected: string | null): GlobeMarker[] {
+  const budget=1500;
+  let degrees=enabled ? height>22_000_000 ? 12 : height>8_000_000 ? 8 : height>2_000_000 ? 3 : 0 : 0;
+  if(points.length>budget) degrees=Math.max(degrees,.05);
+  let shown=groupMarkers(points,degrees,selected);
+  while(shown.length>budget && degrees>0 && degrees<180){
+    degrees*=2;
+    shown=groupMarkers(points,degrees,selected);
+  }
+  return shown;
+}

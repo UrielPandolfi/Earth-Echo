@@ -76,9 +76,11 @@
       "Fuente de observaciones"
     ],
     "official_url": "https://firms.modaps.eosdis.nasa.gov/api/",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d06-viirs-noaa20-sa"
+    ],
+    "blocker_or_next_step": "Anomalías térmicas observadas: pueden incluir incendios, volcanes y antorchas de gas. Un píxel nominal 375 m no es perímetro quemado, incendio único, área quemada ni probabilidad de ignición. FRP integrada del píxel en MW; brillo I4/I5 en K, scan/track km. Tiempos de adquisición UTC a resolución de minuto; publicación/emisión exacta desconocida. Calidad nativa low/nominal/high: low y FRP ausente no se dibujan, conservando coordenadas y valores en tabla/original. Consulta regional de un sensor, no cobertura global ni ausencia garantizada entre pasadas. Archivo 24h puede estar atrasado: se muestran las fechas reales. No requiere MAP_KEY para esta descarga pública; API por área/fecha es otro acceso.",
     "limits": "Detecta fuego o calor existente. Un punto no es el perímetro completo ni una predicción de ignición. Conservar identificador del sensor."
   },
   {

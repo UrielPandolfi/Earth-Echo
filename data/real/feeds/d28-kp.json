@@ -1,56 +1,16 @@
 {
   "source_id": "D28",
-  "retrieved_at": "2026-11-13T22:53:40Z",
+  "retrieved_at": "2026-11-14T01:27:05Z",
   "query": "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json",
-  "checksum_sha256": "7fa8dd71dedbf8ac7b0391210a96ce36aa00129019956f4df95d204b7fc581b0",
-  "byte_size": 4880,
-  "raw_file": "assets\\d28-kp\\7fa8dd71dedbf8ac7b0391210a96ce36aa00129019956f4df95d204b7fc581b0.json",
+  "checksum_sha256": "5bb24ec97626509a4ceb0a33ab063deba9f066d53cc1292963dc203022b99a4f",
+  "byte_size": 4339,
+  "raw_file": "assets\\d28-kp\\5bb24ec97626509a4ceb0a33ab063deba9f066d53cc1292963dc203022b99a4f.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "global_index",
   "unit": "Kp",
   "note": "Índice planetario. No es la intensidad local producida por una fulguración.",
   "rows": [
-    {
-      "time": "2026-11-06T00:00:00Z",
-      "kp": 2.33,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T03:00:00Z",
-      "kp": 0.67,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T06:00:00Z",
-      "kp": 2.67,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T09:00:00Z",
-      "kp": 2.33,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T12:00:00Z",
-      "kp": 2.0,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T15:00:00Z",
-      "kp": 2.0,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T18:00:00Z",
-      "kp": 2.33,
-      "station_count": 8
-    },
-    {
-      "time": "2026-11-06T21:00:00Z",
-      "kp": 3.33,
-      "station_count": 8
-    },
     {
       "time": "2026-11-07T00:00:00Z",
       "kp": 3.0,
@@ -323,6 +283,11 @@
     },
     {
       "time": "2026-11-13T18:00:00Z",
+      "kp": 0.67,
+      "station_count": 8
+    },
+    {
+      "time": "2026-11-13T21:00:00Z",
       "kp": 0.67,
       "station_count": 8
     }

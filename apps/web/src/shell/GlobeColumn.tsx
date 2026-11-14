@@ -101,7 +101,7 @@ export function GlobeColumn({
         <ul className="symbol-legend">
           {state.dataMode==='real' ? <li><span style={{color:'#acb5c3'}}>●</span> Inventario (si seleccionado)</li> : null}
           {tracks?.length ? <li><span style={{color:'#e7bf74'}}>━</span> Trayectoria histórica</li> : null}
-          {regions?.length ? <li><span style={{color:'#e7bf74'}}>▱</span> Área publicada · ver vigencia</li> : null}
+          {regions?.length ? <li><span style={{color:'#e7bf74'}}>▱</span> Geometría publicada · ver ficha</li> : null}
           <li><SymbolMark kind="observation" /> Observación</li>
           <li><SymbolMark kind="risk" /> Riesgo</li>
           <li><SymbolMark kind="forecast" /> Pronóstico</li>

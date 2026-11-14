@@ -166,6 +166,13 @@
       "sample_path": "data/real/products/d32-basins-south-america/current.json",
       "credential_variables": [],
       "detail": "HydroATLAS · cuencas de Sudamérica (31 unidades de nivel 03 con HYBAS_ID que comienza 603, Sudamérica; 31 geometrías válidas dibujadas. SUB_AREA/UP_AREA/topología nativos; no todos los atributos interpretados.)"
+    },
+    "D06": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d06-viirs-noaa20-sa/current.json",
+      "credential_variables": [],
+      "detail": "FIRMS · anomalías térmicas NOAA-20 · Sudamérica (15977 detecciones únicas del archivo regional Sudamérica 24h publicado; 15176 cumplen máscara visual. El intervalo real se conserva aunque el archivo publicado tenga demora. Cero registros significa archivo vacío comprobado, no ausencia regional de fuego.)"
     }
   }
 }

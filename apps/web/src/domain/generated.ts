@@ -241,6 +241,8 @@ export interface ProductList {
   field_products: number;
   calculated_field_products?: number;
   observation_records: number;
+  historical_records?: number;
+  imported_indicator_records?: number;
   calculated_signals: number;
   catalog_phenomena: number;
   products: ScientificProduct[];
@@ -257,6 +259,7 @@ export interface ProductRegion {
 
 export interface ProductSample {
   id: string;
+  map_eligible?: boolean;
   time?: string | null;
   valid_to?: string | null;
   longitude?: number | null;

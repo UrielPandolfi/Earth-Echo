@@ -75,6 +75,7 @@ def jobs() -> dict:
     from earth_echo.connectors.asis import fetch_asis
     from earth_echo.connectors.locusts import fetch_locusts
     from earth_echo.connectors.hydroatlas import fetch_hydroatlas
+    from earth_echo.connectors.firms import fetch_firms
     from earth_echo.ingest.derived_fields import derive_ifs_fields
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
@@ -95,6 +96,7 @@ def jobs() -> dict:
         'd19-desert-locust-surveys':(86400,fetch_locusts),
         'd07-derived-fields':(43200,derive_ifs_fields),
         'd32-basins-south-america':(2592000,fetch_hydroatlas),
+        'd06-viirs-noaa20-sa':(10800,fetch_firms),
     }
 
 def execute_job(name, runner, moment):

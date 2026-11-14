@@ -1442,6 +1442,16 @@
           "title": "Observation Records",
           "type": "integer"
         },
+        "historical_records": {
+          "default": 0,
+          "title": "Historical Records",
+          "type": "integer"
+        },
+        "imported_indicator_records": {
+          "default": 0,
+          "title": "Imported Indicator Records",
+          "type": "integer"
+        },
         "calculated_signals": {
           "title": "Calculated Signals",
           "type": "integer"
@@ -1512,6 +1522,11 @@
         "id": {
           "title": "Id",
           "type": "string"
+        },
+        "map_eligible": {
+          "default": true,
+          "title": "Map Eligible",
+          "type": "boolean"
         },
         "time": {
           "anyOf": [

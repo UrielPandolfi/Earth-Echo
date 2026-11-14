@@ -43,6 +43,7 @@ class ScientificGrid(ApiModel):
 
 class ProductSample(ApiModel):
     id: str
+    map_eligible: bool = True
     time: UtcDateTime | None = None
     valid_to: UtcDateTime | None = None
     longitude: float | None = Field(default=None, ge=-180, le=180)
@@ -150,6 +151,8 @@ class ProductList(ApiModel):
     field_products: int
     calculated_field_products: int = 0
     observation_records: int
+    historical_records: int = 0
+    imported_indicator_records: int = 0
     calculated_signals: int
     catalog_phenomena: int
     products: list[ScientificProduct]

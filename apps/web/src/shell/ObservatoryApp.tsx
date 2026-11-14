@@ -26,7 +26,7 @@ import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 import type { ProductList, ScientificProduct,RefreshStatus } from '../domain/generated';
 import { ProductsPanel, ProductInspector } from '../real/Products';
-import { groupMarkers } from '../globe/clustering';
+import { realMarkersForView } from '../globe/clustering';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 
@@ -313,7 +313,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   };
   const shownMarkers: GlobeMarker[] =
     state.dataMode === "real"
-      ? groupMarkers([
+      ? realMarkersForView([
           ...(productKey === 'archive' && realObservation?.spatial.geometry
             ? [
                 {
@@ -327,7 +327,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 },
               ]
             : []),
-          ...(activeProduct?.representation === 'points' || activeProduct?.representation === 'tracks' ? (activeProduct.samples ?? []).filter(s=>activeProduct.representation!=='tracks' || activeProduct.tracks?.some(t=>t.sample_ids[t.sample_ids.length-1]===s.id)).flatMap(s => s.longitude === null || s.longitude === undefined || s.latitude === null || s.latitude === undefined ? [] : [{
+          ...(activeProduct?.representation === 'points' || activeProduct?.representation === 'tracks' ? (activeProduct.samples ?? []).filter(s=>s.map_eligible!==false && (activeProduct.representation!=='tracks' || activeProduct.tracks?.some(t=>t.sample_ids[t.sample_ids.length-1]===s.id))).flatMap(s => s.longitude === null || s.longitude === undefined || s.latitude === null || s.latitude === undefined ? [] : [{
             id:`product-point:${s.id}`,title:s.attributes?.nombre ?? s.id,longitude:s.longitude,latitude:s.latitude,priority:1,note:s.quality,symbol:activeProduct.kind === 'static_context' ? 'context' as const : 'observation' as const,
           }]) : []),
           ...(state.realQuakes
@@ -341,7 +341,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 symbol: "observation" as const,
               }))
             : []),
-        ],clusterDegreesFor(cameraHeight,state.groupOnZoom),state.realSelectedId)
+        ],cameraHeight,state.groupOnZoom,state.realSelectedId)
       : markers;
   const shownField =
     state.dataMode === "real" ? (activeProduct?.grid ? paintSstField({...activeProduct.grid, observation_id: activeProduct.id, unit: activeProduct.unit}) : productKey === 'archive' && realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
