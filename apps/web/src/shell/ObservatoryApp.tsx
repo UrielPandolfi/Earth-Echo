@@ -411,7 +411,9 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           }
           emptyText={
             state.dataMode === "real"
-              ? realView?.status === "available"
+              ? activeProduct?.representation==='time_series'
+                ? 'Serie regional disponible en el inspector; no hay pines ni una malla espacial para este producto.'
+                : realView?.status === "available"
                 ? undefined
                 : realError
                   ? `${realError} El escenario DEMO no se usó como reemplazo.`

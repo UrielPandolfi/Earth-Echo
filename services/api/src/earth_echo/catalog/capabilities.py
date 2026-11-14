@@ -150,6 +150,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F24',{})['observation'] = ('partial',f'Inventario GVP y reportes preliminares de actividad geolocalizados, cotejados RSS/CAP. Emisión del archivo {edition.issued_at.isoformat()}; puede estar atrasado, sin acreditar actividad mundial actual ni vigilancia instrumental continua. Categorías publicadas, sin fecha/probabilidad de erupción próxima.')
     if 'd26-rgi7-alaska-attributes' in available:
         overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto RGI7 de áreas y puntos representativos nativos en una muestra de Alaska. No se descargaron huellas ni observaciones de lagunas, diques o vaciamientos; ese inventario no habilita observación/predicción GLOF.')
+    if 'd34-amoc-monthly' in available:
+        overrides_by_id.setdefault('F31',{})['observation'] = ('partial','Serie observacional procesada RAPID v2024-2, 248 medias mensuales abril 2004–noviembre 2024 en 26,5° N, con transporte AMOC/calor/agua dulce. No observación mundial o actual ni fecha de colapso; tendencia/inferencia científica siguen separadas.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

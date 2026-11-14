@@ -403,7 +403,7 @@ export interface ScientificProduct {
   unit: string;
   native_unit: string;
   kind: "observation" | "indicator" | "forecast" | "historical" | "static_context" | "orbital_assessment";
-  representation: "field" | "points" | "planetary" | "table" | "regions" | "tracks";
+  representation: "field" | "points" | "planetary" | "table" | "regions" | "tracks" | "time_series";
   observed_at?: string | null;
   observation_end?: string | null;
   initialized_at?: string | null;

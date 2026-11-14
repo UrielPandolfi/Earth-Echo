@@ -2488,7 +2488,8 @@
             "planetary",
             "table",
             "regions",
-            "tracks"
+            "tracks",
+            "time_series"
           ],
           "title": "Representation",
           "type": "string"

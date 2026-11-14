@@ -26,6 +26,15 @@ function line(points: Array<{ x: number; y: number }>): string {
   return points.map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`).join(" ");
 }
 
+function seriesPath(points:Array<{x:number;y:number|null;kind:DemoSeriesPoint['kind']}>,kind:DemoSeriesPoint['kind']):string {
+  let connected=false;
+  return points.map(p=>{
+    if(p.y===null || p.kind!==kind){connected=false;return '';}
+    const command=connected?'L':'M';connected=true;
+    return `${command}${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+  }).filter(Boolean).join(' ');
+}
+
 export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
   const min = domain?.min ?? -48;
   const max = domain?.max ?? 4;
@@ -37,10 +46,10 @@ export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
   }));
   const observed = placed.filter((point) => point.kind === "observed" && point.y !== null);
   const forecast = placed.filter((point) => point.kind === "forecast" && point.y !== null);
-  const bridge =
-    observed.length > 0 && forecast.length > 0
-      ? [observed[observed.length - 1], forecast[0]]
-      : [];
+  const firstForecast=placed.findIndex(p=>p.kind==='forecast' && p.y!==null);
+  const previous=placed[firstForecast-1];
+  const bridge=previous?.kind==='observed' && previous.y!==null ? [previous,placed[firstForecast]] : [];
+  const labelIndices=new Set(Array.from({length:6},(_,i)=>Math.round(i*(points.length-1)/5)));
   const band = placed.filter((point) => point.low !== undefined && point.high !== undefined && point.y !== null);
   const bandPath =
     band.length > 0
@@ -56,19 +65,19 @@ export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
           <g key={tick}>
             <line className="chart-grid" x1={padX} x2={width - 4} y1={yOf(tick, min, max)} y2={yOf(tick, min, max)} />
             <text className="chart-tick" x={2} y={yOf(tick, min, max) + 3}>
-              {tick}
+              {tick.toLocaleString('es',{maximumFractionDigits:2})}
             </text>
           </g>
         ))}
         {bandPath ? <path className="chart-band" d={bandPath} /> : null}
-        {observed.length > 1 ? <path className="chart-observed" d={line(observed.map((point) => ({ x: point.x, y: point.y ?? 0 })))} /> : null}
+        {observed.length > 1 ? <path className="chart-observed" d={seriesPath(placed,'observed')} /> : null}
         {bridge.length === 2 ? (
           <path
             className="chart-forecast"
             d={line(bridge.map((point) => ({ x: point.x, y: point.y ?? 0 })))}
           />
         ) : null}
-        {forecast.length > 1 ? <path className="chart-forecast" d={line(forecast.map((point) => ({ x: point.x, y: point.y ?? 0 })))} /> : null}
+        {forecast.length > 1 ? <path className="chart-forecast" d={seriesPath(placed,'forecast')} /> : null}
         {placed.map((point) =>
           point.y === null ? (
             <text key={point.label} className="chart-gap" x={point.x} y={height - 2}>
@@ -80,7 +89,7 @@ export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
         )}
       </svg>
       <div className="chart-labels">
-        {points.map((point) => (
+        {points.filter((_,i)=>points.length<=6 || labelIndices.has(i)).map((point) => (
           <span key={point.label}>{point.label}</span>
         ))}
       </div>

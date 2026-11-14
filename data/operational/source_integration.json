@@ -180,6 +180,13 @@
       "sample_path": "data/real/products/d26-rgi7-alaska-attributes/current.json",
       "credential_variables": [],
       "detail": "RGI 7 · áreas y puntos representativos · muestra de Alaska (953 registros completos iniciales del CSV global, todos región 01 Alaska; NO representa todo Alaska. RGI2000-v7.0-G-01-00001 a RGI2000-v7.0-G-01-00953. Se recibieron 262.144 bytes del producto G y 131.072 del C.)"
+    },
+    "D34": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d34-amoc-monthly/current.json",
+      "credential_variables": [],
+      "detail": "AMOC · transporte mensual en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de agua dulce en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de calor en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.)"
     }
   }
 }

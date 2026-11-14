@@ -465,9 +465,13 @@
       "Dataset histórico"
     ],
     "official_url": "https://rapid.ac.uk/data/data-download",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "RAPID solicita correo y consentimiento en formulario oficial. Falta archivo de transporte/README; no se enviaron datos personales ni aceptaron condiciones",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d34-amoc-monthly",
+      "/v1/products/d34-freshwater-monthly",
+      "/v1/products/d34-heat-monthly"
+    ],
+    "blocker_or_next_step": "Historia observacional procesada, con componentes instrumentales, reanálisis e interpolaciones/climatologías del proveedor; no sensor global continuo ni pronóstico. Se conservan unidades nativas: Sv=10⁶ m³/s y PW=10¹⁵ W, positivo norte. Los tiempos representan medias mensuales; faltantes NaN permanecen null, sin rellenar. Datos terminan en noviembre 2024, edición v2024-2 creada 14/10/2026 sin hora/zona conocida. El archivo de incertidumbre separado llega sólo a 2015 y no se extrapola a 2024; no se inventa confianza. No determina tendencia secular significativa ni fecha/probabilidad de colapso AMOC. Una prueba adicional con máximos de perfiles verticales discretos no reprodujo exactamente la serie AMOC (diferencia ≤0,001617 Sv); se conserva la serie publicada, sin sustituirla ni declarar esa reconstrucción validada. Revisión semanal de esta edición fija; otra edición necesita revisión científica.",
     "limits": "Serie relativamente corta para inferir un punto de quiebre secular. No produce una fecha confiable de colapso."
   },
   {

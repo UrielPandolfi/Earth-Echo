@@ -250,6 +250,20 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
   color: #d7e4ef;
 }
 
+.globe-wrap > .empty-map {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 46px;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--bg-raised);
+  z-index: 2;
+  pointer-events: none;
+}
+
 .wide-toggle {
   margin-top: 8px;
   border: 1px solid var(--line-strong);

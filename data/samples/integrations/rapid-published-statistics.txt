@@ -1,0 +1,3 @@
+Fuente: https://rapid.ac.uk/data, edición RAPID_transports_v2024-2.nc, comprobada 14/11/2026 UTC.
+MOC : 17.1±3.2 Sv.
+Media y desviación estándar muestral publicadas con un decimal para abril 2004–noviembre 2024; no incertidumbre instrumental ni intervalo de predicción.

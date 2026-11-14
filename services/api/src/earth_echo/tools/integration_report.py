@@ -22,7 +22,7 @@ BLOCKS = {
     'D24':'Resolver versión y archivo numérico LHASA', 'D25':'STAC público verificado con escena Sentinel-2 L2A real; metadatos científicos HTTPS respondieron 401. CDSE_CLIENT_ID/CDSE_CLIENT_SECRET para la ruta OAuth elegida; sin píxeles acreditados',
     'D26':'RGI 7 resuelto por DOI/CMR NSIDC-0770; distribución redirige a Earthdata. EARTHDATA_USERNAME/EARTHDATA_PASSWORD; no hay geometría descargada',
     'D30':'Seleccionar mosaico DSM/datum/licencia', 'D31':'Subconjunto GEBCO y Type Identifier Grid con datum',
-    'D32':'Subconjunto y licencia HydroATLAS; no son caudales', 'D34':'RAPID solicita correo y consentimiento en formulario oficial. Falta archivo de transporte/README; no se enviaron datos personales ni aceptaron condiciones',
+    'D32':'Subconjunto y licencia HydroATLAS; no son caudales', 'D34':'Edición RAPID v2024-2 con URL directa pública oficial; ejecutar refresh para descargar. El formulario de correo no es la única distribución; una serie de sección no pronostica colapso',
     'D35':'Resolver productos, geometrias, cancelación y validez', 'D41':'CDSAPI_KEY + licencia GTSM',
     'D47':'Best tracks históricos, versión y agencia pendientes',
 }

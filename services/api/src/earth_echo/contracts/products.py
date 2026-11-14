@@ -114,7 +114,7 @@ class ScientificProduct(ApiModel):
     unit: str
     native_unit: str
     kind: Literal['observation', 'indicator', 'forecast', 'historical', 'static_context', 'orbital_assessment']
-    representation: Literal['field', 'points', 'planetary', 'table', 'regions', 'tracks']
+    representation: Literal['field', 'points', 'planetary', 'table', 'regions', 'tracks', 'time_series']
     observed_at: UtcDateTime | None = None
     observation_end: UtcDateTime | None = None
     initialized_at: UtcDateTime | None = None

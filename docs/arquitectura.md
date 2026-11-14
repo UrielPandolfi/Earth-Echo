@@ -50,6 +50,8 @@ Los reportes de actividad GVP se separan del inventario estático. Se coteja RSS
 
 RGI7 usa atributos científicos G/C del espejo académico público OGGM mediante rangos acotados, sin afirmar descarga de huellas NSIDC. Solo filas completas del fragmento inicial de Alaska se publican; la ventana no representa toda la región. Área km² y puntos representativos nativos (no centroides) permanecen con su ID original. src_date sin zona se conserva como texto de fecha fuente, sin inventar UTC. Un área/punto se coteja entre producto glaciar G y complejo C coincidentes; guía RGI7 fija unidades y semántica. El inventario estático no habilita observación o predicción de GLOF.
 
+Las series regionales integradas usan representación `time_series`, separada de `planetary`: RAPID 26,5° N no es índice planetario ni malla mundial. El NetCDF completo de transportes se comparte entre AMOC/calor/agua dulce; `Units` distingue Sv/PW y tiempo CF gregorian es coordenada mensual representativa, no medición instantánea. Fecha de creación sin hora/zona no se convierte en emisión UTC. La serie publicada se conserva incluso cuando un intento de reconstrucción desde perfiles discretos difiere; la verificación usa valores binarios y estadísticas oficiales, sin declarar validado otro método. El gráfico conserva todos los valores, reduce solo rótulos y corta la línea en faltantes, sin interpolarlos.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |
