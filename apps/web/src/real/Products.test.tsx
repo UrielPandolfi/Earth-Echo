@@ -8,6 +8,7 @@ import seasonal from '../../../../data/real/products/d09-seas5-pampa-precipitaci
 import discharge from '../../../../data/real/products/d10-glofas-rosario/current.json';
 import smoc from '../../../../data/real/products/d14-smoc-u-total/current.json';
 import thetao from '../../../../data/real/products/d14-thetao-surface/current.json';
+import mol from '../../../../data/real/products/d14-mol-total/current.json';
 
 afterEach(cleanup);
 
@@ -68,4 +69,14 @@ it('presenta temperatura potencial en su profundidad y separa consulta de recupe
   expect(screen.getByText('Última consulta satisfactoria')).toBeTruthy();
   expect(screen.getByText('2026-11-14T22:10:00Z')).toBeTruthy();
   expect(screen.getByText('Fecha de validez 2026-11-15T00:00:00Z UTC')).toBeTruthy();
+});
+
+it('conserva geoide y fecha CF de MOL sin presentarlo como inundación o GTSM',()=>{
+  const product=mol as unknown as ScientificProduct;
+  const refresh={jobs:{'d14-mol-native':{status:'unchanged',last_success_at:'2026-11-14T22:20:00Z'}}} as unknown as RefreshStatus;
+  render(<ProductInspector product={product} selectedId={null} refreshStatus={refresh}/>);
+  expect(screen.getByRole('heading',{name:'Altura total del mar · geoide · norte occidental'})).toBeTruthy();
+  expect(screen.getByText('Última consulta satisfactoria')).toBeTruthy();
+  expect(screen.getByText('2026-11-14T22:20:00Z')).toBeTruthy();
+  expect(screen.getByText('Fecha de validez 2026-11-15T00:30:00Z UTC')).toBeTruthy();
 });
