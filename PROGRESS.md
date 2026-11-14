@@ -443,6 +443,14 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - La lista de 42 productos tiene desplazamiento propio y altura acotada: la leyenda queda accesible en 1280×720 sin recorrer toda la lista. Fecha UTC, unidad, resolución, escala y cantidad de huecos comprobadas en la captura REAL.
 - 25 fuentes con datos, 42 productos nuevos, 27 campos (dos calculados), 2.475 registros históricos, cero señales calculadas. 100 pruebas API, 23 web, contratos y build pasaron. Evidencia de originales/API repetida: 34 activos únicos/86.108.038 bytes, resumen 99.058 bytes, referencias intactas; almacén 211.303.107 bytes dentro de 256 MB. Continúan únicamente ampliaciones con datos reales y método verificable.
 
+## Incremento 11R — análisis descriptivo RAPID reproducible
+
+- D34 comparte el NetCDF ya retenido: no nueva descarga ni otro activo para el análisis. Años calendario 2005–2023 fijados antes del cálculo; 2004 y 2024 parciales excluidos. Medias mensuales ponderadas por días gregorianos/bisiestos; un mes faltante deja el año null, sin interpolación. Ajuste con al menos 15 de 19 años completos, cada año válido con igual peso.
+- Producto `d34-amoc-annual-trend`: 19 medias anuales en Sv y pendiente OLS descriptiva −0,8416859261676243 Sv/década. Todas las medias cotejadas con `numpy.average`; pendiente independiente por SVD `numpy.linalg.lstsq` −0,841685926167622. Fórmula, parámetros, período, versión e insumo SHA en API/inspector; etiquetas diferencian agregado calculado de observación nativa.
+- F31 tiene tendencia descriptiva parcial para esa sección/período, sin inferencia de significación, causalidad, aceleración, autocorrelación corregida, intervalo, probabilidad o fecha de colapso. No habilita pronóstico ni cambia el experimento SST.
+- Ejecución real del planificador e idempotencia `unchanged`, último éxito 06:21:43 UTC. Tarea Windows reiniciada y comprobada Running con trabajo semanal nuevo. Pruebas de años incompletos, bisiestos, pendiente conocida, mínima cobertura, corrupción de entrada/conservación y recuperación; muestra científica auténtica existente, sin fixture inventado de proveedor.
+- 43 productos / 25 fuentes, 27 campos (dos calculados), un análisis descriptivo, 2.475 registros históricos, dos indicadores importados y cero señales de evento. Contadores y verificador distinguen estos tipos; originales únicos siguen siendo 34 / 86.108.038 bytes. API/original/valores comprobados; resumen 103.266 bytes, referencias intactas. 103 pruebas API, 24 web, contratos y build pasaron. Captura REAL `real-rapid-annual-trend.jpg`, consola sin errores.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

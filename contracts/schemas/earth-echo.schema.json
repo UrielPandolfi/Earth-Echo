@@ -244,6 +244,30 @@
       "title": "CalculationInput",
       "type": "object"
     },
+    "CalculationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value",
+        "unit"
+      ],
+      "title": "CalculationResult",
+      "type": "object"
+    },
     "CatalogSourceView": {
       "additionalProperties": false,
       "properties": {
@@ -1438,6 +1462,11 @@
           "title": "Calculated Field Products",
           "type": "integer"
         },
+        "calculated_indicator_products": {
+          "default": 0,
+          "title": "Calculated Indicator Products",
+          "type": "integer"
+        },
         "observation_records": {
           "title": "Observation Records",
           "type": "integer"
@@ -2244,6 +2273,17 @@
         "applicability": {
           "title": "Applicability",
           "type": "string"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CalculationResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [

@@ -184,9 +184,9 @@
     "D34": {
       "integration_status": "connected",
       "sample_kind": "verified_scientific_product",
-      "sample_path": "data/real/products/d34-amoc-monthly/current.json",
+      "sample_path": "data/real/products/d34-amoc-annual-trend/current.json",
       "credential_variables": [],
-      "detail": "AMOC · transporte mensual en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de agua dulce en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de calor en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.)"
+      "detail": "AMOC · medias anuales y pendiente descriptiva · 2005–2023 (19 de 19 años calendario completos de RAPID 26,5° N, 2005–2023. Análisis regional de sección, no tendencia mundial.); AMOC · transporte mensual en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de agua dulce en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de calor en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.)"
     },
     "D25": {
       "integration_status": "connected",

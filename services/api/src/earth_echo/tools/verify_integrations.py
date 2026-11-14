@@ -54,6 +54,9 @@ def verify(base):
         if quakes['count']!=len(quakes['features']) or kp['geometry_kind']!='global_index':raise ValueError('Point/planetary layer contract mismatch')
         expected_obs=quakes['count']+kp['count']+sum(len(p.samples) for p in products if p.kind=='observation')
         if listed.observation_records!=expected_obs:raise ValueError('Observation counter includes other record types')
+        if listed.calculated_field_products!=sum(p.grid is not None and p.calculation is not None for p in products):raise ValueError('Calculated-field counter includes nonfields')
+        if listed.calculated_indicator_products!=sum(p.kind=='indicator' and p.calculation is not None for p in products):raise ValueError('Calculated-analysis counter disagrees')
+        if listed.imported_indicator_records!=sum(len(p.samples) for p in products if p.kind=='indicator' and p.calculation is None):raise ValueError('Imported-indicator counter includes own analysis')
         return {'checked_at':datetime.now(timezone.utc).isoformat(),'scope':'Consistency of originals, decoding, API and counts; not forecast skill or independent scientific validation of models',
             'original_references_unchanged':True,'products':len(products),'connected_source_ids':sorted({p.source_id for p in products}|{'D21','D28'}),
             'unique_original_assets':len(checked_assets),'unique_original_bytes':sum(checked_assets.values()),'summary_bytes':len(listed_raw),

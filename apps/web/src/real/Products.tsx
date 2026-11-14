@@ -4,7 +4,7 @@ import { useEffect,useMemo,useState,useRef } from 'react';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
 export function productKindLabel(p: ScientificProduct): string {
-  if(p.calculation) return 'Campo calculado';
+  if(p.calculation) return p.representation==='field' ? 'Campo calculado' : 'Análisis descriptivo calculado';
   return {observation:'Observaciones',indicator:'Indicador importado',forecast:'Pronóstico externo',historical:'Archivo histórico',static_context:'Contexto geográfico',orbital_assessment:'Evaluación orbital'}[p.kind];
 }
 
@@ -30,6 +30,7 @@ export function ProductsPanel({ data, selected, activeProduct, refreshStatus, on
     <div className="sidebar-body">
       <p className="hint">{data?.connected_sources ?? '—'} fuentes con datos · {data?.field_products ?? '—'} campos científicos · {data?.calculated_field_products ?? '—'} calculados</p>
       <p className="hint">{data?.historical_records ?? '—'} registros históricos · {data?.imported_indicator_records ?? '—'} registros de indicadores importados. Contexto estático y celdas no suman observaciones.</p>
+      {!!data?.calculated_indicator_products && <p className="hint">{data.calculated_indicator_products} análisis descriptivo calculado; no cuenta como evento detectado.</p>}
       <p className="hint">Actualizador: {refreshStatus?.recent_scan ? 'revisión reciente' : 'sin revisión reciente comprobada'} · {refreshStatus?.last_scan_at ?? 'No disponible'} UTC</p>
       {error && <p role="status" className="hint">{error} Se conserva la última carga disponible.</p>}
       <h3>Productos reales</h3>
@@ -61,15 +62,15 @@ export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocu
   const matching=useMemo(()=>samples.filter(s=>!sampleQuery || `${s.id} ${s.time ?? ''} ${s.category ?? ''} ${JSON.stringify(s.attributes)}`.toLocaleLowerCase('es').includes(sampleQuery.toLocaleLowerCase('es'))),[samples,sampleQuery]);
   const pages=Math.max(1,Math.ceil(matching.length/40));const page=Math.min(samplePage,pages-1);
   const selected = samples.find(s=>s.id===selectedId);
-  const jobKey=p.source_id==='D04' ? `mod13q1-${p.id.split('-').at(-1)}` : p.source_id==='D05' ? `mod11a2-${p.id.split('-').at(-1)}` : p.source_id==='D07' ? p.calculation ? 'd07-derived-fields' : 'd07-ifs-24h' : p.source_id==='D16' ? 'd16-mhw-monthly' : p.source_id==='D20' ? 'd20-asi-s1' : p.source_id==='D34' ? 'd34-rapid-monthly' : p.id;
+  const jobKey=p.source_id==='D04' ? `mod13q1-${p.id.split('-').at(-1)}` : p.source_id==='D05' ? `mod11a2-${p.id.split('-').at(-1)}` : p.source_id==='D07' ? p.calculation ? 'd07-derived-fields' : 'd07-ifs-24h' : p.source_id==='D16' ? 'd16-mhw-monthly' : p.source_id==='D20' ? 'd20-asi-s1' : p.source_id==='D34' && !p.calculation ? 'd34-rapid-monthly' : p.id;
   const job=refreshStatus?.jobs?.[jobKey];
   const chartSamples = p.representation === 'planetary' ? samples.slice(-60) : p.representation==='time_series' ? samples : [];
   const present = chartSamples.flatMap(s=>s.value === null || s.value === undefined ? [] : [s.value]);
   const low = present.length ? Math.min(...present) : 0;
   const high = present.length ? Math.max(...present) : 1;
-  const chart=chartSamples.length > 0 ? <section aria-label="Serie del producto"><h3>{p.kind==='historical' ? 'Serie histórica' : 'Serie del índice'}</h3><p className="fine">{p.unit} · {p.coverage}</p><AnomalyChart points={chartSamples.map(s=>({label:s.time?.slice(0,p.representation==='time_series'?7:10) ?? s.id,kind:p.kind==='forecast'?'forecast':'observed',value:s.value ?? null}))} domain={{min:low-.1,max:high+.1,ticks:[high,(low+high)/2,low]}} caption={`${p.variable} · ${p.unit}; ${chartSamples.length} registros conservados. ${p.coverage} UTC; los huecos siguen ausentes.`}/></section> : null;
+  const chart=chartSamples.length > 0 ? <section aria-label="Serie del producto"><h3>{p.calculation ? 'Serie calculada' : p.kind==='historical' ? 'Serie histórica' : 'Serie del índice'}</h3><p className="fine">{p.unit} · {p.coverage}</p><AnomalyChart observedLabel={p.calculation ? 'Agregado calculado' : 'Observado'} points={chartSamples.map(s=>({label:s.time?.slice(0,p.calculation ? 4 : p.representation==='time_series'?7:10) ?? s.id,kind:p.kind==='forecast'?'forecast':'observed',value:s.value ?? null}))} domain={{min:low-.1,max:high+.1,ticks:[high,(low+high)/2,low]}} caption={`${p.variable} · ${p.unit}; ${chartSamples.length} registros conservados. ${p.coverage} UTC; los huecos siguen ausentes.`}/></section> : null;
   return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {productKindLabel(p)}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? (p.issued_at ? `Emitido ${p.issued_at}` : `Recuperado ${p.retrieved_at}`)} UTC</p></header>
-    <div className="inspector-body">{chart}<p>{p.limitation}</p>
+    <div className="inspector-body">{p.calculation?.result && <section aria-label="Resultado descriptivo"><h3>{p.calculation.result.label}</h3><p className="calculation-result">{p.calculation.result.value.toLocaleString('es',{maximumFractionDigits:4,signDisplay:'exceptZero'})} {p.calculation.result.unit}</p><p className="fine">Describe el período indicado. Sin prueba de significación ni extrapolación.</p></section>}{chart}<p>{p.limitation}</p>
       {job && <section><h3>Actualización · UTC</h3>{job.error && <p role="status">Falló el último intento: {job.error}. Se conserva el último producto válido en REAL.</p>}<dl className="facts"><div><dt>Último intento</dt><dd>{job.last_attempt_at} · {job.status}</dd></div><div><dt>{p.calculation ? 'Último cálculo correcto' : 'Última descarga correcta'}</dt><dd>{job.last_success_at ?? 'No disponible'}</dd></div><div><dt>Último cambio</dt><dd>{job.last_change_at ?? 'Sin cambio nuevo registrado'}</dd></div><div><dt>Próximo intento</dt><dd>{job.next_attempt_at}</dd></div></dl></section>}
       {p.calculation && <section><h3>Cálculo reproducible</h3><p>{p.calculation.formula}</p><p className="fine">{p.calculation.applicability}</p><p className="fine">{p.calculation.reference_period} · {p.calculation.method_version}</p><p className="fine">Parámetros: {JSON.stringify(p.calculation.parameters)}. Calculado {p.ingested_at} UTC; entradas recuperadas {p.retrieved_at} UTC.</p>{p.calculation.inputs.map(i=><p className="fine" key={i.product_id}>{i.product_id} · {i.variable} · {i.unit} · SHA-256 {i.checksum_sha256}</p>)}<p><a href={p.calculation.reference_url} target="_blank" rel="noreferrer">Definición del método</a></p></section>}
       {!!p.tracks?.length && <section><h3>{p.tracks.length} trayectorias históricas</h3><p className="fine">Línea dorada: centros publicados, no trayectoria futura. Seleccioná un sistema para encuadrarlo.</p><div className="product-table">{p.tracks.map(t=><button key={t.id} type="button" className="wide-toggle" onClick={()=>onTrackFocus?.(t)}>Encuadrar {t.name} · {t.sample_ids.length} posiciones</button>)}</div></section>}

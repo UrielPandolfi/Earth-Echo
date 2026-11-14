@@ -38,6 +38,12 @@ export interface CalculationInput {
   checksum_sha256: string;
 }
 
+export interface CalculationResult {
+  label: string;
+  value: number;
+  unit: string;
+}
+
 export interface CatalogSourceView {
   id: string;
   name: string;
@@ -240,6 +246,7 @@ export interface ProductList {
   connected_sources: number;
   field_products: number;
   calculated_field_products?: number;
+  calculated_indicator_products?: number;
   observation_records: number;
   historical_records?: number;
   imported_indicator_records?: number;
@@ -368,6 +375,7 @@ export interface ScientificCalculation {
   reference_url: string;
   reference_period: string;
   applicability: string;
+  result?: CalculationResult | null;
 }
 
 export interface ScientificGrid {

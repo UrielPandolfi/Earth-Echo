@@ -4,6 +4,7 @@ interface AnomalyChartProps {
   points: DemoSeriesPoint[];
   caption: string;
   domain?: { min: number; max: number; ticks: number[] };
+  observedLabel?: string;
 }
 
 const width = 320;
@@ -35,7 +36,7 @@ function seriesPath(points:Array<{x:number;y:number|null;kind:DemoSeriesPoint['k
   }).filter(Boolean).join(' ');
 }
 
-export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
+export function AnomalyChart({ points, caption, domain, observedLabel='Observado' }: AnomalyChartProps) {
   const min = domain?.min ?? -48;
   const max = domain?.max ?? 4;
   const ticks = domain?.ticks ?? [0, -20, -40];
@@ -94,7 +95,7 @@ export function AnomalyChart({ points, caption, domain }: AnomalyChartProps) {
         ))}
       </div>
       <figcaption className="chart-key">
-        <span><i className="swatch observed" /> Observado</span>
+        <span><i className="swatch observed" /> {observedLabel}</span>
         {points.some((point) => point.kind === "forecast") ? <span><i className="swatch forecast" /> Pronóstico</span> : null}
         {points.some((point) => point.low !== undefined && point.high !== undefined) ? <span><i className="swatch band" /> Incertidumbre</span> : null}
       </figcaption>

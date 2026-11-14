@@ -96,6 +96,11 @@ class CalculationInput(ApiModel):
     unit: str
     checksum_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
 
+class CalculationResult(ApiModel):
+    label: str
+    value: float = Field(allow_inf_nan=False)
+    unit: str
+
 class ScientificCalculation(ApiModel):
     method_version: str
     formula: str
@@ -104,6 +109,7 @@ class ScientificCalculation(ApiModel):
     reference_url: str
     reference_period: str
     applicability: str
+    result: CalculationResult | None = None
 
 class ScientificProduct(ApiModel):
     schema_version: Literal['1.0'] = '1.0'
@@ -153,6 +159,7 @@ class ProductList(ApiModel):
     connected_sources: int
     field_products: int
     calculated_field_products: int = 0
+    calculated_indicator_products: int = 0
     observation_records: int
     historical_records: int = 0
     imported_indicator_records: int = 0

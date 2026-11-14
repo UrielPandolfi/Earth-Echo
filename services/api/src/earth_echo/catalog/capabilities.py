@@ -154,6 +154,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F31',{})['observation'] = ('partial','Serie observacional procesada RAPID v2024-2, 248 medias mensuales abril 2004–noviembre 2024 en 26,5° N, con transporte AMOC/calor/agua dulce. No observación mundial o actual ni fecha de colapso; tendencia/inferencia científica siguen separadas.')
     if 'd25-s3a-chlorophyll' in available:
         overrides_by_id.setdefault('F20',{})['observation'] = ('partial','Clorofila OC4Me L3 Sentinel-3A vía NOAA, producto experimental con huecos y fechas reales. Fuente Copernicus, no sustituye OceanColor NASA D17. No confirma especie de alga, toxicidad ni un evento HAB; no hay detector o pronóstico biológico.')
+    if 'd34-amoc-annual-trend' in available:
+        overrides_by_id.setdefault('F31',{})['trend'] = ('partial','Medias anuales RAPID 2005–2023 ponderadas por días del mes y pendiente OLS descriptiva en Sv/década, con período/parámetros/versión/entradas SHA y comprobación aritmética independiente. Sin prueba de significación, atribución, extrapolación ni fecha/probabilidad de colapso.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

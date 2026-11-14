@@ -11,3 +11,9 @@ it('keeps an explicit gap in the observed line and limits only date labels',()=>
   expect(container.querySelectorAll('circle').length).toBe(247);
   expect(container.querySelectorAll('.chart-gap').length).toBe(1);
 });
+
+it('labels calculated aggregates explicitly',()=>{
+  const {container}=render(<AnomalyChart points={[{label:'2005',kind:'observed',value:18}]} caption="annual aggregate" observedLabel="Agregado calculado"/>);
+  expect(container.querySelector('.chart-key')?.textContent).toContain('Agregado calculado');
+  expect(container.querySelector('.chart-key')?.textContent).not.toContain('Observado');
+});
