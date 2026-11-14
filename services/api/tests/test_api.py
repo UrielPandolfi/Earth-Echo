@@ -51,7 +51,7 @@ def test_providers_are_not_probed(client: TestClient) -> None:
     assert {"D01", "D02", "D04", "D05", "D07", "D13", "D15", "D21", "D22", "D23", "D27", "D28", "D29", "D48"} <= actual
     assert actual <= {source.id for source in load_catalog().sources}
     by_id = {item["source_id"]: item for item in body["providers"]}
-    assert by_id["D01"]["integration_status"] == "credential_required"
+    assert by_id["D01"]["integration_status"] == "connected"  # Published historical climatology only.
     assert by_id["D02"]["integration_status"] == "credential_required"
     assert by_id["D15"]["integration_status"] == "connected"
     assert by_id["D21"]["integration_status"] == "connected"
@@ -69,7 +69,7 @@ def test_catalog_counts_come_from_the_file(client: TestClient) -> None:
     assert len(body["sources"]) == 2
     listed = client.get("/catalog/sources").json()["sources"]
     by_id = {item["id"]: item["integration_status"] for item in listed}
-    assert by_id["D01"] == "credential_required"
+    assert by_id["D01"] == "connected"  # Does not unblock the recent-rainfall endpoint below.
     assert by_id["D02"] == "credential_required"
     assert by_id["D15"] == "connected"
     assert by_id["D21"] == "connected"

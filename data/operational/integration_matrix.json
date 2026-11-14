@@ -336,7 +336,7 @@
     "evidence": [
       "/v1/products/d24-lhasa-bc"
     ],
-    "blocker_or_next_step": "Nowcast/modelo importado, no un deslizamiento observado ni una alerta geotécnica de cada ladera. La fecha es la referencia del archivo NRT, no hora de un evento. Se transfirieron 1048576 bytes en 8 rangos de un GeoTIFF de 146876470 bytes; se conservan esos rangos, no el archivo mundial completo.",
+    "blocker_or_next_step": "Nowcast/modelo importado, no un deslizamiento observado ni una alerta geotécnica de cada ladera. La fecha es la referencia del archivo NRT, no hora de un evento. Se transfirieron 1048576 bytes en 8 rangos de un GeoTIFF de 145888037 bytes; se conservan esos rangos, no el archivo mundial completo.",
     "limits": "No predice el colapso de cada ladera ni sustituye sensores geotécnicos locales. El inventario de eventos tiene sesgo de reporte."
   },
   {
@@ -363,9 +363,10 @@
     "official_url": "https://rgidata.org/",
     "status": "connected_for_scope",
     "evidence": [
+      "/v1/products/d26-rgi60-patagonia-outlines",
       "/v1/products/d26-rgi7-alaska-attributes"
     ],
-    "blocker_or_next_step": "Contexto estático de áreas/puntos representativos, no polígonos ni área quemada/inundada. RGI tiene época objetivo alrededor de 2000; src_date por registro es fecha de imagen fuente sin zona, conservada como texto, no observación actual UTC. No describe retroceso, espesor, lagunas, diques ni probabilidad GLOF. Muestra de registros iniciales, no cobertura completa regional ni mundial. Fin parcial de ventana byte se excluye, sin rellenar valores. Archivos G/C globales de 74734943/17449800 bytes no descargados completos. Se usa espejo académico público de atributos; las huellas oficiales NSIDC siguen detrás de Earthdata. Los puntos son nativos del proveedor, no inventados desde celdas ni centroides locales.",
+    "blocker_or_next_step": "Contornos históricos de RGI 6.0 (2017), versión anterior identificada explícitamente y separada de los atributos RGI 7.0 de Alaska. Época de imágenes 2000–2003, con mes/día iniciales desconocidos. No representan área actual, retroceso medido, lagunas, estabilidad de diques, vaciamientos ni pronóstico GLOF. Selección cartográfica por punto representativo/área, no umbral de peligro; no incluye todos los glaciares del área. Se conservan límites completos, anillos interiores y áreas nativas, sin simplificar ni recortar. 6 contornos con contactos de anillo normalizados sólo para dibujar, conservando área planar relativa a 1e-10 y bbox a 1e-10°; originales intactos. 0 geometrías no calificadas quedan sin dibujo. La descarga de esta edición fija no cambia su época. RGI 7.0 sigue siendo la versión recomendada y sus huellas oficiales siguen pendientes de Earthdata. | Contexto estático de áreas/puntos representativos, no polígonos ni área quemada/inundada. RGI tiene época objetivo alrededor de 2000; src_date por registro es fecha de imagen fuente sin zona, conservada como texto, no observación actual UTC. No describe retroceso, espesor, lagunas, diques ni probabilidad GLOF. Muestra de registros iniciales, no cobertura completa regional ni mundial. Fin parcial de ventana byte se excluye, sin rellenar valores. Archivos G/C globales de 74734943/17449800 bytes no descargados completos. Se usa espejo académico público de atributos; las huellas oficiales NSIDC siguen detrás de Earthdata. Los puntos son nativos del proveedor, no inventados desde celdas ni centroides locales.",
     "limits": "No incluye nivel de cada lago, estabilidad de cada dique ni disparadores de una rotura. Es una capa de contexto."
   },
   {

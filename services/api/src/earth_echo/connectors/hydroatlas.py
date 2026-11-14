@@ -9,8 +9,7 @@ from datetime import datetime
 import shapefile
 from pyproj import CRS
 from shapely.geometry import shape, mapping
-from shapely import make_valid
-from shapely.validation import explain_validity
+from earth_echo.science.static_geometry import prepare_static_polygon
 from earth_echo.connectors.http import download
 from earth_echo.connectors.zip_subset import FigshareZipSubset, ArchivedZipSubset
 from earth_echo.contracts.geometry import GeoMultiPolygon, GeographicExtent
@@ -56,22 +55,7 @@ def decode_basins(members):
             raise ValueError('Independent native DBF area disagrees')
         original = reader.shape(index)
         geometry = shape(original.__geo_interface__)
-        valid = not geometry.is_empty and geometry.is_valid
-        quality = 'Geometría nativa válida'
-        if not valid and not geometry.is_empty:
-            # Raster-derived basins have rings touching at one native vertex.
-            # Normalize only the display topology, retaining original coordinates,
-            # members and area attributes. Reject any material area/bbox change.
-            reason = explain_validity(geometry)
-            candidate = make_valid(geometry, method='structure', keep_collapsed=False)
-            if (candidate.geom_type in ('Polygon','MultiPolygon') and candidate.is_valid
-                and math.isclose(candidate.area, geometry.area, rel_tol=1e-10, abs_tol=1e-12)
-                and all(math.isclose(a,b,abs_tol=1e-10,rel_tol=0) for a,b in zip(candidate.bounds,geometry.bounds))):
-                geometry = candidate
-                valid = True
-                quality = f'Topología normalizada sólo para visualizar con GEOS make_valid(structure); original: {reason}; área planar relativa conservada a 1e-10 y bbox a 1e-10°'
-            else:
-                quality = f'Geometría inválida no dibujada: {reason}'
+        geometry,valid,quality = prepare_static_polygon(geometry)
         native_vertices += len(original.points)
         sid = str(row['HYBAS_ID'])
         extent = GeographicExtent(west=original.bbox[0], south=original.bbox[1], east=original.bbox[2], north=original.bbox[3], crosses_antimeridian=False)

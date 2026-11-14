@@ -117,7 +117,7 @@ def capability_matrix() -> CapabilityMatrix:
     if 'd07-ifs-tp-24h' in available:
         overrides_by_id['F01']['forecast'] = ('partial','Precipitación determinista IFS acumulada 0–24 h, mundial, m convertidos a mm. Sin percentiles de extremo ni probabilidad calibrada.')
     if 'd01-imerg-grand-climatology' in available:
-        overrides_by_id['F01']['observation'] = ('blocked','Hay una climatología mundial IMERG Final V07B de junio 2000–mayo 2023, en mm/año, como referencia histórica agregada. No es lluvia reciente ni la colección Early; la observación actual requiere todavía acceso Earthdata/PPS y un conector separado. No habilita detector/anomalía de precipitación por sí sola.')
+        overrides_by_id['F01']['observation'] = ('blocked','Hay una climatología mundial IMERG Final V07B de junio 2000–mayo 2023, en mm/año, como referencia histórica agregada. No es lluvia reciente ni la colección Early; la observación actual requiere todavía acceso Earthdata/PPS y un conector separado. Ruta Earthdata: EARTHDATA_USERNAME y EARTHDATA_PASSWORD, con autorización DAAC; PPS requiere su registro propio. No habilita detector/anomalía de precipitación por sí sola.')
     overrides_by_id.setdefault('F19',{})['experimental_model'] = ('experimental','Experimento de anomalía mensual SST del Caribe, sin habilidad adicional frente a persistencia. No pronostica daño de coral.')
     if 'd13-oisst-global' in available:
         overrides_by_id.setdefault('F18',{})['observation'] = ('partial','SST diaria mundial OISST v2.1, preliminar; sin climatología diaria y duración no se diagnostica una ola de calor marina.')
@@ -156,6 +156,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F24',{})['observation'] = ('partial',f'Inventario GVP y reportes preliminares de actividad geolocalizados, cotejados RSS/CAP. Emisión del archivo {edition.issued_at.isoformat()}; puede estar atrasado, sin acreditar actividad mundial actual ni vigilancia instrumental continua. Categorías publicadas, sin fecha/probabilidad de erupción próxima.')
     if 'd26-rgi7-alaska-attributes' in available:
         overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto RGI7 de áreas y puntos representativos nativos en una muestra de Alaska. No se descargaron huellas ni observaciones de lagunas, diques o vaciamientos; ese inventario no habilita observación/predicción GLOF.')
+    if 'd26-rgi60-patagonia-outlines' in available:
+        overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto de áreas/puntos RGI7 en Alaska y contornos históricos RGI 6.0 de una selección de 38 glaciares grandes en Patagonia, con épocas de imagen 2000–2003. Versiones separadas, sin compararlas para inferir retroceso. No hay observaciones de lagunas, diques o vaciamientos y los inventarios no habilitan observación/predicción GLOF.')
     if 'd34-amoc-monthly' in available:
         overrides_by_id.setdefault('F31',{})['observation'] = ('partial','Serie observacional procesada RAPID v2024-2, 248 medias mensuales abril 2004–noviembre 2024 en 26,5° N, con transporte AMOC/calor/agua dulce. No observación mundial o actual ni fecha de colapso; tendencia/inferencia científica siguen separadas.')
     if 'd25-s3a-chlorophyll' in available:

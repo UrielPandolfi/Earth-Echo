@@ -174,9 +174,9 @@
     "D26": {
       "integration_status": "connected",
       "sample_kind": "verified_scientific_product",
-      "sample_path": "data/real/products/d26-rgi7-alaska-attributes/current.json",
+      "sample_path": "data/real/products/d26-rgi60-patagonia-outlines/current.json",
       "credential_variables": [],
-      "detail": "RGI 7 · áreas y puntos representativos · muestra de Alaska (953 registros completos iniciales del CSV global, todos región 01 Alaska; NO representa todo Alaska. RGI2000-v7.0-G-01-00001 a RGI2000-v7.0-G-01-00953. Se recibieron 262.144 bytes del producto G y 131.072 del C.)"
+      "detail": "Contornos glaciares históricos · RGI 6.0 · Patagonia (38 glaciares de Status=0 y Area≥50 km² con punto representativo en lon [-74,5,-72], lat [-51,-48]; 38 contornos completos dibujados. Selección, no toda Patagonia. ZIP nativo contiene la región Andes del Sur completa.); RGI 7 · áreas y puntos representativos · muestra de Alaska (953 registros completos iniciales del CSV global, todos región 01 Alaska; NO representa todo Alaska. RGI2000-v7.0-G-01-00001 a RGI2000-v7.0-G-01-00953. Se recibieron 262.144 bytes del producto G y 131.072 del C.)"
     },
     "D34": {
       "integration_status": "connected",

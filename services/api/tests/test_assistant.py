@@ -33,6 +33,7 @@ def test_missing_rain_source_stays_blocked() -> None:
     reply = ask("¿Hay lluvia de IMERG para esta región?", _real(), None)
     assert "EARTHDATA_USERNAME" in reply.text
     assert "blocked" in json.dumps(reply.tools)
+    assert "climatología" in reply.text and "No es lluvia reciente" in reply.text
 
 
 def test_replay_hides_the_outcome_until_the_science_module_revealed_it() -> None:

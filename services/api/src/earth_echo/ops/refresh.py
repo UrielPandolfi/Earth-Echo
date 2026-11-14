@@ -103,6 +103,7 @@ def jobs() -> dict:
     from earth_echo.connectors.era5_arco import fetch_era5
     from earth_echo.connectors.grace_assimilation import fetch_grace
     from earth_echo.connectors.imerg_climatology import fetch_imerg_climatology
+    from earth_echo.connectors.glacier_outlines import fetch_glacier_outlines
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -131,6 +132,7 @@ def jobs() -> dict:
         'd08-era5-air-temperature':(604800,fetch_era5),
         'd33-grace-global':(86400,fetch_grace),
         'd01-imerg-grand-climatology':(2592000,fetch_imerg_climatology),
+        'd26-rgi60-patagonia-outlines':(2592000,fetch_glacier_outlines),
     }
 
 def execute_job(name, runner, moment):

@@ -49,8 +49,18 @@ describe("encuadre geográfico", () => {
     });
     expect(framed.status).toBe("framed");
     if (framed.status === "framed") {
-      expect(framed.view.heightMeters).toBeGreaterThanOrEqual(250_000);
+      expect(framed.view.heightMeters).toBeGreaterThanOrEqual(25_000);
     }
+  });
+
+  it("permite encuadrar un contorno glaciar por acción explícita", () => {
+    const framed = frameExtent({west:-73.38148918,south:-50.687461237,east:-73.036936128,north:-50.460214006,crossesAntimeridian:false});
+    expect(framed.status).toBe('framed');
+    if (framed.status==='framed') {
+      expect(framed.view.heightMeters).toBeGreaterThanOrEqual(25_000);
+      expect(framed.view.heightMeters).toBeLessThan(100_000);
+    }
+    expect(americasPreset.heightMeters).toBe(13_200_000);
   });
 
   it("oculta el punto opuesto a la cámara", () => {

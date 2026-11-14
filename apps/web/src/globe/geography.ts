@@ -44,7 +44,7 @@ export const americasPreset: CameraView = {
 };
 
 export const cameraLimits = {
-  minimumHeightMeters: 250_000,
+  minimumHeightMeters: 25_000,
   maximumHeightMeters: 28_000_000,
 };
 
