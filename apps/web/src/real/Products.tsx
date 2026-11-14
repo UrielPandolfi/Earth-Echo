@@ -3,6 +3,11 @@ import { AnomalyChart } from '../shell/AnomalyChart';
 import { useEffect,useMemo,useState } from 'react';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
+export function productKindLabel(p: ScientificProduct): string {
+  if(p.calculation) return 'Campo calculado';
+  return {observation:'Observaciones',indicator:'Indicador importado',forecast:'Pronóstico externo',historical:'Archivo histórico',static_context:'Contexto geográfico',orbital_assessment:'Evaluación orbital'}[p.kind];
+}
+
 export function ProductsPanel({ data, selected, activeProduct, refreshStatus, onSelect, onFocus, quakesOn, quakeCount, onQuakes, kpText, error, grouped, onGroup }: {
   data: ProductList | null; selected: string; onSelect: (key: string) => void; onFocus: () => void;
   activeProduct: ScientificProduct | undefined;
@@ -22,8 +27,8 @@ export function ProductsPanel({ data, selected, activeProduct, refreshStatus, on
       <ul className="rows">{data?.products.map(p => <li key={p.id}><label className="row"><input type="radio" name="real-product" checked={selected === p.id} onChange={() => onSelect(p.id)} /><span>{p.title}</span></label></li>)}
         <li><label className="row"><input type="radio" name="real-product" checked={selected === 'archive'} onChange={() => onSelect('archive')} /><span>SST · archivo del Caribe</span></label></li>
       </ul>
-      {product && <figure className="legend"><figcaption><strong>{product.variable} · {product.unit}</strong><span>{product.kind} · {product.source_id}</span></figcaption>
-        <p className="hint">{product.observed_at ?? product.valid_from ?? (product.issued_at ? `Emisión ${product.issued_at}` : 'Fecha en cada registro')} UTC</p>
+      {product && <figure className="legend"><figcaption><strong>{product.variable} · {product.unit}</strong><span>{productKindLabel(product)} · {product.source_id}</span></figcaption>
+        <p className="hint">{product.observed_at || product.valid_from || product.issued_at ? `${product.observed_at ?? product.valid_from ?? `Emisión ${product.issued_at}`} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}</p>
         {product.grid && <><div className="legend-bar legend-real" /><div className="legend-scale"><span>{product.grid.minimum?.toFixed(2)} {product.unit}</span><span>{product.grid.maximum?.toFixed(2)} {product.unit}</span></div><p className="hint">{product.grid.resolution}. {product.grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p></>}
         {(product.grid || product.extent) && <button type="button" className="wide-toggle" onClick={onFocus}>Encuadrar cobertura</button>}
         <p className="hint">{product.coverage}</p>
@@ -53,7 +58,7 @@ export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocu
   const present = chartSamples.flatMap(s=>s.value === null || s.value === undefined ? [] : [s.value]);
   const low = present.length ? Math.min(...present) : 0;
   const high = present.length ? Math.max(...present) : 1;
-  return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {p.kind}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? (p.issued_at ? `Emitido ${p.issued_at}` : `Recuperado ${p.retrieved_at}`)} UTC</p></header>
+  return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {productKindLabel(p)}</p><h2>{p.title}</h2><p className="region">{p.observed_at ?? p.valid_from ?? (p.issued_at ? `Emitido ${p.issued_at}` : `Recuperado ${p.retrieved_at}`)} UTC</p></header>
     <div className="inspector-body"><p>{p.limitation}</p>
       {job && <section><h3>Actualización · UTC</h3>{job.error && <p role="status">Falló el último intento: {job.error}. Se conserva el último producto válido en REAL.</p>}<dl className="facts"><div><dt>Último intento</dt><dd>{job.last_attempt_at} · {job.status}</dd></div><div><dt>{p.calculation ? 'Último cálculo correcto' : 'Última descarga correcta'}</dt><dd>{job.last_success_at ?? 'No disponible'}</dd></div><div><dt>Último cambio</dt><dd>{job.last_change_at ?? 'Sin cambio nuevo registrado'}</dd></div><div><dt>Próximo intento</dt><dd>{job.next_attempt_at}</dd></div></dl></section>}
       {p.calculation && <section><h3>Cálculo reproducible</h3><p>{p.calculation.formula}</p><p className="fine">{p.calculation.applicability}</p><p className="fine">{p.calculation.reference_period} · {p.calculation.method_version}</p><p className="fine">Parámetros: {JSON.stringify(p.calculation.parameters)}. Calculado {p.ingested_at} UTC; entradas recuperadas {p.retrieved_at} UTC.</p>{p.calculation.inputs.map(i=><p className="fine" key={i.product_id}>{i.product_id} · {i.variable} · {i.unit} · SHA-256 {i.checksum_sha256}</p>)}<p><a href={p.calculation.reference_url} target="_blank" rel="noreferrer">Definición del método</a></p></section>}

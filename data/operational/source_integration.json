@@ -22,17 +22,17 @@
     },
     "D21": {
       "integration_status": "connected",
-      "sample_kind": "geojson_feature",
-      "sample_path": "data/samples/d21-usgs/event.geojson",
+      "sample_kind": "retained_live_feed",
+      "sample_path": "data/real/feeds/d21-events.json",
       "credential_variables": [],
-      "detail": "Consulta pública de sismos con magnitud de al menos 5, hasta 20 eventos. Son observaciones del catálogo, no probabilidades de réplica."
+      "detail": "USGS FDSN con ventana, umbral y máximo configurables; query original, UTC, magnitud/revisión y datos retenidos. La capa /v1/layers/d21-events consulta el archivo actualizado, no la muestra inicial de 20 eventos. No probabilidades de réplica."
     },
     "D28": {
       "integration_status": "connected",
-      "sample_kind": "json_index",
-      "sample_path": "data/samples/d28-swpc/planetary-k-index.json",
+      "sample_kind": "retained_observation_and_forecast",
+      "sample_path": "data/real/feeds/d28-kp.json",
       "credential_variables": [],
-      "detail": "Índice Kp planetario público de SWPC. No incluye los avisos ni convierte una fulguración en intensidad local."
+      "detail": "Kp planetario observado y forecast SWPC de filas predicted, actualización separada de observación/validez. Emisión e inicialización no proporcionadas quedan null; recuperación no las sustituye. Sin intensidad local ni validación de modelo propio."
     },
     "D15": {
       "integration_status": "connected",
@@ -173,6 +173,13 @@
       "sample_path": "data/real/products/d06-viirs-noaa20-sa/current.json",
       "credential_variables": [],
       "detail": "FIRMS · anomalías térmicas NOAA-20 · Sudamérica (15977 detecciones únicas del archivo regional Sudamérica 24h publicado; 15176 cumplen máscara visual. El intervalo real se conserva aunque el archivo publicado tenga demora. Cero registros significa archivo vacío comprobado, no ausencia regional de fuego.)"
+    },
+    "D26": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d26-rgi7-alaska-attributes/current.json",
+      "credential_variables": [],
+      "detail": "RGI 7 · áreas y puntos representativos · muestra de Alaska (953 registros completos iniciales del CSV global, todos región 01 Alaska; NO representa todo Alaska. RGI2000-v7.0-G-01-00001 a RGI2000-v7.0-G-01-00953. Se recibieron 262.144 bytes del producto G y 131.072 del C.)"
     }
   }
 }

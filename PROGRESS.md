@@ -415,6 +415,15 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - 37 productos nuevos/22 fuentes, 26 campos, 1.731 registros históricos separados de 16.200 observaciones. Verificación de originales/API repetida: 31 activos únicos/78.005.604 bytes, resumen 82.875 bytes, referencias intactas. 94 pruebas API y build pasaron; la suite web previa de 21 sigue pasando y no cambió la lógica científica de agrupación.
 - Continúa una vía pública documentada por OGGM para inventarios glaciares RGI6. La distribución oficial de RGI7 sigue requiriendo Earthdata; no se sustituirá edición silenciosamente.
 
+## Incremento 11O — muestra científica RGI7 pública
+
+- D26: la ruta oficial NSIDC de huellas RGI7 exige Earthdata. El enlace RGI6 global documentado por OGGM devolvió 404; al recorrer su índice público apareció una vía real para atributos RGI7 G/C. Se preservó la edición 7.0 y el origen académico de la copia, sin sustituir silenciosamente por v6.
+- 953 registros completos iniciales de Alaska, IDs RGI2000-v7.0-G-01-00001…00953: áreas km² y puntos representativos nativos, no centroides ni polígonos. No cubren todo Alaska. src_date textual conserva la fecha de la imagen fuente sin zona; no se inventa una observación actual UTC. Área faltante permanece null, coordenadas originales accesibles y máscara visual explícita.
+- Lectura de 262.144 bytes de G y 131.072 de C frente a originales de 74.734.943 y 17.449.800 bytes; activo reproducible 699.999 bytes. Primer caso cotejado entre G y complejo C coincidente: 0,239199161030735 y 0,2391991610307348 km², mismo punto -155,90940361036584 / 67,4137265. Content-Range/coherencia/replay y semántica de unidades contra guía RGI7.
+- Ingestión repetida `unchanged`; revisión mensual activada en tarea Windows y comprobada a las 02:21 UTC del 14/11. Área estática no habilita lagunas, diques, vaciamientos ni predicción GLOF; F26 lo declara bloqueado. Huellas oficiales siguen pendientes de Earthdata. No se agregaron pines de evento o celdas para aparentar densidad.
+- 23 fuentes con datos y 38 productos nuevos; 26 campos, dos calculados, 1.731 registros históricos y cero señales calculadas. Comprobación actual de originales/API: 32 activos únicos/78.705.603 bytes; resumen 85.986 bytes. Contador de observaciones cambió de 16.200 a 16.206 por actualizaciones automáticas reales; el inventario estático no lo incrementa. Almacén medido 182.045.422 bytes antes de esas revisiones, dentro de 256 MB.
+- 96 pruebas API, 21 web, contratos y build pasaron. Se corrigieron textos heredados de D21 que todavía anunciaban la muestra inicial de 20 sismos/magnitud 5 y de D28 que sugerían emisión conocida. La matriz distingue expresamente GIBS visual y CMR descubrimiento, sin contarlos como nuevas fuentes científicas. Inspector vuelve al inicio al cambiar de producto y distingue contexto/archivo/observación; no etiqueta una fecha UTC ausente como disponible. Captura auténtica RGI7 en `docs/integraciones/real-rgi7-alaska.jpg`.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

@@ -352,9 +352,11 @@
       "Geometría o contexto estático"
     ],
     "official_url": "https://rgidata.org/",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "RGI 7 resuelto por DOI/CMR NSIDC-0770; distribución redirige a Earthdata. EARTHDATA_USERNAME/EARTHDATA_PASSWORD; no hay geometría descargada",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d26-rgi7-alaska-attributes"
+    ],
+    "blocker_or_next_step": "Contexto estático de áreas/puntos representativos, no polígonos ni área quemada/inundada. RGI tiene época objetivo alrededor de 2000; src_date por registro es fecha de imagen fuente sin zona, conservada como texto, no observación actual UTC. No describe retroceso, espesor, lagunas, diques ni probabilidad GLOF. Muestra de registros iniciales, no cobertura completa regional ni mundial. Fin parcial de ventana byte se excluye, sin rellenar valores. Archivos G/C globales de 74734943/17449800 bytes no descargados completos. Se usa espejo académico público de atributos; las huellas oficiales NSIDC siguen detrás de Earthdata. Los puntos son nativos del proveedor, no inventados desde celdas ni centroides locales.",
     "limits": "No incluye nivel de cada lago, estabilidad de cada dique ni disparadores de una rotura. Es una capa de contexto."
   },
   {
@@ -489,9 +491,12 @@
       "Servicio de descubrimiento o visualización"
     ],
     "official_url": "https://nasa-gibs.github.io/gibs-api-docs/access-basics/",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "visualization_only",
+    "evidence": [
+      "apps/web/src/globe/createCesiumGlobe.ts",
+      "docs/integraciones/real-hydroatlas-1672x941.jpg"
+    ],
+    "blocker_or_next_step": "Base GIBS Blue Marble comprobada como visualización estática; no observación del día ni valores científicos nuevos",
     "limits": "Los colores de un PNG no reemplazan el archivo científico. Usar para el globo y descargar valores analíticos por la ruta del dataset."
   },
   {
@@ -501,9 +506,12 @@
       "Servicio de descubrimiento o visualización"
     ],
     "official_url": "https://earthaccess.readthedocs.io/en/latest/api/",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Consultar producto real; descubrimiento no cuenta como integración",
+    "status": "discovery_only",
+    "evidence": [
+      "data/samples/d02-smap/cmr-granule.json",
+      "data/samples/d02-smap/retrieval.json"
+    ],
+    "blocker_or_next_step": "CMR público devolvió metadatos auténticos de SMAP; discovery verificado, HDF científico todavía no descargado",
     "limits": "CMR es descubrimiento, no predictor ni API universal de series. Revisar el proveedor y las credenciales del dato final."
   },
   {
@@ -632,7 +640,8 @@
     "id": "D48",
     "name": "NOAA CPC ENSO",
     "classification": [
-      "Pronóstico o producto científico existente"
+      "Pronóstico o producto científico existente",
+      "Dataset histórico"
     ],
     "official_url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
     "status": "connected_for_scope",

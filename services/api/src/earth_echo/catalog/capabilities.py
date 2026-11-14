@@ -72,7 +72,7 @@ _OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
     "F28": {
         "observation": (
             "partial",
-            "Hay sismos recientes de USGS con magnitud de al menos 5. No son probabilidades de réplica.",
+            "Hay sismos USGS de consulta acotada, con ventana/umbral/límite en la query conservada y revisión/magnitud nativas. No son probabilidades de réplica.",
         ),
         "forecast": ("specified", "El producto de réplicas D22 no está ingerido."),
     },
@@ -83,7 +83,7 @@ _OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
         ),
         "forecast": (
             "partial",
-            "Hay un Kp previsto importado de SWPC, con emisión y validez. No está validado y no es un aviso local.",
+            "Hay Kp previsto importado de SWPC, con validez de tres horas y recuperación separada. El feed no publica emisión/inicialización: permanecen null. No es un aviso local ni modelo validado.",
         ),
     },
     "F31": {
@@ -148,6 +148,8 @@ def capability_matrix() -> CapabilityMatrix:
     if 'd23-weekly-activity-reports' in available:
         edition=next(p for p in products if p.id=='d23-weekly-activity-reports')
         overrides_by_id.setdefault('F24',{})['observation'] = ('partial',f'Inventario GVP y reportes preliminares de actividad geolocalizados, cotejados RSS/CAP. Emisión del archivo {edition.issued_at.isoformat()}; puede estar atrasado, sin acreditar actividad mundial actual ni vigilancia instrumental continua. Categorías publicadas, sin fecha/probabilidad de erupción próxima.')
+    if 'd26-rgi7-alaska-attributes' in available:
+        overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto RGI7 de áreas y puntos representativos nativos en una muestra de Alaska. No se descargaron huellas ni observaciones de lagunas, diques o vaciamientos; ese inventario no habilita observación/predicción GLOF.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

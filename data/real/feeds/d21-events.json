@@ -1,15 +1,63 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T01:54:03Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T01%3A54%3A03Z&endtime=2026-11-14T01%3A54%3A03Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "163fa90dbd59f67ef8bc0f5a97fe2b98f5f49990e80577de35028d4a296d56e0",
-  "byte_size": 82407,
-  "raw_file": "assets\\d21-events\\163fa90dbd59f67ef8bc0f5a97fe2b98f5f49990e80577de35028d4a296d56e0.json",
+  "retrieved_at": "2026-11-14T04:54:57Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T04%3A54%3A57Z&endtime=2026-11-14T04%3A54%3A57Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "72cfb0072bcf5a442f1ccf437161d81ffc4c462b42580b9925fc3d46710b9e61",
+  "byte_size": 85906,
+  "raw_file": "assets\\d21-events\\72cfb0072bcf5a442f1ccf437161d81ffc4c462b42580b9925fc3d46710b9e61.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000ty6p",
+      "longitude": -66.7642,
+      "latitude": -23.9436,
+      "depth_km": 216.092,
+      "magnitude": 4.7,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T03:32:26.040000Z",
+      "time": "2026-11-14T03:18:26Z",
+      "place": "54 km NW of San Antonio de los Cobres, Argentina"
+    },
+    {
+      "id": "us7000ty6n",
+      "longitude": 92.8261,
+      "latitude": 3.304,
+      "depth_km": 10.0,
+      "magnitude": 5.2,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T04:31:05.644000Z",
+      "time": "2026-11-14T02:59:29Z",
+      "place": "off the west coast of northern Sumatra"
+    },
+    {
+      "id": "us7000ty6e",
+      "longitude": -177.739,
+      "latitude": -19.5803,
+      "depth_km": 587.447,
+      "magnitude": 4.5,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T02:38:35.040000Z",
+      "time": "2026-11-14T02:21:07Z",
+      "place": "Fiji region"
+    },
+    {
+      "id": "us7000ty59",
+      "longitude": -74.7229,
+      "latitude": -37.922,
+      "depth_km": 10.0,
+      "magnitude": 4.6,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T01:55:53.040000Z",
+      "time": "2026-11-13T23:55:15Z",
+      "place": "100 km WSW of Lebu, Chile"
+    },
     {
       "id": "us7000ty56",
       "longitude": 149.92,
@@ -21,6 +69,18 @@
       "updated_at": "2026-11-13T23:50:28.040000Z",
       "time": "2026-11-13T23:30:38Z",
       "place": "153 km NW of Kavieng, Papua New Guinea"
+    },
+    {
+      "id": "us7000ty53",
+      "longitude": 130.4805,
+      "latitude": 29.5604,
+      "depth_km": 40.852,
+      "magnitude": 4.6,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T02:48:21.040000Z",
+      "time": "2026-11-13T23:22:54Z",
+      "place": "74 km S of Yudomari, Japan"
     },
     {
       "id": "us7000ty4w",
@@ -114,7 +174,7 @@
       "magnitude": 4.8,
       "magnitude_type": "mb",
       "review_status": "reviewed",
-      "updated_at": "2026-11-13T21:27:56.765000Z",
+      "updated_at": "2026-11-14T04:34:00.038000Z",
       "time": "2026-11-13T16:35:58Z",
       "place": "10 km SW of Guaymate, Dominican Republic"
     },

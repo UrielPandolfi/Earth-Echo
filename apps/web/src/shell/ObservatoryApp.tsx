@@ -25,7 +25,7 @@ import { CapabilitiesPanel } from "./CapabilitiesPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 import type { ProductList, ScientificProduct,RefreshStatus } from '../domain/generated';
-import { ProductsPanel, ProductInspector } from '../real/Products';
+import { ProductsPanel, ProductInspector,productKindLabel } from '../real/Products';
 import { realMarkersForView } from '../globe/clustering';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
@@ -434,7 +434,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 : undefined
           }
         />
-        {state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{activeProduct.kind === 'forecast' ? 'Pronóstico externo' : 'Observado / producto científico'}</strong><span>{activeProduct.observed_at ?? activeProduct.valid_from ?? 'Fechas por registro'} UTC{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
+        {state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{productKindLabel(activeProduct)}</strong><span>{activeProduct.observed_at || activeProduct.valid_from || activeProduct.issued_at ? `${activeProduct.observed_at ?? activeProduct.valid_from ?? `Emisión ${activeProduct.issued_at}`} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
           state={state}
           onTimeline={(days) => dispatch({ type: "timeline", days })}
           onPlay={() => dispatch({ type: "play" })}
@@ -451,7 +451,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
         />
-      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector product={activeProduct} refreshStatus={refreshStatus} selectedId={state.realSelectedId?.replace('product-point:','').split(':area:')[0] ?? null} onSampleSelect={id=>dispatch({type:'real-select',id:`product-point:${id}`})} onRegionFocus={region=>{
+      ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector key={activeProduct.id} product={activeProduct} refreshStatus={refreshStatus} selectedId={state.realSelectedId?.replace('product-point:','').split(':area:')[0] ?? null} onSampleSelect={id=>dispatch({type:'real-select',id:`product-point:${id}`})} onRegionFocus={region=>{
         dispatch({type:'real-select',id:`product-point:${region.sample_id}`});
         setFrameRequest({west:region.extent.west,east:region.extent.east,south:region.extent.south,north:region.extent.north,crossesAntimeridian:region.extent.crosses_antimeridian});
       }} onTrackFocus={track=>{

@@ -48,6 +48,8 @@ Los puntos REAL se agrupan ya en la cámara inicial, con tamaño angular dependi
 
 Los reportes de actividad GVP se separan del inventario estático. Se coteja RSS con CAP 1.1 y se conserva el período local textual; el UTC por registro es emisión, no instante de actividad. Un circle CAP de radio cero es ubicación del volcán, nunca área afectada. Fuente atrasada permanece archivo histórico con su fecha; una página web más reciente no autoriza a cambiar la fecha del feed. El desfase de zona entre canal RSS e ítems/CAP se conserva sin inventar una corrección.
 
+RGI7 usa atributos científicos G/C del espejo académico público OGGM mediante rangos acotados, sin afirmar descarga de huellas NSIDC. Solo filas completas del fragmento inicial de Alaska se publican; la ventana no representa toda la región. Área km² y puntos representativos nativos (no centroides) permanecen con su ID original. src_date sin zona se conserva como texto de fecha fuente, sin inventar UTC. Un área/punto se coteja entre producto glaciar G y complejo C coincidentes; guía RGI7 fija unidades y semántica. El inventario estático no habilita observación o predicción de GLOF.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |
