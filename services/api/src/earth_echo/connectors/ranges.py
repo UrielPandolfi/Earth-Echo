@@ -9,7 +9,8 @@ import truststore
 from earth_echo.connectors.http import download
 
 class RangeSource:
-    def __init__(self,url: str,*,max_bytes=8_000_000,max_requests=48):
+    def __init__(self,url: str,*,max_bytes=8_000_000,max_requests=48,deadline_seconds=120):
+        if not 30<=deadline_seconds<=420:raise ValueError('Scientific range deadline must be30…420seconds')
         self.url=url; self.max_bytes=max_bytes; self.max_requests=max_requests
         with urlopen(Request(url,method='HEAD',headers={'User-Agent':'EarthEcho/0.2'}),timeout=25,context=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)) as response:
             self.size=int(response.headers['Content-Length'])
@@ -17,7 +18,8 @@ class RangeSource:
             self.modified=response.headers.get('Last-Modified')
             if response.headers.get('Accept-Ranges')!='bytes': raise ValueError('Provider does not advertise byte ranges')
         self.block_size=131072; self.cache={}; self.requests=0; self.transferred=0
-        self.deadline=time.monotonic()+120
+        self.deadline_seconds=deadline_seconds
+        self.deadline=time.monotonic()+deadline_seconds
 
     def open(self): return RangeReader(self)
 
@@ -29,7 +31,7 @@ class RangeSource:
         while length:
             block=offset//self.block_size*self.block_size
             if block not in self.cache:
-                if time.monotonic()>=self.deadline: raise TimeoutError('Scientific subset exceeded 120 seconds; previous retained')
+                if time.monotonic()>=self.deadline: raise TimeoutError(f'Scientific subset exceeded {self.deadline_seconds} seconds; previous retained')
                 end=min(block+self.block_size,self.size)-1
                 if self.requests>=self.max_requests or self.transferred+(end-block+1)>self.max_bytes:
                     raise ValueError('Scientific subset exceeds byte/request budget; full collection was not downloaded')

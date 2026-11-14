@@ -25,7 +25,7 @@ import { CapabilitiesPanel } from "./CapabilitiesPanel";
 import { TimelineBar } from "./TimelineBar";
 import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 import type { ProductList, ScientificProduct,RefreshStatus } from '../domain/generated';
-import { ProductsPanel, ProductInspector,productKindLabel } from '../real/Products';
+import { ProductsPanel, ProductInspector,productKindLabel,productTimeLabel } from '../real/Products';
 import { realMarkersForView } from '../globe/clustering';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
@@ -436,7 +436,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 : undefined
           }
         />
-        {state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{productKindLabel(activeProduct)}</strong><span>{activeProduct.observed_at || activeProduct.valid_from || activeProduct.issued_at ? `${activeProduct.observed_at ? `Dato ${activeProduct.observed_at}` : activeProduct.valid_from ? `Validez desde ${activeProduct.valid_from}` : `Emisión ${activeProduct.issued_at}`} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
+        {state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{productKindLabel(activeProduct)}</strong><span>{activeProduct.observed_at || activeProduct.valid_from || activeProduct.issued_at ? `${productTimeLabel(activeProduct)} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
           state={state}
           onTimeline={(days) => dispatch({ type: "timeline", days })}
           onPlay={() => dispatch({ type: "play" })}

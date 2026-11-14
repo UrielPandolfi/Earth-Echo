@@ -111,6 +111,7 @@ def jobs() -> dict:
     from earth_echo.connectors.seasonal_monthly import fetch_seasonal_monthly
     from earth_echo.connectors.glofas_discharge import fetch_glofas
     from earth_echo.connectors.cams_fields import fetch_cams
+    from earth_echo.connectors.marine_currents import fetch_marine_currents
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -147,11 +148,16 @@ def jobs() -> dict:
         'd09-seas5-monthly':(86400,fetch_seasonal_monthly),
         'd10-glofas-discharge':(86400,fetch_glofas),
         'd12-cams-global':(43200,fetch_cams),
+        'd14-smoc-native':(86400,fetch_marine_currents),
     }
 
 def execute_job(name, runner, moment):
     """A socket timeout is not a total timeout (DNS and slow bodies can hang)."""
-    timeout = int(os.getenv('EARTH_ECHO_HYDROATLAS_TIMEOUT_SECONDS', '420') if name == 'd32-basins-south-america' else os.getenv('EARTH_ECHO_CAMS_TIMEOUT_SECONDS', '420') if name == 'd12-cams-global' else os.getenv('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
+    limits = {'d32-basins-south-america': ('EARTH_ECHO_HYDROATLAS_TIMEOUT_SECONDS', '420'),
+        'd12-cams-global': ('EARTH_ECHO_CAMS_TIMEOUT_SECONDS', '420'),
+        'd14-smoc-native': ('EARTH_ECHO_MARINE_TIMEOUT_SECONDS', '300')}
+    variable, default = limits.get(name, ('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
+    timeout = int(os.getenv(variable, default))
     if not 30 <= timeout <= 600:
         raise ValueError('Job timeout must be between 30 and 600 seconds')
     try:

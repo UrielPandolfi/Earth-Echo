@@ -1,11 +1,12 @@
 import { cleanup,render,screen,within } from '@testing-library/react';
 import { afterEach,expect,it } from 'vitest';
-import { ProductInspector } from './Products';
+import { ProductInspector,productTimeLabel } from './Products';
 import type { ScientificProduct } from '../domain/generated';
 import native from '../../../../data/real/products/d26-rgi60-patagonia-outlines/current.json';
 import roni from '../../../../data/real/products/d48-roni-history/current.json';
 import seasonal from '../../../../data/real/products/d09-seas5-pampa-precipitacion/current.json';
 import discharge from '../../../../data/real/products/d10-glofas-rosario/current.json';
+import smoc from '../../../../data/real/products/d14-smoc-u-total/current.json';
 
 afterEach(cleanup);
 
@@ -48,4 +49,12 @@ it('mantiene fechas diarias distintas para caudal sin concatenar miembros del en
   expect(container.querySelectorAll('.chart-dot-forecast').length).toBe(7);
   expect(container.querySelector('.chart-key')?.textContent).toBe(' Pronóstico');
   expect(screen.getByRole('link',{name:'Weather data by Open-Meteo.com'})).toBeTruthy();
+});
+
+it('preserva la coordenada temporal de una media horaria sin inventar el inicio del promedio',()=>{
+  const product=smoc as unknown as ScientificProduct;
+  render(<ProductInspector product={product} selectedId={null}/>);
+  expect(productTimeLabel(product)).toBe('Fecha de validez 2026-11-15T00:30:00Z');
+  expect(screen.getByText('Fecha de validez 2026-11-15T00:30:00Z UTC')).toBeTruthy();
+  expect(screen.queryByText(/Validez desde/)).toBeNull();
 });
