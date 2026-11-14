@@ -152,6 +152,8 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F26',{})['observation'] = ('blocked','Hay contexto RGI7 de áreas y puntos representativos nativos en una muestra de Alaska. No se descargaron huellas ni observaciones de lagunas, diques o vaciamientos; ese inventario no habilita observación/predicción GLOF.')
     if 'd34-amoc-monthly' in available:
         overrides_by_id.setdefault('F31',{})['observation'] = ('partial','Serie observacional procesada RAPID v2024-2, 248 medias mensuales abril 2004–noviembre 2024 en 26,5° N, con transporte AMOC/calor/agua dulce. No observación mundial o actual ni fecha de colapso; tendencia/inferencia científica siguen separadas.')
+    if 'd25-s3a-chlorophyll' in available:
+        overrides_by_id.setdefault('F20',{})['observation'] = ('partial','Clorofila OC4Me L3 Sentinel-3A vía NOAA, producto experimental con huecos y fechas reales. Fuente Copernicus, no sustituye OceanColor NASA D17. No confirma especie de alga, toxicidad ni un evento HAB; no hay detector o pronóstico biológico.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

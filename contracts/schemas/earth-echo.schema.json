@@ -2370,6 +2370,15 @@
           "title": "Quality Mask",
           "type": "string"
         },
+        "color_scale": {
+          "default": "linear",
+          "enum": [
+            "linear",
+            "log10"
+          ],
+          "title": "Color Scale",
+          "type": "string"
+        },
         "quality_values": {
           "anyOf": [
             {

@@ -79,6 +79,7 @@ def jobs() -> dict:
     from earth_echo.connectors.volcano_reports import fetch_volcano_reports
     from earth_echo.connectors.glacier_inventory import fetch_glacier_inventory
     from earth_echo.connectors.rapid_transport import fetch_rapid
+    from earth_echo.connectors.sentinel_ocean_color import fetch_sentinel_chlorophyll
     from earth_echo.ingest.derived_fields import derive_ifs_fields
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
@@ -103,6 +104,7 @@ def jobs() -> dict:
         'd23-weekly-activity-reports':(86400,fetch_volcano_reports),
         'd26-rgi7-alaska-attributes':(2592000,fetch_glacier_inventory),
         'd34-rapid-monthly':(604800,fetch_rapid),
+        'd25-s3a-chlorophyll':(86400,fetch_sentinel_chlorophyll),
     }
 
 def execute_job(name, runner, moment):

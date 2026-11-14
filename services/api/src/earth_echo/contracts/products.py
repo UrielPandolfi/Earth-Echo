@@ -22,6 +22,7 @@ class ScientificGrid(ApiModel):
     resolution: str
     sampling: str
     quality_mask: str
+    color_scale: Literal['linear','log10'] = 'linear'
     quality_values: list[int | None] | None = None
     quality_legend: dict[str,str] = Field(default_factory=dict)
 
@@ -39,6 +40,8 @@ class ScientificGrid(ApiModel):
             raise ValueError('Invalid missing count')
         if self.quality_values is not None and len(self.quality_values)!=len(self.values):
             raise ValueError('Quality grid shape mismatch')
+        if self.color_scale=='log10' and any(v is not None and v<=0 for v in self.values):
+            raise ValueError('Log display requires positive scientific values; zero must not be silently masked')
         return self
 
 class ProductSample(ApiModel):

@@ -187,6 +187,13 @@
       "sample_path": "data/real/products/d34-amoc-monthly/current.json",
       "credential_variables": [],
       "detail": "AMOC · transporte mensual en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de agua dulce en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.); RAPID · transporte mensual de calor en 26,5° N (248 medias mensuales abril 2004–noviembre 2024 de la sección RAPID 26,5° N. No cobertura oceánica mundial ni dato actual.)"
+    },
+    "D25": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d25-s3a-chlorophyll/current.json",
+      "credential_variables": [],
+      "detail": "Clorofila · Sentinel-3A OC4Me · experimental (Campo L3 de ámbito oceánico mundial; extensión exacta en grid y solo celdas válidas observadas/agregadas. Nubes/tierra/huecos quedan ausentes; no cobertura completa efectiva en cada día.)"
     }
   }
 }

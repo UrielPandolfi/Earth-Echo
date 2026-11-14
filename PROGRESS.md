@@ -433,6 +433,16 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Repetición mediante planificador `unchanged`, revisión semanal de la edición fija, último éxito 05:43:51 UTC. F31 habilita observación procesada parcial; análisis de tendencias y pronóstico permanecen separados. No se infiere probabilidad/fecha de colapso, ni se promociona el experimento SST.
 - 24 fuentes con datos, 41 productos nuevos, 26 campos (dos calculados), 2.475 registros históricos y cero señales calculadas. Verificación de originales/API: 33 activos únicos/85.755.625 bytes, resumen 95.668 bytes y referencias intactas. 98 pruebas API, 22 web, contratos y build pasaron. Continúa la búsqueda de distribución científica pública de clorofila NASA, sin sustituirla por imágenes o datos NOAA de otro producto.
 
+## Incremento 11Q — clorofila Sentinel-3A científica
+
+- D25: producto `noaacwS3AOLCIchlaDaily`, procedencia Copernicus/Sentinel-3A OLCI y procesamiento/distribución modificada NOAA. No se lo atribuyó a NASA D17 ni se declaró descargada la escena Sentinel-2 protegida. Atribución «Contains modified Copernicus Sentinel data» conservada en API/inspector/mapa.
+- Muestra 4×4 de 5.508 bytes en Atlántico sur resultó completamente ausente y se mantuvo así. Ampliación posterior medida a 400×200 (0,9°, stride 24 sobre L3 nativo 0,0375°): 7.132 celdas finitas y 72.868 faltantes, baseline 10/11/2026 12:00 UTC. No relleno de nubes/tierra ni celdas convertidas en señales.
+- OC4Me Experimental, mg m^-3 nativos → etiqueta mg/m³ sin cambio numérico. Rango 0,01–315,0909729; máximo cotejado con CSV independiente 315,09097. ColorBarMaximum=64,7 no se usó como máscara o recorte. Color log10 sólo para visualizar, valores científicos intactos; cero no se oculta para satisfacer esa escala. graphics es overlay, no QA; no hay flags individuales descargados ni confianza inventada.
+- NetCDF y máscara consultables por API/original, leyenda con unidad/fecha/escala/resolución y captura REAL. Identidad incluye todos los valores/atributos y conserva historial de procesamiento, excluyendo sólo líneas volátiles de petición. Repetición `unchanged`; cadencia diaria en tarea Windows, último éxito comprobado 06:05:22 UTC.
+- F20 tiene un insumo observacional parcial de clorofila, sin especie/toxicidad/evento HAB o pronóstico biológico. D17 NASA sigue pendiente: PFEG no respondió y el dataset global público consultado termina en 2022; no se hizo una sustitución semántica.
+- La lista de 42 productos tiene desplazamiento propio y altura acotada: la leyenda queda accesible en 1280×720 sin recorrer toda la lista. Fecha UTC, unidad, resolución, escala y cantidad de huecos comprobadas en la captura REAL.
+- 25 fuentes con datos, 42 productos nuevos, 27 campos (dos calculados), 2.475 registros históricos, cero señales calculadas. 100 pruebas API, 23 web, contratos y build pasaron. Evidencia de originales/API repetida: 34 activos únicos/86.108.038 bytes, resumen 99.058 bytes, referencias intactas; almacén 211.303.107 bytes dentro de 256 MB. Continúan únicamente ampliaciones con datos reales y método verificable.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

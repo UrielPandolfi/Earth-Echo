@@ -1,6 +1,6 @@
 import type { ProductList, ScientificProduct,ProductTrack,ProductRegion,RefreshStatus } from '../domain/generated';
 import { AnomalyChart } from '../shell/AnomalyChart';
-import { useEffect,useMemo,useState } from 'react';
+import { useEffect,useMemo,useState,useRef } from 'react';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
 export function productKindLabel(p: ScientificProduct): string {
@@ -16,6 +16,15 @@ export function ProductsPanel({ data, selected, activeProduct, refreshStatus, on
   grouped: boolean; onGroup: () => void;
 }) {
   const product = activeProduct;
+  const listRef=useRef<HTMLUListElement>(null);
+  useEffect(()=>{
+    const list=listRef.current;
+    const row=list?.querySelector('input:checked')?.closest('li');
+    if(!list || !row) return;
+    const box=list.getBoundingClientRect(),item=row.getBoundingClientRect();
+    if(item.top<box.top) list.scrollTop+=item.top-box.top;
+    else if(item.bottom>box.bottom) list.scrollTop+=item.bottom-box.bottom;
+  },[selected,data?.products.length]);
   const forceGrouping=(product?.samples ?? []).filter(s=>s.map_eligible!==false && s.latitude!=null && s.longitude!=null).length>1500;
   return <aside className="sidebar" aria-label="Consulta real"><div className="sidebar-head"><h2>Observatorio · REAL</h2></div>
     <div className="sidebar-body">
@@ -24,12 +33,12 @@ export function ProductsPanel({ data, selected, activeProduct, refreshStatus, on
       <p className="hint">Actualizador: {refreshStatus?.recent_scan ? 'revisión reciente' : 'sin revisión reciente comprobada'} · {refreshStatus?.last_scan_at ?? 'No disponible'} UTC</p>
       {error && <p role="status" className="hint">{error} Se conserva la última carga disponible.</p>}
       <h3>Productos reales</h3>
-      <ul className="rows">{data?.products.map(p => <li key={p.id}><label className="row"><input type="radio" name="real-product" checked={selected === p.id} onChange={() => onSelect(p.id)} /><span>{p.title}</span></label></li>)}
+      <ul className="rows product-list" ref={listRef}>{data?.products.map(p => <li key={p.id}><label className="row"><input type="radio" name="real-product" checked={selected === p.id} onChange={() => onSelect(p.id)} /><span>{p.title}</span></label></li>)}
         <li><label className="row"><input type="radio" name="real-product" checked={selected === 'archive'} onChange={() => onSelect('archive')} /><span>SST · archivo del Caribe</span></label></li>
       </ul>
       {product && <figure className="legend"><figcaption><strong>{product.variable} · {product.unit}</strong><span>{productKindLabel(product)} · {product.source_id}</span></figcaption>
         <p className="hint">{product.observed_at || product.valid_from || product.issued_at ? `${product.observed_at ?? product.valid_from ?? `Emisión ${product.issued_at}`} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}</p>
-        {product.grid && <><div className="legend-bar legend-real" /><div className="legend-scale"><span>{product.grid.minimum?.toFixed(2)} {product.unit}</span><span>{product.grid.maximum?.toFixed(2)} {product.unit}</span></div><p className="hint">{product.grid.resolution}. {product.grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p></>}
+        {product.grid && <><div className="legend-bar legend-real" /><div className="legend-scale"><span>{product.grid.minimum?.toFixed(2)} {product.unit}</span><span>{product.grid.maximum?.toFixed(2)} {product.unit}</span></div><p className="hint">Escala {product.grid.color_scale==='log10' ? 'logarítmica log10' : 'lineal'} de color; valores en {product.unit}.</p><p className="hint">{product.grid.resolution}. {product.grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p></>}
         {(product.grid || product.extent) && <button type="button" className="wide-toggle" onClick={onFocus}>Encuadrar cobertura</button>}
         <p className="hint">{product.coverage}</p>
         {product.representation==='points' && <p className="hint">{(product.samples ?? []).filter(s=>s.map_eligible===false).length} registros excluidos del mapa por calidad, conservados en la tabla/original.</p>}

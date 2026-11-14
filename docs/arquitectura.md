@@ -52,6 +52,8 @@ RGI7 usa atributos científicos G/C del espejo académico público OGGM mediante
 
 Las series regionales integradas usan representación `time_series`, separada de `planetary`: RAPID 26,5° N no es índice planetario ni malla mundial. El NetCDF completo de transportes se comparte entre AMOC/calor/agua dulce; `Units` distingue Sv/PW y tiempo CF gregorian es coordenada mensual representativa, no medición instantánea. Fecha de creación sin hora/zona no se convierte en emisión UTC. La serie publicada se conserva incluso cuando un intento de reconstrucción desde perfiles discretos difiere; la verificación usa valores binarios y estadísticas oficiales, sin declarar validado otro método. El gráfico conserva todos los valores, reduce solo rótulos y corta la línea en faltantes, sin interpolarlos.
 
+Sentinel-3A OC4Me L3 llega por una distribución pública modificada de Copernicus en NOAA; pertenece a D25 y no sustituye NASA OceanColor D17 o las escenas CDSE todavía no descargadas. Se conserva el estado Experimental, la atribución exigida y el baseline temporal. graphics es overlay y nunca QA. La grilla mantiene NaN y valores que exceden colorBarMaximum: una paleta no define validez científica. `color_scale=log10` afecta sólo el color; contrato rechaza valores no positivos en esa presentación antes que ocultar un cero. Identidad científica conserva ejes, valores y todos los atributos, excluyendo únicamente dos líneas de historial añadidas por la petición ERDDAP; el procesamiento Sentinel-SAFE/cwutils permanece en el hash.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

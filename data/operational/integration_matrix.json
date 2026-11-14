@@ -337,12 +337,15 @@
     "id": "D25",
     "name": "Copernicus Data Space",
     "classification": [
+      "Fuente de observaciones",
       "Servicio de descubrimiento o visualización"
     ],
     "official_url": "https://documentation.dataspace.copernicus.eu/APIs.html",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "STAC público verificado con escena Sentinel-2 L2A real; metadatos científicos HTTPS respondieron 401. CDSE_CLIENT_ID/CDSE_CLIENT_SECRET para la ruta OAuth elegida; sin píxeles acreditados",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d25-s3a-chlorophyll"
+    ],
+    "blocker_or_next_step": "Producto Experimental OC4Me de Sentinel-3A, agregado geométrico L3 redistribuido/modificado por NOAA; no producto NASA OceanColor D17 ni escena Sentinel-2/InSAR. Es concentración de clorofila, no especie de alga, toxicidad, hipoxia ni enfermedad humana. La fecha es baseline del producto diario; se conserva aun con demora del proveedor. Resolución nativa publicada 0.0375° y vista cada 24 centros (0.9°), sin interpolar faltantes. Valores por encima de colorBarMaximum=64.7 se conservan: colorBar no es rango válido ni control de calidad. Escala log10 modifica solo color, no datos. No hay flags QA individuales en este subconjunto; graphics no se usó como calidad. No habilita detección de HAB ni pronóstico biológico. Otras rutas Sentinel-1/2/5P y descarga/procesamiento CDSE siguen pendientes de credenciales/permisos.",
     "limits": "InSAR necesita series SLC compatibles y correcciones. Una imagen SAR no es una medición directa de deformación. SO2 atmosférico no reemplaza el flujo de gas medido en un volcán."
   },
   {

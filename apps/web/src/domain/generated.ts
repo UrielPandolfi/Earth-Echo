@@ -387,6 +387,7 @@ export interface ScientificGrid {
   resolution: string;
   sampling: string;
   quality_mask: string;
+  color_scale?: "linear" | "log10";
   quality_values?: Array<number | null> | null;
   quality_legend?: Record<string, string>;
 }

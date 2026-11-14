@@ -45,6 +45,7 @@ export interface RealField {
   maximum: number | null;
   missing_cells: number;
   values: Array<number | null>;
+  color_scale?: 'linear' | 'log10';
 }
 
 export function isRealSourceView(value: unknown): value is RealSourceView {
@@ -59,12 +60,14 @@ export function paintSstField(field: RealField): FieldGrid {
   const rgba = new Uint8ClampedArray(field.width * field.height * 4);
   const minimum = field.minimum ?? 0;
   const maximum = field.maximum ?? minimum + 1;
-  const span = maximum - minimum || 1;
+  const normalize=(value:number)=>field.color_scale==='log10' ? Math.log10(value) : value;
+  const low=normalize(minimum),high=normalize(maximum);
+  const span = high-low || 1;
   field.values.forEach((value, index) => {
     if (value === null) {
       return;
     }
-    const mix = Math.min(1, Math.max(0, (value - minimum) / span));
+    const mix = Math.min(1, Math.max(0, (normalize(value) - low) / span));
     const offset = index * 4;
     rgba[offset] = Math.round(48 + mix * 176);
     rgba[offset + 1] = Math.round(132 - mix * 40);
