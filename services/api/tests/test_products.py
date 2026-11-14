@@ -54,18 +54,46 @@ def test_scheduler_cadence_failure_recovery_and_os_lock(tmp_path, monkeypatch):
         if len(calls) == 2: raise TimeoutError('offline')
         return 'unchanged' if len(calls) == 3 else 'stored'
     monkeypatch.setattr(refresh, 'jobs', lambda:{'source':(3600,runner)})
+    def run(**kwargs):
+        return refresh.run_due(executor=lambda name, function, moment:function(moment), **kwargs)
     now = datetime(2026,11,13,tzinfo=timezone.utc)
-    first = refresh.run_due(now=now)
-    refresh.run_due(now=now+timedelta(minutes=30))
+    first = run(now=now)
+    run(now=now+timedelta(minutes=30))
     assert len(calls) == 1
-    failed = refresh.run_due(now=now+timedelta(hours=1))['jobs']['source']
+    failed = run(now=now+timedelta(hours=1))['jobs']['source']
     assert failed['last_success_at'] == first['jobs']['source']['last_success_at']
     assert failed['kept_previous'] is True
-    refresh.run_due(now=now+timedelta(hours=1,minutes=10))
+    run(now=now+timedelta(hours=1,minutes=10))
     assert len(calls) == 2
-    recovered = refresh.run_due(now=now+timedelta(hours=1,minutes=16))['jobs']['source']
+    recovered = run(now=now+timedelta(hours=1,minutes=16))['jobs']['source']
     assert recovered['status'] == 'unchanged'
     assert recovered['last_success_at'] != recovered['last_change_at']
     with refresh.execution_lock(path.with_suffix('.lock')) as acquired:
         assert acquired
         assert refresh.run_due(force=True)['status'] == 'already_running'
+
+
+def test_total_job_deadline_keeps_valid_and_continues_other_source(tmp_path, monkeypatch):
+    import subprocess
+    from types import SimpleNamespace
+    path = tmp_path/'state.json'
+    moment = datetime(2026,11,13,tzinfo=timezone.utc)
+    previous = (moment-timedelta(days=1)).isoformat()
+    path.write_text(json.dumps({'jobs':{'slow':{'last_success_at':previous, 'last_change_at':previous}}}))
+    monkeypatch.setattr(refresh, 'state_path', lambda:path)
+    monkeypatch.setattr(refresh, 'jobs', lambda:{'slow':(3600,None), 'other':(3600,None)})
+    calls = []
+    def spawn(args, **kwargs):
+        calls.append((args, kwargs))
+        if args[-2] == 'slow':
+            raise subprocess.TimeoutExpired(args, kwargs['timeout'])
+        return SimpleNamespace(returncode=0, stdout='{"status":"unchanged"}')
+    monkeypatch.setattr(refresh.subprocess, 'run', spawn)
+    state = refresh.run_due(now=moment)
+    assert state['jobs']['slow']['status'] == 'failed'
+    assert state['jobs']['slow']['kept_previous'] is True
+    assert state['jobs']['slow']['last_success_at'] == previous
+    assert 'child terminated' in state['jobs']['slow']['error']
+    assert state['jobs']['other']['status'] == 'unchanged'
+    assert len(calls) == 2 and calls[0][1]['timeout'] == 180
+    assert calls[0][0][-2:] == ['slow', moment.isoformat()]

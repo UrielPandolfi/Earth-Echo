@@ -2,6 +2,8 @@
 import asyncio
 import json
 import os
+import subprocess
+import sys
 from contextlib import contextmanager, asynccontextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -93,7 +95,29 @@ def jobs() -> dict:
         'd07-derived-fields':(43200,derive_ifs_fields),
     }
 
-def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None) -> dict:
+def execute_job(name, runner, moment):
+    """A socket timeout is not a total timeout (DNS and slow bodies can hang)."""
+    timeout = int(os.getenv('EARTH_ECHO_REFRESH_JOB_TIMEOUT_SECONDS', '180'))
+    if not 30 <= timeout <= 600:
+        raise ValueError('Job timeout must be between 30 and 600 seconds')
+    try:
+        child = subprocess.run([sys.executable, '-m', 'earth_echo.tools.refresh_job', name, moment.isoformat()],
+            cwd=repo_root(), capture_output=True, text=True, timeout=timeout,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+    except subprocess.TimeoutExpired:
+        raise TimeoutError(f'Source exceeded {timeout} seconds; child terminated, previous retained') from None
+    try:
+        result = json.loads(child.stdout)
+    except (ValueError, TypeError):
+        raise RuntimeError(f'Source worker failed with exit code {child.returncode}; no valid result') from None
+    if child.returncode or result.get('error'):
+        raise RuntimeError(result.get('error', f'Source worker exited {child.returncode}'))
+    if result.get('status') not in {'stored', 'unchanged'}:
+        raise ValueError('Source worker returned an invalid status')
+    return result['status']
+
+
+def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] | None = None, executor=None) -> dict:
     moment = now or datetime.now(timezone.utc)
     path = state_path()
     with execution_lock(path.with_suffix('.lock')) as acquired:
@@ -113,7 +137,7 @@ def run_due(*, now: datetime | None = None, force: bool = False, only: set[str] 
             state['jobs'][name] = entry
             atomic_json(path, state)
             try:
-                result = runner(attempt)
+                result = (executor or execute_job)(name, runner, attempt)
                 completed=now or datetime.now(timezone.utc)
                 entry.update(status=result, last_success_at=completed.isoformat(), error=None,
                     kept_previous=False,

@@ -382,10 +382,16 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Medición previa: 71.521.479 bytes en almacén, 16.469.328 bytes de JSON actual, 31.336.860 de originales únicos actuales; 177.620.832.256 bytes libres en E:. Presupuesto ampliado a 256 MB configurable para soportar revisiones de las integraciones nuevas, manteniendo cuatro por producto y conservación del válido si llega al tope.
 - 85 pruebas API, contratos y build pasaron. Prueba independiente contra ejemplo FAO publicado 24,5 °C→3,075 kPa y 15 °C→1,705 kPa; pruebas de ausencia/dominio y vector 3–4–5. RGI se resolvió por DOI/CMR pero su distribución NSIDC redirige a Earthdata: D26 requiere las mismas variables NASA, sin iniciar sesión ni crear cuenta.
 
+## Incremento 11K — límite total de actualización por fuente
+
+- Las comprobaciones de proveedores públicos mostraron que un timeout de socket de 25 s no limita DNS ni una respuesta que sigue enviando bytes. Cada trabajo ahora corre en un hijo con límite total de 180 s configurable entre 30 y 600 s. El padre termina/espera al hijo vencido, registra el fallo y continúa con la siguiente fuente, manteniendo exclusión del SO y estado persistente.
+- No se agregaron servidores, base de datos ni colas. El hijo solo ejecuta el ID registrado; secretos heredados por entorno, sin argumentos. La última revisión válida permanece REAL. Prueba de vencimiento comprueba conservación del éxito previo y ejecución posterior de otra fuente; cadencia, bloqueo, fallo/recuperación siguen comprobados.
+- 86 pruebas API pasaron. Tarea Windows reiniciada con el código nuevo; ejecución Kp real por hijo terminó `stored` a las 01:27:06 UTC del 14/11, con intento/éxito/cambio distintos y sin solapamiento. Continúa HydroATLAS: atributos nativos completos leídos y geometría comprimida obtenida; algunas geometrías originales son inválidas y requieren máscara explícita, sin reparación silenciosa ni declaración de capa ya integrada.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.
 2. Un Qwen local pequeño, solo para parafrasear herramientas, si se quiere texto de modelo.
-3. Una cuenta CDS si se va a leer caudal, sin convertirlo en profundidad de inundación.
+3. Una cuenta ECMWF/EWDS y aceptación manual del producto GloFAS si se va a leer caudal, sin convertirlo en profundidad de inundación.
 4. Mantener el experimento de SST como experimental hasta que supere a la persistencia en una prueba nueva.
 
