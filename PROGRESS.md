@@ -407,6 +407,14 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Verificación reproducible `python -m earth_echo.tools.verify_integrations`: 36 detalles API idénticos al almacenamiento, originales servidos con SHA coincidente, 30 activos únicos/77.898.365 bytes, resumen 80.069 bytes; leyendas/máscaras/contadores coherentes. Evidencia en `data/operational/integration_evidence.json`; referencias originales sin cambios. No evalúa habilidad predictiva.
 - 93 pruebas API (incluida ingesta offline/idempotencia/recuperación FIRMS), 21 web, contratos y build. Almacén medido 160 MB antes de otra revisión de metadatos, dentro de 256 MB. Continúa actividad volcánica publicada y otras capacidades públicas verificables; fuentes autenticadas permanecen bloqueadas sólo en su alcance.
 
+## Incremento 11N — reportes de actividad volcánica publicados
+
+- D23 amplía inventario con 27 reportes GVP/USGS del 8–14 octubre 2026, emitidos 15/10 07:11:08 UTC. RSS y CAP 1.1 entregaron ese archivo atrasado, mientras la página semanal muestra noviembre y su descarga automatizada respondió 403. Se integra como archivo histórico explícito; no se oculta el atraso ni se declara actividad actual.
+- Categoría nativa New/Continuing Eruptive Activity, país, nombre, ID GVP, coordenadas y fuentes primarias. Cotejo de los 27 registros entre RSS/CAP. Circle CAP tiene radio cero: punto del volcán, sin área de peligro inventada. Valor/probabilidad null; no extracción de intensidades ni predicción de erupción desde narrativa.
+- Fechas por registro representan emisión, período de actividad permanece texto local sin zona homogénea. Canal RSS declara una zona con una hora de diferencia frente a ítems/CAP; ambas conservadas. Originales ISO-8859-1 exactos en activo de 107.239 bytes, actualizador diario/idempotente `unchanged`, último éxito 02:07:01 UTC. No se vuelve a descargar el inventario para los reportes.
+- 37 productos nuevos/22 fuentes, 26 campos, 1.731 registros históricos separados de 16.200 observaciones. Verificación de originales/API repetida: 31 activos únicos/78.005.604 bytes, resumen 82.875 bytes, referencias intactas. 94 pruebas API y build pasaron; la suite web previa de 21 sigue pasando y no cambió la lógica científica de agrupación.
+- Continúa una vía pública documentada por OGGM para inventarios glaciares RGI6. La distribución oficial de RGI7 sigue requiriendo Earthdata; no se sustituirá edición silenciosamente.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

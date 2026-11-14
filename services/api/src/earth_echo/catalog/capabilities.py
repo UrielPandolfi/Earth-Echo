@@ -145,6 +145,9 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id.setdefault('F15',{})['indicator'] = ('partial','VPD instantáneo sobre agua líquida calculado de T/Td IFS +24 h en dominio conservador 0–50 °C. Variable meteorológica de entorno; no FWI, humedad de combustible ni probabilidad de ignición. GWIS numérico sigue pendiente.')
     if 'd06-viirs-noaa20-sa' in available:
         overrides_by_id.setdefault('F15',{})['observation'] = ('partial','Detecciones térmicas VIIRS NOAA-20 C2 en Sudamérica, con FRP MW, tiempos UTC y calidad nativa. Low permanece en tabla y se excluye del mapa. Puede incluir volcanes/antorchas; no incendios únicos, área quemada ni probabilidad de ignición.')
+    if 'd23-weekly-activity-reports' in available:
+        edition=next(p for p in products if p.id=='d23-weekly-activity-reports')
+        overrides_by_id.setdefault('F24',{})['observation'] = ('partial',f'Inventario GVP y reportes preliminares de actividad geolocalizados, cotejados RSS/CAP. Emisión del archivo {edition.issued_at.isoformat()}; puede estar atrasado, sin acreditar actividad mundial actual ni vigilancia instrumental continua. Categorías publicadas, sin fecha/probabilidad de erupción próxima.')
     phenomena = []
     for module in load_catalog().modules:
         outputs = []

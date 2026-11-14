@@ -46,6 +46,8 @@ FIRMS selecciona NOAA-20 C2 desde el índice público oficial, CSV y SHP de Suda
 
 Los puntos REAL se agrupan ya en la cámara inicial, con tamaño angular dependiente de altura. Un presupuesto de 1.500 símbolos fuerza agrupación adicional aun en conjuntos densos; cada grupo suma sus registros originales y la selección queda separada. No se descartan observaciones para aliviar el visor y la tabla conserva acceso individual. Las pruebas con 20.000 entradas verifican límite, conservación de cantidades y ambos lados del antimeridiano. El límite responde al bloqueo observado al enviar 15.000 billboards a la vista inicial.
 
+Los reportes de actividad GVP se separan del inventario estático. Se coteja RSS con CAP 1.1 y se conserva el período local textual; el UTC por registro es emisión, no instante de actividad. Un circle CAP de radio cero es ubicación del volcán, nunca área afectada. Fuente atrasada permanece archivo histórico con su fecha; una página web más reciente no autoriza a cambiar la fecha del feed. El desfase de zona entre canal RSS e ítems/CAP se conserva sin inventar una corrección.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

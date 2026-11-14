@@ -95,7 +95,7 @@
       "sample_kind": "verified_scientific_product",
       "sample_path": "data/real/products/d23-holocene-inventory/current.json",
       "credential_variables": [],
-      "detail": "Volcanes · inventario Holoceno (Inventario mundial de volcanes conocidos del Holoceno.)"
+      "detail": "Volcanes · inventario Holoceno (Inventario mundial de volcanes conocidos del Holoceno.); GVP · archivo de reportes de actividad · 8 October-14 October 2026 (27 reportes geolocalizados; períodos: 8 October-14 October 2026)"
     },
     "D22": {
       "integration_status": "connected",

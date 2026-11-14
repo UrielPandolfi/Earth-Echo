@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:alert xmlns:ns0="urn:oasis:names:tc:emergency:cap:1.1">
+<ns0:identifier>GVP-Weekly-20261015</ns0:identifier>
+<ns0:sender>gvp@si.edu</ns0:sender>
+<ns0:sent>2026-10-15T03:11:08-04:00</ns0:sent>
+<ns0:status>Actual</ns0:status>
+<ns0:msgType>Alert</ns0:msgType>
+<ns0:source>Global Volcanism Program (Smithsonian Institution) and Volcano Hazards Program (US Geological Survey)</ns0:source>
+<ns0:scope>Public</ns0:scope>
+
+
+<ns0:info>
+	<ns0:category>Geo</ns0:category>
+	<ns0:event>Volcano</ns0:event>
+	<ns0:responseType>None</ns0:responseType>
+	<ns0:urgency>Unknown</ns0:urgency>
+	<ns0:severity>Unknown</ns0:severity>
+	<ns0:certainty>Observed</ns0:certainty>
+	<ns0:eventCode><ns0:valueName>Volcano Name</ns0:valueName><ns0:value>Krakatau</ns0:value></ns0:eventCode>
+	<ns0:eventCode><ns0:valueName>New Activity</ns0:valueName><ns0:value>Yes</ns0:value></ns0:eventCode>
+	<ns0:senderName>Global Volcanism Program (Smithsonian Institution)</ns0:senderName>
+	<ns0:headline>Volcanic activity report for Krakatau (Indonesia), 8 October-14 October 2026</ns0:headline>
+	<ns0:description>The Pusat Vulkanologi dan Mitigasi Bencana Geologi (PVMBG) reported an increase in low-level eruptive activity at Krakatau starting in early October. During 21 September-9 October seismicity indicating both shallow and deep magmatic processes did not significantly increase. Minor white-to-black ash plumes were occasionally visible in webcam images rising as high as 50 m above the crater, though weather conditions sometimes prevented views. Satellite data indicated low sulfur dioxide emissions as high as 238 tons per day and low-level thermal anomalies. Five eruptive events were recorded during 6-8 October, followed by nine eruptive events just on 9 October, indicating increasing low-level activity. The Alert Level was raised to 3 (on a scale of 1-4) at 2100 on 9 October and the public was advised to stay 5 km away from summit.</ns0:description>
+	<ns0:web>https://volcano.si.edu/reports_weekly.cfm</ns0:web>
+	<ns0:contact>Source: Pusat Vulkanologi dan Mitigasi Bencana Geologi (PVMBG, also known as CVGHM)</ns0:contact>
+	<ns0:area><ns0:areaDesc>Indonesia</ns0:areaDesc><ns0:circle>-6.1009,105.4233 0</ns0:circle></ns0:area>
+</ns0:info>
+
+<ns0:info>
+	<ns0:category>Geo</ns0:category>
+	<ns0:event>Volcano</ns0:event>
+	<ns0:responseType>None</ns0:responseType>
+	<ns0:urgency>Unknown</ns0:urgency>
+	<ns0:severity>Unknown</ns0:severity>
+	<ns0:certainty>Observed</ns0:certainty>
+	<ns0:eventCode><ns0:valueName>Volcano Name</ns0:valueName><ns0:value>Manam</ns0:value></ns0:eventCode>
+	<ns0:eventCode><ns0:valueName>New Activity</ns0:valueName><ns0:value>Yes</ns0:value></ns0:eventCode>
+	<ns0:senderName>Global Volcanism Program (Smithsonian Institution)</ns0:senderName>
+	<ns0:headline>Volcanic activity report for Manam (Papua New Guinea), 8 October-14 October 2026</ns0:headline>
+	<ns0:description>The Darwin Volcanic Ash Advisory Centre (VAAC) reported that ash plumes from Manam rose to 2.1 km (7,000 ft) a.s.l. and drifted E, NE, N, and NW during 8-9 and 11-13 October. </ns0:description>
+	<ns0:web>https://volcano.si.edu/reports_weekly.cfm</ns0:web>
+	<ns0:contact>Source: Darwin Volcanic Ash Advisory Centre (VAAC)</ns0:contact>
+	<ns0:area><ns0:areaDesc>Papua New Guinea</ns0:areaDesc><ns0:circle>-4.0800,145.0370 0</ns0:circle></ns0:area>
+</ns0:info>
+
+</ns0:alert>
