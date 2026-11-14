@@ -365,6 +365,8 @@ export interface ScientificGrid {
   resolution: string;
   sampling: string;
   quality_mask: string;
+  quality_values?: Array<number | null> | null;
+  quality_legend?: Record<string, string>;
 }
 
 export interface ScientificProduct {

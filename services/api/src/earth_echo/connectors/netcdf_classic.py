@@ -32,9 +32,9 @@ class NetCdfError(ValueError):
 
 
 class ClassicNetCdf:
-    def __init__(self, path: Path) -> None:
-        self.path = path
-        blob = path.read_bytes()
+    def __init__(self, path: Path | bytes) -> None:
+        self.path = path if isinstance(path,Path) else None
+        blob = path if isinstance(path,bytes) else path.read_bytes()
         if blob[:3] != b"CDF" or blob[3] != 1:
             raise NetCdfError("El archivo no es NetCDF clásico CDF-1.")
         self._blob = blob

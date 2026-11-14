@@ -347,6 +347,14 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 - Se corrigió la asignación de las nuevas capacidades de ciclones: corresponde al ID original F06, no F04 (tormentas severas/granizo). Los 31 IDs y referencias permanecen intactos.
 - 17 fuentes con datos, 29 productos nuevos, 22 campos; almacén 66.418.367 bytes. 78 pruebas API, 20 web, contratos y build pasaron. Captura REAL `real-gdacs-cap-1672x941.jpg`, con área y estado Past accesibles. Continúa trabajo numérico viable sin credenciales.
 
+## Incremento 11G — GEBCO numérico con tipo de fuente
+
+- D31 GEBCO_2026: recorte nativo 15 segundos de arco del Caribe (85–84° O, 17–18° N), 240×240 centros. Muestra inicial 30×30 de 7.854 bytes; ampliación tras medir. Elevaciones -5.497 a +134 m, sin faltantes declarados en el recorte. Positivo hacia arriba, nivel medio del mar nominal EPSG:5831; heterogeneidad vertical somera expresamente conservada.
+- Tipo de fuente TID alineado por celda, no confianza: 91 tierra, 965 multihaz, 273 mediciones directas combinadas, 53.633 predicción guiada por gravedad y 2.638 fuentes mixtas/interpoladas. La resolución de 15 segundos no se presenta como exactitud o medición directa.
+- ASCII científico OPeNDAP y metadatos retenidos, cotejados con valores binarios de los archivos mundiales. Elevación usa HDF5; TID resultó CDF-1, no HDF5. El primer intento se detuvo al alcanzar el presupuesto; se corrigió la detección explícita del formato, sin ampliar a una descarga mundial. Valores independientes: elevación -3.987 m y TID 40 con coordenadas coincidentes. Archivo local de evidencia 2.065.411 bytes frente a originales de 7,5 y 3,7 GB.
+- API, campo, leyenda, calidad por celda, original e inspector disponibles. Actualización mensual en tarea Windows; repetición e idempotencia registradas. 18 fuentes con datos, 30 productos nuevos y 23 campos. No habilita profundidad de inundación, simulación costera ni navegación.
+- 79 pruebas API, contratos y build de producción pasaron. Se conservan dos respuestas ASCII auténticas pequeñas para probar valores y ejes. Continúa FAO ASIS: GeoTIFF flotante y `getSamples` ya entregaron el mismo 58,5; máscara/estación/período todavía en implementación.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

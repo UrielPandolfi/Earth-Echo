@@ -2257,6 +2257,35 @@
         "quality_mask": {
           "title": "Quality Mask",
           "type": "string"
+        },
+        "quality_values": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quality Values"
+        },
+        "quality_legend": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Quality Legend",
+          "type": "object"
         }
       },
       "required": [

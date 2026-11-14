@@ -138,6 +138,13 @@
       "sample_path": "data/real/products/d35-cyclone-cap-areas/current.json",
       "credential_variables": [],
       "detail": "GDACS · áreas CAP de ciclones (2 CAP de ciclón en el RSS consultado, máximo tres. No cubre todos los avisos ni otros tipos de amenaza.)"
+    },
+    "D31": {
+      "integration_status": "connected",
+      "sample_kind": "verified_scientific_product",
+      "sample_path": "data/real/products/d31-gebco-caribe/current.json",
+      "credential_variables": [],
+      "detail": "Batimetría y TID GEBCO · Caribe (Recorte del Caribe 85–84° O, 17–18° N; original nominal mundial no descargado completo.)"
     }
   }
 }

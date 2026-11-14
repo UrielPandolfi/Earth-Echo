@@ -22,6 +22,8 @@ class ScientificGrid(ApiModel):
     resolution: str
     sampling: str
     quality_mask: str
+    quality_values: list[int | None] | None = None
+    quality_legend: dict[str,str] = Field(default_factory=dict)
 
     @model_validator(mode='after')
     def check_grid(self):
@@ -35,6 +37,8 @@ class ScientificGrid(ApiModel):
             raise ValueError('Nonfinite value must be missing')
         if self.missing_cells != self.values.count(None):
             raise ValueError('Invalid missing count')
+        if self.quality_values is not None and len(self.quality_values)!=len(self.values):
+            raise ValueError('Quality grid shape mismatch')
         return self
 
 class ProductSample(ApiModel):

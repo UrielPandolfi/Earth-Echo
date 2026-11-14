@@ -30,6 +30,8 @@ Las trayectorias importadas reutilizan GeoJSON y extensión existentes, con tiem
 
 Las áreas CAP conservan estado y urgencia aunque el mensaje sea pasado; `todate` describe el evento y no reemplaza `expires`. Se cotejan revisiones entre RSS y CAP. Partición de polígonos usa GEOS/Shapely, rechaza originales inválidos y conserva anillos/partes, sin reparar ni usar bbox como área afectada. Las fechas operativas se muestran en el inspector por trabajo concreto; una falla mantiene el producto científico, con su fecha y error visibles.
 
+GEBCO usa subconjuntos numéricos OPeNDAP y TID de la misma edición/coordenadas. La comprobación binaria detecta magic HDF5/CDF antes de elegir lector; no intenta abrir un NetCDF clásico como HDF5 recorriendo el archivo. `quality_values` se alinea por celda y su leyenda identifica tipo de fuente, sin convertirlo en confianza. El datum nominal MSL y su heterogeneidad se conservan; no se usa la grilla para navegación ni hidráulica.
+
 | Pieza | Elección | Motivo |
 | --- | --- | --- |
 | Interfaz | React 19.3, TypeScript 7.0.2, Vite 8.3.8 | El prompt lo proponía y el entorno ya tiene Node 22 y npm. Un solo gestor: npm, con `package-lock.json`. |

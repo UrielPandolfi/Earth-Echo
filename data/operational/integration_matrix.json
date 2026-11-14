@@ -413,9 +413,11 @@
       "Geometría o contexto estático"
     ],
     "official_url": "https://www.gebco.net/data-products/gridded-bathymetry-data",
-    "status": "pending",
-    "evidence": [],
-    "blocker_or_next_step": "Subconjunto GEBCO y Type Identifier Grid con datum",
+    "status": "connected_for_scope",
+    "evidence": [
+      "/v1/products/d31-gebco-caribe"
+    ],
+    "blocker_or_next_step": "Contexto estático, no medición actual ni profundidad de inundación. Altura negativa indica fondo marino bajo nivel medio del mar; no se invierte el signo sin conversión. WGS84 horizontal; datum vertical nominal EPSG:5831/MSL, con heterogeneidad conocida de fuentes someras según GEBCO. No apto para navegación o seguridad marítima. Se conservan ASCII numérico nativo, metadatos y bloques HDF5 de comprobación, sin descargar los 7,5 GB.",
     "limits": "Gran parte de la profundidad se estima o interpola. No es suficiente para resolver inundación en cada puerto. Revisar datum y licencia de la edición."
   },
   {
