@@ -12,14 +12,21 @@ class RangeSource:
     def __init__(self,url: str,*,max_bytes=8_000_000,max_requests=48,deadline_seconds=120):
         if not 30<=deadline_seconds<=600:raise ValueError('Scientific range deadline must be30…600seconds')
         self.url=url; self.max_bytes=max_bytes; self.max_requests=max_requests
-        with urlopen(Request(url,method='HEAD',headers={'User-Agent':'EarthEcho/0.2'}),timeout=25,context=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)) as response:
-            self.size=int(response.headers['Content-Length'])
-            self.etag=response.headers.get('ETag')
-            self.modified=response.headers.get('Last-Modified')
-            if response.headers.get('Accept-Ranges')!='bytes': raise ValueError('Provider does not advertise byte ranges')
+        meta={k.lower():v for k,v in self._head(url).items()}
+        self.size=int(meta['content-length'])
+        self.etag=meta.get('etag')
+        self.modified=meta.get('last-modified')
+        if meta.get('accept-ranges')!='bytes': raise ValueError('Provider does not advertise byte ranges')
         self.block_size=131072; self.cache={}; self.requests=0; self.transferred=0
         self.deadline_seconds=deadline_seconds
         self.deadline=time.monotonic()+deadline_seconds
+
+    def _head(self,url):
+        with urlopen(Request(url,method='HEAD',headers={'User-Agent':'EarthEcho/0.2'}),timeout=25,context=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)) as response:
+            return dict(response.headers)
+
+    def _fetch(self,url,*,max_bytes,headers):
+        return download(url,max_bytes=max_bytes,headers=headers)
 
     def open(self): return RangeReader(self)
 
@@ -39,7 +46,7 @@ class RangeSource:
                 # HTTP If-Match requires strong validators; a weak ETag never matches it.
                 if self.etag and not self.etag.startswith('W/'): headers['If-Match']=self.etag
                 elif self.modified: headers['If-Unmodified-Since']=self.modified
-                raw,meta=download(self.url,max_bytes=end-block+1,headers=headers)
+                raw,meta=self._fetch(self.url,max_bytes=end-block+1,headers=headers)
                 lowered={k.lower():v for k,v in meta.items()}
                 if lowered.get('content-range')!=f'bytes {block}-{end}/{self.size}' or len(raw)!=end-block+1:
                     raise ValueError('Range response does not match requested offsets/version')

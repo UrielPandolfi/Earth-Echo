@@ -23,7 +23,7 @@
     "official_url": "https://nsidc.org/data/spl3smp_e",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "blocker_or_next_step": "CMR comprobado: SPL3SMP_E V006, gránulo13/11/2026. Diagnóstico nasa_access y transporte autenticado acotado preparados/probados con respuestas controladas; credenciales ausentes, sin valores HDF verificados. No es fuente conectada. Configurar EARTHDATA_USERNAME/EARTHDATA_PASSWORD o EARTHDATA_TOKEN localmente y autorizar NSIDC; evidencia data/samples/nasa-access. V006 no se deduce del sufijo _001 del archivo.",
     "limits": "No observa directamente toda la zona radicular. Excluir suelo congelado, nieve, agua y recuperaciones rechazadas. No rellenar huecos como mediciones reales."
   },
   {
@@ -35,7 +35,7 @@
     "official_url": "https://ldas.gsfc.nasa.gov/gldas/dataset",
     "status": "pending",
     "evidence": [],
-    "blocker_or_next_step": "Earthdata: EARTHDATA_USERNAME, EARTHDATA_PASSWORD; falta descarga autenticada",
+    "blocker_or_next_step": "CMR comprobado: GLDAS_NOAH025_3H V2.1, último gránulo31/07/2026 21UTC. Diagnóstico nasa_access y transporte autenticado acotado preparados/probados con respuestas controladas; credenciales ausentes, sin valores NetCDF verificados. No es fuente conectada. Configurar EARTHDATA_USERNAME/EARTHDATA_PASSWORD o EARTHDATA_TOKEN y autorizar GES DISC; no cambiar por Early Product para ocultar latencia. Evidencia data/samples/nasa-access.",
     "limits": "Es salida de un modelo con observaciones asimiladas o forzantes, no una medición satelital directa. No combinar series 2.0 y 2.1 sin evaluar discontinuidades."
   },
   {
