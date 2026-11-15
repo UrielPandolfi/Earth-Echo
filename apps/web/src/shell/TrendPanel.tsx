@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { DataMode } from "./observatoryState";
 import { ForecastReplay } from "./ForecastReplay";
 import { TrendChart } from "./TrendChart";
+import { SSTAnomalies } from './SSTAnomalies';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 
@@ -132,6 +133,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
           </div>
         </dl>
         <p className="fine">Método {view.method_id}. Ejecución {view.execution_id}.</p>
+        <SSTAnomalies />
         <ForecastReplay onReplay={onReplay} />
       </div>
       <footer className="inspector-foot">

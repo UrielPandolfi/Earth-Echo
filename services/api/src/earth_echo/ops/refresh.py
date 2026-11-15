@@ -20,9 +20,13 @@ DERIVED_INPUTS = {
     'd07-derived-fields': tuple(f'd07-ifs-{p}-24h' for p in ('10u', '10v', '2t', '2d')),
     'd34-amoc-annual-trend': ('d34-amoc-monthly',),
 }
+DERIVED_FILE_INPUTS = {'d15-sst-anomalies':('d15/monthly_series.json',)}
 
 def input_revisions(name: str) -> dict[str, str]:
     revisions = {}
+    for relative in DERIVED_FILE_INPUTS.get(name,()):
+        try:revisions['file:'+relative]=hashlib.sha256((repo_root()/'data/real'/relative).read_bytes()).hexdigest()
+        except OSError as error:revisions['file:'+relative]=f'unavailable:{type(error).__name__}'
     for key in DERIVED_INPUTS.get(name, ()):
         try:
             revisions[key] = hashlib.sha256((products_root()/key/'current.json').read_bytes()).hexdigest()
@@ -115,6 +119,7 @@ def jobs() -> dict:
     from earth_echo.connectors.marine_temperature import fetch_marine_temperature
     from earth_echo.connectors.marine_level import fetch_marine_level
     from earth_echo.connectors.marine_salinity import fetch_marine_salinity
+    from earth_echo.ingest.sst_anomalies import derive_sst_anomalies
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -155,6 +160,7 @@ def jobs() -> dict:
         'd14-thetao-native':(86400,fetch_marine_temperature),
         'd14-mol-native':(86400,fetch_marine_level),
         'd14-so-native':(86400,fetch_marine_salinity),
+        'd15-sst-anomalies':(86400,derive_sst_anomalies),
     }
 
 def terminate_worker(child):

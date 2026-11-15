@@ -223,6 +223,13 @@ def _real_routes() -> APIRouter:
 def _analysis_routes() -> APIRouter:
     router = APIRouter(prefix="/v1/analyses")
 
+    from earth_echo.contracts.analyses import SSTAnomalyView
+    from earth_echo.queries.anomalies import anomaly_view
+
+    @router.get('/d15-anomalies',response_model=SSTAnomalyView)
+    def sst_anomalies():
+        return anomaly_view()
+
     @router.get("/d15-sst", response_model=TrendView)
     def sst_trend(
         region_id: str = "caribe-occidental",

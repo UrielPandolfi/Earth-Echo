@@ -105,6 +105,9 @@ def capability_matrix() -> CapabilityMatrix:
         overrides_by_id['F19']['observation'] = ('partial','SST CoralTemp de cobertura oceánica mundial submuestreada a 1°. La SST no confirma blanqueamiento; historia y tendencia solo en el recorte del Caribe.')
     if {'d15-dhw-global','d15-hotspot-global'} <= available:
         overrides_by_id['F19']['indicator'] = ('partial','HotSpot y DHW numéricos importados de NOAA con máscara. Indicadores de estrés térmico observado, sin daño biológico confirmado.')
+    if 'd15-sst-seasonal-departures' in available:
+        previous=overrides_by_id.setdefault('F19',{}).get('indicator',('partial',''))[1]
+        overrides_by_id['F19']['indicator']=('partial',previous+' Además hay etiquetado descriptivo de desvíos mensuales SST del recorte Caribe2022–2025 respecto a mediana/MAD2014–2021, ocho años por mes, sin probabilidad o daño. No es detector diario MHW o blanqueamiento ni alerta actual; /v1/analyses/d15-anomalies.')
     if any(p.source_id=='D04' for p in products):
         overrides_by_id.setdefault('F16',{})['observation'] = ('partial','NDVI/EVI MODIS en subconjuntos de Pampa/Amazonía, con QA y compuesto de 16 días. No mide rendimiento ni identifica causa del estrés.')
     if any(p.source_id=='D05' for p in products):

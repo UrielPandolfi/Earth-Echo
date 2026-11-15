@@ -369,6 +369,20 @@ export interface RefreshStatus {
   note: string;
 }
 
+export interface SSTAnomalyView {
+  data_mode?: "real";
+  status: "evaluated" | "not_evaluable" | "unavailable";
+  reason?: string | null;
+  assessment_period?: string;
+  assessed_months?: number;
+  flagged_months?: number;
+  warm_months?: number;
+  cold_months?: number;
+  missing_months?: number;
+  stale_input?: boolean;
+  product?: ScientificProduct | null;
+}
+
 export interface ScientificCalculation {
   method_version: string;
   formula: string;
@@ -550,6 +564,7 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  sst_anomaly_analysis: SSTAnomalyView;
   refresh: RefreshStatus;
   scientific_products: ProductList;
   health: HealthResponse;

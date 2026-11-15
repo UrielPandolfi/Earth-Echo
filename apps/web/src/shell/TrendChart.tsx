@@ -11,6 +11,7 @@ interface GuidePoint {
 }
 
 interface TrendChartProps {
+  label?: string;
   series: TrendPoint[];
   trendLine: GuidePoint[];
   lowLine: GuidePoint[];
@@ -27,7 +28,7 @@ function keyOf(point: { year: number; month: number }): string {
   return `${point.year}-${point.month}`;
 }
 
-export function TrendChart({ series, trendLine, lowLine, highLine }: TrendChartProps) {
+export function TrendChart({ series, trendLine, lowLine, highLine, label="Anomalía mensual de SST y recta ajustada" }: TrendChartProps) {
   const numbers = [
     ...series.flatMap((point) => (point.anomaly_c === null ? [] : [point.anomaly_c])),
     ...trendLine.map((point) => point.anomaly_c),
@@ -66,7 +67,7 @@ export function TrendChart({ series, trendLine, lowLine, highLine }: TrendChartP
 
   return (
     <figure className="chart trend-chart">
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Anomalía mensual de SST y recta ajustada">
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
         <line className="chart-grid" x1={padLeft} x2={width - padRight} y1={yOf(0)} y2={yOf(0)} />
         <text className="chart-tick" x={4} y={yOf(0) + 3}>0 °C</text>
         {lowLine.length > 1 && highLine.length > 1 ? (
@@ -79,8 +80,8 @@ export function TrendChart({ series, trendLine, lowLine, highLine }: TrendChartP
       </svg>
       <figcaption className="chart-key">
         <span><i className="swatch observed" /> Anomalía mensual</span>
-        <span><i className="swatch trend" /> Recta</span>
-        <span><i className="swatch band" /> Intervalo de la pendiente</span>
+        {trendLine.length>1 && <span><i className="swatch trend" /> Recta</span>}
+        {lowLine.length>1 && highLine.length>1 && <span><i className="swatch band" /> Intervalo de la pendiente</span>}
       </figcaption>
     </figure>
   );

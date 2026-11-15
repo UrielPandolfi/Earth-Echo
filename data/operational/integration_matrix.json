@@ -234,9 +234,10 @@
     "evidence": [
       "/v1/products/d15-dhw-global",
       "/v1/products/d15-hotspot-global",
-      "/v1/products/d15-sst-global"
+      "/v1/products/d15-sst-global",
+      "/v1/products/d15-sst-seasonal-departures"
     ],
-    "blocker_or_next_step": "HotSpot: diferencia positiva de SST respecto de Maximum Monthly Mean; DHW: acumulación del estrés ≥1 °C durante 12 semanas. Indicadores importados de NOAA, sin confirmar blanqueamiento biológico ni pronóstico. | SST analizada: no es temperatura del aire ni diagnóstico de ola de calor marina.",
+    "blocker_or_next_step": "HotSpot: diferencia positiva de SST respecto de Maximum Monthly Mean; DHW: acumulación del estrés ≥1 °C durante 12 semanas. Indicadores importados de NOAA, sin confirmar blanqueamiento biológico ni pronóstico. | SST analizada: no es temperatura del aire ni diagnóstico de ola de calor marina. | Referencia corta de ocho años, estacionalidad por mes; no normal climática. Se preservan candidatos como observaciones, no se eliminan. Regla exploratoria3,5×MAD normalizada, sin tasas de falsa alarma/daño, múltiples comparaciones o probabilidad. Un resultado dentro del umbral no demuestra ausencia de estrés. No incorpora datos posteriores a2025; no es alerta actual, MHW de cinco días, causalidad, pronóstico ni validación del experimento SST.",
     "limits": "Estrés térmico y riesgo de blanqueamiento no confirman daño biológico observado. No asignar automáticamente los 5 km al pronóstico de cuatro meses."
   },
   {

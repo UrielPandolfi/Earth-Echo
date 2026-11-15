@@ -2251,6 +2251,89 @@
       "title": "RefreshStatus",
       "type": "object"
     },
+    "SSTAnomalyView": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "not_evaluable",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "assessment_period": {
+          "default": "2022–2025 · histórico",
+          "title": "Assessment Period",
+          "type": "string"
+        },
+        "assessed_months": {
+          "default": 0,
+          "title": "Assessed Months",
+          "type": "integer"
+        },
+        "flagged_months": {
+          "default": 0,
+          "title": "Flagged Months",
+          "type": "integer"
+        },
+        "warm_months": {
+          "default": 0,
+          "title": "Warm Months",
+          "type": "integer"
+        },
+        "cold_months": {
+          "default": 0,
+          "title": "Cold Months",
+          "type": "integer"
+        },
+        "missing_months": {
+          "default": 0,
+          "title": "Missing Months",
+          "type": "integer"
+        },
+        "stale_input": {
+          "default": false,
+          "title": "Stale Input",
+          "type": "boolean"
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScientificProduct"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "SSTAnomalyView",
+      "type": "object"
+    },
     "ScientificCalculation": {
       "additionalProperties": false,
       "properties": {
@@ -3567,6 +3650,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "sst_anomaly_analysis": {
+      "$ref": "#/$defs/SSTAnomalyView"
+    },
     "refresh": {
       "$ref": "#/$defs/RefreshStatus"
     },
@@ -3608,6 +3694,7 @@
     }
   },
   "required": [
+    "sst_anomaly_analysis",
     "refresh",
     "scientific_products",
     "health",
