@@ -11,11 +11,12 @@ from earth_echo.contracts.typescript_emit import emit_typescript
 from earth_echo.contracts.types import ApiModel
 from earth_echo.contracts.products import ProductList
 from earth_echo.contracts.operations import RefreshStatus
-from earth_echo.contracts.analyses import SSTAnomalyView
+from earth_echo.contracts.analyses import SSTAnomalyView,AssociationView
 from earth_echo.paths import repo_root
 
 
 class ContractBundle(ApiModel):
+    associations: AssociationView
     sst_anomaly_analysis: SSTAnomalyView
     refresh: RefreshStatus
     scientific_products: ProductList

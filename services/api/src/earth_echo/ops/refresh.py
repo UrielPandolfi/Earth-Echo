@@ -19,6 +19,7 @@ from earth_echo.ingest.feeds import refresh_usgs, refresh_kp, refresh_kp_forecas
 DERIVED_INPUTS = {
     'd07-derived-fields': tuple(f'd07-ifs-{p}-24h' for p in ('10u', '10v', '2t', '2d')),
     'd34-amoc-annual-trend': ('d34-amoc-monthly',),
+    'earth-system-associations':('d15-sst-seasonal-departures','d48-roni-history','d34-amoc-monthly'),
 }
 DERIVED_FILE_INPUTS = {'d15-sst-anomalies':('d15/monthly_series.json',)}
 
@@ -120,6 +121,7 @@ def jobs() -> dict:
     from earth_echo.connectors.marine_level import fetch_marine_level
     from earth_echo.connectors.marine_salinity import fetch_marine_salinity
     from earth_echo.ingest.sst_anomalies import derive_sst_anomalies
+    from earth_echo.ingest.associations import derive_associations
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -161,6 +163,7 @@ def jobs() -> dict:
         'd14-mol-native':(86400,fetch_marine_level),
         'd14-so-native':(86400,fetch_marine_salinity),
         'd15-sst-anomalies':(86400,derive_sst_anomalies),
+        'earth-system-associations':(86400,derive_associations),
     }
 
 def terminate_worker(child):

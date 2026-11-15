@@ -3,6 +3,7 @@ import type { DataMode } from "./observatoryState";
 import { ForecastReplay } from "./ForecastReplay";
 import { TrendChart } from "./TrendChart";
 import { SSTAnomalies } from './SSTAnomalies';
+import { AssociationsPanel } from './AssociationsPanel';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 
@@ -134,6 +135,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
         </dl>
         <p className="fine">Método {view.method_id}. Ejecución {view.execution_id}.</p>
         <SSTAnomalies />
+        <AssociationsPanel />
         <ForecastReplay onReplay={onReplay} />
       </div>
       <footer className="inspector-foot">

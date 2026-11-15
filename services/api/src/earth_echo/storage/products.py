@@ -47,6 +47,10 @@ def publish(product: ScientificProduct, raw: bytes, suffix: str, root: Path | No
     if same_asset and scientific_metadata(current)==metadata:
         return 'unchanged'
     used = sum(p.stat().st_size for p in active.rglob('*') if p.is_file()) if active.exists() else 0
+    # Calculated reports share the same512MB scientific budget; not another
+    # database or unbounded store outside the product accounting.
+    analyses=active.parent/'analyses'
+    if analyses.exists():used+=sum(p.stat().st_size for p in analyses.rglob('*') if p.is_file())
     projected = used + (0 if (active/product.raw_file).exists() else len(raw)) + 2*len(product.model_dump_json().encode())
     budget=int(os.getenv('EARTH_ECHO_PRODUCT_STORE_MAX_BYTES','512000000'))
     if not 32_000_000<=budget<=2_000_000_000: raise ValueError('Product store budget must be between 32 MB and 2 GB')

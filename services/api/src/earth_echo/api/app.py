@@ -230,6 +230,20 @@ def _analysis_routes() -> APIRouter:
     def sst_anomalies():
         return anomaly_view()
 
+    from earth_echo.contracts.analyses import AssociationView
+    from earth_echo.queries.associations import association_view
+
+    @router.get('/associations',response_model=AssociationView)
+    def earth_system_associations():
+        return association_view()
+
+    @router.get('/associations/{key}.csv')
+    def earth_system_association_csv(key:Annotated[str,Path(pattern=r'^(enso-sst|amoc-sst)$')]):
+        from earth_echo.queries.associations import association_csv
+        content=association_csv(key)
+        if content is None:raise HTTPException(404,'No está disponible ese análisis real')
+        return Response(content=content,media_type='text/csv',headers={'Content-Disposition':f'attachment; filename={key}-paired-quarters.csv'})
+
     @router.get("/d15-sst", response_model=TrendView)
     def sst_trend(
         region_id: str = "caribe-occidental",

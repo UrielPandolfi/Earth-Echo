@@ -22,6 +22,56 @@ export interface AssetRecord {
   provenance: Provenance;
 }
 
+export interface AssociationPairView {
+  id: string;
+  title: string;
+  status: "evaluated" | "not_evaluable";
+  reason: string | null;
+  x_name: string;
+  y_name: string;
+  x_unit: string;
+  y_unit: string;
+  x_scope: string;
+  y_scope: string;
+  n_pairs: number;
+  missing_pairs: number;
+  raw_r: number | null;
+  residual_r: number | null;
+  slope_x_per_year: number | null;
+  slope_y_per_year: number | null;
+  intervals: BlockInterval[];
+  points: AssociationPoint[];
+  inputs: CalculationInput[];
+  warnings: string[];
+}
+
+export interface AssociationPoint {
+  year: number;
+  quarter: number;
+  start: string;
+  end: string;
+  x: number | null;
+  y: number | null;
+  residual_x: number | null;
+  residual_y: number | null;
+}
+
+export interface AssociationView {
+  data_mode?: "real";
+  status: "evaluated" | "not_evaluable" | "unavailable";
+  reason?: string | null;
+  method_version: string;
+  execution_id: string;
+  computed_at: string | null;
+  causal_attribution?: "not_identified";
+  predictive_validation?: "not_a_forecast";
+  parameters: Record<string, number>;
+  references: string[];
+  stale_inputs?: string[];
+  verification: string;
+  pairs: AssociationPairView[];
+}
+
 export interface AvailabilityKnown {
   status: "known";
   at: string;
@@ -29,6 +79,14 @@ export interface AvailabilityKnown {
 
 export interface AvailabilityUnknown {
   status: "unknown";
+}
+
+export interface BlockInterval {
+  block_quarters: number;
+  low: number | null;
+  high: number | null;
+  valid_draws: number;
+  draws: number;
 }
 
 export interface CalculationInput {
@@ -564,6 +622,7 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  associations: AssociationView;
   sst_anomaly_analysis: SSTAnomalyView;
   refresh: RefreshStatus;
   scientific_products: ProductList;

@@ -178,6 +178,359 @@
       "title": "AssetRecord",
       "type": "object"
     },
+    "AssociationPairView": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "not_evaluable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "x_name": {
+          "title": "X Name",
+          "type": "string"
+        },
+        "y_name": {
+          "title": "Y Name",
+          "type": "string"
+        },
+        "x_unit": {
+          "title": "X Unit",
+          "type": "string"
+        },
+        "y_unit": {
+          "title": "Y Unit",
+          "type": "string"
+        },
+        "x_scope": {
+          "title": "X Scope",
+          "type": "string"
+        },
+        "y_scope": {
+          "title": "Y Scope",
+          "type": "string"
+        },
+        "n_pairs": {
+          "title": "N Pairs",
+          "type": "integer"
+        },
+        "missing_pairs": {
+          "title": "Missing Pairs",
+          "type": "integer"
+        },
+        "raw_r": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": -1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Raw R"
+        },
+        "residual_r": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": -1,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Residual R"
+        },
+        "slope_x_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Slope X Per Year"
+        },
+        "slope_y_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Slope Y Per Year"
+        },
+        "intervals": {
+          "items": {
+            "$ref": "#/$defs/BlockInterval"
+          },
+          "title": "Intervals",
+          "type": "array"
+        },
+        "points": {
+          "items": {
+            "$ref": "#/$defs/AssociationPoint"
+          },
+          "title": "Points",
+          "type": "array"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/CalculationInput"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status",
+        "reason",
+        "x_name",
+        "y_name",
+        "x_unit",
+        "y_unit",
+        "x_scope",
+        "y_scope",
+        "n_pairs",
+        "missing_pairs",
+        "raw_r",
+        "residual_r",
+        "slope_x_per_year",
+        "slope_y_per_year",
+        "intervals",
+        "points",
+        "inputs",
+        "warnings"
+      ],
+      "title": "AssociationPairView",
+      "type": "object"
+    },
+    "AssociationPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "year": {
+          "title": "Year",
+          "type": "integer"
+        },
+        "quarter": {
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Quarter",
+          "type": "integer"
+        },
+        "start": {
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "format": "date-time",
+          "title": "End",
+          "type": "string"
+        },
+        "x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "X"
+        },
+        "y": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Y"
+        },
+        "residual_x": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Residual X"
+        },
+        "residual_y": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Residual Y"
+        }
+      },
+      "required": [
+        "year",
+        "quarter",
+        "start",
+        "end",
+        "x",
+        "y",
+        "residual_x",
+        "residual_y"
+      ],
+      "title": "AssociationPoint",
+      "type": "object"
+    },
+    "AssociationView": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "not_evaluable",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "execution_id": {
+          "title": "Execution Id",
+          "type": "string"
+        },
+        "computed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Computed At"
+        },
+        "causal_attribution": {
+          "const": "not_identified",
+          "default": "not_identified",
+          "title": "Causal Attribution",
+          "type": "string"
+        },
+        "predictive_validation": {
+          "const": "not_a_forecast",
+          "default": "not_a_forecast",
+          "title": "Predictive Validation",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        },
+        "stale_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Stale Inputs",
+          "type": "array"
+        },
+        "verification": {
+          "title": "Verification",
+          "type": "string"
+        },
+        "pairs": {
+          "items": {
+            "$ref": "#/$defs/AssociationPairView"
+          },
+          "title": "Pairs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "method_version",
+        "execution_id",
+        "computed_at",
+        "parameters",
+        "references",
+        "verification",
+        "pairs"
+      ],
+      "title": "AssociationView",
+      "type": "object"
+    },
     "AvailabilityKnown": {
       "additionalProperties": false,
       "properties": {
@@ -212,6 +565,54 @@
         "status"
       ],
       "title": "AvailabilityUnknown",
+      "type": "object"
+    },
+    "BlockInterval": {
+      "additionalProperties": false,
+      "properties": {
+        "block_quarters": {
+          "title": "Block Quarters",
+          "type": "integer"
+        },
+        "low": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Low"
+        },
+        "high": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "High"
+        },
+        "valid_draws": {
+          "title": "Valid Draws",
+          "type": "integer"
+        },
+        "draws": {
+          "title": "Draws",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "block_quarters",
+        "low",
+        "high",
+        "valid_draws",
+        "draws"
+      ],
+      "title": "BlockInterval",
       "type": "object"
     },
     "CalculationInput": {
@@ -3650,6 +4051,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "associations": {
+      "$ref": "#/$defs/AssociationView"
+    },
     "sst_anomaly_analysis": {
       "$ref": "#/$defs/SSTAnomalyView"
     },
@@ -3694,6 +4098,7 @@
     }
   },
   "required": [
+    "associations",
     "sst_anomaly_analysis",
     "refresh",
     "scientific_products",

@@ -1,7 +1,8 @@
 """Typed summaries of calculated analyses, separate from event counts."""
 from typing import Literal
-from earth_echo.contracts.types import ApiModel
-from earth_echo.contracts.products import ScientificProduct
+from earth_echo.contracts.types import ApiModel,UtcDateTime
+from earth_echo.contracts.products import ScientificProduct,CalculationInput
+from pydantic import Field
 
 
 class SSTAnomalyView(ApiModel):
@@ -16,3 +17,61 @@ class SSTAnomalyView(ApiModel):
     missing_months: int=0
     stale_input: bool=False
     product: ScientificProduct | None=None
+
+
+class AssociationPoint(ApiModel):
+    year: int
+    quarter: int=Field(ge=1,le=4)
+    start: UtcDateTime
+    end: UtcDateTime
+    x: float | None
+    y: float | None
+    residual_x: float | None
+    residual_y: float | None
+
+
+class BlockInterval(ApiModel):
+    block_quarters: int
+    low: float | None
+    high: float | None
+    valid_draws: int
+    draws: int
+
+
+class AssociationPairView(ApiModel):
+    id: str
+    title: str
+    status: Literal['evaluated','not_evaluable']
+    reason: str | None
+    x_name: str
+    y_name: str
+    x_unit: str
+    y_unit: str
+    x_scope: str
+    y_scope: str
+    n_pairs: int
+    missing_pairs: int
+    raw_r: float | None=Field(ge=-1,le=1,allow_inf_nan=False)
+    residual_r: float | None=Field(ge=-1,le=1,allow_inf_nan=False)
+    slope_x_per_year: float | None
+    slope_y_per_year: float | None
+    intervals: list[BlockInterval]
+    points: list[AssociationPoint]
+    inputs: list[CalculationInput]
+    warnings: list[str]
+
+
+class AssociationView(ApiModel):
+    data_mode: Literal['real']='real'
+    status: Literal['evaluated','not_evaluable','unavailable']
+    reason: str | None=None
+    method_version: str
+    execution_id: str
+    computed_at: UtcDateTime | None
+    causal_attribution: Literal['not_identified']='not_identified'
+    predictive_validation: Literal['not_a_forecast']='not_a_forecast'
+    parameters: dict[str,float]
+    references: list[str]
+    stale_inputs: list[str]=Field(default_factory=list)
+    verification: str
+    pairs: list[AssociationPairView]

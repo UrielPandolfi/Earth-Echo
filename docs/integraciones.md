@@ -55,38 +55,38 @@ Generada desde los 48 IDs originales con `python -m earth_echo.tools.integration
 
 ## Capacidades de los 31 fenómenos
 
-Observación puede ser parcial; un dato de contexto no habilita un detector. «specified», «blocked» o «research» no son capacidades operativas. «partial» describe exactamente el alcance indicado en la API.
+Observación puede ser parcial; un dato de contexto no habilita un detector. «specified», «blocked» o «research» no son capacidades operativas. «partial» describe exactamente el alcance indicado en la API. Las asociaciones son exploratorias y no identifican causalidad.
 
-| ID | Fenómeno | Observación | Indicador | Tendencia | Pronóstico externo | Modelo propio |
-| --- | --- | --- | --- | --- | --- | --- |
-| F01 | Lluvias extremas | blocked | specified | specified | partial | specified |
-| F02 | Olas de calor | partial | specified | specified | partial | specified |
-| F03 | Olas de frío y heladas | specified | specified | specified | partial | specified |
-| F04 | Tormentas severas y granizo | specified | partial | specified | specified | specified |
-| F05 | Tornados | specified | specified | specified | specified | specified |
-| F06 | Ciclones tropicales | partial | partial | specified | specified | specified |
-| F07 | Marejadas e inundación costera | specified | specified | specified | specified | specified |
-| F08 | Nieve y tormentas de hielo | specified | specified | specified | specified | specified |
-| F09 | Tormentas de polvo | specified | specified | specified | partial | specified |
-| F10 | Contaminación y transporte de humo | specified | specified | specified | partial | specified |
-| F11 | Sequías | blocked | partial | specified | partial | specified |
-| F12 | Crecidas fluviales | blocked | specified | specified | partial | specified |
-| F13 | Inundaciones repentinas | specified | specified | specified | specified | specified |
-| F14 | Escasez de agua | specified | partial | specified | specified | specified |
-| F15 | Peligro de incendios | partial | partial | specified | specified | specified |
-| F16 | Estrés agrícola | partial | partial | specified | partial | specified |
-| F17 | El Niño y La Niña | specified | partial | specified | partial | specified |
-| F18 | Olas de calor marinas | partial | specified | specified | partial | specified |
-| F19 | Estrés térmico de corales | partial | partial | partial | specified | experimental |
-| F20 | Floraciones de algas nocivas | partial | specified | specified | specified | specified |
-| F21 | Hipoxia acuática | specified | specified | specified | specified | specified |
-| F22 | Condiciones favorables para Vibrio | specified | specified | specified | specified | specified |
-| F23 | Langosta del desierto | partial | specified | specified | specified | specified |
-| F24 | Actividad volcánica y erupciones | partial | specified | specified | specified | specified |
-| F25 | Deslizamientos por lluvia | specified | partial | specified | specified | specified |
-| F26 | Desbordes de lagos glaciares | blocked | specified | specified | specified | specified |
-| F27 | Tsunamis | partial | specified | specified | specified | specified |
-| F28 | Réplicas sísmicas | partial | specified | specified | partial | specified |
-| F29 | Tormentas geomagnéticas | connected | specified | specified | partial | specified |
-| F30 | Impactos de asteroides conocidos | specified | specified | specified | partial | specified |
-| F31 | Cambios en la AMOC | partial | specified | partial | research | specified |
+| ID | Fenómeno | Observación | Indicador | Tendencia | Pronóstico externo | Modelo propio | Asociación |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| F01 | Lluvias extremas | blocked | specified | specified | partial | specified | specified |
+| F02 | Olas de calor | partial | specified | specified | partial | specified | specified |
+| F03 | Olas de frío y heladas | specified | specified | specified | partial | specified | specified |
+| F04 | Tormentas severas y granizo | specified | partial | specified | specified | specified | specified |
+| F05 | Tornados | specified | specified | specified | specified | specified | specified |
+| F06 | Ciclones tropicales | partial | partial | specified | specified | specified | specified |
+| F07 | Marejadas e inundación costera | specified | specified | specified | specified | specified | specified |
+| F08 | Nieve y tormentas de hielo | specified | specified | specified | specified | specified | specified |
+| F09 | Tormentas de polvo | specified | specified | specified | partial | specified | specified |
+| F10 | Contaminación y transporte de humo | specified | specified | specified | partial | specified | specified |
+| F11 | Sequías | blocked | partial | specified | partial | specified | specified |
+| F12 | Crecidas fluviales | blocked | specified | specified | partial | specified | specified |
+| F13 | Inundaciones repentinas | specified | specified | specified | specified | specified | specified |
+| F14 | Escasez de agua | specified | partial | specified | specified | specified | specified |
+| F15 | Peligro de incendios | partial | partial | specified | specified | specified | specified |
+| F16 | Estrés agrícola | partial | partial | specified | partial | specified | specified |
+| F17 | El Niño y La Niña | specified | partial | specified | partial | specified | partial |
+| F18 | Olas de calor marinas | partial | specified | specified | partial | specified | specified |
+| F19 | Estrés térmico de corales | partial | partial | partial | specified | experimental | partial |
+| F20 | Floraciones de algas nocivas | partial | specified | specified | specified | specified | specified |
+| F21 | Hipoxia acuática | specified | specified | specified | specified | specified | specified |
+| F22 | Condiciones favorables para Vibrio | specified | specified | specified | specified | specified | specified |
+| F23 | Langosta del desierto | partial | specified | specified | specified | specified | specified |
+| F24 | Actividad volcánica y erupciones | partial | specified | specified | specified | specified | specified |
+| F25 | Deslizamientos por lluvia | specified | partial | specified | specified | specified | specified |
+| F26 | Desbordes de lagos glaciares | blocked | specified | specified | specified | specified | specified |
+| F27 | Tsunamis | partial | specified | specified | specified | specified | specified |
+| F28 | Réplicas sísmicas | partial | specified | specified | partial | specified | specified |
+| F29 | Tormentas geomagnéticas | connected | specified | specified | partial | specified | specified |
+| F30 | Impactos de asteroides conocidos | specified | specified | specified | partial | specified | specified |
+| F31 | Cambios en la AMOC | partial | specified | partial | research | specified | partial |

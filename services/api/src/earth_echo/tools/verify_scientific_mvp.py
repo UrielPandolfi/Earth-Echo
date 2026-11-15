@@ -1,0 +1,52 @@
+"""Recompute native scientific checks and compare retained results with local API."""
+import argparse
+import csv
+import io
+import json
+from datetime import datetime,timezone
+from urllib.request import urlopen
+
+from earth_echo.ingest.associations import build_associations
+from earth_echo.ingest.sst_anomalies import build_sst_anomalies
+from earth_echo.paths import repo_root
+from earth_echo.storage.products import atomic_json
+
+
+def get(path):
+    with urlopen('http://127.0.0.1:8000'+path,timeout=20) as response:
+        raw=response.read(2_000_001)
+    if len(raw)>2_000_000:raise ValueError('MVP API response exceeded2MB')
+    return raw
+
+
+def verify():
+    now=datetime.now(timezone.utc)
+    expected,_=build_sst_anomalies(now)
+    anomaly=json.loads(get('/v1/analyses/d15-anomalies'))
+    if anomaly['data_mode']!='real' or anomaly['status']!='evaluated' or anomaly['stale_input']:raise ValueError('Anomaly analysis unavailable/stale')
+    if anomaly['product']['samples']!=expected.model_dump(mode='json')['samples'] or anomaly['product']['extent']!=expected.extent.model_dump(mode='json'):raise ValueError('Anomaly API differs from checked native history')
+    associations=json.loads(get('/v1/analyses/associations'))
+    expected_associations=build_associations(now)
+    if associations['execution_id']!=expected_associations.execution_id or associations['stale_inputs']:raise ValueError('Association API differs from native recomputation')
+    exports=[]
+    for pair in expected_associations.pairs:
+        rows=list(csv.DictReader(io.StringIO(get(f'/v1/analyses/associations/{pair.id}.csv').decode())))
+        if len(rows)!=len(pair.points) or any(row['execution_id']!=expected_associations.execution_id for row in rows):raise ValueError('Association CSV mismatch')
+        for row,point in zip(rows,pair.points,strict=True):
+            for key in ('x','y','residual_x','residual_y'):
+                if (None if row[key]=='' else float(row[key]))!=getattr(point,key):raise ValueError('Association CSV scientific value differs')
+        exports.append({'pair':pair.id,'rows':len(rows),'raw_r':pair.raw_r,'residual_r':pair.residual_r,'intervals':[p.model_dump() for p in pair.intervals]})
+    return {'checked_at':now.isoformat(),'scope':'Native inputs, calculation arithmetic, persisted API and CSV consistency; no causal/predictive validation',
+        'anomalies':{'method':expected.method_version,'months':len(expected.samples),'assessed_months':anomaly['assessed_months'],'flagged_months':anomaly['flagged_months'],'input_sha256':expected.checksum_sha256,'native_coverage':expected.extent.model_dump(mode='json')},
+        'associations':{'method':expected_associations.method_version,'execution_id':expected_associations.execution_id,'causal_attribution':expected_associations.causal_attribution,'predictive_validation':expected_associations.predictive_validation,'pairs':exports},
+        'api_and_csv_consistent':True,'native_checks_passed':True,'new_external_downloads':0}
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--retain',action='store_true');args=parser.parse_args()
+    report=verify()
+    if args.retain:atomic_json(repo_root()/'data/operational/mvp_scientific_evidence.json',report)
+    print(json.dumps(report,ensure_ascii=True))
+
+
+if __name__=='__main__':main()

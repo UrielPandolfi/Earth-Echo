@@ -21,6 +21,7 @@ const labels: Record<string, string> = {
   trend: "Tendencia",
   forecast: "Pronóstico",
   experimental_model: "Modelo propio",
+  association: "Asociación",
 };
 
 export function CapabilitiesPanel() {

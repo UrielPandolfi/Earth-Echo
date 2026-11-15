@@ -64,10 +64,10 @@ def main():
         evidence = item['status']+': '+', '.join(item['evidence']) if item['evidence'] else item['status']
         text += f"| {item['id']} | {item['name']} | {'; '.join(item['classification'])} | {evidence} | {item['blocker_or_next_step'].replace('|',';')} |\n"
     from earth_echo.catalog.capabilities import capability_matrix
-    text+='\n## Capacidades de los 31 fenómenos\n\nObservación puede ser parcial; un dato de contexto no habilita un detector. «specified», «blocked» o «research» no son capacidades operativas. «partial» describe exactamente el alcance indicado en la API.\n\n| ID | Fenómeno | Observación | Indicador | Tendencia | Pronóstico externo | Modelo propio |\n| --- | --- | --- | --- | --- | --- | --- |\n'
+    text+='\n## Capacidades de los 31 fenómenos\n\nObservación puede ser parcial; un dato de contexto no habilita un detector. «specified», «blocked» o «research» no son capacidades operativas. «partial» describe exactamente el alcance indicado en la API. Las asociaciones son exploratorias y no identifican causalidad.\n\n| ID | Fenómeno | Observación | Indicador | Tendencia | Pronóstico externo | Modelo propio | Asociación |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n'
     for m in capability_matrix().phenomena:
         statuses={o.kind:o.status for o in m.outputs}
-        text+=f"| {m.id} | {m.name} | "+' | '.join(statuses[k] for k in ['observation','indicator','trend','forecast','experimental_model'])+' |\n'
+        text+=f"| {m.id} | {m.name} | "+' | '.join(statuses[k] for k in ['observation','indicator','trend','forecast','experimental_model','association'])+' |\n'
     (root/'docs/integraciones.md').write_text(text,encoding='utf-8')
     overlay_path=root/'data/operational/source_integration.json'
     overlay=json.loads(overlay_path.read_text(encoding='utf-8'))

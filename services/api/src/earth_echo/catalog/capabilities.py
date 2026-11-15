@@ -93,7 +93,7 @@ _OVERRIDES: dict[str, dict[str, tuple[str, str]]] = {
     },
 }
 
-_KINDS = ("observation", "indicator", "trend", "forecast", "experimental_model")
+_KINDS = ("observation", "indicator", "trend", "forecast", "experimental_model", "association")
 
 
 def capability_matrix() -> CapabilityMatrix:
@@ -195,6 +195,14 @@ def capability_matrix() -> CapabilityMatrix:
     if 'd12-cams-global-dust-bin3' in available:
         overrides_by_id.setdefault('F09',{})['forecast'] = ('partial','CAMS global: concentración prevista de fracción de polvo aermr06(0,9–20μm), nivel137 con conversión de densidad fija del distribuidor, y AOD550 de aerosoles totales en columna. Vista mundial12° desde centros nativos0,4°, un plazo+24h. No polvo total, PM10 equivalente, detección observada de tormenta, probabilidad o pronóstico local validado.')
         overrides_by_id.setdefault('F10',{})['forecast'] = ('partial','PM2,5/PM10 superficiales y AOD550 en columna CAMS, productos/definiciones separados y plazo+24h. Vista mundial12° de centros0,4°, sin estaciones/calibración local. No AQI sin norma/ventana, exposición individual, causalidad de humo/incendios o probabilidad de daño.')
+    from earth_echo.queries.associations import association_view
+    association=association_view()
+    for pair in association.pairs:
+        if pair.status!='evaluated':continue
+        ids=['F17','F19'] if pair.id=='enso-sst' else ['F31','F19']
+        for fid in ids:
+            previous=overrides_by_id.setdefault(fid,{}).get('association',('partial',''))[1]
+            overrides_by_id[fid]['association']=('partial',previous+f' {pair.title}: {pair.n_pairs} trimestres históricos no solapados, correlación de residuos tras retirar ciclo/tendencia, bootstrap condicional4/8trimestres. No causalidad, daño biológico o habilidad predictiva; sin búsqueda de desfase. /v1/analyses/associations. '+('Entrada obsoleta: conserva último válido.' if association.stale_inputs else ''))
     phenomena = []
     for module in load_catalog().modules:
         outputs = []
@@ -204,7 +212,7 @@ def capability_matrix() -> CapabilityMatrix:
                 kind,
                 (
                     "specified",
-                    module.missing_or_local_data,
+                    'Sin asociación calculada calificada para este fenómeno.' if kind=='association' else module.missing_or_local_data,
                 ),
             )
             outputs.append(OutputCapability(kind=kind, status=status, detail=detail))
