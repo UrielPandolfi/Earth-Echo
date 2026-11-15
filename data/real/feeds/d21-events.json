@@ -1,15 +1,27 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-15T17:09:52Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T17%3A09%3A52Z&endtime=2026-11-15T17%3A09%3A52Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "69dee463f1978f78c27c1af46aa9de6e73651006aa43e6b753518a06ef2d9240",
-  "byte_size": 83914,
-  "raw_file": "assets\\d21-events\\69dee463f1978f78c27c1af46aa9de6e73651006aa43e6b753518a06ef2d9240.json",
+  "retrieved_at": "2026-11-15T18:12:03Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T18%3A12%3A03Z&endtime=2026-11-15T18%3A12%3A03Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "a6caf887fe193d90c71809b296d37d08d2c793af90f2e9e6e5901af4cd415097",
+  "byte_size": 84617,
+  "raw_file": "assets\\d21-events\\a6caf887fe193d90c71809b296d37d08d2c793af90f2e9e6e5901af4cd415097.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000tyfh",
+      "longitude": 70.9503,
+      "latitude": 36.0947,
+      "depth_km": 100.728,
+      "magnitude": 5.0,
+      "magnitude_type": "mww",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T18:08:18.040000Z",
+      "time": "2026-11-15T17:48:36Z",
+      "place": "74 km N of Pārūn, Afghanistan"
+    },
     {
       "id": "us7000tyf4",
       "longitude": 122.1345,
