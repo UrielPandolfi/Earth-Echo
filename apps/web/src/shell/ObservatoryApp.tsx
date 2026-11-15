@@ -416,6 +416,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           field={shownField}
           tracks={state.dataMode==='real' && !forecasting ? activeProduct?.tracks : undefined}
           regions={state.dataMode==='real' && !forecasting ? activeProduct?.regions : undefined}
+          planetaryKp={forecasting && forecasts.selection.mode==='kp' ? { forecast: forecasts.kp, error: forecasts.kpError } : null}
           onGeographicSelect={forecasting && forecasts.selection.mode!=='kp' ? selectForecastPosition : undefined}
           fieldSelection={forecasting && forecasts.point && forecasts.selection.mode!=='kp' ? {longitude:forecasts.point.requested_longitude,latitude:forecasts.point.requested_latitude,cell:forecasts.point.cell ?? null} : null}
           fieldCredit={

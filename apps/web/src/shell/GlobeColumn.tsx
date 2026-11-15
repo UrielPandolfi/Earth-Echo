@@ -6,7 +6,7 @@ import type { FieldGrid } from "../demo/explore";
 import type { ObservatoryState, Section } from "./observatoryState";
 import { amazoniaFrame, type GeoExtent } from "../globe/geography";
 import { Icon, SymbolMark } from "./icons";
-import type { ProductTrack,ProductRegion } from '../domain/generated';
+import type { PlanetaryForecast, ProductTrack,ProductRegion } from '../domain/generated';
 
 interface GlobeColumnProps {
   state: ObservatoryState;
@@ -28,6 +28,17 @@ interface GlobeColumnProps {
   countLabel?: string;
   onGeographicSelect?: (position:{longitude:number;latitude:number}) => void;
   fieldSelection?: GeographicSelection|null;
+  planetaryKp?: { forecast: PlanetaryForecast | null; error: string | null } | null;
+}
+
+const month = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+function utcStamp(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+  return `${date.getUTCDate()} ${month[date.getUTCMonth()]} ${String(date.getUTCHours()).padStart(2, "0")}:${String(date.getUTCMinutes()).padStart(2, "0")}`;
 }
 
 const sectionNote: Record<Exclude<Section, "explorar">, string> = {
@@ -56,10 +67,14 @@ export function GlobeColumn({
   countLabel,
   onGeographicSelect,
   fieldSelection,
+  planetaryKp,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
-  const note = state.section === "explorar" ? null : trendNote ?? sectionNote[state.section];
+  const note = planetaryKp
+    ? "El Kp previsto es planetario. El aviso está en el panel del mapa, no en una región."
+    : state.section === "explorar" ? null : trendNote ?? sectionNote[state.section];
+  const planetaryWindows = (planetaryKp?.forecast?.windows ?? []).filter((window) => window.temporal_state !== "expired");
 
   useEffect(() => {
     controls?.setSignals?.(markers);
@@ -90,10 +105,29 @@ export function GlobeColumn({
       {note ? <p className="section-note" role="status">{note}</p> : null}
       <div className="globe-wrap">
         <GlobeStage createGlobe={createGlobe} onControls={setControls} onSelect={onSelect} />
-        {signalCount === 0 ? (
+        {signalCount === 0 && !planetaryKp ? (
           <p className="empty-map" role="status">
             {emptyText ?? "No hay señales en este instante y con estos filtros. Activá una categoría o volvé a Ahora."}
           </p>
+        ) : null}
+        {planetaryKp ? (
+          <aside className="kp-float" aria-label="Kp previsto planetario">
+            <h2>Kp previsto</h2>
+            <p>Índice planetario de NOAA SWPC. No se dibuja en el mapa.</p>
+            {planetaryKp.error ? <p role="status">{planetaryKp.error}</p> : null}
+            {planetaryWindows.length ? (
+              <ol>
+                {planetaryWindows.map((window) => (
+                  <li key={window.valid_from}>
+                    <strong>{window.value.toFixed(2)}</strong>
+                    <span>{utcStamp(window.valid_from)}–{utcStamp(window.valid_to)} UTC</span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p>{planetaryKp.forecast?.reason ?? planetaryKp.forecast?.note ?? "No hay ventanas previstas en esta copia."}</p>
+            )}
+          </aside>
         ) : null}
         <div className="synthesis" aria-live="polite">
           <strong>{countLabel ?? `${formatCount(signalCount)} señales`}</strong>
@@ -107,7 +141,7 @@ export function GlobeColumn({
           <small>del catálogo</small>
         </div>
         <ul className="symbol-legend">
-          {state.section==='pronosticos' && state.dataMode==='real' ? <>
+          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
             <li><SymbolMark kind="forecast"/> Área para explorar · pronóstico</li>
             <li><SymbolMark kind="cluster"/> Agrupación visual de áreas</li>
             <li><span>□</span> Celda seleccionada · soporte de malla</li>
