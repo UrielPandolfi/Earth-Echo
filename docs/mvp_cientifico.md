@@ -54,3 +54,20 @@ Las entradas se verifican otra vez contra sus originales retenidos (CPC HTML/ZIP
 Verificación reproducible con API encendida: `& './services/api/.venv/Scripts/python.exe' -m earth_echo.tools.verify_scientific_mvp --retain`. Recalcula comprobaciones nativas y compara resultados persistidos/API/CSV; escribe`data/operational/mvp_scientific_evidence.json`. No certifica modelos científicos. Capturas nuevas de este incremento permanecen pendientes mientras el controlador del navegador no pueda inicializar sus archivos; no se sustituye por imágenes generadas.
 
 Credenciales Earthdata, más regiones/fuentes, rediseño visual y modelos predictivos nuevos son ampliaciones separadas. SMAP/GLDAS/IMERG reciente permanecen pendientes por decisión del usuario; [configuración](accesos.md).
+
+## Asistente y recorrido demostrable
+
+El asistente consulta los resultados persistidos: anomalías históricas/campo diario, asociaciones exploratorias y pendiente AMOC con unidades de transporte. Son resúmenes de herramientas, sin recalcular ciencia o inventar cifras. Para estos resúmenes y capacidades científicas F17/F19/F31 no se llama al proveedor de texto aunque esté configurado: estado `not_used`, mostrado explícitamente. Los demás recorridos conservan su comportamiento previo. No necesita Qwen/API externa para demostrar el núcleo. Un contexto de replay impide entregar estos análisis completos o llamar a un modelo que pueda revelar información posterior al corte.
+
+El resumen sísmico también toma la consulta definida del dato, sin fijar magnitud≥5cuando el operador configuró otra; fuente ausente no se comunica como cero sismos. El inspector de anomalía diaria comunica una falla de descarga de su fuente aunque el procesamiento local haya sido correcto, conservando las fechas originales y REAL.
+
+Con la API y la web iniciadas ([arranque](../README.md)):
+
+1. Abrir[Earth Echo local](http://127.0.0.1:5173/) y elegir REAL. Mantener vista amplia; no se requieren credenciales para este recorrido.
+2. Elegir **Tendencias**. Ver la pendiente SST2014–2025, los intervalos12/24meses y diagnóstico residual. **Ver serie** muestra la anomalía/gráfico y advertencias; **Exportar CSV** incluye versión, referencia y SHA.
+3. En **Anomalías históricas**, expandir serie/tabla:9meses candidatos de48evaluados. Revisar referencia corta y región. **Ver campo diario en el globo** selecciona explícitamente OISST; leyenda/fecha/soporte/unidad/original en el inspector. La cámara permanece amplia hasta pedir encuadre.
+4. Volver a **Tendencias → Conexiones exploratorias** y expandir ambos pares. Comparar coeficiente crudo/ajustado, dispersión e intervalos/sensibilidad. Exportar los pares CSV con ventanas UTC/unidades/ejecución. No hay afirmación causal o predictiva.
+5. En **Asistente**, preguntar «¿Qué anomalías SST hay?», «¿Qué relación hay entre AMOC y SST?» o «¿Cuál es la tendencia de AMOC?». Abrir datos/procedencia desde los enlaces y comparar con el inspector. Un replay activo bloquea los análisis completos; no revela desenlace nuevo.
+6. Ejecutar el verificador anterior. Comprueba todos los originales/cálculos/JSON/CSV y estos recorridos del asistente mediante la API local, sin nuevas descargas externas.
+
+Las pruebas automáticas y verificaciones numéricas/API están ejecutadas. La revisión visual nueva y sus capturas siguen pendientes: el controlador de navegador falla antes de inicializar sus archivos (`system cannot find the path specified`). Se conservaron las capturas auténticas anteriores y no se generaron imágenes para aparentar esa aprobación. Este es el bloqueo de cierre visual; las credenciales NASA no bloquean las capacidades centrales descritas.

@@ -178,6 +178,176 @@
       "title": "AssetRecord",
       "type": "object"
     },
+    "AssistantAction": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "open-section",
+          "title": "Type",
+          "type": "string"
+        },
+        "section": {
+          "enum": [
+            "explorar",
+            "tendencias",
+            "historico"
+          ],
+          "title": "Section",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "section"
+      ],
+      "title": "AssistantAction",
+      "type": "object"
+    },
+    "AssistantContext": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "enum": [
+            "real",
+            "demo"
+          ],
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "replay_issue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay Issue"
+        },
+        "replay_revealed": {
+          "default": false,
+          "title": "Replay Revealed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "data_mode"
+      ],
+      "title": "AssistantContext",
+      "type": "object"
+    },
+    "AssistantReply": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "unavailable",
+            "not_used",
+            "mock",
+            "openai-compatible"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Model"
+        },
+        "answer_kind": {
+          "enum": [
+            "tool_template",
+            "model_paraphrase"
+          ],
+          "title": "Answer Kind",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Tools",
+          "type": "array"
+        },
+        "documents": {
+          "items": {
+            "$ref": "#/$defs/RetrievedDocument"
+          },
+          "title": "Documents",
+          "type": "array"
+        },
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/AssistantAction"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "asked_at": {
+          "title": "Asked At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "provider",
+        "model",
+        "answer_kind",
+        "text",
+        "tools",
+        "documents",
+        "actions",
+        "limitations",
+        "asked_at"
+      ],
+      "title": "AssistantReply",
+      "type": "object"
+    },
+    "AssistantRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "context": {
+          "$ref": "#/$defs/AssistantContext"
+        }
+      },
+      "required": [
+        "question",
+        "context"
+      ],
+      "title": "AssistantRequest",
+      "type": "object"
+    },
     "AssociationPairView": {
       "additionalProperties": false,
       "properties": {
@@ -2676,6 +2846,32 @@
       "title": "RefreshStatus",
       "type": "object"
     },
+    "RetrievedDocument": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "role": {
+          "const": "documentation",
+          "title": "Role",
+          "type": "string"
+        },
+        "applied_as_instruction": {
+          "const": false,
+          "title": "Applied As Instruction",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "applied_as_instruction"
+      ],
+      "title": "RetrievedDocument",
+      "type": "object"
+    },
     "SSTAnomalyView": {
       "additionalProperties": false,
       "properties": {
@@ -4544,6 +4740,12 @@
   },
   "additionalProperties": false,
   "properties": {
+    "assistant_request": {
+      "$ref": "#/$defs/AssistantRequest"
+    },
+    "assistant_reply": {
+      "$ref": "#/$defs/AssistantReply"
+    },
     "sst_trend_analysis": {
       "$ref": "#/$defs/TrendView"
     },
@@ -4594,6 +4796,8 @@
     }
   },
   "required": [
+    "assistant_request",
+    "assistant_reply",
     "sst_trend_analysis",
     "associations",
     "sst_anomaly_analysis",

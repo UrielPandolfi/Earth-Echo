@@ -1,8 +1,10 @@
 # Entrega local de Earth Echo
 
+Actualización15/11/2026: el núcleo científico posterior a fase10 se demuestra con anomalía diaria OISST mundial, anomalías históricas SST regionales, tendencia estacional con sensibilidad y asociaciones exploratorias ENSO/SST-AMOC/SST. Guía vigente y límites en[docs/mvp_cientifico.md](mvp_cientifico.md), matriz completa en[integraciones.md](integraciones.md) y evidencia ejecutada en`data/operational/mvp_scientific_evidence.json`.235API/51web, contratos/build comprobados. Falta nueva revisión visual/capturas porque el controlador del navegador no puede inicializar sus archivos; no se declara aprobada. Las credenciales Earthdata siguen pendientes por decisión del usuario, sin impedir este recorrido.
+
 Esta entrega corre en la máquina de desarrollo. No hay un servidor público ni un modelo de lenguaje cargado. El detalle de cada fenómeno sigue en `GET /v1/capabilities`.
 
-## Matriz de lo que esta versión hace
+## Matriz de la fase10, conservada como referencia histórica
 
 | Capacidad | Implementación | DEMO | REAL | Alcance | Límite |
 | --- | --- | --- | --- | --- | --- |

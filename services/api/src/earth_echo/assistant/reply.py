@@ -12,7 +12,7 @@ from earth_echo.assistant import tools
 from earth_echo.assistant.provider import OpenAICompatibleProvider, ScriptedProvider
 from earth_echo.contracts.types import ApiModel
 
-ProviderName = Literal["unavailable", "mock", "openai-compatible"]
+ProviderName = Literal["unavailable", "not_used", "mock", "openai-compatible"]
 AnswerKind = Literal["tool_template", "model_paraphrase"]
 SectionName = Literal["explorar", "tendencias", "historico"]
 
@@ -129,6 +129,17 @@ def _select_tools(question: str, context: AssistantContext) -> tuple[list[dict[s
         return [tools.phenomenon_capability("F01"), tools.source_status("D01")], "historico", ""
     if any(word in folded for word in ("smap", "humedad del suelo", "sequia")):
         return [tools.phenomenon_capability("F11"), tools.source_status("D02")], "historico", ""
+    if ('amoc' in folded or 'f31' in folded) and any(word in folded for word in ('colapso','fecha','cuando','pronostico')):
+        return [tools.phenomenon_capability('F31')],'historico','No hay fecha o probabilidad operativa de colapso de AMOC. La pendiente y las asociaciones históricas no proporcionan ese pronóstico.'
+    association_question=any(word in folded for word in ('correl','asociacion','asociaciones','conexion','conexiones','relacion')) or ('amoc' in folded and 'sst' in folded)
+    anomaly_question=any(word in folded for word in ('anomalia','desvio','meses candidatos')) and not any(word in folded for word in ('experimento','analogo','persistencia','desenlace'))
+    amoc_trend_question=('amoc' in folded or 'f31' in folded) and any(word in folded for word in ('tendencia','pendiente'))
+    if association_question or anomaly_question or amoc_trend_question:
+        if issue is not None:
+            return [],'tendencias','El replay tiene un corte temporal. Los análisis completos de anomalías/asociaciones no se entregan dentro de ese contexto para no revelar datos posteriores; consultalos fuera del replay.'
+        if association_question:return [tools.associations()],'tendencias','Estos son los dos pares históricos disponibles; otros ámbitos o mecanismos no quedan acreditados por esta consulta.'
+        if amoc_trend_question:return [tools.amoc_trend()],'tendencias',''
+        return [tools.sst_anomalies()],'tendencias',''
     if any(word in folded for word in ("blanqueamiento", "coral", "f19")):
         return [tools.phenomenon_capability("F19")], "historico", ""
     if any(word in folded for word in ("kp", "geomagnet", "pronostico importado")):
@@ -148,7 +159,7 @@ def _select_tools(question: str, context: AssistantContext) -> tuple[list[dict[s
     if any(word in folded for word in ("sismo", "terremoto")):
         return [tools.quake_summary()], "explorar", ""
     return [], None, (
-        "No hay una herramienta para esa pregunta. Puedo consultar la tendencia de SST, "
+        "No hay una herramienta para esa pregunta. Puedo consultar anomalías SST, tendencias SST/AMOC, asociaciones exploratorias, "
         "el experimento, el Kp importado, los sismos observados o el estado de una fuente. "
         "No invento una medición."
     )
@@ -160,7 +171,27 @@ def _template(intro: str, used: list[dict[str, Any]], context: AssistantContext)
         parts.append("El modo en pantalla es DEMO. Estos datos son del subconjunto real, no del escenario simulado.")
     for item in used:
         name = item["tool"]
-        if name == "sst_trend":
+        if name=='sst_anomalies':
+            if item['status']=='evaluated':
+                parts.append(f"En {item['region']}, hay {item['flagged_months']} meses candidatos de {item['assessed_months']} evaluados en {item['period']}: {item['warm_months']} cálidos y {item['cold_months']} fríos. Referencia {item['reference']}; umbral de score robusto |M|>{item['threshold']}. No son alertas actuales ni probabilidades de daño.")
+            else:parts.append(str(item['reason'] or 'Anomalías históricas no evaluables.'))
+            if item['stale_input']:parts.append('Se conserva el análisis anterior con entrada cambiada o ausente.')
+            if item['current_daily_anomaly_id']:
+                parts.append(f"También está el campo diario mundial NOAA OISST de {item['current_daily_anomaly_at']} UTC, en {item['unit']}, referencia {item['current_daily_reference']}. Un día anómalo no confirma un evento MHW de cinco días, daño coralino o calor del aire.")
+        elif name=='associations':
+            if item['status']=='unavailable':parts.append(str(item['reason']))
+            for pair in item['pairs']:
+                if pair['status']!='evaluated':parts.append(pair['title']+': no evaluable.');continue
+                parts.append(f"{pair['title']}: {pair['n_pairs']} trimestres no solapados, período {pair['start'][:7]} a {pair['end_exclusive'][:7]} exclusivo UTC; r crudo {pair['raw_r']:.3f}, r sin estacionalidad/tendencia {pair['residual_r']:.3f}; unidades originales {pair['x_unit']} y {pair['y_unit']}.")
+                for interval in pair['intervals']:
+                    if interval['low'] is None:parts.append(f"Intervalo de bloque{interval['block_quarters']} no evaluable.")
+                    else:parts.append(f"Intervalo condicional95%, bloque{interval['block_quarters']}trimestres: {interval['low']:.3f} a {interval['high']:.3f}.")
+            if item['stale_inputs']:parts.append('Entradas obsoletas: se muestra el último análisis válido.')
+            parts.append('Son asociaciones exploratorias contemporáneas, sin búsqueda del mejor desfase. r es adimensional, no una probabilidad. No demuestran causalidad ni habilidad predictiva. RONI incluye una corrección tropical que puede compartir señal matemática con el Caribe.')
+        elif name=='amoc_trend':
+            if item['status']=='unavailable':parts.append(str(item['reason']))
+            else:parts.append(f"Pendiente descriptiva del transporte en {item['scope']}: {item['slope']:.3f} {item['unit']}. Sin intervalo de confianza calculado ni prueba de significación, atribución causal o predicción de colapso. No es una tendencia oceánica mundial.")
+        elif name == "sst_trend":
             parts.append(str(item["narrative"]))
             if item["cutoff"]:
                 parts.append(f"El corte de esta consulta es {item['cutoff']}. No es el informe completo hasta 2025-12.")
@@ -196,10 +227,10 @@ def _template(intro: str, used: list[dict[str, Any]], context: AssistantContext)
                     f"Primer valor {item['first_kp']} y último {item['last_kp']}. No es una probabilidad ni un aviso local."
                 )
         elif name == "quakes":
-            parts.append(
-                f"Hay {item['count']} sismos observados de magnitud 5 o más. "
-                f"El más reciente es {item['latest']}. No hay una fecha prevista para el próximo sismo."
-            )
+            if not item.get('available'):
+                parts.append('No hay una instantánea sísmica real disponible. No hay una fecha prevista para el próximo sismo.')
+            else:
+                parts.append(f"Hay {item['count']} sismos observados en la consulta acotada. {item['query_note']} El más reciente es {item['latest']}. No hay una fecha prevista para el próximo sismo.")
         elif name == "capability":
             if not item["found"]:
                 parts.append(f"{item['id']} no está en el catálogo.")
@@ -251,7 +282,12 @@ def ask(
     provider_name: ProviderName = "unavailable"
     model_name: str | None = None
     answer_kind: AnswerKind = "tool_template"
-    if provider is not None:
+    protected_analysis=any(item['tool'] in {'sst_anomalies','associations','amoc_trend'} or (item['tool']=='capability' and item.get('id') in {'F17','F19','F31'}) for item in used)
+    protected_analysis=protected_analysis or (context.replay_issue is not None and any(word in fold(question) for word in ('correl','asocia','conex','relacion','anomalia','desvio','amoc')))
+    if provider is not None and protected_analysis:
+        provider_name='not_used'
+        limitations.append('Resumen científico emitido por plantilla verificada; el modelo de texto no reinterpreta anomalías, asociaciones o causalidad.')
+    elif provider is not None:
         provider_name = provider.provider_id  # type: ignore[assignment]
         model_name = provider.model_name
         try:

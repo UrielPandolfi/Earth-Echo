@@ -22,6 +22,35 @@ export interface AssetRecord {
   provenance: Provenance;
 }
 
+export interface AssistantAction {
+  type: "open-section";
+  section: "explorar" | "tendencias" | "historico";
+}
+
+export interface AssistantContext {
+  data_mode: "real" | "demo";
+  replay_issue?: string | null;
+  replay_revealed?: boolean;
+}
+
+export interface AssistantReply {
+  schema_version: "1.0";
+  provider: "unavailable" | "not_used" | "mock" | "openai-compatible";
+  model: string | null;
+  answer_kind: "tool_template" | "model_paraphrase";
+  text: string;
+  tools: Array<Record<string, unknown>>;
+  documents: RetrievedDocument[];
+  actions: AssistantAction[];
+  limitations: string[];
+  asked_at: string;
+}
+
+export interface AssistantRequest {
+  question: string;
+  context: AssistantContext;
+}
+
 export interface AssociationPairView {
   id: string;
   title: string;
@@ -433,6 +462,12 @@ export interface RefreshStatus {
   note: string;
 }
 
+export interface RetrievedDocument {
+  id: string;
+  role: "documentation";
+  applied_as_instruction: false;
+}
+
 export interface SSTAnomalyView {
   data_mode?: "real";
   status: "evaluated" | "not_evaluable" | "unavailable";
@@ -692,6 +727,8 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  assistant_request: AssistantRequest;
+  assistant_reply: AssistantReply;
   sst_trend_analysis: TrendView;
   associations: AssociationView;
   sst_anomaly_analysis: SSTAnomalyView;

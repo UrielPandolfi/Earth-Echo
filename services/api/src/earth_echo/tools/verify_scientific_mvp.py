@@ -6,7 +6,7 @@ import json
 import math
 import numpy as np
 from datetime import datetime,timezone
-from urllib.request import urlopen
+from urllib.request import urlopen,Request
 
 from earth_echo.ingest.associations import build_associations
 from earth_echo.ingest.sst_anomalies import build_sst_anomalies
@@ -16,8 +16,9 @@ from earth_echo.storage.products import read_product,products_root
 from earth_echo.ingest.oisst_anomaly import anomaly_from_source
 
 
-def get(path):
-    with urlopen('http://127.0.0.1:8000'+path,timeout=20) as response:
+def get(path,payload=None):
+    request=Request('http://127.0.0.1:8000'+path,data=None if payload is None else json.dumps(payload).encode(),headers={'Content-Type':'application/json'})
+    with urlopen(request,timeout=20) as response:
         raw=response.read(2_000_001)
     if len(raw)>2_000_000:raise ValueError('MVP API response exceeded2MB')
     return raw
@@ -57,11 +58,19 @@ def verify():
     daily_expected=anomaly_from_source(oisst,(products_root()/oisst.raw_file).read_bytes(),now)
     daily=json.loads(get('/v1/products/d13-oisst-anomaly-global'))
     if daily['grid']!=daily_expected.grid.model_dump(mode='json') or daily['checksum_sha256']!=oisst.checksum_sha256:raise ValueError('Daily anomaly API differs from original/aggregation')
+    assistant_tools=[]
+    for question,tool in [('¿Qué anomalías SST hay?','sst_anomalies'),('¿Qué relación hay entre AMOC y SST?','associations'),('¿Cuál es la tendencia de AMOC?','amoc_trend')]:
+        reply=json.loads(get('/v1/assistant/ask',{'question':question,'context':{'data_mode':'real'}}))
+        if reply['answer_kind']!='tool_template' or not reply['tools'] or reply['tools'][0]['tool']!=tool:raise ValueError('Scientific assistant did not use the verified template/tool')
+        assistant_tools.append(tool)
+    replay=json.loads(get('/v1/assistant/ask',{'question':'¿Qué relación hay entre AMOC y SST?','context':{'data_mode':'real','replay_issue':'2022-01','replay_revealed':False}}))
+    if replay['tools'] or 'corte temporal' not in replay['text']:raise ValueError('Full scientific analysis leaked into a replay')
     return {'checked_at':now.isoformat(),'scope':'Native inputs, calculation arithmetic, persisted API and CSV consistency; no causal/predictive validation',
         'anomalies':{'method':expected.method_version,'months':len(expected.samples),'assessed_months':anomaly['assessed_months'],'flagged_months':anomaly['flagged_months'],'input_sha256':expected.checksum_sha256,'native_coverage':expected.extent.model_dump(mode='json')},
         'associations':{'method':expected_associations.method_version,'execution_id':expected_associations.execution_id,'causal_attribution':expected_associations.causal_attribution,'predictive_validation':expected_associations.predictive_validation,'pairs':exports},
         'trend':{key:trend[key] for key in ('method_id','method_version','execution_id','source_series_sha256','present_months','missing_months','slope_c_per_year','interval_low_c_per_year','interval_high_c_per_year','sensitivity_low_c_per_year','sensitivity_high_c_per_year','residual_lag1_r')},
         'daily_anomaly':{'source_id':'D13','method_version':daily_expected.method_version,'data_at':daily_expected.observed_at.isoformat(),'reference_period':'1971–2000','shared_original_sha256':oisst.checksum_sha256,'valid_display_cells':len(daily_expected.grid.values)-daily_expected.grid.missing_cells,'missing_display_cells':daily_expected.grid.missing_cells,'minimum_c':daily_expected.grid.minimum,'maximum_c':daily_expected.grid.maximum,'color_center':daily_expected.grid.color_center},
+        'assistant':{'verified_templates':assistant_tools,'full_analysis_withheld_during_replay':True},
         'api_and_csv_consistent':True,'native_checks_passed':True,'new_external_downloads':0}
 
 

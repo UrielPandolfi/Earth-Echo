@@ -13,9 +13,12 @@ from earth_echo.contracts.products import ProductList
 from earth_echo.contracts.operations import RefreshStatus
 from earth_echo.contracts.analyses import SSTAnomalyView,AssociationView,TrendView
 from earth_echo.paths import repo_root
+from earth_echo.assistant.reply import AssistantReply,AssistantRequest
 
 
 class ContractBundle(ApiModel):
+    assistant_request: AssistantRequest
+    assistant_reply: AssistantReply
     sst_trend_analysis: TrendView
     associations: AssociationView
     sst_anomaly_analysis: SSTAnomalyView

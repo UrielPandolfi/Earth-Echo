@@ -11,6 +11,40 @@ from earth_echo.queries.trend import trend_view
 from earth_echo.science.forecast_eval import replay
 
 
+def sst_anomalies() -> dict[str,Any]:
+    from earth_echo.queries.anomalies import anomaly_view
+    view=anomaly_view()
+    return {'tool':'sst_anomalies','status':view.status,'reason':view.reason,'region':'Recorte SST al sur de Puerto Rico,21×21celdas0,05°',
+        'period':view.assessment_period,'assessed_months':view.assessed_months,'flagged_months':view.flagged_months,'warm_months':view.warm_months,'cold_months':view.cold_months,
+        'reference':'2014–2021, mediana/MAD del mismo mes; ocho años','threshold':3.5,'unit':'°C','probability':None,'stale_input':view.stale_input,
+        'method_version':view.product.method_version if view.product else None,
+        'input_sha256':view.product.checksum_sha256 if view.product else None,
+        'current_daily_anomaly_id':view.current_daily_anomaly_id,'current_daily_anomaly_at':None if view.current_daily_anomaly_at is None else view.current_daily_anomaly_at.isoformat(),
+        'current_daily_reference':'1971–2000, OISST publicado NOAA, diferente de referencia regional',
+        'link':'/v1/analyses/d15-anomalies'}
+
+
+def associations() -> dict[str,Any]:
+    from earth_echo.queries.associations import association_view
+    view=association_view()
+    return {'tool':'associations','status':view.status,'reason':view.reason,'method_version':view.method_version,'execution_id':view.execution_id,
+        'stale_inputs':view.stale_inputs,'causal_attribution':view.causal_attribution,'predictive_validation':view.predictive_validation,
+        'pairs':[{'title':p.title,'status':p.status,'reason':p.reason,'n_pairs':p.n_pairs,'raw_r':p.raw_r,'residual_r':p.residual_r,
+            'x_unit':p.x_unit,'y_unit':p.y_unit,'intervals':[i.model_dump() for i in p.intervals],
+            'start':p.points[0].start.isoformat() if p.points else None,'end_exclusive':p.points[-1].end.isoformat() if p.points else None} for p in view.pairs],
+        'link':'/v1/analyses/associations'}
+
+
+def amoc_trend() -> dict[str,Any]:
+    from earth_echo.storage.products import read_product
+    product=read_product('d34-amoc-annual-trend')
+    if product is None or product.calculation is None or product.calculation.result is None:
+        return {'tool':'amoc_trend','status':'unavailable','reason':'No está disponible la tendencia descriptiva RAPID retenida.','link':'/v1/products/d34-amoc-annual-trend'}
+    return {'tool':'amoc_trend','status':'evaluated','slope':product.calculation.result.value,'unit':product.calculation.result.unit,
+        'reference_period':product.calculation.reference_period,'scope':'Sección RAPID26,5N, medias anuales2005–2023','method_version':product.method_version,
+        'input_sha256':product.checksum_sha256,'interval':None,'causal_attribution':'not_identified','predictive_validation':'not_a_forecast','link':'/v1/products/d34-amoc-annual-trend'}
+
+
 def phenomenon_capability(phenomenon_id: str) -> dict[str, Any]:
     found = next((item for item in capability_matrix().phenomena if item.id == phenomenon_id), None)
     if found is None:
@@ -151,6 +185,8 @@ def quake_summary() -> dict[str, Any]:
         "tool": "quakes",
         "count": layer.count,
         "unit": layer.unit,
+        "available":layer.retrieved_at is not None,
+        "query_note":layer.note,
         "earliest": min(times) if times else None,
         "latest": max(times) if times else None,
         "forecast": "absent",

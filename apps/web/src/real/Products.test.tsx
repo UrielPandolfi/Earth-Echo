@@ -10,8 +10,17 @@ import smoc from '../../../../data/real/products/d14-smoc-u-total/current.json';
 import thetao from '../../../../data/real/products/d14-thetao-surface/current.json';
 import mol from '../../../../data/real/products/d14-mol-total/current.json';
 import so from '../../../../data/real/products/d14-so-surface/current.json';
+import oisstAnomaly from '../../../../data/real/products/d13-oisst-anomaly-global/current.json';
 
 afterEach(cleanup);
+
+it('warns about upstream download failure even if local anomaly processing succeeded',()=>{
+  const refreshStatus={jobs:{'d13-oisst-global':{status:'failed',error:'Network unavailable'},'d13-current-anomaly':{status:'unchanged',last_success_at:'2026-11-15T06:20:33Z'}}} as unknown as RefreshStatus;
+  render(<ProductInspector product={oisstAnomaly as unknown as ScientificProduct} selectedId={null} refreshStatus={refreshStatus}/>);
+  expect(screen.getByRole('status').textContent).toContain('Falló la actualización de la fuente diaria OISST');
+  expect(screen.getByRole('status').textContent).toContain('Se conserva el campo válido en REAL');
+  expect(screen.getByText('Último procesamiento correcto')).toBeTruthy();
+});
 
 it('shows symmetric anomaly colour bounds, physical zero and actual data range',()=>{
   const product={unit:'°C',grid:{minimum:-2,maximum:3,color_center:0,resolution:'Media1°',missing_cells:1}} as unknown as ScientificProduct;

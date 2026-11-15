@@ -1,22 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { DataMode } from "./observatoryState";
+import type { AssistantReply,AssistantAction } from '../domain/generated';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
-
-interface AssistantAction {
-  type: "open-section";
-  section: "explorar" | "tendencias" | "historico";
-}
-
-interface AssistantReply {
-  provider: "unavailable" | "mock" | "openai-compatible";
-  model: string | null;
-  answer_kind: "tool_template" | "model_paraphrase";
-  text: string;
-  limitations: string[];
-  actions: AssistantAction[];
-  tools: Array<{ tool?: string; link?: string }>;
-}
 
 interface AssistantDrawerProps {
   open: boolean;
@@ -105,6 +91,8 @@ export function AssistantDrawer({ open, mode, replayIssue, replayRevealed, onClo
   const providerLabel = reply
     ? reply.provider === "unavailable"
       ? "Sin modelo. Respuesta de herramientas."
+      : reply.provider === 'not_used'
+        ? 'Resumen científico de herramientas. El modelo de texto no intervino.'
       : reply.provider === "mock"
         ? "Proveedor de prueba, no es Qwen."
         : `Paráfrasis de ${reply.model ?? "un modelo configurado"}.`
@@ -153,6 +141,7 @@ export function AssistantDrawer({ open, mode, replayIssue, replayRevealed, onClo
         <div>
           <p>{providerLabel}</p>
           <p>{reply.text}</p>
+          {reply.tools.flatMap((item,index)=>typeof item.link==='string' && item.link.startsWith('/v1/') ? [<p key={index}><a href={`${apiBase}${item.link}`} target="_blank" rel="noreferrer">Consultar datos y procedencia</a></p>] : [])}
           {reply.actions.map((action) => (
             <button key={action.section} type="button" onClick={() => onOpenSection(action.section)}>
               Abrir {action.section}

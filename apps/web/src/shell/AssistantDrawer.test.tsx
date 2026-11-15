@@ -8,6 +8,17 @@ afterEach(() => {
 });
 
 describe("asistente", () => {
+  it('identifica el resumen científico sin inferencia y ofrece procedencia',async()=>{
+    vi.stubGlobal('fetch',vi.fn(async(url:string)=>new Response(JSON.stringify(url.endsWith('/status') ? {status:'configured',model:'local-model'} : {
+      provider:'not_used',model:null,answer_kind:'tool_template',text:'Asociación exploratoria, sin causalidad demostrada.',limitations:[],actions:[],tools:[{tool:'associations',link:'/v1/analyses/associations'}],
+    }))));
+    render(<AssistantDrawer open mode="real" replayIssue={null} replayRevealed={false} onClose={()=>{}} onOpenSection={()=>{}}/>);
+    fireEvent.change(screen.getByRole('textbox',{name:'Pregunta al asistente'}),{target:{value:'¿Qué asociaciones hay?'}});
+    fireEvent.click(screen.getByRole('button',{name:'Enviar'}));
+    expect(await screen.findByText('Resumen científico de herramientas. El modelo de texto no intervino.')).toBeTruthy();
+    expect(screen.getByRole('link',{name:'Consultar datos y procedencia'}).getAttribute('href')).toBe('/api/v1/analyses/associations');
+    expect(screen.queryByText(/Paráfrasis de/)).toBeNull();
+  });
   it("muestra la respuesta de herramientas cuando el modelo no está", async () => {
     vi.stubGlobal(
       "fetch",
