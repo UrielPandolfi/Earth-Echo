@@ -233,6 +233,12 @@ export interface IntervalSpan {
   bounds: "start_inclusive_end_exclusive";
 }
 
+export interface LinePoint {
+  year: number;
+  month: number;
+  anomaly_c: number;
+}
+
 export interface MissingValue {
   status: "missing";
   value?: null;
@@ -519,6 +525,15 @@ export interface ScientificProduct {
   verification: Verification;
 }
 
+export interface SeriesPoint {
+  year: number;
+  month: number;
+  sst_c: number | null;
+  anomaly_c: number | null;
+  present_days: number;
+  expected_days: number;
+}
+
 export interface SignalQueryResult {
   schema_version: "1.0";
   requested_data_mode: "real" | "demo";
@@ -579,6 +594,58 @@ export interface StoreCheck {
   present: boolean;
 }
 
+export interface TrendView {
+  schema_version: "1.0";
+  execution_id: string;
+  data_mode: "real";
+  status: "evaluated" | "not_evaluable" | "unavailable";
+  reason?: string | null;
+  method_id: string;
+  method_version: string;
+  source_id: "D15";
+  variable_id: "V15";
+  region_id: string;
+  unit: "°C";
+  anomaly_kind: "absolute_celsius";
+  aggregation: string;
+  reference_start: string;
+  reference_end: string;
+  analysis_start: string;
+  analysis_end: string;
+  cutoff?: string | null;
+  expected_months: number;
+  present_months: number;
+  missing_months: number;
+  coverage: number | null;
+  slope_c_per_year: number | null;
+  interval_low_c_per_year: number | null;
+  interval_high_c_per_year: number | null;
+  includes_zero: boolean | null;
+  practical_threshold_c_per_year: number;
+  practical_threshold_exceeded: boolean | null;
+  predictable: "not_a_forecast";
+  cause: "not_identified";
+  assumptions: string[];
+  warnings: string[];
+  asset_checksums: string[];
+  narrative: string;
+  series: SeriesPoint[];
+  trend_line: LinePoint[];
+  interval_low_line: LinePoint[];
+  interval_high_line: LinePoint[];
+  source_series_sha256?: string | null;
+  region_extent?: GeographicExtent | null;
+  bootstrap_block_months?: number;
+  bootstrap_draws?: number;
+  bootstrap_valid_draws?: number;
+  sensitivity_block_months?: number;
+  sensitivity_low_c_per_year?: number | null;
+  sensitivity_high_c_per_year?: number | null;
+  sensitivity_valid_draws?: number;
+  residual_lag1_r?: number | null;
+  conditional_interval?: true;
+}
+
 export interface UnavailableResult {
   schema_version: "1.0";
   status: "unavailable";
@@ -622,6 +689,7 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  sst_trend_analysis: TrendView;
   associations: AssociationView;
   sst_anomaly_analysis: SSTAnomalyView;
   refresh: RefreshStatus;

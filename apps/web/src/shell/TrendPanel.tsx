@@ -4,39 +4,9 @@ import { ForecastReplay } from "./ForecastReplay";
 import { TrendChart } from "./TrendChart";
 import { SSTAnomalies } from './SSTAnomalies';
 import { AssociationsPanel } from './AssociationsPanel';
+import type { TrendView as TrendResponse } from '../domain/generated';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
-
-interface TrendPoint {
-  year: number;
-  month: number;
-  anomaly_c: number | null;
-}
-
-interface TrendResponse {
-  status: "evaluated" | "not_evaluable" | "unavailable";
-  reason: string | null;
-  narrative: string;
-  method_id: string;
-  reference_start: string;
-  reference_end: string;
-  analysis_start: string;
-  analysis_end: string;
-  present_months: number;
-  missing_months: number;
-  expected_months: number;
-  slope_c_per_year: number | null;
-  interval_low_c_per_year: number | null;
-  interval_high_c_per_year: number | null;
-  includes_zero: boolean | null;
-  practical_threshold_exceeded: boolean | null;
-  execution_id: string;
-  series: TrendPoint[];
-  trend_line: Array<{ year: number; month: number; anomaly_c: number }>;
-  interval_low_line: Array<{ year: number; month: number; anomaly_c: number }>;
-  interval_high_line: Array<{ year: number; month: number; anomaly_c: number }>;
-  warnings: string[];
-}
 
 interface TrendPanelProps {
   mode: DataMode;
@@ -81,7 +51,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
           <p className="kicker">Tendencia</p>
           <h2>Sin análisis en DEMO</h2>
         </header>
-        <p>El escenario simulado no se usa para estimar una tendencia. Elegí REAL para la SST del Caribe occidental.</p>
+        <p>El escenario simulado no se usa para estimar una tendencia. Elegí REAL para la historia SST del recorte del Caribe.</p>
       </aside>
     );
   }
@@ -93,7 +63,11 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
           <p className="kicker">Tendencia · REAL</p>
           <h2>No disponible</h2>
         </header>
-        <p>{error ?? "Cargando la serie mensual."}</p>
+        <div className="inspector-body">
+          <p role="status">{error ?? "Cargando la serie mensual."}</p>
+          <SSTAnomalies key="sst-anomalies" />
+          <AssociationsPanel key="associations" />
+        </div>
         <p className="fine">El escenario DEMO no se usó como reemplazo.</p>
       </aside>
     );
@@ -103,11 +77,12 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
     <aside className="inspector" aria-label="Tendencia">
       <header className="inspector-head">
         <p className="kicker">Tendencia · REAL · D15</p>
-        <h2>SST del Caribe occidental</h2>
+        <h2>SST del Caribe · recorte histórico</h2>
         <p className="region">{view.analysis_start} a {view.analysis_end}</p>
       </header>
       <div className="inspector-body">
         <p>{view.narrative}</p>
+        {view.region_extent && <p className="fine">Huella WGS84: {view.region_extent.south.toFixed(2)} a {view.region_extent.north.toFixed(2)}° N, {Math.abs(view.region_extent.west).toFixed(2)} a {Math.abs(view.region_extent.east).toFixed(2)}° O · sur de Puerto Rico.</p>}
         <p className="fine">
           Referencia {view.reference_start} a {view.reference_end}. Meses presentes {view.present_months} de {view.expected_months}. Huecos {view.missing_months}.
         </p>
@@ -133,9 +108,11 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
             <dd>No es un pronóstico</dd>
           </div>
         </dl>
+        <p className="fine">Intervalo condicional con bloques de {view.bootstrap_block_months ?? 12} meses. Sensibilidad con {view.sensitivity_block_months ?? 24} meses: {view.sensitivity_low_c_per_year==null || view.sensitivity_high_c_per_year==null ? 'No evaluable' : `${view.sensitivity_low_c_per_year.toFixed(3)} a ${view.sensitivity_high_c_per_year.toFixed(3)} °C/año`}. Correlación residual mensual adyacente: {view.residual_lag1_r==null ? 'No definida' : view.residual_lag1_r.toFixed(3)}.</p>
+        <p className="fine">Los intervalos dependen del período y de los supuestos del remuestreo; no incluyen toda la incertidumbre observacional.</p>
         <p className="fine">Método {view.method_id}. Ejecución {view.execution_id}.</p>
-        <SSTAnomalies />
-        <AssociationsPanel />
+        <SSTAnomalies key="sst-anomalies" />
+        <AssociationsPanel key="associations" />
         <ForecastReplay onReplay={onReplay} />
       </div>
       <footer className="inspector-foot">

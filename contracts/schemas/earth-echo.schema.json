@@ -1455,6 +1455,30 @@
       "title": "IntervalSpan",
       "type": "object"
     },
+    "LinePoint": {
+      "additionalProperties": false,
+      "properties": {
+        "year": {
+          "title": "Year",
+          "type": "integer"
+        },
+        "month": {
+          "title": "Month",
+          "type": "integer"
+        },
+        "anomaly_c": {
+          "title": "Anomaly C",
+          "type": "number"
+        }
+      },
+      "required": [
+        "year",
+        "month",
+        "anomaly_c"
+      ],
+      "title": "LinePoint",
+      "type": "object"
+    },
     "MissingValue": {
       "additionalProperties": false,
       "properties": {
@@ -3300,6 +3324,59 @@
       "title": "ScientificProduct",
       "type": "object"
     },
+    "SeriesPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "year": {
+          "title": "Year",
+          "type": "integer"
+        },
+        "month": {
+          "title": "Month",
+          "type": "integer"
+        },
+        "sst_c": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sst C"
+        },
+        "anomaly_c": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Anomaly C"
+        },
+        "present_days": {
+          "title": "Present Days",
+          "type": "integer"
+        },
+        "expected_days": {
+          "title": "Expected Days",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "year",
+        "month",
+        "sst_c",
+        "anomaly_c",
+        "present_days",
+        "expected_days"
+      ],
+      "title": "SeriesPoint",
+      "type": "object"
+    },
     "SignalQueryResult": {
       "additionalProperties": false,
       "properties": {
@@ -3795,6 +3872,385 @@
       "title": "StoreCheck",
       "type": "object"
     },
+    "TrendView": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "execution_id": {
+          "title": "Execution Id",
+          "type": "string"
+        },
+        "data_mode": {
+          "const": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "not_evaluable",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "method_id": {
+          "title": "Method Id",
+          "type": "string"
+        },
+        "method_version": {
+          "title": "Method Version",
+          "type": "string"
+        },
+        "source_id": {
+          "const": "D15",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "variable_id": {
+          "const": "V15",
+          "title": "Variable Id",
+          "type": "string"
+        },
+        "region_id": {
+          "title": "Region Id",
+          "type": "string"
+        },
+        "unit": {
+          "const": "°C",
+          "title": "Unit",
+          "type": "string"
+        },
+        "anomaly_kind": {
+          "const": "absolute_celsius",
+          "title": "Anomaly Kind",
+          "type": "string"
+        },
+        "aggregation": {
+          "title": "Aggregation",
+          "type": "string"
+        },
+        "reference_start": {
+          "title": "Reference Start",
+          "type": "string"
+        },
+        "reference_end": {
+          "title": "Reference End",
+          "type": "string"
+        },
+        "analysis_start": {
+          "title": "Analysis Start",
+          "type": "string"
+        },
+        "analysis_end": {
+          "title": "Analysis End",
+          "type": "string"
+        },
+        "cutoff": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cutoff"
+        },
+        "expected_months": {
+          "title": "Expected Months",
+          "type": "integer"
+        },
+        "present_months": {
+          "title": "Present Months",
+          "type": "integer"
+        },
+        "missing_months": {
+          "title": "Missing Months",
+          "type": "integer"
+        },
+        "coverage": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Coverage"
+        },
+        "slope_c_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Slope C Per Year"
+        },
+        "interval_low_c_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Interval Low C Per Year"
+        },
+        "interval_high_c_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Interval High C Per Year"
+        },
+        "includes_zero": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Includes Zero"
+        },
+        "practical_threshold_c_per_year": {
+          "title": "Practical Threshold C Per Year",
+          "type": "number"
+        },
+        "practical_threshold_exceeded": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Practical Threshold Exceeded"
+        },
+        "predictable": {
+          "const": "not_a_forecast",
+          "title": "Predictable",
+          "type": "string"
+        },
+        "cause": {
+          "const": "not_identified",
+          "title": "Cause",
+          "type": "string"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "asset_checksums": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Asset Checksums",
+          "type": "array"
+        },
+        "narrative": {
+          "title": "Narrative",
+          "type": "string"
+        },
+        "series": {
+          "items": {
+            "$ref": "#/$defs/SeriesPoint"
+          },
+          "title": "Series",
+          "type": "array"
+        },
+        "trend_line": {
+          "items": {
+            "$ref": "#/$defs/LinePoint"
+          },
+          "title": "Trend Line",
+          "type": "array"
+        },
+        "interval_low_line": {
+          "items": {
+            "$ref": "#/$defs/LinePoint"
+          },
+          "title": "Interval Low Line",
+          "type": "array"
+        },
+        "interval_high_line": {
+          "items": {
+            "$ref": "#/$defs/LinePoint"
+          },
+          "title": "Interval High Line",
+          "type": "array"
+        },
+        "source_series_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Series Sha256"
+        },
+        "region_extent": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GeographicExtent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "bootstrap_block_months": {
+          "default": 12,
+          "title": "Bootstrap Block Months",
+          "type": "integer"
+        },
+        "bootstrap_draws": {
+          "default": 1000,
+          "title": "Bootstrap Draws",
+          "type": "integer"
+        },
+        "bootstrap_valid_draws": {
+          "default": 0,
+          "title": "Bootstrap Valid Draws",
+          "type": "integer"
+        },
+        "sensitivity_block_months": {
+          "default": 24,
+          "title": "Sensitivity Block Months",
+          "type": "integer"
+        },
+        "sensitivity_low_c_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sensitivity Low C Per Year"
+        },
+        "sensitivity_high_c_per_year": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sensitivity High C Per Year"
+        },
+        "sensitivity_valid_draws": {
+          "default": 0,
+          "title": "Sensitivity Valid Draws",
+          "type": "integer"
+        },
+        "residual_lag1_r": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Residual Lag1 R"
+        },
+        "conditional_interval": {
+          "const": true,
+          "default": true,
+          "title": "Conditional Interval",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "schema_version",
+        "execution_id",
+        "data_mode",
+        "status",
+        "method_id",
+        "method_version",
+        "source_id",
+        "variable_id",
+        "region_id",
+        "unit",
+        "anomaly_kind",
+        "aggregation",
+        "reference_start",
+        "reference_end",
+        "analysis_start",
+        "analysis_end",
+        "expected_months",
+        "present_months",
+        "missing_months",
+        "coverage",
+        "slope_c_per_year",
+        "interval_low_c_per_year",
+        "interval_high_c_per_year",
+        "includes_zero",
+        "practical_threshold_c_per_year",
+        "practical_threshold_exceeded",
+        "predictable",
+        "cause",
+        "assumptions",
+        "warnings",
+        "asset_checksums",
+        "narrative",
+        "series",
+        "trend_line",
+        "interval_low_line",
+        "interval_high_line"
+      ],
+      "title": "TrendView",
+      "type": "object"
+    },
     "UnavailableResult": {
       "additionalProperties": false,
       "properties": {
@@ -4051,6 +4507,9 @@
   },
   "additionalProperties": false,
   "properties": {
+    "sst_trend_analysis": {
+      "$ref": "#/$defs/TrendView"
+    },
     "associations": {
       "$ref": "#/$defs/AssociationView"
     },
@@ -4098,6 +4557,7 @@
     }
   },
   "required": [
+    "sst_trend_analysis",
     "associations",
     "sst_anomaly_analysis",
     "refresh",

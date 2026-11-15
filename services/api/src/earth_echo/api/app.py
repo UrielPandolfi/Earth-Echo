@@ -251,10 +251,12 @@ def _analysis_routes() -> APIRouter:
         cutoff_month: Annotated[int | None, Query(ge=1, le=12)] = None,
     ) -> TrendView:
         if region_id != "caribe-occidental":
-            blocked = trend_view()
+            from earth_echo.queries.trend import _missing
+            blocked = _missing('Esa región no tiene cobertura en este subconjunto. No se usó el escenario DEMO.')
             return blocked.model_copy(
                 update={
                     "status": "unavailable",
+                    "region_id":region_id,
                     "reason": "Esa región no tiene cobertura en este subconjunto. No se usó el escenario DEMO.",
                     "slope_c_per_year": None,
                     "series": [],
@@ -270,11 +272,15 @@ def _analysis_routes() -> APIRouter:
         return trend_view(cutoff)
 
     @router.get("/d15-sst.csv")
-    def sst_trend_csv(region_id: str = "caribe-occidental") -> Response:
+    def sst_trend_csv(region_id: str = "caribe-occidental",
+        cutoff_year: Annotated[int | None, Query(ge=1985,le=2100)]=None,
+        cutoff_month: Annotated[int | None, Query(ge=1,le=12)]=None) -> Response:
         if region_id != "caribe-occidental":
             raise HTTPException(status_code=404, detail="Esa región no tiene una serie exportable.")
+        if (cutoff_year is None)!=(cutoff_month is None):raise HTTPException(422,'El corte necesita año y mes.')
+        cutoff=None if cutoff_year is None else (cutoff_year,cutoff_month)
         return Response(
-            content=trend_csv(),
+            content=trend_csv(cutoff),
             media_type="text/csv",
             headers={"Content-Disposition": "attachment; filename=d15-sst-tendencia.csv"},
         )

@@ -3,6 +3,8 @@ import argparse
 import csv
 import io
 import json
+import math
+import numpy as np
 from datetime import datetime,timezone
 from urllib.request import urlopen
 
@@ -36,9 +38,22 @@ def verify():
             for key in ('x','y','residual_x','residual_y'):
                 if (None if row[key]=='' else float(row[key]))!=getattr(point,key):raise ValueError('Association CSV scientific value differs')
         exports.append({'pair':pair.id,'rows':len(rows),'raw_r':pair.raw_r,'residual_r':pair.residual_r,'intervals':[p.model_dump() for p in pair.intervals]})
+    trend=json.loads(get('/v1/analyses/d15-sst'))
+    if trend['source_series_sha256']!=expected.checksum_sha256 or trend['method_version']!='2' or trend['status']!='evaluated':raise ValueError('Seasonal trend version/input mismatch')
+    present=[p for p in trend['series'] if p['sst_c'] is not None]
+    design=np.array([[float(p['month']==month) for month in range(1,13)]+[p['year']-2014+(p['month']-.5)/12] for p in present])
+    independent=float(np.linalg.lstsq(design,[p['sst_c'] for p in present],rcond=None)[0][-1])
+    if not math.isclose(trend['slope_c_per_year'],independent,abs_tol=1e-12,rel_tol=0):raise ValueError('Trend slope differs from independent SVD')
+    trend_rows=list(csv.DictReader(io.StringIO(get('/v1/analyses/d15-sst.csv').decode())))
+    if len(trend_rows)!=len(trend['series']):raise ValueError('Trend CSV length mismatch')
+    for row,point in zip(trend_rows,trend['series'],strict=True):
+        if row['execution_id']!=trend['execution_id'] or row['source_series_sha256']!=expected.checksum_sha256 or row['unit']!='°C':raise ValueError('Trend CSV provenance mismatch')
+        for key in ('sst_c','anomaly_c'):
+            if (None if row[key]=='' else float(row[key]))!=point[key]:raise ValueError('Trend CSV value mismatch')
     return {'checked_at':now.isoformat(),'scope':'Native inputs, calculation arithmetic, persisted API and CSV consistency; no causal/predictive validation',
         'anomalies':{'method':expected.method_version,'months':len(expected.samples),'assessed_months':anomaly['assessed_months'],'flagged_months':anomaly['flagged_months'],'input_sha256':expected.checksum_sha256,'native_coverage':expected.extent.model_dump(mode='json')},
         'associations':{'method':expected_associations.method_version,'execution_id':expected_associations.execution_id,'causal_attribution':expected_associations.causal_attribution,'predictive_validation':expected_associations.predictive_validation,'pairs':exports},
+        'trend':{key:trend[key] for key in ('method_id','method_version','execution_id','source_series_sha256','present_months','missing_months','slope_c_per_year','interval_low_c_per_year','interval_high_c_per_year','sensitivity_low_c_per_year','sensitivity_high_c_per_year','residual_lag1_r')},
         'api_and_csv_consistent':True,'native_checks_passed':True,'new_external_downloads':0}
 
 

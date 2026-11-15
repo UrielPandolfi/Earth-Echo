@@ -14,9 +14,17 @@ Se cotejaron los144agregados contra todos los NetCDF originales retenidos, con b
 
 Actualización registrada `d15-sst-anomalies`: diaria y al cambiar hash de`data/real/d15/monthly_series.json`, con el scheduler/lock/plazo/retención existentes. Actualizar el análisis no inventa observaciones posteriores a2025; ampliar historia es un trabajo explícito distinto. Ante pérdida/cambio de entrada se conserva el producto anterior y el resumen declara obsolescencia. Los9candidatos se cuentan en ese análisis; no incrementan el contador de eventos calculados como si fueran desastres.
 
-## Tendencias — base existente, mejoras pendientes
+## Tendencias — implementado y revisado
 
-SST mensual Caribe dispone de pendiente/intervalo por bloques y exportación CSV; RAPID dispone de medias anuales/pendiente descriptiva2005–2023. Resta revisar ajuste estacional, tratamiento de huecos e incertidumbre y cerrar el recorrido demostrable. Ninguna pendiente constituye pronóstico o causa.
+SST mensual usa `sst-seasonal-fixed-effects-calendar-block-v2`: SST absoluta contra doce interceptos de mes calendario y una pendiente lineal común, estimada por sumas centradas dentro de mes. Mínimo96meses válidos/6años por mes; el gráfico resta media2014–2021 (mínimo8años por mes), pero esa precorrección no interviene en la pendiente. La línea gráfica es la componente lineal común anclada a la media de anomalías. El recorte está al sur de Puerto Rico; se conserva el identificador regional heredado`caribe-occidental`, sin cambiar las coordenadas para hacerlas coincidir con ese nombre.
+
+Resultado2014–2025:144meses, pendiente0,06815495338°C/año. Intervalo condicional95% con12meses:0,02665672194…0,10905991707; sensibilidad24meses:0,02615383366…0,11051116545. Correlación de residuos adyacentes0,84370387165, diagnóstico de dependencia que no se trata como datos independientes. Una serie de12años de este recorte no acredita tendencia secular mundial, causa o capacidad de extrapolación.
+
+Bootstrap de residuos en bloques **calendario completos**,1000réplicas por longitud, semilla20261115+longitud. La máscara se mantiene en sus posiciones originales al reconstruir/ajustar cada réplica: no se eliminan huecos antes de definir bloques o tiempo. Mínimo8inicios de bloque completos; los inicios elegibles pueden solaparse y no se consideran independientes. Si hay meses válidos suficientes pero ningún bloque completo, se publica pendiente con intervalo null. Intervalos aproximados, condicionales a estacionalidad/tendencia ajustadas, sin incertidumbre de instrumentos/climatología/período; suponen residuos aproximadamente estacionarios y dependencia suficientemente corta respecto al bloque. Se muestra sensibilidad, sin escoger la longitud más favorable. No se interpreta excluir cero como atribución causal o validación predictiva.
+
+El verificador compara pendiente contra diseño explícito de12interceptos+tiempo por SVD NumPy; casos conocidos prueban ciclo estacional+pendiente, huecos reales en calendario, dispersión nula, serie corta y ausencia de bloques. CSV mantiene valores/huecos y añade unidad, referencia, versión/método, ejecución y SHA; admite el mismo corte año/mes que JSON. Corte futuro se limita a datos disponibles. Una región no cubierta devuelve todos los valores de tendencia/intervalo nulos, sin reutilizar otra región. Tipos frontend generados desde Pydantic. Anomalías/asociaciones siguen accesibles si falla únicamente la consulta de tendencia.
+
+La ingestión histórica original, método v1 y experimento predictivo SST no se modificaron; siguen reproducibles y el experimento permanece experimental sin evidencia adicional sobre persistencia. RAPID mantiene medias anuales/pendiente descriptiva2005–2023, con sus límites y sin convertirla en pronóstico de colapso.
 
 ## Asociaciones históricas — implementado
 

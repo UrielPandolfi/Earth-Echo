@@ -80,7 +80,7 @@ export function TrendChart({ series, trendLine, lowLine, highLine, label="Anomal
       </svg>
       <figcaption className="chart-key">
         <span><i className="swatch observed" /> Anomalía mensual</span>
-        {trendLine.length>1 && <span><i className="swatch trend" /> Recta</span>}
+        {trendLine.length>1 && <span><i className="swatch trend" /> Componente lineal</span>}
         {lowLine.length>1 && highLine.length>1 && <span><i className="swatch band" /> Intervalo de la pendiente</span>}
       </figcaption>
     </figure>
