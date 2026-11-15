@@ -1,15 +1,39 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-15T06:07:36Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T06%3A07%3A36Z&endtime=2026-11-15T06%3A07%3A36Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "f5f3cfe73f7bcd31076befe623ed7ae8b0a8660e36847de86e89f61f24ec368b",
-  "byte_size": 85250,
-  "raw_file": "assets\\d21-events\\f5f3cfe73f7bcd31076befe623ed7ae8b0a8660e36847de86e89f61f24ec368b.json",
+  "retrieved_at": "2026-11-15T14:09:29Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T14%3A09%3A29Z&endtime=2026-11-15T14%3A09%3A29Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "d86078f729de15ada781af4b656efa1e9a9d1664d5fe852929aed7562546839f",
+  "byte_size": 84595,
+  "raw_file": "assets\\d21-events\\d86078f729de15ada781af4b656efa1e9a9d1664d5fe852929aed7562546839f.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000tyek",
+      "longitude": 126.2,
+      "latitude": 9.7595,
+      "depth_km": 9.971,
+      "magnitude": 5.5,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T14:06:16.004000Z",
+      "time": "2026-11-15T13:41:35Z",
+      "place": "9 km E of Union, Philippines"
+    },
+    {
+      "id": "us7000tyd3",
+      "longitude": -175.9354,
+      "latitude": -20.589,
+      "depth_km": 177.524,
+      "magnitude": 4.7,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T07:58:09.040000Z",
+      "time": "2026-11-15T07:36:37Z",
+      "place": "92 km NW of Houma, Tonga"
+    },
     {
       "id": "us7000tyca",
       "longitude": -177.8215,
@@ -18,7 +42,7 @@
       "magnitude": 5.5,
       "magnitude_type": "mww",
       "review_status": "reviewed",
-      "updated_at": "2026-11-15T05:38:57.871000Z",
+      "updated_at": "2026-11-15T07:21:02.884000Z",
       "time": "2026-11-15T05:15:02Z",
       "place": "Fiji region"
     },
@@ -138,7 +162,7 @@
       "magnitude": 5.5,
       "magnitude_type": "mww",
       "review_status": "reviewed",
-      "updated_at": "2026-11-14T11:32:21.086000Z",
+      "updated_at": "2026-11-15T09:31:43.302000Z",
       "time": "2026-11-14T09:26:13Z",
       "place": "northern Mid-Atlantic Ridge"
     },
@@ -618,7 +642,7 @@
       "magnitude": 4.5,
       "magnitude_type": "mb",
       "review_status": "reviewed",
-      "updated_at": "2026-11-14T08:27:35.343000Z",
+      "updated_at": "2026-11-15T08:27:41.591000Z",
       "time": "2026-11-12T08:17:28Z",
       "place": "off the coast of Oregon"
     },
@@ -1413,42 +1437,6 @@
       "updated_at": "2026-11-08T17:20:59.040000Z",
       "time": "2026-11-08T16:33:24Z",
       "place": "central Mid-Atlantic Ridge"
-    },
-    {
-      "id": "us7000twxn",
-      "longitude": 64.443,
-      "latitude": -27.6901,
-      "depth_km": 10.0,
-      "magnitude": 4.7,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T12:51:23.040000Z",
-      "time": "2026-11-08T12:29:17Z",
-      "place": "Southwest Indian Ridge"
-    },
-    {
-      "id": "us7000twxf",
-      "longitude": -70.0603,
-      "latitude": -19.6811,
-      "depth_km": 68.785,
-      "magnitude": 4.7,
-      "magnitude_type": "mwr",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-09T03:20:52.241000Z",
-      "time": "2026-11-08T11:58:32Z",
-      "place": "46 km NW of Huara, Chile"
-    },
-    {
-      "id": "us7000twx1",
-      "longitude": 143.5257,
-      "latitude": 39.8647,
-      "depth_km": 10.0,
-      "magnitude": 4.7,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T09:52:58.040000Z",
-      "time": "2026-11-08T09:23:35Z",
-      "place": "137 km E of Miyako, Japan"
     }
   ]
 }
