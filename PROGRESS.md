@@ -722,6 +722,10 @@ La matriz, el guion y la copia están en `docs/entrega.md`.
 
 Cierre operativo 2026-11-15T06:40:19.131280+00:00: instantánea de51metadatos de feeds/pronósticos/productos actualizados autónomamente, incluida retención de revisiones. Se capturó bajo lock del actualizador después de verificar API/originales; sin cambiar métodos, referencias, estado científico o los archivos de auditoría del usuario. Los originales compartidos siguen en el almacén local y las fixtures auténticas conservadas.
 
+## F17 en Pronósticos — 2026-11-15
+
+Se reutilizaron las tablas CPC/RONI ya retenidas (edición 2026-11), sin una ingestión nueva. `GET /v1/forecasts/enso/d48` y el CSV exponen nueve trimestres. En pantalla, REAL → Pronósticos → El Niño / La Niña muestra FMA 2027 como 98 % El Niño, 2 % neutral y 0 % La Niña, mediana RONI 1,23 °C. El índice observado ASO 2026 es 2,0 °C y se etiqueta como fase de ese trimestre, no como episodio de cinco temporadas. El recuadro Niño 3.4 es referencia geográfica. La actualización sigue en el trabajo `d48-roni-outlook-tables`.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

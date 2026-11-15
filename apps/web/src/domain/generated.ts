@@ -178,6 +178,48 @@ export interface DescriptiveNote {
   remainder: string;
 }
 
+export interface EnsoObservation {
+  season_id: string;
+  valid_from: string;
+  valid_to: string;
+  roni_c: number;
+  season_phase: "La Niña" | "Neutral" | "El Niño";
+  note: string;
+}
+
+export interface EnsoOutlook {
+  data_mode?: "real";
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  edition?: string | null;
+  issued_at?: null;
+  issue_time_basis: string;
+  retrieved_at?: string | null;
+  ingested_at?: string | null;
+  source_url: string;
+  discussion_url: string;
+  checksum_sha256?: string | null;
+  phases: EnsoPhase[];
+  observation?: EnsoObservation | null;
+  region: ProductRegion;
+  meaning: string;
+  limitation: string;
+  update?: RefreshJob | null;
+  update_pending?: boolean;
+}
+
+export interface EnsoPhase {
+  season: string;
+  order: number;
+  valid_from: string;
+  valid_to: string;
+  temporal_state: "future" | "in_progress" | "expired" | "unknown";
+  la_nina_percent: number;
+  neutral_percent: number;
+  el_nino_percent: number;
+  roni_p50_c?: number | null;
+}
+
 export interface ForecastCatalog {
   data_mode?: "real";
   as_of: string;
@@ -869,6 +911,7 @@ export interface ContractBundle {
   forecast_point: ForecastPoint;
   forecast_highlights: ForecastHighlights;
   planetary_forecast: PlanetaryForecast;
+  enso_outlook: EnsoOutlook;
   assistant_request: AssistantRequest;
   assistant_reply: AssistantReply;
   sst_trend_analysis: TrendView;

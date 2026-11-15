@@ -2,8 +2,8 @@
 from typing import Annotated
 from fastapi import APIRouter, Path, Query, HTTPException
 from fastapi.responses import FileResponse, Response
-from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast
-from earth_echo.queries.predictions import forecast_catalog, forecast_field, forecast_point, forecast_highlights, point_csv, retained, planetary_forecast
+from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast, EnsoOutlook
+from earth_echo.queries.predictions import forecast_catalog, forecast_field, forecast_point, forecast_highlights, point_csv, retained, planetary_forecast, enso_outlook, enso_csv
 from earth_echo.storage.products import products_root
 
 Version = Annotated[str,Path(pattern=r'^[0-9a-f]{64}$')]
@@ -63,5 +63,13 @@ def forecast_routes():
         raw=feeds_dir()/'assets'/'d28-kp-forecast'/f'{version}.json' if version else feeds_dir()/json.loads(path.read_bytes()).get('raw_file','missing')
         if not raw.is_file():raise HTTPException(404,'Original Kp no retenido.')
         return FileResponse(raw,filename=raw.name)
+
+    @router.get('/enso/d48',response_model=EnsoOutlook)
+    def enso():
+        return enso_outlook()
+
+    @router.get('/enso/d48.csv')
+    def enso_export():
+        return Response(enso_csv(enso_outlook()),media_type='text/csv',headers={'Content-Disposition':'attachment; filename=f17-enso-roni.csv'})
 
     return router

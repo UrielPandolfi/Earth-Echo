@@ -29,6 +29,7 @@ interface GlobeColumnProps {
   onGeographicSelect?: (position:{longitude:number;latitude:number}) => void;
   fieldSelection?: GeographicSelection|null;
   planetaryKp?: { forecast: PlanetaryForecast | null; error: string | null } | null;
+  mapNotice?: string | null;
 }
 
 const month = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -68,12 +69,15 @@ export function GlobeColumn({
   onGeographicSelect,
   fieldSelection,
   planetaryKp,
+  mapNotice,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
   const note = planetaryKp
     ? "El Kp previsto es planetario. El aviso está en el panel del mapa, no en una región."
-    : state.section === "explorar" ? null : trendNote ?? sectionNote[state.section];
+    : mapNotice
+      ? "El recuadro marca la región del índice. Las probabilidades están en el inspector, no en cada punto."
+      : state.section === "explorar" ? null : trendNote ?? sectionNote[state.section];
   const planetaryWindows = (planetaryKp?.forecast?.windows ?? []).filter((window) => window.temporal_state !== "expired");
 
   useEffect(() => {
@@ -105,11 +109,12 @@ export function GlobeColumn({
       {note ? <p className="section-note" role="status">{note}</p> : null}
       <div className="globe-wrap">
         <GlobeStage createGlobe={createGlobe} onControls={setControls} onSelect={onSelect} />
-        {signalCount === 0 && !planetaryKp ? (
+        {signalCount === 0 && !planetaryKp && !mapNotice ? (
           <p className="empty-map" role="status">
             {emptyText ?? "No hay señales en este instante y con estos filtros. Activá una categoría o volvé a Ahora."}
           </p>
         ) : null}
+        {mapNotice ? <p className="kp-float map-notice" role="status">{mapNotice}</p> : null}
         {planetaryKp ? (
           <aside className="kp-float" aria-label="Kp previsto planetario">
             <h2>Kp previsto</h2>
@@ -141,7 +146,7 @@ export function GlobeColumn({
           <small>del catálogo</small>
         </div>
         <ul className="symbol-legend">
-          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
+          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : mapNotice ? <li><span style={{color:'#e7bf74'}}>▱</span> Niño 3.4 · referencia</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
             <li><SymbolMark kind="forecast"/> Área para explorar · pronóstico</li>
             <li><SymbolMark kind="cluster"/> Agrupación visual de áreas</li>
             <li><span>□</span> Celda seleccionada · soporte de malla</li>

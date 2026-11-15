@@ -7,7 +7,7 @@ from typing import Literal
 from pydantic import Field, model_validator
 from earth_echo.contracts.types import ApiModel, CatalogSourceId, PhenomenonId, UtcDateTime, Sha256
 from earth_echo.contracts.geometry import GeographicExtent, GeoMultiPolygon
-from earth_echo.contracts.products import ScientificGrid, ScientificCalculation
+from earth_echo.contracts.products import ScientificGrid, ScientificCalculation, ProductRegion
 from earth_echo.contracts.operations import RefreshJob
 
 TemporalState = Literal['future', 'in_progress', 'expired', 'unknown']
@@ -155,3 +155,51 @@ class PlanetaryForecast(ApiModel):
     windows: list[PlanetaryWindow]
     probability: None = None
     note: str
+
+
+class EnsoPhase(ApiModel):
+    season: str
+    order: int = Field(ge=0)
+    valid_from: UtcDateTime
+    valid_to: UtcDateTime
+    temporal_state: TemporalState
+    la_nina_percent: int = Field(ge=0, le=100)
+    neutral_percent: int = Field(ge=0, le=100)
+    el_nino_percent: int = Field(ge=0, le=100)
+    roni_p50_c: float | None = Field(default=None, allow_inf_nan=False)
+
+    @model_validator(mode='after')
+    def official_total(self):
+        if self.la_nina_percent + self.neutral_percent + self.el_nino_percent != 100:
+            raise ValueError('Las tres fases oficiales deben sumar 100. No se renormalizan.')
+        return self
+
+
+class EnsoObservation(ApiModel):
+    season_id: str
+    valid_from: UtcDateTime
+    valid_to: UtcDateTime
+    roni_c: float = Field(allow_inf_nan=False)
+    season_phase: Literal['La Niña', 'Neutral', 'El Niño']
+    note: str
+
+
+class EnsoOutlook(ApiModel):
+    data_mode: Literal['real'] = 'real'
+    status: ResultStatus
+    reason: str | None = None
+    edition: str | None = None
+    issued_at: None = None
+    issue_time_basis: str
+    retrieved_at: UtcDateTime | None = None
+    ingested_at: UtcDateTime | None = None
+    source_url: str
+    discussion_url: str
+    checksum_sha256: Sha256 | None = None
+    phases: list[EnsoPhase]
+    observation: EnsoObservation | None = None
+    region: ProductRegion
+    meaning: str
+    limitation: str
+    update: RefreshJob | None = None
+    update_pending: bool = False

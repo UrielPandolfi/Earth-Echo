@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ForecastCatalog,ForecastField,ForecastPoint,ForecastHighlights,PlanetaryForecast } from '../domain/generated';
+import type { ForecastCatalog,ForecastField,ForecastPoint,ForecastHighlights,PlanetaryForecast,EnsoOutlook } from '../domain/generated';
 
 const api=import.meta.env.VITE_API_BASE ?? '/api';
 const storageKey='earth-echo-forecast-selection-v1';
 type Position={longitude:number;latitude:number};
-type Selection={d16:string|null;ifs:string|null;position:Position|null;threshold:number;mode:'d16'|'ifs'|'kp'};
+type Selection={d16:string|null;ifs:string|null;position:Position|null;threshold:number;mode:'d16'|'ifs'|'kp'|'enso';season:string|null};
 function saved():Selection {
-  const fallback:Selection={d16:null,ifs:null,position:null,threshold:.7,mode:'d16'};
+  const fallback:Selection={d16:null,ifs:null,position:null,threshold:.7,mode:'d16',season:null};
   try {
     const value=JSON.parse(localStorage.getItem(storageKey) ?? 'null') as Partial<Selection>|null;
     if(!value)return fallback;
     return {...fallback,d16:typeof value.d16==='string' ? value.d16 : null,ifs:typeof value.ifs==='string' ? value.ifs : null,
-      mode:['d16','ifs','kp'].includes(value.mode ?? '') ? value.mode! : 'd16',
+      mode:['d16','ifs','kp','enso'].includes(value.mode ?? '') ? value.mode! : 'd16',
+      season:typeof value.season==='string' ? value.season : null,
       threshold:typeof value.threshold==='number' && value.threshold>=0 && value.threshold<=1 ? value.threshold : .7,
       position:value.position && Number.isFinite(value.position.longitude) && Number.isFinite(value.position.latitude) && Math.abs(value.position.latitude)<=90 ? value.position : null};
   } catch {return fallback;}
@@ -33,6 +34,8 @@ export function useForecastExplorer(enabled:boolean) {
   const [pointError,setPointError]=useState<string|null>(null);
   const [highlightError,setHighlightError]=useState<string|null>(null);
   const [kpError,setKpError]=useState<string|null>(null);
+  const [enso,setEnso]=useState<EnsoOutlook|null>(null);
+  const [ensoError,setEnsoError]=useState<string|null>(null);
   const revision=useRef(0);
   useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify(selection));}catch{/* Private storage may be disabled. */}},[selection]);
   useEffect(()=>{
@@ -47,6 +50,16 @@ export function useForecastExplorer(enabled:boolean) {
         setSelection(s=>({...s,d16:s.d16 ?? body.default_d16_id,ifs:s.ifs ?? [...body.forecasts].filter(f=>f.source_id==='D07' && f.variable==='2t' && f.queryable).sort((a,b)=>(b.valid_from ?? '').localeCompare(a.valid_from ?? ''))[0]?.id ?? null}));
       }catch(e){if(!controller.signal.aborted)setError(e instanceof Error ? e.message : 'Catálogo no disponible.');}
     }
+    void load();const timer=window.setInterval(()=>void load(),60_000);
+    return ()=>{controller.abort();window.clearInterval(timer);};
+  },[enabled]);
+  useEffect(()=>{
+    if(!enabled)return;
+    const controller=new AbortController();
+    async function load(){try{
+      const body=await get<EnsoOutlook>('/v1/forecasts/enso/d48',controller.signal);
+      if(!controller.signal.aborted){setEnso(body);setEnsoError(null);}
+    }catch(e){if(!controller.signal.aborted)setEnsoError(e instanceof Error ? e.message : 'ENSO no disponible.');}}
     void load();const timer=window.setInterval(()=>void load(),60_000);
     return ()=>{controller.abort();window.clearInterval(timer);};
   },[enabled]);
@@ -87,6 +100,16 @@ export function useForecastExplorer(enabled:boolean) {
     void load();const timer=window.setInterval(()=>void load(),60_000);
     return ()=>{controller.abort();window.clearInterval(timer);};
   },[enabled]);
+  useEffect(()=>{
+    if(!enabled)return;
+    const controller=new AbortController();
+    async function load(){try{
+      const body=await get<EnsoOutlook>('/v1/forecasts/enso/d48',controller.signal);
+      if(!controller.signal.aborted){setEnso(body);setEnsoError(null);}
+    }catch(e){if(!controller.signal.aborted)setEnsoError(e instanceof Error ? e.message : 'ENSO no disponible.');}}
+    void load();const timer=window.setInterval(()=>void load(),60_000);
+    return ()=>{controller.abort();window.clearInterval(timer);};
+  },[enabled]);
   const selectPosition=useCallback((position:Position)=>setSelection(s=>({...s,position})),[]);
   const activeField=field?.forecast?.id===key ? field : null;
   // Match the request identity, not independently normalized floating degrees:
@@ -94,8 +117,9 @@ export function useForecastExplorer(enabled:boolean) {
   // returned canonical longitude is scientific metadata, not a request token.
   const activePoint=point?.key===key && point.result.forecast?.id===key && point.longitude===longitude && point.latitude===latitude ? point.result : null;
   const activeHighlights=highlights?.forecast_id===key && highlights.probability_filter===selection.threshold ? highlights : null;
-  return {selection,catalog,key,field:activeField,point:activePoint,highlights:activeHighlights,kp,error,pointError,highlightError,kpError,
+  return {selection,catalog,key,field:activeField,point:activePoint,highlights:activeHighlights,kp,enso,error,pointError,highlightError,kpError,ensoError,
     selectPosition,setMode:(mode:Selection['mode'])=>setSelection(s=>({...s,mode})),
+    setSeason:(season:string)=>setSelection(s=>({...s,season})),
     setPeriod:(id:string)=>setSelection(s=>({...s,[s.mode==='d16'?'d16':'ifs']:id})),setThreshold:(threshold:number)=>setSelection(s=>({...s,threshold}))};
 }
 export type ForecastExplorer=ReturnType<typeof useForecastExplorer>;

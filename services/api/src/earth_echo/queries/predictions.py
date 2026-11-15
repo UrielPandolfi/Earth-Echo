@@ -13,7 +13,9 @@ from pathlib import Path
 
 from earth_echo.contracts.products import ScientificProduct
 from earth_echo.contracts.predictions import (ForecastDescriptor, ForecastCatalog, ForecastField, ForecastPoint,
-    ForecastHighlights, ForecastHighlight, PlanetaryForecast, PlanetaryWindow)
+    ForecastHighlights, ForecastHighlight, PlanetaryForecast, PlanetaryWindow, EnsoOutlook, EnsoPhase, EnsoObservation)
+from earth_echo.contracts.products import ProductRegion
+from earth_echo.contracts.geometry import GeoMultiPolygon, GeographicExtent
 from earth_echo.contracts.operations import RefreshStatus
 from earth_echo.contracts.types import parse_utc
 from earth_echo.science.forecast_grid import CELL_RULE, HIGHLIGHT_RULE, locate, cell_at, components, normalize_longitude, axes
@@ -219,3 +221,100 @@ def planetary_forecast(now=None, operations=None):
         valid_from=windows[0].valid_from if windows else None,valid_to=windows[-1].valid_to if windows else None,temporal_semantics='three_hour_windows',coverage='Planetario; sin geometría local.',
         original_url='https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json',original_sha256=version,original_download=f'/v1/forecasts/planetary/d28-kp/original?version={version}',metadata_download=f'/v1/forecasts/planetary/d28-kp?version={version}',reference_url='https://www.swpc.noaa.gov/products/planetary-k-index',limitation=note,experimental=False,update=job,update_pending=(moment-(job.last_success_at if job and job.last_success_at else retrieved)).total_seconds()>10800)
     return PlanetaryForecast(status='expired' if meta.temporal_state=='expired' else 'available',forecast=meta,windows=windows,note=note)
+
+
+ENSO_SOURCE='https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/probabilities/'
+ENSO_DISCUSSION='https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml'
+ENSO_MEANING=(
+    'El Niño y La Niña describen el Pacífico tropical ecuatorial en la región Niño 3.4. '
+    'Se asocian, en promedio, con cambios de la circulación atmosférica y con patrones de lluvia y temperatura en varias partes del mundo. '
+    'Esas relaciones son climáticas generales. No convierten estas probabilidades en un pronóstico de inundación, sequía o temperatura para Argentina, Rosario ni ningún otro punto.'
+)
+ENSO_LIMITATION=(
+    'Pronóstico oficial CPC/RONI, ERSSTv6, base 1991–2020. Trimestres civiles de tres meses que se solapan; no es un pronóstico meteorológico diario. '
+    'La Niña, neutral y El Niño de una temporada usan los umbrales ±0,5 °C de ese índice. Un episodio histórico exige cinco temporadas consecutivas y no se diagnostica aquí. '
+    'El 0 % y el 100 % publicados son aproximados. No hay intervalo de confianza nuevo calculado por Earth Echo. '
+    'El recuadro del mapa es la región de referencia, no un campo de probabilidad.'
+)
+
+
+def nino34_region() -> ProductRegion:
+    ring=[[-170,-5],[-120,-5],[-120,5],[-170,5],[-170,-5]]
+    return ProductRegion(id='nino-3.4',name='Niño 3.4 · referencia',sample_id='nino-3.4',
+        geometry=GeoMultiPolygon(type='MultiPolygon',coordinates=[[ring]]),
+        extent=GeographicExtent(west=-170,south=-5,east=-120,north=5,crosses_antimeridian=False),
+        quality='Región científica de definición del índice. No contiene la probabilidad ENSO en cada punto.')
+
+
+def _percent(value) -> int:
+    number=float(value)
+    if number!=number or abs(number-round(number))>1e-6 or not 0<=round(number)<=100:
+        raise ValueError('Porcentaje CPC fuera de 0–100 o no entero publicado')
+    return int(round(number))
+
+
+def _season_phase(value: float) -> str:
+    if value<=-0.5:return 'La Niña'
+    if value>=0.5:return 'El Niño'
+    return 'Neutral'
+
+
+def enso_outlook(now=None, root=None, operations=None):
+    from earth_echo.storage.products import read_product
+    moment=now or clock()
+    if operations is None and root is None:
+        operations=_operations()
+    base=dict(issue_time_basis='CPC declara el mes de emisión y no una hora UTC. issued_at queda null.',source_url=ENSO_SOURCE,discussion_url=ENSO_DISCUSSION,region=nino34_region(),meaning=ENSO_MEANING,limitation=ENSO_LIMITATION)
+    phase=read_product('d48-roni-probabilities', root)
+    if phase is None:
+        return EnsoOutlook(status='missing_input',reason='No hay probabilidades ENSO retenidas. No se inventaron porcentajes.',phases=[],**base)
+    outlook=read_product('d48-roni-outlook', root)
+    medians={}
+    if outlook is not None:
+        for sample in outlook.samples:
+            if sample.attributes and sample.attributes.get('column')=='p50' and sample.value is not None:
+                medians[sample.attributes.get('season')]=sample.value
+    grouped={}
+    try:
+        for sample in phase.samples:
+            attrs=sample.attributes or {}
+            season=attrs.get('season');order=int(attrs.get('season_order'))
+            column=attrs.get('column')
+            if not season or sample.time is None or sample.valid_to is None or column not in {'La Niña','Neutral','El Niño'}:
+                raise ValueError('Temporada CPC incompleta')
+            row=grouped.setdefault(order,{'season':season,'start':sample.time,'end':sample.valid_to,'values':{}})
+            if row['season']!=season or row['start']!=sample.time or row['end']!=sample.valid_to:
+                raise ValueError('Las tres fases no comparten la misma ventana')
+            row['values'][column]=_percent(sample.value)
+    except (TypeError,ValueError) as error:
+        return EnsoOutlook(status='missing_input',reason=f'{error}. Se conservó el archivo y no se publicaron porcentajes parciales.',edition=phase.product_version[:7],retrieved_at=phase.retrieved_at,ingested_at=phase.ingested_at,checksum_sha256=phase.checksum_sha256,phases=[],**base)
+    phases=[]
+    for order in sorted(grouped):
+        row=grouped[order]
+        values=row['values']
+        if set(values)!={'La Niña','Neutral','El Niño'} or sum(values.values())!=100:
+            return EnsoOutlook(status='missing_input',reason='Una temporada CPC no suma 100 o le falta una fase. No se renormalizó.',phases=[],**base)
+        phases.append(EnsoPhase(season=row['season'],order=order,valid_from=row['start'],valid_to=row['end'],temporal_state=temporal_state(row['start'],row['end'],moment),
+            la_nina_percent=values['La Niña'],neutral_percent=values['Neutral'],el_nino_percent=values['El Niño'],roni_p50_c=medians.get(row['season'])))
+    if any(phases[i].valid_from>phases[i+1].valid_from for i in range(len(phases)-1)):
+        return EnsoOutlook(status='missing_input',reason='Las temporadas CPC no están en orden cronológico.',phases=[],**base)
+    observation=None
+    history=read_product('d48-roni-history', root)
+    if history is not None:
+        published=[s for s in history.samples if s.value is not None and s.time is not None and s.valid_to is not None and s.time<=moment]
+        if published:
+            latest=max(published,key=lambda s:(s.time,s.id))
+            observation=EnsoObservation(season_id=latest.id,valid_from=latest.time,valid_to=latest.valid_to,roni_c=latest.value,season_phase=_season_phase(latest.value),
+                note='Fase de este trimestre según el umbral ±0,5 °C del RONI publicado. No es un episodio de cinco temporadas consecutivas ni el pronóstico.')
+    job=operations.jobs.get('d48-roni-outlook-tables') if operations else None
+    pending=(moment-(job.last_success_at if job and job.last_success_at else phase.retrieved_at)).total_seconds()>phase.cadence_seconds
+    edition=(phase.samples[0].attributes or {}).get('issued_month') if phase.samples else None
+    return EnsoOutlook(status='available',edition=edition,retrieved_at=phase.retrieved_at,ingested_at=phase.ingested_at,checksum_sha256=phase.checksum_sha256,phases=phases,observation=observation,update=job,update_pending=pending,**base)
+
+
+def enso_csv(result: EnsoOutlook) -> str:
+    stream=io.StringIO();writer=csv.writer(stream)
+    writer.writerow(['edition','season','season_order','valid_from','valid_to','temporal_state','la_nina_percent','neutral_percent','el_nino_percent','roni_p50_c','issued_at','retrieved_at','checksum_sha256','source_url'])
+    for phase in result.phases:
+        writer.writerow([result.edition,phase.season,phase.order,phase.valid_from.isoformat(),phase.valid_to.isoformat(),phase.temporal_state,phase.la_nina_percent,phase.neutral_percent,phase.el_nino_percent,phase.roni_p50_c,None,result.retrieved_at.isoformat() if result.retrieved_at else None,result.checksum_sha256,result.source_url])
+    return stream.getvalue()

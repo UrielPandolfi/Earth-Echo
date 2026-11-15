@@ -350,6 +350,15 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 .kp-float ol { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; }
 .kp-float li { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
 .kp-float strong { color: var(--observed); font-variant-numeric: tabular-nums; }
+.enso-stack { display: flex; height: 14px; width: 100%; overflow: hidden; border-radius: 4px; background: var(--bg-sunken); }
+.enso-stack .nina { background: #7eb6e0; }
+.enso-stack .neutral { background: #c5ced6; }
+.enso-stack .nino { background: #e07a62; }
+.enso-key { display: flex; gap: 8px; align-items: center; }
+.enso-key span { width: 10px; height: 10px; display: inline-block; }
+.enso-seasons { display: grid; gap: 6px; margin: 8px 0; }
+.enso-seasons button { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 8px; align-items: center; text-align: left; background: transparent; border: 0; padding: 0; }
+.enso-seasons button[aria-current="true"] span:first-child { color: var(--accent); }
 .synthesis {
   top: 12px;
   right: 12px;
