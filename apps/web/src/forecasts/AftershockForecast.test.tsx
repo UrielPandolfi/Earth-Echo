@@ -45,7 +45,7 @@ describe("réplicas USGS", () => {
 
   it("marca un horizonte vencido y no inventa un pronóstico ausente", () => {
     render(<AftershockForecastView forecasts={forecasts} eventId="us7000txrk" windowLabel="1 Day" magnitude={3} onEvent={() => undefined} onWindow={() => undefined} onMagnitude={() => undefined} />);
-    expect(screen.getByText(/Este horizonte está vencido/)).toBeTruthy();
+    expect(screen.getByText(/Este plazo ya terminó/)).toBeTruthy();
     cleanup();
     render(<AftershockForecastView forecasts={{ ...forecasts, status: "missing_input", events: [], reason: "No se inventaron réplicas." }} eventId={null} windowLabel={null} magnitude={null} onEvent={() => undefined} onWindow={() => undefined} onMagnitude={() => undefined} />);
     expect(screen.getByText("No se inventaron réplicas.")).toBeTruthy();

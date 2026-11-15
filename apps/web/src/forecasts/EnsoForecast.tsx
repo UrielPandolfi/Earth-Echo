@@ -38,8 +38,11 @@ export function EnsoForecastView({ outlook, selected, onSelect, onFocus }: {
             {outlook.phases.map((item) => <option key={item.season} value={item.season}>{item.season}</option>)}
           </select>
         </label>
-        <p>{ensoSentence(phase)}</p>
-        <EnsoStack phase={phase} />
+        <div className="metric-block">
+          <p className="metric-label">{phase.season}</p>
+          <p>{ensoSentence(phase)}</p>
+          <EnsoStack phase={phase} />
+        </div>
         <p className="fine enso-key"><span className="nina" /> La Niña <span className="neutral" /> Neutral <span className="nino" /> El Niño{phase.roni_p50_c != null ? ` · mediana RONI ${phase.roni_p50_c} °C` : ""}</p>
         <div className="enso-seasons" role="list" aria-label="Probabilidades por trimestre">
           {outlook.phases.map((item) => (

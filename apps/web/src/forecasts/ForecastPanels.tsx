@@ -24,7 +24,7 @@ export function ForecastPanel({explorer:x,products,onTechnical,onSelectPosition}
   const h=x.highlights;
   const future=entries.some(e=>e.source_id==='D16' && e.temporal_state==='future' && e.availability==='available');
   return <aside className="sidebar forecast-sidebar" aria-label="Pronósticos reales"><div className="sidebar-head"><h2>Pronósticos · REAL</h2></div><div className="sidebar-body">
-    <p className="hint">Los proveedores calculan los resultados. Earth Echo integra, consulta y explica.</p>
+    <p className="hint">Earth Echo muestra el resultado del organismo que lo calcula. No inventa otro número.</p>
     <label className="forecast-control">Producto<select aria-label="Producto predictivo" value={x.selection.mode} onChange={e=>x.setMode(e.target.value as 'd16'|'ifs'|'kp'|'enso'|'oaf'|'sentry')}>
       <option value="d16">◇ Calor marino · mensual</option><option value="ifs">◇ Meteorología · IFS +24 h</option><option value="enso">◇ El Niño / La Niña · estacional</option><option value="oaf">◇ Réplicas sísmicas · USGS</option><option value="sentry">◇ Asteroides · Sentry</option><option value="kp">◇ Kp · planetario</option>
     </select></label>

@@ -2,6 +2,7 @@ import type { AftershockEvent, AftershockForecasts } from "../domain/generated";
 
 const api = import.meta.env.VITE_API_BASE ?? "/api";
 const stateLabel = { future: "Futuro", in_progress: "En curso", expired: "Vencido", unknown: "Validez desconocida" };
+const horizonName: Record<string, string> = { "1 Day": "1 día", "1 Week": "1 semana", "1 Month": "1 mes", "1 Year": "1 año" };
 
 function percent(value: number): string {
   const pct = value * 100;
@@ -34,9 +35,9 @@ export function AftershockForecastView({ forecasts, eventId, windowLabel, magnit
   }
   return (
     <section className="oaf-view" aria-label="Pronóstico de réplicas">
-      <h3>Réplicas · {event.event_id}</h3>
-      <p>Terremoto principal de magnitud {event.magnitude ?? "no informada"}. El punto del mapa es su centro declarado, no el lugar de las réplicas.</p>
-      <p className="fine">{event.geometry_note}</p>
+      <p className="metric-label">Después del terremoto principal</p>
+      <h3>{event.magnitude == null ? event.event_id : `Magnitud ${event.magnitude}`}</h3>
+      <p className="fine">{event.event_id} · el punto del mapa es ese sismo, no el lugar de las réplicas.</p>
       {forecasts.events.length > 1 ? (
         <label className="forecast-control">Evento
           <select aria-label="Evento con pronóstico OAF" value={event.event_id} onChange={(input) => onEvent(input.target.value)}>
@@ -44,33 +45,40 @@ export function AftershockForecastView({ forecasts, eventId, windowLabel, magnit
           </select>
         </label>
       ) : null}
-      <label className="forecast-control">Horizonte publicado
+      <label className="forecast-control">Durante cuánto tiempo
         <select aria-label="Horizonte de réplicas" value={horizon.label} onChange={(input) => onWindow(input.target.value)}>
-          {event.windows.map((item) => <option key={item.label} value={item.label}>{item.label} · {stateLabel[item.temporal_state]}</option>)}
+          {event.windows.map((item) => <option key={item.label} value={item.label}>{horizonName[item.label] ?? item.label} · {stateLabel[item.temporal_state]}</option>)}
         </select>
       </label>
-      <label className="forecast-control">Magnitud
+      <label className="forecast-control">Réplicas de magnitud
         <select aria-label="Umbral de magnitud" value={String(bin.magnitude)} onChange={(input) => onMagnitude(Number(input.target.value))}>
-          {horizon.bins.map((item) => <option key={item.magnitude} value={item.magnitude}>M{item.magnitude}+</option>)}
+          {horizon.bins.map((item) => <option key={item.magnitude} value={item.magnitude}>M{item.magnitude} o mayor</option>)}
         </select>
       </label>
-      {horizon.temporal_state === "expired" ? <p className="forecast-warning" role="status">Este horizonte está vencido. No describe el futuro actual.</p> : null}
-      <p>{aftershockSentence(event, horizon.label, bin.magnitude, bin.probability)}</p>
-      <p className="fine">Calculado desde {new Date(horizon.valid_from).toISOString()} hasta {new Date(horizon.valid_to).toISOString()}.</p>
-      <p className="forecast-result">{percent(bin.probability)}</p>
-      <p className="fine">Probabilidad de al menos una réplica. Mediana del número esperado: {bin.median_count ?? "no publicada"}. Intervalo p95 del conteo: {bin.p95_minimum ?? "—"} a {bin.p95_maximum ?? "—"}.</p>
+      {horizon.temporal_state === "expired" ? <p className="forecast-warning" role="status">Este plazo ya terminó. No describe lo que puede pasar ahora.</p> : null}
+      <div className="metric-block">
+        <p className="metric-label">Probabilidad de al menos una réplica</p>
+        <p className="forecast-result">{percent(bin.probability)}</p>
+        <p>{aftershockSentence(event, horizon.label, bin.magnitude, bin.probability)}</p>
+        <p className="fine">Desde {new Date(horizon.valid_from).toISOString()} hasta {new Date(horizon.valid_to).toISOString()}.</p>
+      </div>
+      <p className="fine">Cantidad más probable: {bin.median_count ?? "no publicada"}. En 95 de cada 100 simulaciones del modelo, el conteo queda entre {bin.p95_minimum ?? "—"} y {bin.p95_maximum ?? "—"}.</p>
       <div className="enso-seasons" role="list" aria-label="Probabilidades por magnitud">
         {horizon.bins.map((item) => (
           <button key={item.magnitude} type="button" role="listitem" aria-current={item.magnitude === bin.magnitude} onClick={() => onMagnitude(item.magnitude)}>
             <span>M{item.magnitude}+</span>
-            <span className="enso-stack" aria-hidden="true"><i className="nino" style={{ width: `${item.probability * 100}%` }} /></span>
+            <span className="enso-stack" aria-hidden="true"><i className="nino" style={{ width: `${Math.max(item.probability * 100, item.probability > 0 ? 2 : 0)}%` }} /></span>
           </button>
         ))}
       </div>
-      <p className="fine">Emitido {event.issued_at}. Versión {event.product_version}. Recuperado {event.retrieved_at}. Modelo: {event.model_name}.</p>
-      <p>{forecasts.limitation}</p>
+      <details>
+        <summary>De dónde sale este número</summary>
+        <p className="fine">{event.geometry_note}</p>
+        <p className="fine">Emitido {event.issued_at}. Versión {event.product_version}. Recuperado {event.retrieved_at}. Modelo: {event.model_name}.</p>
+        <p>{forecasts.limitation}</p>
+        <p><a href={`${api}/v1/forecasts/aftershocks/d22.csv`}>Descargar CSV</a> · <a href={event.original_url} target="_blank" rel="noreferrer">forecast.json del USGS</a></p>
+      </details>
       {onFocus && event.latitude != null ? <button type="button" onClick={onFocus}>Encuadrar el terremoto principal</button> : null}
-      <p><a href={`${api}/v1/forecasts/aftershocks/d22.csv`}>Descargar CSV</a> · <a href={event.original_url} target="_blank" rel="noreferrer">forecast.json del USGS</a></p>
     </section>
   );
 }
