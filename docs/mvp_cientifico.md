@@ -14,6 +14,14 @@ Se cotejaron los144agregados contra todos los NetCDF originales retenidos, con b
 
 Actualización registrada `d15-sst-anomalies`: diaria y al cambiar hash de`data/real/d15/monthly_series.json`, con el scheduler/lock/plazo/retención existentes. Actualizar el análisis no inventa observaciones posteriores a2025; ampliar historia es un trabajo explícito distinto. Ante pérdida/cambio de entrada se conserva el producto anterior y el resumen declara obsolescencia. Los9candidatos se cuentan en ese análisis; no incrementan el contador de eventos calculados como si fueran desastres.
 
+## Anomalía diaria mundial — implementado
+
+Campo`d13-oisst-anomaly-global`, derivado de la variable **anom publicada por NOAA** dentro del mismo NetCDF ya retenido para SST. No nueva fuente, descarga o climatología propia. Permite ver el estado diario disponible además del análisis histórico. La referencia1971–2000 y la condición preliminar están explícitas, separadas de2014–2021. Original nativo0,25°/SST/anom/err/ice compartido, con todas las escalas/máscaras y fecha CF comprobadas por dos lecturas. [Evidencia/fixture](../data/samples/integrations/oisst-anomaly-20261113.md).
+
+Vista de medias1°cos(lat), mínimo8de16celdas válidas por bloque; costa sin soporte queda ausente y se conserva conteo por celda. Máscara primero, escala después: el fill−999 está dentro del valid_range y no se vuelve−9,99°C. Comparación independiente completa de64.800medias. Colores divergentes centrados en cero físico, leyenda simétrica/valores reales, nulos transparentes; ninguna celda se transforma en señal detectada. El inspector conserva unidad/fecha/resolución/QA/original y el resumen histórico ofrece **Ver campo diario en el globo**, selección explícita sin cambiar cámara. Último procesamiento se separa de recuperación del original y de fecha del dato.
+
+Revisión`d13-current-anomaly` diaria y por cambio de`d13-oisst-global`, después de esa entrada, sin HTTP propio. Idempotencia y conservación del válido usan el mismo almacén/lock/retención/presupuesto. Campo de un día no confirma evento MHW de cinco días, umbral percentil90, daño coralino o riesgo de calor del aire. El experimento predictivo sigue experimental.
+
 ## Tendencias — implementado y revisado
 
 SST mensual usa `sst-seasonal-fixed-effects-calendar-block-v2`: SST absoluta contra doce interceptos de mes calendario y una pendiente lineal común, estimada por sumas centradas dentro de mes. Mínimo96meses válidos/6años por mes; el gráfico resta media2014–2021 (mínimo8años por mes), pero esa precorrección no interviene en la pendiente. La línea gráfica es la componente lineal común anclada a la media de anomalías. El recorte está al sur de Puerto Rico; se conserva el identificador regional heredado`caribe-occidental`, sin cambiar las coordenadas para hacerlas coincidir con ese nombre.

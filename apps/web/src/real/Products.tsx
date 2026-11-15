@@ -2,10 +2,28 @@ import type { ProductList, ScientificProduct,ProductTrack,ProductRegion,RefreshS
 import { AnomalyChart } from '../shell/AnomalyChart';
 import { CpcEnsoPanel } from './CpcEnsoPanel';
 import { useEffect,useMemo,useState,useRef } from 'react';
+import { fieldColorBounds } from './view';
 const apiBase = import.meta.env.VITE_API_BASE ?? '/api';
 
 function DistributorCredit({product}:{product:ScientificProduct}) {
   return product.license_url==='https://open-meteo.com/en/licence' ? <p className="fine"><a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Weather data by Open-Meteo.com</a> · <a href={product.license_url} target="_blank" rel="noreferrer">CC BY4.0</a> · {product.source_id}</p> : null;
+}
+
+export function ProductFieldLegend({product}:{product:ScientificProduct}) {
+  const grid=product.grid;
+  if(!grid)return null;
+  const centered=grid.color_center!=null;
+  const [low,high]=fieldColorBounds(grid);
+  return <>
+    {grid.minimum==null || grid.maximum==null ? <p className="hint">Rango no disponible: no hay valores válidos.</p> : <>
+      <div className={`legend-bar legend-real${centered ? ' legend-diverging' : grid.reverse_colors ? ' legend-real-reversed' : ''}`}/>
+      <div className="legend-scale"><span>{low.toFixed(2)} {product.unit}</span>{centered && <span>{grid.color_center} {product.unit}</span>}<span>{high.toFixed(2)} {product.unit}</span></div>
+    </>}
+    <p className="hint">Escala {grid.color_scale==='log10' ? 'logarítmica log10' : 'lineal'} de color{centered ? ` centrada en ${grid.color_center}` : ''}; valores en {product.unit}.</p>
+    {centered && <p className="hint">Azul: anomalía negativa. Centro neutro: cero válido. Naranja: positiva. Datos: {grid.minimum?.toFixed(2)} a {grid.maximum?.toFixed(2)} {product.unit}. Sin probabilidad de evento.</p>}
+    {grid.reverse_colors && <p className="hint">Rojo: bajo percentil. Azul: alto percentil. No son probabilidades de eventos.</p>}
+    <p className="hint">{grid.resolution}. {grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p>
+  </>;
 }
 
 export function productKindLabel(p: ScientificProduct): string {
@@ -51,7 +69,7 @@ export function ProductsPanel({ data, selected, activeProduct, refreshStatus, on
       </ul>
       {product && <figure className="legend"><figcaption><strong>{product.variable} · {product.unit}</strong><span>{productKindLabel(product)} · {product.source_id}</span></figcaption>
         <p className="hint">{product.observed_at || product.valid_from || product.issued_at ? `${productTimeLabel(product)} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}</p>
-        {product.grid && <><div className={`legend-bar legend-real${product.grid.reverse_colors ? ' legend-real-reversed' : ''}`} /><div className="legend-scale"><span>{product.grid.minimum?.toFixed(2)} {product.unit}</span><span>{product.grid.maximum?.toFixed(2)} {product.unit}</span></div><p className="hint">Escala {product.grid.color_scale==='log10' ? 'logarítmica log10' : 'lineal'} de color; valores en {product.unit}.</p>{product.grid.reverse_colors && <p className="hint">Rojo: bajo percentil. Azul: alto percentil. No son probabilidades de eventos.</p>}<p className="hint">{product.grid.resolution}. {product.grid.missing_cells.toLocaleString('es')} celdas ausentes, transparentes.</p></>}
+        <ProductFieldLegend product={product}/>
         {(product.grid || product.extent) && <button type="button" className="wide-toggle" onClick={onFocus}>Encuadrar cobertura</button>}
         <p className="hint">{product.coverage}</p>
         <DistributorCredit product={product}/>
@@ -78,7 +96,8 @@ export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocu
   const pages=Math.max(1,Math.ceil(matching.length/40));const page=Math.min(samplePage,pages-1);
   const selected = samples.find(s=>s.id===selectedId);
   const jobKey=p.id==='d14-so-surface' ? 'd14-so-native' : p.id.startsWith('d14-mol-') ? 'd14-mol-native' : p.id==='d14-thetao-surface' ? 'd14-thetao-native' : p.id.startsWith('d14-smoc-') ? 'd14-smoc-native' : p.source_id==='D12' ? 'd12-cams-global' : p.id.startsWith('d10-glofas-') ? 'd10-glofas-discharge' : p.id.startsWith('d09-seas5-') ? 'd09-seas5-monthly' : p.id.startsWith('d48-roni-') ? 'd48-roni-outlook-tables' : p.id.startsWith('d25-s2-pampa-') ? 'd25-s2-pampa' : p.source_id==='D04' ? `mod13q1-${p.id.split('-').at(-1)}` : p.source_id==='D05' ? `mod11a2-${p.id.split('-').at(-1)}` : p.source_id==='D07' ? p.calculation ? 'd07-derived-fields' : 'd07-ifs-24h' : p.source_id==='D16' ? 'd16-mhw-monthly' : p.source_id==='D20' ? 'd20-asi-s1' : p.source_id==='D33' ? 'd33-grace-global' : p.source_id==='D34' && !p.calculation ? 'd34-rapid-monthly' : p.id;
-  const job=refreshStatus?.jobs?.[jobKey];
+  const derivedJobKeys:Record<string,string>={'d13-oisst-anomaly-global':'d13-current-anomaly','d15-sst-seasonal-departures':'d15-sst-anomalies'};
+  const job=refreshStatus?.jobs?.[derivedJobKeys[p.id] ?? jobKey];
   const chartSamples = p.representation === 'planetary' ? samples.slice(-60) : p.representation==='time_series' ? samples : [];
   const present = chartSamples.flatMap(s=>s.value === null || s.value === undefined ? [] : [s.value]);
   const low = present.length ? Math.min(...present) : 0;
@@ -87,7 +106,7 @@ export function ProductInspector({ product, selectedId,onTrackFocus,onRegionFocu
   const chart=p.kind==='forecast' && p.id.startsWith('d48-roni-') ? <CpcEnsoPanel product={p}/> : chartSamples.length > 0 ? <section aria-label="Serie del producto"><h3>{p.calculation ? 'Serie calculada' : p.kind==='forecast' ? 'Serie del pronóstico' : p.kind==='historical' ? 'Serie histórica' : 'Serie del índice'}</h3><p className="fine">{p.unit} · {p.coverage}</p><AnomalyChart observedLabel={p.calculation ? 'Agregado calculado' : 'Observado'} points={chartSamples.map(s=>({label:s.time?.slice(0,timeLabelDigits) ?? s.id,kind:p.kind==='forecast'?'forecast':'observed',value:s.value ?? null}))} domain={{min:low-.1,max:high+.1,ticks:[high,(low+high)/2,low]}} caption={`${p.variable} · ${p.unit}; ${chartSamples.length} registros conservados. ${p.coverage} UTC; los huecos siguen ausentes.`}/></section> : null;
   return <aside className="inspector" aria-label="Producto real"><header className="inspector-head"><p className="kicker">{p.source_id} · REAL · {productKindLabel(p)}</p><h2>{p.title}</h2><p className="region">{productTimeLabel(p)} UTC</p></header>
     <div className="inspector-body" ref={inspectorBody}><DistributorCredit product={p}/>{selected && <section aria-label="Registro seleccionado"><h3>{selected.attributes?.nombre ?? selected.id}</h3><p>{selected.value ?? selected.category ?? 'Ausente'} {p.unit}</p>{selected.map_eligible===false && selected.latitude!=null && selected.longitude!=null && <p className="fine">Excluido del mapa por calidad; el registro original permanece accesible.</p>}{selected.latitude!=null && selected.longitude!=null && <p>{selected.latitude}°, {selected.longitude}° WGS84</p>}<details><summary>Atributos nativos y método</summary><p className="fine">{Object.entries(selected.attributes ?? {}).map(([k,v])=>`${k}: ${v ?? 'ausente'}`).join(' · ')}</p></details><p className="fine">{selected.quality}</p></section>}{p.calculation?.result && <section aria-label="Resultado descriptivo"><h3>{p.calculation.result.label}</h3><p className="calculation-result">{p.calculation.result.value.toLocaleString('es',{maximumFractionDigits:4,signDisplay:'exceptZero'})} {p.calculation.result.unit}</p><p className="fine">Describe el período indicado. Sin prueba de significación ni extrapolación.</p></section>}{chart}<p>{p.limitation}</p>
-      {job && <section><h3>Actualización · UTC</h3>{job.error && <p role="status">Falló el último intento: {job.error}. Se conserva el último producto válido en REAL.</p>}<dl className="facts"><div><dt>Último intento</dt><dd>{job.last_attempt_at} · {job.status}</dd></div><div><dt>{p.source_id==='D12' || p.source_id==='D14' || p.id.startsWith('d25-s2-pampa-') ? 'Última consulta satisfactoria' : p.calculation ? 'Último cálculo correcto' : 'Última descarga correcta'}</dt><dd>{job.last_success_at ?? 'No disponible'}</dd></div><div><dt>Último cambio del lote</dt><dd>{job.last_change_at ?? 'Sin cambio nuevo registrado'}</dd></div><div><dt>Próximo intento</dt><dd>{job.next_attempt_at}</dd></div></dl></section>}
+      {job && <section><h3>Actualización · UTC</h3>{job.error && <p role="status">Falló el último intento: {job.error}. Se conserva el último producto válido en REAL.</p>}<dl className="facts"><div><dt>Último intento</dt><dd>{job.last_attempt_at} · {job.status}</dd></div><div><dt>{p.id==='d13-oisst-anomaly-global' ? 'Último procesamiento correcto' : p.source_id==='D12' || p.source_id==='D14' || p.id.startsWith('d25-s2-pampa-') ? 'Última consulta satisfactoria' : p.calculation ? 'Último cálculo correcto' : 'Última descarga correcta'}</dt><dd>{job.last_success_at ?? 'No disponible'}</dd></div><div><dt>Último cambio del lote</dt><dd>{job.last_change_at ?? 'Sin cambio nuevo registrado'}</dd></div><div><dt>Próximo intento</dt><dd>{job.next_attempt_at}</dd></div></dl></section>}
       {p.calculation && <section><h3>Cálculo reproducible</h3><p>{p.calculation.formula}</p><p className="fine">{p.calculation.applicability}</p><p className="fine">{p.calculation.reference_period} · {p.calculation.method_version}</p><p className="fine">Parámetros: {JSON.stringify(p.calculation.parameters)}. Calculado {p.ingested_at} UTC; entradas recuperadas {p.retrieved_at} UTC.</p>{p.calculation.inputs.map(i=><p className="fine" key={i.product_id}>{i.product_id} · {i.variable} · {i.unit} · SHA-256 {i.checksum_sha256}</p>)}<p><a href={p.calculation.reference_url} target="_blank" rel="noreferrer">Definición del método</a></p></section>}
       {!!p.tracks?.length && <section><h3>{p.tracks.length} trayectorias históricas</h3><p className="fine">Línea dorada: centros publicados, no trayectoria futura. Seleccioná un sistema para encuadrarlo.</p><div className="product-table">{p.tracks.map(t=><button key={t.id} type="button" className="wide-toggle" onClick={()=>onTrackFocus?.(t)}>Encuadrar {t.name} · {t.sample_ids.length} posiciones</button>)}</div></section>}
       {!!p.regions?.length && <section><h3>{p.kind==='static_context' ? 'Unidades geográficas' : 'Áreas publicadas'}</h3><p className="fine">{p.kind==='static_context' ? 'Geometría de contexto; consultá resolución y transformación de visualización. No es un aviso ni un área afectada.' : 'Contorno del proveedor; la fecha del evento no determina vigencia del aviso. Consultá estado, urgencia y expiración en la ficha.'}</p>{p.regions.map(r=><button key={r.id} type="button" className="wide-toggle" onClick={()=>onRegionFocus?.(r)}>Encuadrar {r.name}</button>)}</section>}

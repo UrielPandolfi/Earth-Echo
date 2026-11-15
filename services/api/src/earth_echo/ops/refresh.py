@@ -20,6 +20,7 @@ DERIVED_INPUTS = {
     'd07-derived-fields': tuple(f'd07-ifs-{p}-24h' for p in ('10u', '10v', '2t', '2d')),
     'd34-amoc-annual-trend': ('d34-amoc-monthly',),
     'earth-system-associations':('d15-sst-seasonal-departures','d48-roni-history','d34-amoc-monthly'),
+    'd13-current-anomaly':('d13-oisst-global',),
 }
 DERIVED_FILE_INPUTS = {'d15-sst-anomalies':('d15/monthly_series.json',)}
 
@@ -122,6 +123,7 @@ def jobs() -> dict:
     from earth_echo.connectors.marine_salinity import fetch_marine_salinity
     from earth_echo.ingest.sst_anomalies import derive_sst_anomalies
     from earth_echo.ingest.associations import derive_associations
+    from earth_echo.ingest.oisst_anomaly import derive_oisst_anomaly
     def modis(product, region, now):
         results = fetch_modis(product,region,now)
         return 'unchanged' if all(r=='unchanged' for r in results) else 'stored'
@@ -131,6 +133,7 @@ def jobs() -> dict:
         **{f'{p.lower()}-{r}':(86400, lambda now,p=p,r=r:modis(p,r,now)) for p in ['MOD13Q1','MOD11A2'] for r in ['pampa','amazonia']},
         'd07-ifs-24h':(43200,fetch_ecmwf),
         'd13-oisst-global':(86400,fetch_oisst), 'd23-holocene-inventory':(604800,fetch_gvp),
+        'd13-current-anomaly':(86400,derive_oisst_anomaly),
         'd29-sentry':(86400,fetch_sentry), 'd27-tsunami-messages':(900,fetch_tsunami),
         'd48-oni-history':(604800,fetch_oni), 'd22-oaf-recent':(3600,fetch_oaf),
         'd30-dem-pampa':(2592000,fetch_dem), 'd24-lhasa-bc':(43200,fetch_lhasa), 'd16-mhw-monthly':(86400,fetch_mhw),

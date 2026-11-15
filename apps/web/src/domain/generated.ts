@@ -445,6 +445,8 @@ export interface SSTAnomalyView {
   missing_months?: number;
   stale_input?: boolean;
   product?: ScientificProduct | null;
+  current_daily_anomaly_id?: string | null;
+  current_daily_anomaly_at?: string | null;
 }
 
 export interface ScientificCalculation {
@@ -477,6 +479,7 @@ export interface ScientificGrid {
   quality_mask: string;
   color_scale?: "linear" | "log10";
   reverse_colors?: boolean;
+  color_center?: number | null;
   quality_values?: Array<number | null> | null;
   quality_legend?: Record<string, string>;
 }

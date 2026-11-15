@@ -192,9 +192,10 @@
     "official_url": "https://www.ncei.noaa.gov/products/optimum-interpolation-sst",
     "status": "connected_for_scope",
     "evidence": [
+      "/v1/products/d13-oisst-anomaly-global",
       "/v1/products/d13-oisst-global"
     ],
-    "blocker_or_next_step": "SST analizada e interpolada, preliminar cuando así lo identifica NOAA. No es temperatura del aire, un evento de calor marino ni diagnóstico ENSO.",
+    "blocker_or_next_step": "Anomalía absoluta publicada en°C, no score estandarizado o probabilidad. Base1971–2000 distinta de referencia regional2014–2021 y de normal1991–2020. No se calcula aquí otra climatología ni se restan campos incompatibles. Análisis OISST interpolado/mezclado; preliminar si así se identifica el archivo. Un día/celda cálida no es evento MHW de cinco días, estrés coralino confirmado, ola de calor del aire, causalidad o pronóstico. La reducción1°es sólo vista, no preserva extremos subcelda; los valores científicos0,25°/anom/err/ice/SST se conservan compartidos sin nueva descarga. | SST analizada e interpolada, preliminar cuando así lo identifica NOAA. No es temperatura del aire, un evento de calor marino ni diagnóstico ENSO.",
     "limits": "Campo interpolado y suavizado. No resuelve todos los estuarios, arrecifes ni cambios subsuperficiales."
   },
   {

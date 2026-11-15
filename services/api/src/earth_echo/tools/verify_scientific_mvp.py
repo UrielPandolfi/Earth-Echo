@@ -12,6 +12,8 @@ from earth_echo.ingest.associations import build_associations
 from earth_echo.ingest.sst_anomalies import build_sst_anomalies
 from earth_echo.paths import repo_root
 from earth_echo.storage.products import atomic_json
+from earth_echo.storage.products import read_product,products_root
+from earth_echo.ingest.oisst_anomaly import anomaly_from_source
 
 
 def get(path):
@@ -50,10 +52,16 @@ def verify():
         if row['execution_id']!=trend['execution_id'] or row['source_series_sha256']!=expected.checksum_sha256 or row['unit']!='°C':raise ValueError('Trend CSV provenance mismatch')
         for key in ('sst_c','anomaly_c'):
             if (None if row[key]=='' else float(row[key]))!=point[key]:raise ValueError('Trend CSV value mismatch')
+    oisst=read_product('d13-oisst-global')
+    if oisst is None:raise ValueError('Daily OISST unavailable')
+    daily_expected=anomaly_from_source(oisst,(products_root()/oisst.raw_file).read_bytes(),now)
+    daily=json.loads(get('/v1/products/d13-oisst-anomaly-global'))
+    if daily['grid']!=daily_expected.grid.model_dump(mode='json') or daily['checksum_sha256']!=oisst.checksum_sha256:raise ValueError('Daily anomaly API differs from original/aggregation')
     return {'checked_at':now.isoformat(),'scope':'Native inputs, calculation arithmetic, persisted API and CSV consistency; no causal/predictive validation',
         'anomalies':{'method':expected.method_version,'months':len(expected.samples),'assessed_months':anomaly['assessed_months'],'flagged_months':anomaly['flagged_months'],'input_sha256':expected.checksum_sha256,'native_coverage':expected.extent.model_dump(mode='json')},
         'associations':{'method':expected_associations.method_version,'execution_id':expected_associations.execution_id,'causal_attribution':expected_associations.causal_attribution,'predictive_validation':expected_associations.predictive_validation,'pairs':exports},
         'trend':{key:trend[key] for key in ('method_id','method_version','execution_id','source_series_sha256','present_months','missing_months','slope_c_per_year','interval_low_c_per_year','interval_high_c_per_year','sensitivity_low_c_per_year','sensitivity_high_c_per_year','residual_lag1_r')},
+        'daily_anomaly':{'source_id':'D13','method_version':daily_expected.method_version,'data_at':daily_expected.observed_at.isoformat(),'reference_period':'1971–2000','shared_original_sha256':oisst.checksum_sha256,'valid_display_cells':len(daily_expected.grid.values)-daily_expected.grid.missing_cells,'missing_display_cells':daily_expected.grid.missing_cells,'minimum_c':daily_expected.grid.minimum,'maximum_c':daily_expected.grid.maximum,'color_center':daily_expected.grid.color_center},
         'api_and_csv_consistent':True,'native_checks_passed':True,'new_external_downloads':0}
 
 

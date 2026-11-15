@@ -6,3 +6,4 @@ data/samples/d18-habsos/latest-ten.json -text
 data/samples/d18-habsos/empty-layer-metadata.xml -text
 data/samples/nasa-access/*-cmr.json -text
 data/samples/nasa-access/*-header.ranges.json -text
+data/samples/integrations/oisst-anomaly-20261113.nc -text

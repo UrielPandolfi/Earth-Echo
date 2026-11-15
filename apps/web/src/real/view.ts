@@ -47,6 +47,14 @@ export interface RealField {
   values: Array<number | null>;
   color_scale?: 'linear' | 'log10';
   reverse_colors?: boolean;
+  color_center?: number | null;
+}
+
+export function fieldColorBounds(field:Pick<RealField,'minimum'|'maximum'|'color_center'>):[number,number] {
+  const low=field.minimum ?? 0,high=field.maximum ?? low+1;
+  if(field.color_center==null)return [low,high];
+  const radius=Math.max(Math.abs(low-field.color_center),Math.abs(high-field.color_center)) || 1;
+  return [field.color_center-radius,field.color_center+radius];
 }
 
 export function isRealSourceView(value: unknown): value is RealSourceView {
@@ -59,8 +67,7 @@ export function isRealSourceView(value: unknown): value is RealSourceView {
 
 export function paintSstField(field: RealField): FieldGrid {
   const rgba = new Uint8ClampedArray(field.width * field.height * 4);
-  const minimum = field.minimum ?? 0;
-  const maximum = field.maximum ?? minimum + 1;
+  const [minimum,maximum]=fieldColorBounds(field);
   const normalize=(value:number)=>field.color_scale==='log10' ? Math.log10(value) : value;
   const low=normalize(minimum),high=normalize(maximum);
   const span = high-low || 1;
@@ -71,6 +78,14 @@ export function paintSstField(field: RealField): FieldGrid {
     const normalized = Math.min(1, Math.max(0, (normalize(value) - low) / span));
     const mix = field.reverse_colors ? 1-normalized : normalized;
     const offset = index * 4;
+    if(field.color_center!=null) {
+      const signed=Math.max(-1,Math.min(1,(value-field.color_center)/((maximum-minimum)/2)));
+      const target=signed<0 ? [48,132,186] : [224,92,56];
+      const neutral=[225,232,229];
+      for(let channel=0;channel<3;channel++)rgba[offset+channel]=Math.round(neutral[channel]+Math.abs(signed)*(target[channel]-neutral[channel]));
+      rgba[offset+3]=220;
+      return;
+    }
     rgba[offset] = Math.round(48 + mix * 176);
     rgba[offset + 1] = Math.round(132 - mix * 40);
     rgba[offset + 2] = Math.round(186 - mix * 130);

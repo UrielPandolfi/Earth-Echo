@@ -1,5 +1,5 @@
 import {expect,it} from 'vitest';
-import {paintSstField,type RealField} from './view';
+import {paintSstField,fieldColorBounds,type RealField} from './view';
 
 it('uses logarithms only for colour, preserving units, values and transparent missing cells',()=>{
   const field:RealField={observation_id:'test',unit:'mg/m³',width:4,height:1,west:0,east:4,south:0,north:1,minimum:1,maximum:100,values:[1,10,100,null],missing_cells:1,color_scale:'log10'};
@@ -7,6 +7,17 @@ it('uses logarithms only for colour, preserving units, values and transparent mi
   expect([...result.rgba.slice(4,8)]).toEqual([136,112,121,220]);
   expect([...result.rgba.slice(12,16)]).toEqual([0,0,0,0]);
   expect(field.values).toEqual([1,10,100,null]);
+});
+
+it('centres anomaly colours at physical zero and retains transparent absence',()=>{
+  const field:RealField={observation_id:'anomaly',unit:'°C',width:4,height:1,west:0,east:4,south:0,north:1,minimum:-2,maximum:3,values:[-2,0,3,null],missing_cells:1,color_center:0};
+  const result=paintSstField(field);
+  expect(fieldColorBounds(field)).toEqual([-3,3]);
+  expect([...result.rgba.slice(4,8)]).toEqual([225,232,229,220]);
+  expect([...result.rgba.slice(8,12)]).toEqual([224,92,56,220]);
+  expect([...result.rgba.slice(12,16)]).toEqual([0,0,0,0]);
+  expect(result.rgba[2]).toBeGreaterThan(result.rgba[0]);
+  expect(field.values).toEqual([-2,0,3,null]);
 });
 
 it('reverses wetness percentile colours without changing zero, units or missing values',()=>{

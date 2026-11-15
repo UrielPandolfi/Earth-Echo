@@ -4,7 +4,7 @@ import { TrendChart } from './TrendChart';
 
 const apiBase=import.meta.env.VITE_API_BASE ?? '/api';
 
-export function SSTAnomalies() {
+export function SSTAnomalies({onShowProduct}:{onShowProduct?:(key:string)=>void}) {
   const [view,setView]=useState<SSTAnomalyView | null>(null);
   const [error,setError]=useState<string | null>(null);
   useEffect(()=>{
@@ -42,5 +42,10 @@ export function SSTAnomalies() {
         <p><a href={`${apiBase}/v1/products/${product.id}`} target="_blank" rel="noreferrer">Método, calidad y procedencia</a> · <a href={`${apiBase}/v1/products/${product.id}/original`}>Entrada mensual retenida</a></p>
       </details>
     </>}
+    {view?.current_daily_anomaly_id && <section>
+      <h4>Anomalía diaria mundial</h4>
+      <p className="fine">NOAA OISST · dato {view.current_daily_anomaly_at} UTC. Campo publicado en °C respecto a base 1971–2000; referencia distinta del análisis histórico regional.</p>
+      {onShowProduct ? <button type="button" className="wide-toggle" onClick={()=>onShowProduct(view.current_daily_anomaly_id!)}>Ver campo diario en el globo</button> : <a href={`${apiBase}/v1/products/${view.current_daily_anomaly_id}`}>Consultar campo diario y procedencia</a>}
+    </section>}
   </section>;
 }

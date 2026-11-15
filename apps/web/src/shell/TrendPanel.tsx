@@ -13,9 +13,10 @@ interface TrendPanelProps {
   analysisOpen: boolean;
   onAnalysis: (open: boolean) => void;
   onReplay?: (issue: string, revealed: boolean) => void;
+  onShowProduct?: (key:string)=>void;
 }
 
-export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPanelProps) {
+export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay,onShowProduct }: TrendPanelProps) {
   const [view, setView] = useState<TrendResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,7 +66,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
         </header>
         <div className="inspector-body">
           <p role="status">{error ?? "Cargando la serie mensual."}</p>
-          <SSTAnomalies key="sst-anomalies" />
+          <SSTAnomalies key="sst-anomalies" onShowProduct={onShowProduct}/>
           <AssociationsPanel key="associations" />
         </div>
         <p className="fine">El escenario DEMO no se usó como reemplazo.</p>
@@ -111,7 +112,7 @@ export function TrendPanel({ mode, analysisOpen, onAnalysis, onReplay }: TrendPa
         <p className="fine">Intervalo condicional con bloques de {view.bootstrap_block_months ?? 12} meses. Sensibilidad con {view.sensitivity_block_months ?? 24} meses: {view.sensitivity_low_c_per_year==null || view.sensitivity_high_c_per_year==null ? 'No evaluable' : `${view.sensitivity_low_c_per_year.toFixed(3)} a ${view.sensitivity_high_c_per_year.toFixed(3)} °C/año`}. Correlación residual mensual adyacente: {view.residual_lag1_r==null ? 'No definida' : view.residual_lag1_r.toFixed(3)}.</p>
         <p className="fine">Los intervalos dependen del período y de los supuestos del remuestreo; no incluyen toda la incertidumbre observacional.</p>
         <p className="fine">Método {view.method_id}. Ejecución {view.execution_id}.</p>
-        <SSTAnomalies key="sst-anomalies" />
+        <SSTAnomalies key="sst-anomalies" onShowProduct={onShowProduct}/>
         <AssociationsPanel key="associations" />
         <ForecastReplay onReplay={onReplay} />
       </div>

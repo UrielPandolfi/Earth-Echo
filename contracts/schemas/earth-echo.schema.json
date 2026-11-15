@@ -2751,6 +2751,31 @@
             }
           ],
           "default": null
+        },
+        "current_daily_anomaly_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Daily Anomaly Id"
+        },
+        "current_daily_anomaly_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Daily Anomaly At"
         }
       },
       "required": [
@@ -2945,6 +2970,18 @@
           "default": false,
           "title": "Reverse Colors",
           "type": "boolean"
+        },
+        "color_center": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color Center"
         },
         "quality_values": {
           "anyOf": [

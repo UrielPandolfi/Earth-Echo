@@ -452,6 +452,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           analysisOpen={state.analysisOpen}
           onAnalysis={(open) => dispatch({ type: "analysis", open })}
           onReplay={(issue, revealed) => setReplay({ issue, revealed })}
+          onShowProduct={(key)=>{setProductKey(key);dispatch({type:'real-select',id:null});dispatch({type:'section',section:'explorar'});if(!state.inspectorOpen)dispatch({type:'panel',panel:'inspector'});}}
         />
       ) : state.dataMode === 'real' && activeProduct && !quakes.some(q => q.id === state.realSelectedId) ? <ProductInspector key={activeProduct.id} product={activeProduct} refreshStatus={refreshStatus} selectedId={state.realSelectedId?.replace('product-point:','').split(':area:')[0] ?? null} onSampleSelect={id=>dispatch({type:'real-select',id:`product-point:${id}`})} onRegionFocus={region=>{
         dispatch({type:'real-select',id:`product-point:${region.sample_id}`});

@@ -4,6 +4,15 @@ import { SSTAnomalies } from './SSTAnomalies';
 
 afterEach(()=>{cleanup();vi.unstubAllGlobals();});
 
+it('offers the distinct current daily field even when historical analysis is missing',async()=>{
+  vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({status:'unavailable',product:null,reason:'Historia ausente',current_daily_anomaly_id:'d13-oisst-anomaly-global',current_daily_anomaly_at:'2026-11-13T12:00:00Z'}))));
+  const show=vi.fn();render(<SSTAnomalies onShowProduct={show}/>);
+  fireEvent.click(await screen.findByRole('button',{name:'Ver campo diario en el globo'}));
+  expect(show).toHaveBeenCalledWith('d13-oisst-anomaly-global');
+  expect(screen.getByText(/base 1971–2000/)).toBeTruthy();
+  expect(screen.getByText('Historia ausente')).toBeTruthy();
+});
+
 it('shows historical candidates and provenance without a probability or map pins',async()=>{
   vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({status:'evaluated',flagged_months:1,assessed_months:2,warm_months:1,cold_months:0,missing_months:1,assessment_period:'2022–2025 · histórico',reason:null,product:{id:'d15-sst-seasonal-departures',method_version:'test-method',coverage:'Recorte nativo',limitation:'Sin causalidad',attribution:'NOAA',samples:[
     {id:'2022-01',category:'warm_departure',value:1.2,attributes:{modified_z:'4.5'}},

@@ -108,6 +108,9 @@ def capability_matrix() -> CapabilityMatrix:
     if 'd15-sst-seasonal-departures' in available:
         previous=overrides_by_id.setdefault('F19',{}).get('indicator',('partial',''))[1]
         overrides_by_id['F19']['indicator']=('partial',previous+' Además hay etiquetado descriptivo de desvíos mensuales SST del recorte Caribe2022–2025 respecto a mediana/MAD2014–2021, ocho años por mes, sin probabilidad o daño. No es detector diario MHW o blanqueamiento ni alerta actual; /v1/analyses/d15-anomalies.')
+    if 'd13-oisst-anomaly-global' in available:
+        previous=overrides_by_id.setdefault('F18',{}).get('observation',('partial',''))[1]
+        overrides_by_id['F18']['observation']=('partial',previous+' Anomalía diaria OISST publicada, base1971–2000, vista oceánica mundial1°de medias4×4nativas, con máscara y soporte. Un campo diario de anomalía no acredita evento MHW de cinco días o su probabilidad; no temperatura del aire. Original compartido con SST.')
     if any(p.source_id=='D04' for p in products):
         overrides_by_id.setdefault('F16',{})['observation'] = ('partial','NDVI/EVI MODIS en subconjuntos de Pampa/Amazonía, con QA y compuesto de 16 días. No mide rendimiento ni identifica causa del estrés.')
     if any(p.source_id=='D05' for p in products):

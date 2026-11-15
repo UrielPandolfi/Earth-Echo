@@ -1,6 +1,6 @@
 import { cleanup,render,screen,within } from '@testing-library/react';
 import { afterEach,expect,it } from 'vitest';
-import { ProductInspector,productTimeLabel } from './Products';
+import { ProductInspector,productTimeLabel,ProductFieldLegend } from './Products';
 import type { ScientificProduct,RefreshStatus } from '../domain/generated';
 import native from '../../../../data/real/products/d26-rgi60-patagonia-outlines/current.json';
 import roni from '../../../../data/real/products/d48-roni-history/current.json';
@@ -12,6 +12,23 @@ import mol from '../../../../data/real/products/d14-mol-total/current.json';
 import so from '../../../../data/real/products/d14-so-surface/current.json';
 
 afterEach(cleanup);
+
+it('shows symmetric anomaly colour bounds, physical zero and actual data range',()=>{
+  const product={unit:'°C',grid:{minimum:-2,maximum:3,color_center:0,resolution:'Media1°',missing_cells:1}} as unknown as ScientificProduct;
+  render(<ProductFieldLegend product={product}/>);
+  expect(screen.getByText('-3.00 °C')).toBeTruthy();
+  expect(screen.getByText('0 °C')).toBeTruthy();
+  expect(screen.getByText('3.00 °C')).toBeTruthy();
+  expect(screen.getByText(/Datos: -2.00 a 3.00 °C/)).toBeTruthy();
+  expect(screen.getByText(/cero válido/)).toBeTruthy();
+});
+
+it('never invents a zero-valued legend for a field with no valid values',()=>{
+  const product={unit:'°C',grid:{minimum:null,maximum:null,resolution:'Nativa',missing_cells:1}} as unknown as ScientificProduct;
+  render(<ProductFieldLegend product={product}/>);
+  expect(screen.getByText(/Rango no disponible/)).toBeTruthy();
+  expect(screen.queryByText('0.00 °C')).toBeNull();
+});
 
 it('muestra el registro seleccionado arriba y conserva sus atributos nativos accesibles',()=>{
   const product=native as unknown as ScientificProduct;

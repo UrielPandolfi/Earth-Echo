@@ -18,6 +18,8 @@ class SSTAnomalyView(ApiModel):
     missing_months: int=0
     stale_input: bool=False
     product: ScientificProduct | None=None
+    current_daily_anomaly_id: str | None=None
+    current_daily_anomaly_at: UtcDateTime | None=None
 
 
 class AssociationPoint(ApiModel):

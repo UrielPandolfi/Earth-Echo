@@ -574,6 +574,7 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 .inspector .fine { overflow-wrap: anywhere; }
 .legend-real { background: linear-gradient(90deg, rgb(48,132,186), rgb(136,112,121), rgb(224,92,56)); }
 .legend-real-reversed { background: linear-gradient(90deg, rgb(224,92,56), rgb(136,112,121), rgb(48,132,186)); }
+.legend-diverging { background: linear-gradient(90deg, rgb(48,132,186), rgb(225,232,229), rgb(224,92,56)); }
 .product-time { display: flex; gap: 12px; align-items: center; padding: 14px; min-height: 78px; flex-wrap: wrap; }
 .product-list { max-height: 26vh; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .calculation-result { font-size:1.4rem; font-weight:600; color:var(--accent,#66d8c3); }

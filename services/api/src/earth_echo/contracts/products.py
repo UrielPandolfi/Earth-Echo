@@ -24,11 +24,14 @@ class ScientificGrid(ApiModel):
     quality_mask: str
     color_scale: Literal['linear','log10'] = 'linear'
     reverse_colors: bool = False
+    color_center: float | None = Field(default=None,allow_inf_nan=False)
     quality_values: list[int | None] | None = None
     quality_legend: dict[str,str] = Field(default_factory=dict)
 
     @model_validator(mode='after')
     def check_grid(self):
+        if self.color_center is not None and (self.color_scale!='linear' or self.reverse_colors):
+            raise ValueError('Centered field colours require an unreversed linear scale')
         if len(self.values) != self.width * self.height or len(self.longitudes) != self.width or len(self.latitudes) != self.height:
             raise ValueError('Grid shape mismatch')
         if self.west >= self.east or self.south >= self.north:
