@@ -72,7 +72,7 @@ Regresión final:244API/60web, contratos y build aprobados.25pruebas API enfocad
 | D16/F18 | Adaptador probabilístico mensual; alcance oceánico y máscara nativos |
 | D07 | Adaptador de campos ya retenidos; un plazo+24h, sin probabilidades de impacto |
 | D28/F29 | Ventanas predicted planetarias de3h, incluidas las iniciadas sin terminar; sin mapa local |
-| D22/F28 | Tabla OAF retenida; falta calificar unidad de radio/soporte publicado y verificación por magnitud/ventana. No nuevos epicentros |
+| D22/F28 | Pronóstico OAF en REAL → Pronósticos. El mapa muestra el centro declarado; el radio 10 no trae unidad y no se dibuja. Un evento reciente, no el catálogo mundial |
 | D09/D10 | Dos celdas regionales por producto, no cobertura mundial descargada |
 | D12/D14 | Catálogo con estado temporal real; pueden estar vencidos, sin adaptador nuevo de esta entrega |
 | RONI | Perspectivas estacionales existentes; no impactos locales |

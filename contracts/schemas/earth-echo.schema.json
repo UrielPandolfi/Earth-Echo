@@ -1,5 +1,320 @@
 {
   "$defs": {
+    "AftershockBin": {
+      "additionalProperties": false,
+      "properties": {
+        "magnitude": {
+          "title": "Magnitude",
+          "type": "number"
+        },
+        "probability": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Probability",
+          "type": "number"
+        },
+        "median_count": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Median Count"
+        },
+        "p95_minimum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P95 Minimum"
+        },
+        "p95_maximum": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P95 Maximum"
+        }
+      },
+      "required": [
+        "magnitude",
+        "probability"
+      ],
+      "title": "AftershockBin",
+      "type": "object"
+    },
+    "AftershockEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "magnitude": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Magnitude"
+        },
+        "latitude": {
+          "anyOf": [
+            {
+              "maximum": 90,
+              "minimum": -90,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latitude"
+        },
+        "longitude": {
+          "anyOf": [
+            {
+              "maximum": 180,
+              "minimum": -180,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Longitude"
+        },
+        "depth_km": {
+          "default": null,
+          "title": "Depth Km",
+          "type": "null"
+        },
+        "origin_time": {
+          "default": null,
+          "title": "Origin Time",
+          "type": "null"
+        },
+        "model_name": {
+          "title": "Model Name",
+          "type": "string"
+        },
+        "region_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region Type"
+        },
+        "region_radius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region Radius"
+        },
+        "region_radius_unit": {
+          "default": null,
+          "title": "Region Radius Unit",
+          "type": "null"
+        },
+        "geometry": {
+          "const": "epicenter_only",
+          "default": "epicenter_only",
+          "title": "Geometry",
+          "type": "string"
+        },
+        "geometry_note": {
+          "title": "Geometry Note",
+          "type": "string"
+        },
+        "issued_at": {
+          "format": "date-time",
+          "title": "Issued At",
+          "type": "string"
+        },
+        "product_version": {
+          "title": "Product Version",
+          "type": "string"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "checksum_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Checksum Sha256",
+          "type": "string"
+        },
+        "original_url": {
+          "title": "Original Url",
+          "type": "string"
+        },
+        "windows": {
+          "items": {
+            "$ref": "#/$defs/AftershockWindow"
+          },
+          "title": "Windows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "event_id",
+        "model_name",
+        "geometry_note",
+        "issued_at",
+        "product_version",
+        "retrieved_at",
+        "checksum_sha256",
+        "original_url",
+        "windows"
+      ],
+      "title": "AftershockEvent",
+      "type": "object"
+    },
+    "AftershockForecasts": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "no_coverage",
+            "missing_input",
+            "expired",
+            "not_implemented"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "events": {
+          "items": {
+            "$ref": "#/$defs/AftershockEvent"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "limitation": {
+          "title": "Limitation",
+          "type": "string"
+        },
+        "update": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RefreshJob"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "update_pending": {
+          "default": false,
+          "title": "Update Pending",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "status",
+        "events",
+        "limitation"
+      ],
+      "title": "AftershockForecasts",
+      "type": "object"
+    },
+    "AftershockWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "format": "date-time",
+          "title": "Valid To",
+          "type": "string"
+        },
+        "temporal_state": {
+          "enum": [
+            "future",
+            "in_progress",
+            "expired",
+            "unknown"
+          ],
+          "title": "Temporal State",
+          "type": "string"
+        },
+        "bins": {
+          "items": {
+            "$ref": "#/$defs/AftershockBin"
+          },
+          "title": "Bins",
+          "type": "array"
+        }
+      },
+      "required": [
+        "label",
+        "valid_from",
+        "valid_to",
+        "temporal_state",
+        "bins"
+      ],
+      "title": "AftershockWindow",
+      "type": "object"
+    },
     "AssetRecord": {
       "additionalProperties": false,
       "properties": {
@@ -5969,6 +6284,9 @@
     "enso_outlook": {
       "$ref": "#/$defs/EnsoOutlook"
     },
+    "aftershock_forecasts": {
+      "$ref": "#/$defs/AftershockForecasts"
+    },
     "assistant_request": {
       "$ref": "#/$defs/AssistantRequest"
     },
@@ -6031,6 +6349,7 @@
     "forecast_highlights",
     "planetary_forecast",
     "enso_outlook",
+    "aftershock_forecasts",
     "assistant_request",
     "assistant_reply",
     "sst_trend_analysis",

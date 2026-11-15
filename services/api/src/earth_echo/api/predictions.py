@@ -2,8 +2,8 @@
 from typing import Annotated
 from fastapi import APIRouter, Path, Query, HTTPException
 from fastapi.responses import FileResponse, Response
-from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast, EnsoOutlook
-from earth_echo.queries.predictions import forecast_catalog, forecast_field, forecast_point, forecast_highlights, point_csv, retained, planetary_forecast, enso_outlook, enso_csv
+from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast, EnsoOutlook, AftershockForecasts
+from earth_echo.queries.predictions import forecast_catalog, forecast_field, forecast_point, forecast_highlights, point_csv, retained, planetary_forecast, enso_outlook, enso_csv, aftershock_forecasts, aftershock_csv
 from earth_echo.storage.products import products_root
 
 Version = Annotated[str,Path(pattern=r'^[0-9a-f]{64}$')]
@@ -71,5 +71,13 @@ def forecast_routes():
     @router.get('/enso/d48.csv')
     def enso_export():
         return Response(enso_csv(enso_outlook()),media_type='text/csv',headers={'Content-Disposition':'attachment; filename=f17-enso-roni.csv'})
+
+    @router.get('/aftershocks/d22',response_model=AftershockForecasts)
+    def aftershocks():
+        return aftershock_forecasts()
+
+    @router.get('/aftershocks/d22.csv')
+    def aftershock_export():
+        return Response(aftershock_csv(aftershock_forecasts()),media_type='text/csv',headers={'Content-Disposition':'attachment; filename=f28-oaf.csv'})
 
     return router

@@ -184,6 +184,53 @@ class EnsoObservation(ApiModel):
     note: str
 
 
+class AftershockBin(ApiModel):
+    magnitude: float = Field(allow_inf_nan=False)
+    probability: float = Field(ge=0, le=1)
+    median_count: float | None = Field(default=None, allow_inf_nan=False)
+    p95_minimum: float | None = Field(default=None, allow_inf_nan=False)
+    p95_maximum: float | None = Field(default=None, allow_inf_nan=False)
+
+
+class AftershockWindow(ApiModel):
+    label: str
+    valid_from: UtcDateTime
+    valid_to: UtcDateTime
+    temporal_state: TemporalState
+    bins: list[AftershockBin]
+
+
+class AftershockEvent(ApiModel):
+    event_id: str
+    magnitude: float | None = Field(default=None, allow_inf_nan=False)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    depth_km: None = None
+    origin_time: None = None
+    model_name: str
+    region_type: str | None = None
+    region_radius: float | None = Field(default=None, allow_inf_nan=False)
+    region_radius_unit: None = None
+    geometry: Literal['epicenter_only'] = 'epicenter_only'
+    geometry_note: str
+    issued_at: UtcDateTime
+    product_version: str
+    retrieved_at: UtcDateTime
+    checksum_sha256: Sha256
+    original_url: str
+    windows: list[AftershockWindow]
+
+
+class AftershockForecasts(ApiModel):
+    data_mode: Literal['real'] = 'real'
+    status: ResultStatus
+    reason: str | None = None
+    events: list[AftershockEvent]
+    limitation: str
+    update: RefreshJob | None = None
+    update_pending: bool = False
+
+
 class EnsoOutlook(ApiModel):
     data_mode: Literal['real'] = 'real'
     status: ResultStatus

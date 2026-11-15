@@ -13,7 +13,8 @@ from pathlib import Path
 
 from earth_echo.contracts.products import ScientificProduct
 from earth_echo.contracts.predictions import (ForecastDescriptor, ForecastCatalog, ForecastField, ForecastPoint,
-    ForecastHighlights, ForecastHighlight, PlanetaryForecast, PlanetaryWindow, EnsoOutlook, EnsoPhase, EnsoObservation)
+    ForecastHighlights, ForecastHighlight, PlanetaryForecast, PlanetaryWindow, EnsoOutlook, EnsoPhase, EnsoObservation,
+    AftershockForecasts, AftershockEvent, AftershockWindow, AftershockBin)
 from earth_echo.contracts.products import ProductRegion
 from earth_echo.contracts.geometry import GeoMultiPolygon, GeographicExtent
 from earth_echo.contracts.operations import RefreshStatus
@@ -310,6 +311,71 @@ def enso_outlook(now=None, root=None, operations=None):
     pending=(moment-(job.last_success_at if job and job.last_success_at else phase.retrieved_at)).total_seconds()>phase.cadence_seconds
     edition=(phase.samples[0].attributes or {}).get('issued_month') if phase.samples else None
     return EnsoOutlook(status='available',edition=edition,retrieved_at=phase.retrieved_at,ingested_at=phase.ingested_at,checksum_sha256=phase.checksum_sha256,phases=phases,observation=observation,update=job,update_pending=pending,**base)
+
+
+OAF_LIMITATION=(
+    'Pronóstico oficial de réplicas del USGS para el evento que lo publicó. No anticipa cualquier terremoto ni la hora o el lugar de la siguiente réplica. '
+    'La ausencia de un pronóstico no significa ausencia de riesgo. No es una alerta de evacuación ni una probabilidad por ciudad. '
+    'El archivo declara un círculo y un radio sin unidad escrita; por eso el mapa muestra solo el centro del modelo, que corresponde al terremoto principal.'
+)
+OAF_GEOMETRY='El modelo publica regionType y regionRadius, pero el JSON no escribe la unidad del radio. No se dibuja el círculo. El punto es el centro declarado, no el lugar exacto de las réplicas futuras.'
+
+
+def _oaf_event(product, payload, moment):
+    from earth_echo.connectors.aftershocks import describe_oaf
+    described=describe_oaf(payload, product.title.split('·')[-1].strip() if '·' in product.title else product.id, moment)
+    event_id=next((sample.attributes.get('evento') for sample in product.samples if sample.attributes and sample.attributes.get('evento')), described['event_id'])
+    described['event_id']=event_id
+    windows=[]
+    for window in described['windows']:
+        bins=[]
+        for item in window['bins']:
+            stored=next((sample for sample in product.samples if sample.attributes and sample.attributes.get('ventana')==window['label'] and sample.attributes.get('umbral_magnitud')==str(item['magnitude'])), None)
+            if stored is not None and abs(float(stored.probability)-item['probability'])>1e-9:
+                raise ValueError('La probabilidad guardada no coincide con el forecast.json')
+            bins.append(AftershockBin(**item))
+        windows.append(AftershockWindow(label=window['label'],valid_from=window['valid_from'],valid_to=window['valid_to'],temporal_state=window['temporal_state'],bins=bins))
+    return AftershockEvent(event_id=event_id,magnitude=described['magnitude'],latitude=described['latitude'],longitude=described['longitude'],
+        model_name=described['model_name'],region_type=None if described['region_type'] is None else str(described['region_type']),region_radius=described['region_radius'],
+        geometry_note=OAF_GEOMETRY,issued_at=product.issued_at,product_version=product.product_version,retrieved_at=product.retrieved_at,
+        checksum_sha256=product.checksum_sha256,original_url=product.original_url,windows=windows)
+
+
+def aftershock_forecasts(now=None, root=None, operations=None):
+    from earth_echo.storage.products import products_root, read_product
+    moment=now or clock()
+    if operations is None and root is None:
+        operations=_operations()
+    active=root or products_root()
+    chosen={}
+    for path in sorted(active.glob('d22-oaf-*/current.json')):
+        product=read_product(path.parent.name, active)
+        if product is None: continue
+        raw_path=active/product.raw_file
+        if not raw_path.is_file(): continue
+        try:
+            event=_oaf_event(product, json.loads(raw_path.read_bytes()), moment)
+        except (OSError, ValueError, KeyError):
+            continue
+        previous=chosen.get(event.event_id)
+        if previous is None or event.issued_at>=previous.issued_at:
+            chosen[event.event_id]=event
+    events=sorted(chosen.values(), key=lambda item: item.issued_at, reverse=True)
+    job=operations.jobs.get('d22-oaf-recent') if operations else None
+    pending=bool(events) and (moment-(job.last_success_at if job and job.last_success_at else events[0].retrieved_at)).total_seconds()>3600
+    if not events:
+        return AftershockForecasts(status='missing_input',reason='No hay un pronóstico OAF retenido. No se inventaron réplicas.',events=[],limitation=OAF_LIMITATION,update=job,update_pending=False)
+    return AftershockForecasts(status='available',events=events,limitation=OAF_LIMITATION,update=job,update_pending=pending)
+
+
+def aftershock_csv(result: AftershockForecasts) -> str:
+    stream=io.StringIO();writer=csv.writer(stream)
+    writer.writerow(['event_id','magnitude','latitude','longitude','model_name','issued_at','product_version','retrieved_at','checksum_sha256','window','valid_from','valid_to','temporal_state','aftershock_magnitude','probability_at_least_one','median_count','p95_minimum','p95_maximum','original_url'])
+    for event in result.events:
+        for window in event.windows:
+            for item in window.bins:
+                writer.writerow([event.event_id,event.magnitude,event.latitude,event.longitude,event.model_name,event.issued_at.isoformat(),event.product_version,event.retrieved_at.isoformat(),event.checksum_sha256,window.label,window.valid_from.isoformat(),window.valid_to.isoformat(),window.temporal_state,item.magnitude,item.probability,item.median_count,item.p95_minimum,item.p95_maximum,event.original_url])
+    return stream.getvalue()
 
 
 def enso_csv(result: EnsoOutlook) -> str:

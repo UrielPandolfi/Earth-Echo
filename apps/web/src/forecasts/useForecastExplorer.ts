@@ -1,18 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ForecastCatalog,ForecastField,ForecastPoint,ForecastHighlights,PlanetaryForecast,EnsoOutlook } from '../domain/generated';
+import type { ForecastCatalog,ForecastField,ForecastPoint,ForecastHighlights,PlanetaryForecast,EnsoOutlook,AftershockForecasts } from '../domain/generated';
 
 const api=import.meta.env.VITE_API_BASE ?? '/api';
 const storageKey='earth-echo-forecast-selection-v1';
 type Position={longitude:number;latitude:number};
-type Selection={d16:string|null;ifs:string|null;position:Position|null;threshold:number;mode:'d16'|'ifs'|'kp'|'enso';season:string|null};
+type Selection={d16:string|null;ifs:string|null;position:Position|null;threshold:number;mode:'d16'|'ifs'|'kp'|'enso'|'oaf';season:string|null;eventId:string|null;oafWindow:string|null;oafMagnitude:number|null};
 function saved():Selection {
-  const fallback:Selection={d16:null,ifs:null,position:null,threshold:.7,mode:'d16',season:null};
+  const fallback:Selection={d16:null,ifs:null,position:null,threshold:.7,mode:'d16',season:null,eventId:null,oafWindow:null,oafMagnitude:null};
   try {
     const value=JSON.parse(localStorage.getItem(storageKey) ?? 'null') as Partial<Selection>|null;
     if(!value)return fallback;
     return {...fallback,d16:typeof value.d16==='string' ? value.d16 : null,ifs:typeof value.ifs==='string' ? value.ifs : null,
-      mode:['d16','ifs','kp','enso'].includes(value.mode ?? '') ? value.mode! : 'd16',
+      mode:['d16','ifs','kp','enso','oaf'].includes(value.mode ?? '') ? value.mode! : 'd16',
       season:typeof value.season==='string' ? value.season : null,
+      eventId:typeof value.eventId==='string' ? value.eventId : null,
+      oafWindow:typeof value.oafWindow==='string' ? value.oafWindow : null,
+      oafMagnitude:typeof value.oafMagnitude==='number' ? value.oafMagnitude : null,
       threshold:typeof value.threshold==='number' && value.threshold>=0 && value.threshold<=1 ? value.threshold : .7,
       position:value.position && Number.isFinite(value.position.longitude) && Number.isFinite(value.position.latitude) && Math.abs(value.position.latitude)<=90 ? value.position : null};
   } catch {return fallback;}
@@ -36,6 +39,8 @@ export function useForecastExplorer(enabled:boolean) {
   const [kpError,setKpError]=useState<string|null>(null);
   const [enso,setEnso]=useState<EnsoOutlook|null>(null);
   const [ensoError,setEnsoError]=useState<string|null>(null);
+  const [oaf,setOaf]=useState<AftershockForecasts|null>(null);
+  const [oafError,setOafError]=useState<string|null>(null);
   const revision=useRef(0);
   useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify(selection));}catch{/* Private storage may be disabled. */}},[selection]);
   useEffect(()=>{
@@ -110,6 +115,16 @@ export function useForecastExplorer(enabled:boolean) {
     void load();const timer=window.setInterval(()=>void load(),60_000);
     return ()=>{controller.abort();window.clearInterval(timer);};
   },[enabled]);
+  useEffect(()=>{
+    if(!enabled)return;
+    const controller=new AbortController();
+    async function load(){try{
+      const body=await get<AftershockForecasts>('/v1/forecasts/aftershocks/d22',controller.signal);
+      if(!controller.signal.aborted && Array.isArray(body.events)){setOaf(body);setOafError(null);}
+    }catch(e){if(!controller.signal.aborted)setOafError(e instanceof Error ? e.message : 'Réplicas no disponibles.');}}
+    void load();const timer=window.setInterval(()=>void load(),60_000);
+    return ()=>{controller.abort();window.clearInterval(timer);};
+  },[enabled]);
   const selectPosition=useCallback((position:Position)=>setSelection(s=>({...s,position})),[]);
   const activeField=field?.forecast?.id===key ? field : null;
   // Match the request identity, not independently normalized floating degrees:
@@ -117,9 +132,12 @@ export function useForecastExplorer(enabled:boolean) {
   // returned canonical longitude is scientific metadata, not a request token.
   const activePoint=point?.key===key && point.result.forecast?.id===key && point.longitude===longitude && point.latitude===latitude ? point.result : null;
   const activeHighlights=highlights?.forecast_id===key && highlights.probability_filter===selection.threshold ? highlights : null;
-  return {selection,catalog,key,field:activeField,point:activePoint,highlights:activeHighlights,kp,enso,error,pointError,highlightError,kpError,ensoError,
+  return {selection,catalog,key,field:activeField,point:activePoint,highlights:activeHighlights,kp,enso,oaf,error,pointError,highlightError,kpError,ensoError,oafError,
     selectPosition,setMode:(mode:Selection['mode'])=>setSelection(s=>({...s,mode})),
     setSeason:(season:string)=>setSelection(s=>({...s,season})),
+    setEvent:(eventId:string)=>setSelection(s=>({...s,eventId})),
+    setOafWindow:(oafWindow:string)=>setSelection(s=>({...s,oafWindow})),
+    setOafMagnitude:(oafMagnitude:number)=>setSelection(s=>({...s,oafMagnitude})),
     setPeriod:(id:string)=>setSelection(s=>({...s,[s.mode==='d16'?'d16':'ifs']:id})),setThreshold:(threshold:number)=>setSelection(s=>({...s,threshold}))};
 }
 export type ForecastExplorer=ReturnType<typeof useForecastExplorer>;

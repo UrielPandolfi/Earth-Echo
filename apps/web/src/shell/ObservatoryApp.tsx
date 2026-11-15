@@ -320,10 +320,13 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
       crossesAntimeridian: hit.crossesAntimeridian,
     });
   };
+  const oafEvent=forecasts.oaf?.events?.find(item=>item.event_id===forecasts.selection.eventId) ?? forecasts.oaf?.events?.[0] ?? null;
   const forecastMarkers:GlobeMarker[]=forecasts.selection.mode==='d16' ? (forecasts.highlights?.areas ?? []).map((area,index)=>({
     id:area.id,title:`Zona ${index+1} · celda ${(area.probability_max*100).toFixed(1)} %`,longitude:area.representative.cell!.longitude,
     latitude:area.representative.cell!.latitude,priority:area.cell_count,note:'Área destacada del pronóstico; representante en una celda real',symbol:'forecast',
-  })) : [];
+  })) : forecasts.selection.mode==='oaf' && oafEvent?.longitude!=null && oafEvent.latitude!=null ? [{
+    id:oafEvent.event_id,title:oafEvent.magnitude==null ? oafEvent.event_id : `M${oafEvent.magnitude}`,longitude:oafEvent.longitude,latitude:oafEvent.latitude,priority:2,note:'Terremoto principal. No es el lugar de las réplicas.',symbol:'observation',
+  }] : [];
   const shownMarkers: GlobeMarker[] = forecasting ? realMarkersForView(forecastMarkers,cameraHeight,state.groupOnZoom,null) :
     state.dataMode === "real"
       ? realMarkersForView([
@@ -416,12 +419,12 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           field={shownField}
           tracks={state.dataMode==='real' && !forecasting ? activeProduct?.tracks : undefined}
           regions={forecasting && forecasts.selection.mode==='enso' && forecasts.enso ? [forecasts.enso.region] : state.dataMode==='real' && !forecasting ? activeProduct?.regions : undefined}
-          mapNotice={forecasting && forecasts.selection.mode==='enso' ? 'Región Niño 3.4: referencia del índice. Las probabilidades no se pintan en el mapa.' : null}
+          mapNotice={forecasting && forecasts.selection.mode==='enso' ? 'Región Niño 3.4: referencia del índice. Las probabilidades no se pintan en el mapa.' : forecasting && forecasts.selection.mode==='oaf' ? 'El punto es el terremoto principal. No hay zona de réplicas dibujada: el radio del modelo no trae unidad.' : null}
           planetaryKp={forecasting && forecasts.selection.mode==='kp' ? { forecast: forecasts.kp, error: forecasts.kpError } : null}
           onGeographicSelect={forecasting && forecasts.selection.mode!=='kp' ? selectForecastPosition : undefined}
           fieldSelection={forecasting && forecasts.point && forecasts.selection.mode!=='kp' ? {longitude:forecasts.point.requested_longitude,latitude:forecasts.point.requested_latitude,cell:forecasts.point.cell ?? null} : null}
           fieldCredit={
-            forecasting ? forecasts.selection.mode==='enso' ? 'NOAA CPC · RONI · Niño 3.4' : `${forecasts.field?.forecast?.provider ?? 'Pronóstico externo'} · ${forecasts.field?.forecast?.variable ?? ''}` : state.dataMode === "real"
+            forecasting ? forecasts.selection.mode==='enso' ? 'NOAA CPC · RONI · Niño 3.4' : forecasts.selection.mode==='oaf' ? 'USGS · pronóstico de réplicas' : `${forecasts.field?.forecast?.provider ?? 'Pronóstico externo'} · ${forecasts.field?.forecast?.variable ?? ''}` : state.dataMode === "real"
               ? activeProduct ? `${activeProduct.attribution} · ${activeProduct.variable}` : "NOAA Coral Reef Watch · CoralTemp v3.1 · SST"
               : activeLayer
                 ? `${activeLayer.legendTitle} · ilustrativo`
@@ -442,7 +445,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           }
           frameRequest={frameRequest}
           onSelect={(id) => {if(forecasting){const area=forecasts.highlights?.areas.find(a=>a.id===id);if(area)selectForecastPosition({longitude:area.representative.cell!.longitude,latitude:area.representative.cell!.latitude});}else dispatch(state.dataMode === "real" ? { type: "real-select", id } : { type: "select", id });}}
-          countLabel={forecasting ? forecasts.selection.mode==='enso' ? `${forecasts.enso?.phases.length ?? '—'} trimestres ENSO · índice regional` : forecasts.selection.mode==='kp' ? `${forecasts.kp?.forecast ? forecasts.kp.windows.filter(w=>w.temporal_state!=='expired').length : '—'} ventanas planetarias vigentes/futuras` : `${shownField ? 1 : '—'} campo en el período seleccionado · ${forecasts.selection.mode==='d16' ? forecasts.highlights?.total_areas ?? '—' : 'no aplica'} áreas destacadas` : state.dataMode === "real" ? `${products?.connected_sources ?? '—'} fuentes · ${products?.observation_records ?? '—'} observaciones · ${products?.calculated_indicator_products ?? '—'} indicadores calculados` : undefined}
+          countLabel={forecasting ? forecasts.selection.mode==='enso' ? `${forecasts.enso?.phases.length ?? '—'} trimestres ENSO · índice regional` : forecasts.selection.mode==='oaf' ? `${forecasts.oaf?.events.length ?? '—'} pronósticos de réplicas · no es el catálogo mundial` : forecasts.selection.mode==='kp' ? `${forecasts.kp?.forecast ? forecasts.kp.windows.filter(w=>w.temporal_state!=='expired').length : '—'} ventanas planetarias vigentes/futuras` : `${shownField ? 1 : '—'} campo en el período seleccionado · ${forecasts.selection.mode==='d16' ? forecasts.highlights?.total_areas ?? '—' : 'no aplica'} áreas destacadas` : state.dataMode === "real" ? `${products?.connected_sources ?? '—'} fuentes · ${products?.observation_records ?? '—'} observaciones · ${products?.calculated_indicator_products ?? '—'} indicadores calculados` : undefined}
           onCameraHeight={onCameraHeight}
           trendNote={
             state.section === "tendencias"
@@ -462,7 +465,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onRealIndex={(index) => dispatch({ type: "real-index", index })}
         />}
       </div>
-        {forecasting ? <ForecastInspector explorer={forecasts} onFocus={()=>{const e=forecasts.selection.mode==='enso' ? forecasts.enso?.region.extent : forecasts.point?.cell?.extent;if(e)setFrameRequest({west:e.west,east:e.east,north:e.north,south:e.south,crossesAntimeridian:e.crosses_antimeridian});}}/> : state.section === "historico" ? (
+        {forecasting ? <ForecastInspector explorer={forecasts} onFocus={()=>{if(forecasts.selection.mode==='oaf' && oafEvent?.longitude!=null && oafEvent.latitude!=null){setFrameRequest({west:oafEvent.longitude-2,east:oafEvent.longitude+2,south:oafEvent.latitude-2,north:oafEvent.latitude+2,crossesAntimeridian:false});return;} const e=forecasts.selection.mode==='enso' ? forecasts.enso?.region.extent : forecasts.point?.cell?.extent;if(e)setFrameRequest({west:e.west,east:e.east,north:e.north,south:e.south,crossesAntimeridian:e.crosses_antimeridian});}}/> : state.section === "historico" ? (
         <CapabilitiesPanel />
       ) : state.section === "tendencias" ? (
         <TrendPanel

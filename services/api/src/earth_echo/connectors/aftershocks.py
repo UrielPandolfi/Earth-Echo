@@ -11,6 +11,33 @@ from earth_echo.storage.products import publish
 def _epoch(milliseconds):
     return datetime.fromtimestamp(milliseconds/1000,timezone.utc)
 
+def describe_oaf(payload: dict, event_id: str, now: datetime) -> dict:
+    """Read the published forecast. Do not redraw the model circle: its radius has no unit in the file."""
+    if not isinstance(payload.get('forecast'), list) or not payload['forecast']:
+        raise ValueError('OAF forecast missing')
+    parameters=payload.get('model',{}).get('parameters',{})
+    windows=[]
+    for window in payload['forecast']:
+        start,end=_epoch(window['timeStart']),_epoch(window['timeEnd'])
+        if end<=start: raise ValueError('Invalid OAF window')
+        bins=[]
+        for item in window['bins']:
+            probability=float(item['probability'])
+            if not 0<=probability<=1: raise ValueError('OAF probability outside 0–1')
+            bins.append({'magnitude':float(item['magnitude']),'probability':probability,'median_count':float(item['median']) if 'median' in item else None,
+                'p95_minimum':float(item['p95minimum']) if 'p95minimum' in item else None,'p95_maximum':float(item['p95maximum']) if 'p95maximum' in item else None})
+        state='in_progress' if start<=now<end else 'future' if start>now else 'expired'
+        windows.append({'label':str(window['label']),'valid_from':start,'valid_to':end,'temporal_state':state,'bins':bins})
+    windows.sort(key=lambda item: item['valid_from'])
+    latitude=parameters.get('regionCenterLat'); longitude=parameters.get('regionCenterLon')
+    if latitude is not None and not -90<=float(latitude)<=90: raise ValueError('OAF latitude out of range')
+    if longitude is not None and not -180<=float(longitude)<=180: raise ValueError('OAF longitude out of range')
+    return {'event_id':event_id,'magnitude':None if parameters.get('magMain') is None else float(parameters['magMain']),
+        'latitude':None if latitude is None else float(latitude),'longitude':None if longitude is None else float(longitude),
+        'model_name':str(payload.get('model',{}).get('name') or 'USGS OAF'),'region_type':parameters.get('regionType'),
+        'region_radius':None if parameters.get('regionRadius') is None else float(parameters['regionRadius']),'windows':windows}
+
+
 def parse_oaf(payload: dict,event_id: str) -> list[ProductSample]:
     result=[]
     for window in payload['forecast']:

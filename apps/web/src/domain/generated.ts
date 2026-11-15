@@ -1,5 +1,52 @@
 /* Este archivo se genera desde los modelos Pydantic. No lo edites a mano. */
 
+export interface AftershockBin {
+  magnitude: number;
+  probability: number;
+  median_count?: number | null;
+  p95_minimum?: number | null;
+  p95_maximum?: number | null;
+}
+
+export interface AftershockEvent {
+  event_id: string;
+  magnitude?: number | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  depth_km?: null;
+  origin_time?: null;
+  model_name: string;
+  region_type?: string | null;
+  region_radius?: number | null;
+  region_radius_unit?: null;
+  geometry?: "epicenter_only";
+  geometry_note: string;
+  issued_at: string;
+  product_version: string;
+  retrieved_at: string;
+  checksum_sha256: string;
+  original_url: string;
+  windows: AftershockWindow[];
+}
+
+export interface AftershockForecasts {
+  data_mode?: "real";
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  events: AftershockEvent[];
+  limitation: string;
+  update?: RefreshJob | null;
+  update_pending?: boolean;
+}
+
+export interface AftershockWindow {
+  label: string;
+  valid_from: string;
+  valid_to: string;
+  temporal_state: "future" | "in_progress" | "expired" | "unknown";
+  bins: AftershockBin[];
+}
+
 export interface AssetRecord {
   schema_version: "1.0";
   id: string;
@@ -912,6 +959,7 @@ export interface ContractBundle {
   forecast_highlights: ForecastHighlights;
   planetary_forecast: PlanetaryForecast;
   enso_outlook: EnsoOutlook;
+  aftershock_forecasts: AftershockForecasts;
   assistant_request: AssistantRequest;
   assistant_reply: AssistantReply;
   sst_trend_analysis: TrendView;
