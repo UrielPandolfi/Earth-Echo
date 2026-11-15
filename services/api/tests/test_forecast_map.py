@@ -149,6 +149,17 @@ def test_edges_conventions_antimeridian_and_split_geometry():
     # A diagonal or a missing cell never connects components.
     g=global_grid([.8,None,None,None,None,.9,None,None])
     assert len(components(g,.7)[1])==2
+    g=global_grid([float(np.float32(.7)),.7,None,None,None,None,None,None])
+    assert components(g,.7)[0]==1  # no threshold rounding to Float32
+
+
+def test_native_polar_centres_have_clipped_half_cell_support():
+    g=global_grid([.1,.2,.3,.4,.5,.6,.7,.8]).model_copy(update={'height':3,'latitudes':[90,0,-90],'values':[.1,.2,.3,.4,.5,.6,.7,.8,None,None,None,None],'missing_cells':4})
+    assert locate(g,0,89.75)==(0,2)
+    assert locate(g,0,-89.75)==(2,2)
+    north=cell_at(g,0,2);south=cell_at(g,2,2)
+    assert (north.extent.south,north.extent.north)==(45,90)
+    assert (south.extent.south,south.extent.north)==(-90,-45)
 
 
 def test_highlights_same_grid_point_order_and_no_match_vs_no_data(store):

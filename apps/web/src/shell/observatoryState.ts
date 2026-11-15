@@ -1,7 +1,7 @@
 import { HERO_ID } from "../demo/catalog";
 import { demoScenario } from "../demo/scenario";
 
-export type Section = "explorar" | "tendencias" | "historico";
+export type Section = "explorar" | "pronosticos" | "tendencias" | "historico";
 export type InspectorTab = "resumen" | "datos" | "antecedentes";
 export type DataMode = "demo" | "real";
 
@@ -114,7 +114,7 @@ export function reduceObservatory(state: ObservatoryState, action: ObservatoryAc
     case "search":
       return { ...state, searchText: action.text };
     case "mode":
-      return { ...state, dataMode: action.mode, playing: false, searchText: "" };
+      return { ...state, dataMode: action.mode, section:action.mode==='demo' && state.section==='pronosticos' ? 'explorar' : state.section, playing: false, searchText: "" };
     case "real-index":
       return { ...state, realIndex: Math.max(0, action.index), playing: false };
     case "real-tick":

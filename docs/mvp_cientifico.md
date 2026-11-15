@@ -1,5 +1,7 @@
 # MVP científico demostrable
 
+**Ampliación15/11/2026 — pronósticos en el globo:** REAL → Pronósticos permite explorar D16/NMME mensual, consultar celdas/períodos/destacados y abrir el inspector con probabilidades del proveedor, máscara, límites y originales. Incluye consulta del plazo IFS+24h y serie planetaria Kp, sin sustituir el experimento retrospectivo SST. Guion, contratos, evidencias y mapa implementado/bloqueado/futuro en [Pronósticos en el mapa](pronosticos_mapa.md). Esta capacidad se añadió después del MVP descriptivo documentado debajo; no convierte sus anomalías, tendencias o asociaciones en predicciones. Revisión visual nueva pendiente por controladores de navegador, comprobaciones numéricas/API y pruebas ejecutadas.
+
 Prioridad fijada por el usuario15/11/2026: usar las series científicas ya disponibles para anomalías, tendencias y asociaciones, manteniendo diseño y trazabilidad. No requiere Earthdata ni nuevas fuentes. El catálogo completo y sus31fenómenos siguen como alcance mayor; este MVP no equivale a31detectores o predicción mundial.
 
 ## Anomalías históricas SST — implementado

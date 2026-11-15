@@ -86,7 +86,7 @@ export function GlobeStage({ createGlobe, onCount, onControls, onSelect }: Globe
           {status.detail}
         </p>
       ) : null}
-      {selection && !selection.startsWith("demo-") && !selection.startsWith("wide-") ? <p className="globe-selection">{selection}</p> : null}
+      {selection && !selection.startsWith("demo-") && !selection.startsWith("wide-") && !/^[a-f0-9]{64}:/.test(selection) ? <p className="globe-selection">{selection}</p> : null}
       {error ? (
         <p className="globe-error" role="alert">
           {error}

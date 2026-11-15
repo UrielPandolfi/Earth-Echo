@@ -1,6 +1,6 @@
 # Earth Echo
 
-Observatorio ambiental de escritorio. Esta entrega muestra un globo, un escenario DEMO identificable y un subconjunto real: temperatura del mar en el Caribe, sismos, índice Kp, una tendencia y un experimento que no quedó validado. El asistente explica esas herramientas. No anticipa los 31 fenómenos del catálogo.
+Observatorio ambiental con globo, modos DEMO/REAL explícitos y productos científicos trazables. REAL → Pronósticos permite consultar calor marino mensual NOAA PSL/NMME, meteorología IFS+24h y Kp planetario. Tendencias conserva anomalías, tendencias y asociaciones históricas. El experimento propio SST sigue retrospectivo, sin habilidad adicional demostrada. No anticipa los31fenómenos del catálogo. [Demo y límites de pronósticos](docs/pronosticos_mapa.md).
 
 Los archivos `Earth_Echo_Especificacion.md`, `Earth_Echo_Catalogo.json` y `Earth Echo Global Environmental Observatory.png` son referencias. No los reescribas para implementar una fase. El PNG mide 1672×941 y manda en la composición. Sus números son ilustrativos.
 
@@ -43,7 +43,7 @@ npm run dev:web
 
 La API escucha en `0.0.0.0` y el puerto `PORT` (8000 por defecto). El navegador usa el proxy `/api` de Vite. El build de la web usa `base: "./"`.
 
-No hay un planificador residente ni Postgres. Las actualizaciones son comandos:
+El planificador existente actualiza fuentes con cadencias, lock y recuperación; en este equipo también está activa la tarea Windows. [Operación](docs/actualizacion.md). Se puede ejecutar manualmente, sin Postgres:
 
 ```powershell
 npm run ingest:feeds
@@ -77,8 +77,9 @@ Detené la API y copiá `data/real`. Ahí están el índice SQLite, la serie men
 
 1. Abrí http://127.0.0.1:5173/ en DEMO. La ficha de humedad es ilustrativa. Filtrá, buscá y mové el tiempo.
 2. Pasá a REAL. La SST, los sismos y el Kp son datos archivados. IMERG sigue bloqueado.
-3. En Tendencias, leé la pendiente y hacé un replay: guardar primero, revelar después.
-4. Abrí el asistente. Sin modelo, la respuesta cita las herramientas y lo dice.
+3. En Pronósticos, elegí el primer mes completo futuro D16 y tocá una celda/área destacada. Cambiá mes, filtro y consultá Datos/Método; IFS y Kp están en el selector de producto. [Guion detallado](docs/pronosticos_mapa.md).
+4. En Tendencias, consultá anomalías/asociaciones y la pendiente. El replay SST es un experimento histórico separado: guardar primero, revelar después.
+5. Abrí el asistente. Sin modelo, la respuesta cita las herramientas y lo dice.
 
 ## Límites
 

@@ -15,6 +15,8 @@ import {
   Rectangle,
   SceneTransforms,
   SingleTileImageryProvider,
+  TextureMagnificationFilter,
+  TextureMinificationFilter,
   TileMapServiceImageryProvider,
   UrlTemplateImageryProvider,
   Viewer,
@@ -77,6 +79,7 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
   let overlayListener: ((markers: PlacedMarker[]) => void) | null = null;
   let statusListener: ((status: GlobeStatus) => void) | null = null;
   let selectionListener: ((selection: string | null) => void) | null = null;
+  let geographicListener: ((position:{longitude:number;latitude:number}) => void) | null = null;
   let latestStatus: GlobeStatus = {
     state: "loading",
     detail: "Cargando la base geográfica.",
@@ -103,6 +106,9 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
   const paths = new PolylineCollection();
   scene.primitives.add(paths);
   const regionEntities: Entity[]=[];
+  const selectionEntities: Entity[]=[];
+  const selectionPaths=new PolylineCollection();
+  scene.primitives.add(selectionPaths);
   const globe = scene.globe;
   const camera = viewer.camera;
   const controller = scene.screenSpaceCameraController;
@@ -261,6 +267,16 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     const y = event.clientY - rect.top;
     const picked = scene.pick(new Cartesian2(x, y)) as { id?: unknown } | undefined;
     const id = typeof picked?.id === "string" ? picked.id : picked?.id instanceof Entity ? picked.id.id : null;
+    if (geographicListener && (!id || id.startsWith('field-selection:'))) {
+      const position=camera.pickEllipsoid(new Cartesian2(x,y),globe.ellipsoid);
+      // Space clicks do not issue a geographic query. The current terrain is
+      // the WGS84 ellipsoid, not an inferred point from a raster colour.
+      if(position){
+        const cartographic=globe.ellipsoid.cartesianToCartographic(position);
+        geographicListener({longitude:CesiumMath.toDegrees(cartographic.longitude),latitude:CesiumMath.toDegrees(cartographic.latitude)});
+      }
+      return;
+    }
     if (!id) {
       return;
     }
@@ -336,6 +352,8 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
       });
       fieldLayer = viewer.imageryLayers.addImageryProvider(provider);
       fieldLayer.alpha = 0.62;
+      fieldLayer.magnificationFilter=TextureMagnificationFilter.NEAREST;
+      fieldLayer.minificationFilter=TextureMinificationFilter.NEAREST;
     } catch {
       publish({
         state: "error",
@@ -456,6 +474,22 @@ export function createCesiumGlobe(container: HTMLElement): GlobeHandle {
     setCameraListener(listener) {
       cameraListener = listener;
       listener?.(camera.positionCartographic.height);
+    },
+    setGeographicListener(listener){geographicListener=listener;},
+    setFieldSelection(selection){
+      for(const entity of selectionEntities)viewer.entities.remove(entity);
+      selectionEntities.length=0;selectionPaths.removeAll();
+      if(selection){
+        const longitude=selection.cell?.longitude ?? selection.longitude;
+        const latitude=selection.cell?.latitude ?? selection.latitude;
+        selectionEntities.push(viewer.entities.add({id:'field-selection:point',position:Cartesian3.fromDegrees(longitude,latitude,1000),
+          point:{pixelSize:10,color:Color.WHITE,outlineColor:Color.fromCssColorString('#10cabc'),outlineWidth:3}}));
+        for(const polygon of selection.cell?.geometry.coordinates ?? [])for(const ring of polygon){
+          selectionPaths.add({positions:ring.map(p=>Cartesian3.fromDegrees(p[0],p[1],1200)),width:3,
+            material:Material.fromType('Color',{color:Color.WHITE}),id:'field-selection:boundary'});
+        }
+      }
+      scene.requestRender();
     },
     setOverlayListener(listener) {
       overlayListener = listener;

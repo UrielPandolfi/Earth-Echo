@@ -7,7 +7,7 @@ from typing import Literal
 from pydantic import Field, model_validator
 from earth_echo.contracts.types import ApiModel, CatalogSourceId, PhenomenonId, UtcDateTime, Sha256
 from earth_echo.contracts.geometry import GeographicExtent, GeoMultiPolygon
-from earth_echo.contracts.products import ScientificGrid
+from earth_echo.contracts.products import ScientificGrid, ScientificCalculation
 from earth_echo.contracts.operations import RefreshJob
 
 TemporalState = Literal['future', 'in_progress', 'expired', 'unknown']
@@ -28,6 +28,7 @@ class ForecastDescriptor(ApiModel):
     temporal_state: TemporalState
     variable: str
     unit: str
+    native_unit: str
     event_definition: str
     scientific_threshold: str | None = None
     reference_period: str | None = None
@@ -48,6 +49,8 @@ class ForecastDescriptor(ApiModel):
     coverage: str
     resolution: str | None = None
     quality_mask: str | None = None
+    sampling: str | None = None
+    calculation: ScientificCalculation | None = None
     original_url: str
     original_sha256: Sha256
     original_download: str
@@ -129,9 +132,9 @@ class ForecastHighlights(ApiModel):
     forecast_id: str
     probability_filter: float = Field(ge=0, le=1)
     rule: str
-    matching_cells: int
-    total_areas: int
-    returned_areas: int
+    matching_cells: int | None
+    total_areas: int | None
+    returned_areas: int | None
     limit: int
     areas: list[ForecastHighlight]
 

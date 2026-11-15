@@ -1,6 +1,9 @@
 import type { FrameResult, GeoExtent, PlacedMarker } from "./geography";
 import type { GlobeStatus } from "./createCesiumGlobe";
 import type { ProductTrack,ProductRegion } from '../domain/generated';
+import type { ForecastCell } from '../domain/generated';
+
+export interface GeographicSelection {longitude:number;latitude:number;cell:ForecastCell|null}
 
 export interface GlobeMarker {
   id: string;
@@ -32,6 +35,8 @@ export interface GlobeHandle {
   setTracks?: (tracks: ProductTrack[]) => void;
   setRegions?: (regions: ProductRegion[]) => void;
   setCameraListener?: (listener: ((heightMeters: number) => void) | null) => void;
+  setGeographicListener?: (listener: ((position:{longitude:number;latitude:number}) => void) | null) => void;
+  setFieldSelection?: (selection:GeographicSelection|null) => void;
 }
 
 export type GlobeFactory = (container: HTMLElement) => GlobeHandle;
@@ -78,6 +83,8 @@ export function mountGlobe(container: HTMLElement, createGlobe: GlobeFactory): G
     setTracks: (tracks) => handle.setTracks?.(tracks),
     setRegions: (regions) => handle.setRegions?.(regions),
     setCameraListener: (listener) => handle.setCameraListener?.(listener),
+    setGeographicListener: (listener) => handle.setGeographicListener?.(listener),
+    setFieldSelection: (selection) => handle.setFieldSelection?.(selection),
   };
   container.dataset.earthEchoGlobe = "live";
   active.add(handle);

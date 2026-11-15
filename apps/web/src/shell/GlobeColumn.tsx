@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { GlobeStage } from "../globe/GlobeStage";
-import type { GlobeFactory, GlobeHandle, GlobeMarker } from "../globe/lifecycle";
+import type { GlobeFactory, GlobeHandle, GlobeMarker,GeographicSelection } from "../globe/lifecycle";
 import { formatCount } from "../demo/queries";
 import type { FieldGrid } from "../demo/explore";
 import type { ObservatoryState, Section } from "./observatoryState";
@@ -26,11 +26,14 @@ interface GlobeColumnProps {
   emptyText?: string;
   trendNote?: string;
   countLabel?: string;
+  onGeographicSelect?: (position:{longitude:number;latitude:number}) => void;
+  fieldSelection?: GeographicSelection|null;
 }
 
 const sectionNote: Record<Exclude<Section, "explorar">, string> = {
   tendencias: "Tendencias usa el mismo escenario demo. No hay una tendencia calculada aparte.",
   historico: "Histórico mueve el tiempo del escenario. No carga archivos por fecha.",
+  pronosticos: "Pronósticos externos: seleccioná un período y tocá el campo científico.",
 };
 
 export function GlobeColumn({
@@ -51,6 +54,8 @@ export function GlobeColumn({
   emptyText,
   trendNote,
   countLabel,
+  onGeographicSelect,
+  fieldSelection,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
@@ -66,6 +71,8 @@ export function GlobeColumn({
 
   useEffect(() => { controls?.setTracks?.(tracks ?? []); },[controls,tracks]);
   useEffect(() => { controls?.setRegions?.(regions ?? []); },[controls,regions]);
+  useEffect(()=>{controls?.setGeographicListener?.(onGeographicSelect ?? null);return ()=>controls?.setGeographicListener?.(null);},[controls,onGeographicSelect]);
+  useEffect(()=>{controls?.setFieldSelection?.(fieldSelection ?? null);},[controls,fieldSelection]);
 
   useEffect(() => {
     controls?.setCameraListener?.(onCameraHeight);
@@ -97,8 +104,14 @@ export function GlobeColumn({
           ) : (
             <span>{catalogState === "loading" ? "fenómenos…" : "fenómenos no disponibles"}</span>
           )}
+          <small>del catálogo</small>
         </div>
         <ul className="symbol-legend">
+          {state.section==='pronosticos' && state.dataMode==='real' ? <>
+            <li><SymbolMark kind="forecast"/> Área para explorar · pronóstico</li>
+            <li><SymbolMark kind="cluster"/> Agrupación visual de áreas</li>
+            <li><span>□</span> Celda seleccionada · soporte de malla</li>
+          </> : <>
           {state.dataMode==='real' ? <li><span style={{color:'#acb5c3'}}>●</span> Inventario (si seleccionado)</li> : null}
           {tracks?.length ? <li><span style={{color:'#e7bf74'}}>━</span> Trayectoria histórica</li> : null}
           {regions?.length ? <li><span style={{color:'#e7bf74'}}>▱</span> Geometría publicada · ver ficha</li> : null}
@@ -106,6 +119,7 @@ export function GlobeColumn({
           <li><SymbolMark kind="risk" /> Riesgo</li>
           <li><SymbolMark kind="forecast" /> Pronóstico</li>
           <li><SymbolMark kind="cluster" /> Agrupación</li>
+          </>}
         </ul>
         <div className="zoom">
           <button type="button" onClick={() => controls?.zoomIn?.()} disabled={!cameraReady} title={cameraReady ? "Acercar" : "La cámara no está disponible"}>

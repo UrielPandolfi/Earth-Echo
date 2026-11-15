@@ -12,8 +12,12 @@ export function groupMarkers(points: GlobeMarker[], degrees: number, selected: s
   }
   for (const [key,items] of buckets) {
     if (items.length === 1) { singles.push(items[0]); continue; }
-    singles.push({id:`cluster:real:${key}`,title:`${items.length} registros`,longitude:items.reduce((s,p)=>s+p.longitude,0)/items.length,
-      latitude:items.reduce((s,p)=>s+p.latitude,0)/items.length,priority:items.length,note:'Agrupación visual de registros reales',symbol:'cluster',count:items.length});
+    // Forecast representatives must remain on an actual valid cell; the visual
+    // grouping symbol is a count of exploration areas, not a regional forecast.
+    const forecast=items[0].symbol==='forecast';
+    const representative=items.reduce((best,p)=>p.priority>best.priority ? p : best,items[0]);
+    singles.push({id:`cluster:real:${key}`,title:`${items.length} ${forecast ? 'áreas para explorar' : 'registros'}`,longitude:forecast ? representative.longitude : items.reduce((s,p)=>s+p.longitude,0)/items.length,
+      latitude:forecast ? representative.latitude : items.reduce((s,p)=>s+p.latitude,0)/items.length,priority:items.length,note:'Agrupación visual de registros reales',symbol:'cluster',count:items.length});
   }
   return singles;
 }

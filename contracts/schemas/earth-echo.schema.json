@@ -1311,6 +1311,10 @@
           "title": "Unit",
           "type": "string"
         },
+        "native_unit": {
+          "title": "Native Unit",
+          "type": "string"
+        },
         "event_definition": {
           "title": "Event Definition",
           "type": "string"
@@ -1478,6 +1482,29 @@
           "default": null,
           "title": "Quality Mask"
         },
+        "sampling": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sampling"
+        },
+        "calculation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScientificCalculation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "original_url": {
           "title": "Original Url",
           "type": "string"
@@ -1552,6 +1579,7 @@
         "temporal_state",
         "variable",
         "unit",
+        "native_unit",
         "event_definition",
         "method",
         "adapter_version",
@@ -1709,16 +1737,37 @@
           "type": "string"
         },
         "matching_cells": {
-          "title": "Matching Cells",
-          "type": "integer"
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Matching Cells"
         },
         "total_areas": {
-          "title": "Total Areas",
-          "type": "integer"
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Total Areas"
         },
         "returned_areas": {
-          "title": "Returned Areas",
-          "type": "integer"
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Returned Areas"
         },
         "limit": {
           "title": "Limit",

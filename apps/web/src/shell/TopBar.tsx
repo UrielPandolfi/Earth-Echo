@@ -21,6 +21,7 @@ interface TopBarProps {
 
 const sections = [
   { id: "explorar", label: "Explorar" },
+  { id: "pronosticos", label: "Pronósticos" },
   { id: "tendencias", label: "Tendencias" },
   { id: "historico", label: "Histórico" },
 ] as const;
@@ -35,7 +36,7 @@ export function TopBar({ state, results, onSection, onSearch, onPick, onTimeline
         <span className="brand-name">earth echo</span>
       </div>
       <nav className="nav" aria-label="Secciones">
-        {sections.map((section) => (
+        {sections.filter(section=>section.id!=='pronosticos' || state.dataMode==='real').map((section) => (
           <button
             key={section.id}
             type="button"

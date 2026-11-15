@@ -215,6 +215,7 @@ export interface ForecastDescriptor {
   temporal_state: "future" | "in_progress" | "expired" | "unknown";
   variable: string;
   unit: string;
+  native_unit: string;
   event_definition: string;
   scientific_threshold?: string | null;
   reference_period?: string | null;
@@ -235,6 +236,8 @@ export interface ForecastDescriptor {
   coverage: string;
   resolution?: string | null;
   quality_mask?: string | null;
+  sampling?: string | null;
+  calculation?: ScientificCalculation | null;
   original_url: string;
   original_sha256: string;
   original_download: string;
@@ -270,9 +273,9 @@ export interface ForecastHighlights {
   forecast_id: string;
   probability_filter: number;
   rule: string;
-  matching_cells: number;
-  total_areas: number;
-  returned_areas: number;
+  matching_cells: number | null;
+  total_areas: number | null;
+  returned_areas: number | null;
   limit: number;
   areas: ForecastHighlight[];
 }

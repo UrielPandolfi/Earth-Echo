@@ -15,7 +15,16 @@ def forecast_routes():
     router=APIRouter(prefix='/v1/forecasts')
 
     @router.get('/catalog',response_model=ForecastCatalog)
-    def catalog():return forecast_catalog()
+    def catalog(phenomenon_id:Annotated[str|None,Query(pattern=r'^F\d{2}$')]=None):
+        result=forecast_catalog()
+        if phenomenon_id:
+            from earth_echo.catalog.load import load_catalog
+            if phenomenon_id not in {m.id for m in load_catalog().modules}:raise HTTPException(404,'Fenómeno no incluido en el catálogo.')
+            rows=[f for f in result.forecasts if f.phenomenon_id==phenomenon_id]
+            fields=[f for f in rows if f.queryable and f.availability=='available']
+            result=result.model_copy(update={'forecasts':rows,'default_d16_id':result.default_d16_id if any(f.id==result.default_d16_id for f in rows) else None,
+                'future_fields':sum(f.temporal_state=='future' for f in fields),'current_fields':sum(f.temporal_state=='in_progress' for f in fields),'archived_fields':sum(f.temporal_state=='expired' for f in fields),'own_experiments':0})
+        return result
 
     @router.get('/fields/{version}',response_model=ForecastField)
     def field(version:Version):return forecast_field(version)

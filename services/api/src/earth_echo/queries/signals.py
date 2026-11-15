@@ -73,6 +73,13 @@ def query_signals(phenomenon_id: PhenomenonId, mode: DataMode, as_of: datetime) 
             source_ids=["D02"],
             variable_id="V08",
         )
+    if phenomenon_id in {'F18','F29'}:
+        return _unavailable(phenomenon_id,mode,as_of,reason_code='not_implemented',
+            reason=('No hay un detector REAL de eventos SignalRecord para este fenómeno. '
+                    'Los pronósticos importados se consultan con su contrato de campo/índice en '
+                    '/v1/forecasts/catalog?phenomenon_id=F18 y /v1/forecasts/planetary/d28-kp. '
+                    'Un campo probabilístico o Kp planetario no se convierte en pines de eventos.'),
+            source_ids=['D16'] if phenomenon_id=='F18' else ['D28'])
     return _unavailable(
         phenomenon_id,
         mode,

@@ -1,6 +1,6 @@
 import { cleanup,render,screen,within } from '@testing-library/react';
 import { afterEach,expect,it } from 'vitest';
-import { ProductInspector,productTimeLabel,ProductFieldLegend } from './Products';
+import { ProductInspector,productTimeLabel,ProductFieldLegend,productForecastState } from './Products';
 import type { ScientificProduct,RefreshStatus } from '../domain/generated';
 import native from '../../../../data/real/products/d26-rgi60-patagonia-outlines/current.json';
 import roni from '../../../../data/real/products/d48-roni-history/current.json';
@@ -13,6 +13,13 @@ import so from '../../../../data/real/products/d14-so-surface/current.json';
 import oisstAnomaly from '../../../../data/real/products/d13-oisst-anomaly-global/current.json';
 
 afterEach(cleanup);
+
+it('labels expired fields honestly without treating a recent retrieval as a future forecast',()=>{
+  const now=Date.parse('2026-11-15T15:00:00Z');
+  expect(productForecastState({kind:'forecast',valid_from:'2026-11-15T00:00:00Z',valid_to:null},now)).toBe('Archivado · vencido');
+  expect(productForecastState({kind:'forecast',valid_from:'2026-12-01T00:00:00Z',valid_to:'2027-01-01T00:00:00Z'},now)).toBe('Futuro');
+  expect(productForecastState({kind:'forecast',valid_from:'2026-11-01T00:00:00Z',valid_to:'2026-12-01T00:00:00Z'},now)).toBe('En curso');
+});
 
 it('warns about upstream download failure even if local anomaly processing succeeded',()=>{
   const refreshStatus={jobs:{'d13-oisst-global':{status:'failed',error:'Network unavailable'},'d13-current-anomaly':{status:'unchanged',last_success_at:'2026-11-15T06:20:33Z'}}} as unknown as RefreshStatus;

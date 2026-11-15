@@ -578,3 +578,28 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 .product-time { display: flex; gap: 12px; align-items: center; padding: 14px; min-height: 78px; flex-wrap: wrap; }
 .product-list { max-height: 26vh; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .calculation-result { font-size:1.4rem; font-weight:600; color:var(--accent,#66d8c3); }
+.forecast-control { display:grid; gap:7px; margin:14px 0; font-size:13px; }
+.forecast-control select { width:100%; min-width:0; padding:8px; border:1px solid var(--line-strong); border-radius:6px; background:var(--bg-sunken); }
+.forecast-control input[type=range] { width:100%; accent-color:var(--accent); }
+.forecast-sidebar .sidebar-body { padding:0 12px 18px; }
+.forecast-sidebar h3 { font-size:14px; margin:18px 0 8px; }
+.forecast-warning { color:#e7c56a; border-left:2px solid #d5ae55; padding-left:8px; font-size:12px; line-height:1.5; }
+.forecast-areas { list-style:none; margin:10px 0; padding:0; display:grid; gap:7px; }
+.forecast-areas button { width:100%; display:grid; gap:4px; padding:9px; text-align:left; border:1px solid var(--line); background:var(--bg-sunken); border-radius:6px; }
+.forecast-areas button:hover { border-color:var(--accent); }
+.forecast-areas span,.forecast-areas small { color:var(--text-dim); font-size:11px; }
+.forecast-sidebar details { margin:14px 0; }
+.forecast-sidebar summary { cursor:pointer; font-size:12px; }
+.forecast-capabilities { list-style:none; padding:0; display:grid; gap:12px; font-size:11px; color:var(--text-dim); }
+.forecast-result { font-size:36px; font-weight:650; color:var(--accent); margin:12px 0 4px; }
+.forecast-instruction { padding:12px; border:1px solid var(--line-strong); border-radius:8px; line-height:1.6; }
+.forecast-inspector .tabs { flex-shrink:0; }
+.forecast-inspector .tabs button { font-size:12px; }
+.forecast-time { gap:6px 16px; padding:10px 14px; }
+.forecast-time .fine { flex-basis:100%; }
+@media(max-width:1100px) { .topbar .brand-name { display:none; } .nav-item { padding:6px 7px; } .top-tools .icon-button:disabled { display:none; } }
+@media(max-width:860px) {
+  .nav { display:flex; } .nav-item { font-size:11px; padding:6px 5px; }
+  .topbar .search { display:none; } .topbar { gap:6px; }
+  .forecast-result { font-size:30px; }
+}

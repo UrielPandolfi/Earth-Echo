@@ -27,6 +27,9 @@ import { initialObservatoryState, reduceObservatory } from "./observatoryState";
 import type { ProductList, ScientificProduct,RefreshStatus } from '../domain/generated';
 import { ProductsPanel, ProductInspector,productKindLabel,productTimeLabel } from '../real/Products';
 import { realMarkersForView } from '../globe/clustering';
+import {useForecastExplorer} from '../forecasts/useForecastExplorer';
+import {ForecastPanel,ForecastInspector,ForecastTime} from '../forecasts/ForecastPanels';
+import {paintForecastField} from '../forecasts/field';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 
@@ -36,6 +39,12 @@ interface ObservatoryAppProps {
 
 export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [state, dispatch] = useReducer(reduceObservatory, undefined, initialObservatoryState);
+  const forecasting=state.dataMode==='real' && state.section==='pronosticos';
+  const forecasts=useForecastExplorer(forecasting);
+  const selectForecastPosition=useCallback((position:{longitude:number;latitude:number})=>{
+    forecasts.selectPosition(position);
+    if(!state.inspectorOpen)dispatch({type:'panel',panel:'inspector'});
+  },[forecasts.selectPosition,state.inspectorOpen]);
   const [catalogTotal, setCatalogTotal] = useState<number | null>(null);
   const [catalogState, setCatalogState] = useState<"loading" | "ready" | "error">("loading");
   const [cameraHeight, setCameraHeight] = useState(13_200_000);
@@ -311,7 +320,11 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
       crossesAntimeridian: hit.crossesAntimeridian,
     });
   };
-  const shownMarkers: GlobeMarker[] =
+  const forecastMarkers:GlobeMarker[]=forecasts.selection.mode==='d16' ? (forecasts.highlights?.areas ?? []).map((area,index)=>({
+    id:area.id,title:`Zona ${index+1} · celda ${(area.probability_max*100).toFixed(1)} %`,longitude:area.representative.cell!.longitude,
+    latitude:area.representative.cell!.latitude,priority:area.cell_count,note:'Área destacada del pronóstico; representante en una celda real',symbol:'forecast',
+  })) : [];
+  const shownMarkers: GlobeMarker[] = forecasting ? realMarkersForView(forecastMarkers,cameraHeight,state.groupOnZoom,null) :
     state.dataMode === "real"
       ? realMarkersForView([
           ...(productKey === 'archive' && realObservation?.spatial.geometry
@@ -343,7 +356,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
             : []),
         ],cameraHeight,state.groupOnZoom,state.realSelectedId)
       : markers;
-  const shownField =
+  const forecastField=useMemo(()=>forecasts.selection.mode!=='kp' && forecasts.field?.grid ? paintForecastField(forecasts.field.grid,forecasts.field.forecast?.result_type==='imported_probability') : null,[forecasts.field,forecasts.selection.mode]);
+  const shownField = forecasting ? forecastField :
     state.dataMode === "real" ? (activeProduct?.grid ? paintSstField({...activeProduct.grid, observation_id: activeProduct.id, unit: activeProduct.unit}) : productKey === 'archive' && realField && realField.observation_id === realObservation?.id ? paintSstField(realField) : null) : field;
   const badge =
     state.dataMode === "real"
@@ -365,9 +379,9 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
         onMode={(mode) => dispatch({ type: "mode", mode })}
         onAssistant={() => setAssistantOpen((open) => !open)}
         assistantOpen={assistantOpen}
-        badge={badge}
+        badge={forecasting ? 'REAL · pronósticos externos' : badge}
       />
-      {state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} activeProduct={activeProduct} refreshStatus={refreshStatus} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
+      {forecasting ? <ForecastPanel explorer={forecasts} products={products} onTechnical={()=>dispatch({type:'section',section:'explorar'})} onSelectPosition={selectForecastPosition}/> : state.dataMode === 'real' ? <ProductsPanel data={products} selected={productKey} activeProduct={activeProduct} refreshStatus={refreshStatus} onSelect={(key) => {setProductKey(key); dispatch({ type: 'real-select', id: null });}} onFocus={() => {
         const g = activeProduct?.grid;
         if (g) setFrameRequest({west:g.west, east:g.east, north:g.north, south:g.south, crossesAntimeridian:false});
         else if (activeProduct?.extent) {
@@ -396,21 +410,23 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           createGlobe={createGlobe}
           catalogTotal={catalogTotal}
           catalogState={catalogState}
-          signalCount={state.dataMode === "real" ? shownMarkers.length + (shownField ? 1 : 0) + (activeProduct?.regions?.length ?? 0) + (activeProduct?.tracks?.length ?? 0) : visible.length}
+          signalCount={forecasting ? shownMarkers.length+(shownField ? 1 : 0) : state.dataMode === "real" ? shownMarkers.length + (shownField ? 1 : 0) + (activeProduct?.regions?.length ?? 0) + (activeProduct?.tracks?.length ?? 0) : visible.length}
           groupCount={state.dataMode === "real" ? shownMarkers.filter(m=>m.symbol==='cluster').length : grouped.clusters.length}
           markers={shownMarkers}
           field={shownField}
-          tracks={state.dataMode==='real' ? activeProduct?.tracks : undefined}
-          regions={state.dataMode==='real' ? activeProduct?.regions : undefined}
+          tracks={state.dataMode==='real' && !forecasting ? activeProduct?.tracks : undefined}
+          regions={state.dataMode==='real' && !forecasting ? activeProduct?.regions : undefined}
+          onGeographicSelect={forecasting && forecasts.selection.mode!=='kp' ? selectForecastPosition : undefined}
+          fieldSelection={forecasting && forecasts.point && forecasts.selection.mode!=='kp' ? {longitude:forecasts.point.requested_longitude,latitude:forecasts.point.requested_latitude,cell:forecasts.point.cell ?? null} : null}
           fieldCredit={
-            state.dataMode === "real"
+            forecasting ? `${forecasts.field?.forecast?.provider ?? 'Pronóstico externo'} · ${forecasts.field?.forecast?.variable ?? ''}` : state.dataMode === "real"
               ? activeProduct ? `${activeProduct.attribution} · ${activeProduct.variable}` : "NOAA Coral Reef Watch · CoralTemp v3.1 · SST"
               : activeLayer
                 ? `${activeLayer.legendTitle} · ilustrativo`
                 : "Campo ilustrativo DEMO"
           }
           emptyText={
-            state.dataMode === "real"
+            forecasting ? forecasts.selection.mode==='kp' ? 'Índice planetario: consultá la serie y las ventanas UTC en Detalle. Sin intensidades locales en el mapa.' : forecasts.error ?? 'Consultando un campo predictivo retenido; no se usa DEMO.' : state.dataMode === "real"
               ? activeProduct?.representation==='time_series'
                 ? 'Serie regional disponible en el inspector; no hay pines ni una malla espacial para este producto.'
                 : realView?.status === "available"
@@ -423,8 +439,8 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
               : undefined
           }
           frameRequest={frameRequest}
-          onSelect={(id) => dispatch(state.dataMode === "real" ? { type: "real-select", id } : { type: "select", id })}
-          countLabel={state.dataMode === "real" ? `${products?.connected_sources ?? '—'} fuentes · ${products?.observation_records ?? '—'} observaciones · ${products?.calculated_signals ?? 0} señales calculadas` : undefined}
+          onSelect={(id) => {if(forecasting){const area=forecasts.highlights?.areas.find(a=>a.id===id);if(area)selectForecastPosition({longitude:area.representative.cell!.longitude,latitude:area.representative.cell!.latitude});}else dispatch(state.dataMode === "real" ? { type: "real-select", id } : { type: "select", id });}}
+          countLabel={forecasting ? forecasts.selection.mode==='kp' ? `${forecasts.kp?.forecast ? forecasts.kp.windows.filter(w=>w.temporal_state!=='expired').length : '—'} ventanas planetarias vigentes/futuras` : `${shownField ? 1 : '—'} campo en el período seleccionado · ${forecasts.selection.mode==='d16' ? forecasts.highlights?.total_areas ?? '—' : 'no aplica'} áreas destacadas` : state.dataMode === "real" ? `${products?.connected_sources ?? '—'} fuentes · ${products?.observation_records ?? '—'} observaciones · ${products?.calculated_indicator_products ?? '—'} indicadores calculados` : undefined}
           onCameraHeight={onCameraHeight}
           trendNote={
             state.section === "tendencias"
@@ -436,7 +452,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
                 : undefined
           }
         />
-        {state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{productKindLabel(activeProduct)}</strong><span>{activeProduct.observed_at || activeProduct.valid_from || activeProduct.issued_at ? `${productTimeLabel(activeProduct)} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
+        {forecasting ? <ForecastTime explorer={forecasts}/> : state.dataMode === 'real' && activeProduct ? <div className="product-time" aria-label="Tiempo del producto real"><strong>{productKindLabel(activeProduct)}</strong><span>{activeProduct.observed_at || activeProduct.valid_from || activeProduct.issued_at ? `${productTimeLabel(activeProduct)} UTC` : 'Fechas y época en los registros; sin instante UTC proporcionado.'}{(activeProduct.observation_end ?? activeProduct.valid_to) ? ` → ${activeProduct.observation_end ?? activeProduct.valid_to} UTC` : ''}</span><span className="fine">Inicialización: {activeProduct.initialized_at ?? 'No aplica / no informada'}. Esta fecha pertenece al producto seleccionado.</span></div> : <TimelineBar
           state={state}
           onTimeline={(days) => dispatch({ type: "timeline", days })}
           onPlay={() => dispatch({ type: "play" })}
@@ -444,7 +460,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onRealIndex={(index) => dispatch({ type: "real-index", index })}
         />}
       </div>
-      {state.section === "historico" ? (
+      {forecasting ? <ForecastInspector explorer={forecasts} onFocus={()=>{const e=forecasts.point?.cell?.extent;if(e)setFrameRequest({west:e.west,east:e.east,north:e.north,south:e.south,crossesAntimeridian:e.crosses_antimeridian});}}/> : state.section === "historico" ? (
         <CapabilitiesPanel />
       ) : state.section === "tendencias" ? (
         <TrendPanel

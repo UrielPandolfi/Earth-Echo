@@ -16,7 +16,7 @@ from earth_echo.contracts.predictions import (ForecastDescriptor, ForecastCatalo
     ForecastHighlights, ForecastHighlight, PlanetaryForecast, PlanetaryWindow)
 from earth_echo.contracts.operations import RefreshStatus
 from earth_echo.contracts.types import parse_utc
-from earth_echo.science.forecast_grid import CELL_RULE, HIGHLIGHT_RULE, locate, cell_at, components, normalize_longitude
+from earth_echo.science.forecast_grid import CELL_RULE, HIGHLIGHT_RULE, locate, cell_at, components, normalize_longitude, axes
 from earth_echo.storage.products import products_root, all_products
 
 ADAPTER_VERSION='retained-forecast-cell-v1'
@@ -97,12 +97,15 @@ def descriptor(p, now, operations=None, *, version=None, root=None):
     return ForecastDescriptor(id=key,product_id=p.id,source_id=p.source_id,phenomenon_id='F18' if d16 else 'F28' if p.source_id=='D22' else 'F17' if p.source_id=='D48' else None,
         title=title,provider=p.attribution,result_type='imported_probability' if d16 else 'derived_indicator' if p.calculation else 'imported_value',
         spatial_support=spatial,queryable=queryable,availability='missing_input' if missing else 'available' if queryable else 'not_implemented',
-        temporal_state=state,variable=p.variable,unit='1' if d16 else p.unit,event_definition=event,scientific_threshold=threshold,
+        temporal_state=state,variable=p.variable,unit='1' if d16 else p.unit,native_unit=p.native_unit,event_definition=event,scientific_threshold=threshold,
         reference_period='1991–2020' if d16 else None,trend_treatment='retained' if d16 else None,
-        method=p.calculation.formula if p.calculation else p.method_version,adapter_version=ADAPTER_VERSION,provider_version=p.product_version,
+        method=p.calculation.formula if p.calculation else p.method_version+(' · °C = K − 273,15' if d07 and p.variable in {'2t','2d'} else ' · mm = m × 1000; acumulación 0–24 h' if d07 and p.variable=='tp' else ''),adapter_version=ADAPTER_VERSION,provider_version=p.product_version,
         identity_basis=IDENTITY_BASIS,initialized_at=p.initialized_at,issued_at=p.issued_at,retrieved_at=p.retrieved_at,
         processed_at=p.ingested_at,first_seen_at=p.ingested_at,first_seen_basis=FIRST_SEEN_BASIS,valid_from=p.valid_from,valid_to=p.valid_to,
-        temporal_semantics=semantics,coverage=p.coverage,resolution=p.grid.resolution if p.grid else None,quality_mask=p.grid.quality_mask if p.grid else None,
+        temporal_semantics=semantics,coverage=p.coverage,
+        resolution='NMME1°; recorte heredado de centros89°N–89°S. Filas±90° no importadas en esta revisión (no implica máscara nativa).' if d16 and p.grid and p.grid.height==179 else p.grid.resolution if p.grid else None,
+        quality_mask='NaN del original como faltante, causa no codificada. Cero válido; las filas polares no forman parte del recorte heredado.' if d16 and p.grid and p.grid.height==179 else p.grid.quality_mask if p.grid else None,
+        sampling=p.grid.sampling if p.grid else None,calculation=p.calculation,
         original_url=p.original_url,original_sha256=p.checksum_sha256,original_download=f'/v1/forecasts/fields/{key}/original' if queryable else f'/v1/products/{p.id}/original',
         metadata_download=f'/v1/forecasts/fields/{key}' if queryable else f'/v1/products/{p.id}',
         reference_url='https://psl.noaa.gov/marine-heatwaves/' if d16 else p.license_url,
@@ -118,6 +121,9 @@ def forecast_catalog(now=None, root=None, operations=None):
     # kind=forecast alone does not imply future or a query adapter.
     for p in all_products(root or products_root()):
         if p.kind=='forecast' and not _adapted(p):entries.append(descriptor(p,moment,ops,root=root))
+    if root is None:
+        kp=planetary_forecast(moment,ops)
+        if kp.forecast:entries.append(kp.forecast)
     entries.sort(key=lambda f:(f.source_id,f.valid_from or f.retrieved_at,f.variable,f.first_seen_at,f.id))
     monthly=[e for e in entries if e.source_id=='D16' and e.availability=='available']
     future=[e for e in monthly if e.temporal_state=='future']
@@ -139,7 +145,12 @@ def forecast_field(key, now=None, root=None, operations=None):
         return ForecastField(status='missing_input',reason='Versión no retenida o entrada ausente; no se sustituyó por otra corrida ni DEMO.')
     meta=descriptor(p,now or clock(),operations if operations is not None else _operations(),version=key,root=root)
     if meta.availability=='missing_input':return ForecastField(status='missing_input',reason='Original científico no disponible.',forecast=meta)
-    return ForecastField(status='expired' if meta.temporal_state=='expired' else 'available',forecast=meta,grid=p.grid)
+    # The legacy D16 display bounds clipped half the seam cell. Derive support
+    # from actual centres, preserving every coordinate/value/mask and original.
+    xe,ye,wrap=axes(p.grid)
+    grid=p.grid.model_copy(update={'west':-180 if wrap else xe[0],'east':180 if wrap else xe[-1],'south':ye[0],'north':ye[-1],
+        'resolution':meta.resolution,'quality_mask':meta.quality_mask})
+    return ForecastField(status='expired' if meta.temporal_state=='expired' else 'available',forecast=meta,grid=grid)
 
 
 def point_from_field(field, longitude, latitude):
@@ -149,7 +160,7 @@ def point_from_field(field, longitude, latitude):
     address=locate(field.grid,lon,latitude)
     if address is None:return ForecastPoint(status='no_coverage',reason='Sin cobertura en esta posición: fuera del soporte de la malla.',**base)
     r,c=address;cell=cell_at(field.grid,r,c);v=field.grid.values[r*field.grid.width+c]
-    if v is None:return ForecastPoint(status='no_coverage',reason='Sin cobertura en esta posición: máscara nativa (tierra/hielo/sin salida). No se buscó otra celda.',cell=cell,**base)
+    if v is None:return ForecastPoint(status='no_coverage',reason='Sin cobertura en esta posición: máscara nativa, sin causa codificada por celda. No se buscó otra celda.',cell=cell,**base)
     probabilistic=field.forecast.result_type=='imported_probability'
     return ForecastPoint(status=field.status,cell=cell,probability=v if probabilistic else None,value=None if probabilistic else v,**base)
 
@@ -161,9 +172,9 @@ def forecast_point(key, longitude, latitude, now=None, root=None, operations=Non
 def forecast_highlights(key, threshold=.7, limit=20, now=None, root=None, operations=None):
     field=forecast_field(key,now,root,operations)
     base=dict(forecast_id=key,probability_filter=threshold,rule=HIGHLIGHT_RULE,limit=limit)
-    if field.grid is None:return ForecastHighlights(status=field.status,reason=field.reason,matching_cells=0,total_areas=0,returned_areas=0,areas=[],**base)
-    if field.forecast.result_type!='imported_probability':return ForecastHighlights(status='not_implemented',reason='Este producto contiene valores, no probabilidades definidas.',matching_cells=0,total_areas=0,returned_areas=0,areas=[],**base)
-    if all(v is None for v in field.grid.values):return ForecastHighlights(status='no_coverage',reason='Sin datos válidos: el campo está completamente enmascarado.',matching_cells=0,total_areas=0,returned_areas=0,areas=[],**base)
+    if field.grid is None:return ForecastHighlights(status=field.status,reason=field.reason,matching_cells=None,total_areas=None,returned_areas=None,areas=[],**base)
+    if field.forecast.result_type!='imported_probability':return ForecastHighlights(status='not_implemented',reason='Este producto contiene valores, no probabilidades definidas.',matching_cells=None,total_areas=None,returned_areas=None,areas=[],**base)
+    if all(v is None for v in field.grid.values):return ForecastHighlights(status='no_coverage',reason='Sin datos válidos: el campo está completamente enmascarado.',matching_cells=None,total_areas=None,returned_areas=None,areas=[],**base)
     matching,groups=components(field.grid,threshold)
     areas=[]
     for rep,count,low,high in groups[:limit]:
@@ -203,7 +214,7 @@ def planetary_forecast(now=None, operations=None):
     version=data.get('checksum_sha256') or hashlib.sha256(path.read_bytes()).hexdigest()
     meta=ForecastDescriptor(id=version,product_id='d28-kp',source_id='D28',phenomenon_id='F29',title='Kp previsto · índice planetario',provider='NOAA SWPC',result_type='imported_value',spatial_support='planetary',queryable=False,availability='available',
         temporal_state='future' if any(w.temporal_state=='future' for w in windows) else 'in_progress' if any(w.temporal_state=='in_progress' for w in windows) else 'expired',
-        variable='Kp',unit='Kp',event_definition='Índice Kp planetario previsto; no probabilidad de auroras locales.',method='Filas predicted originales SWPC',adapter_version=ADAPTER_VERSION,provider_version=data.get('product_version','unknown'),identity_basis='SHA256 del JSON original SWPC retenido; identidad local, no emisión.',
+        variable='Kp',unit='Kp',native_unit='Kp',event_definition='Índice Kp planetario previsto; no probabilidad de auroras locales.',method='Filas predicted originales SWPC',adapter_version=ADAPTER_VERSION,provider_version=data.get('product_version','unknown'),identity_basis='SHA256 del JSON original SWPC retenido; identidad local, no emisión.',
         initialized_at=data.get('initialized_at'),issued_at=data.get('issued_at'),retrieved_at=retrieved,processed_at=data.get('archived_at',retrieved),first_seen_at=data.get('first_seen_at',data.get('archived_at',retrieved)),first_seen_basis='Captura local retenida, no publicación SWPC.',
         valid_from=windows[0].valid_from if windows else None,valid_to=windows[-1].valid_to if windows else None,temporal_semantics='three_hour_windows',coverage='Planetario; sin geometría local.',
         original_url='https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json',original_sha256=version,original_download=f'/v1/forecasts/planetary/d28-kp/original?version={version}',metadata_download=f'/v1/forecasts/planetary/d28-kp?version={version}',reference_url='https://www.swpc.noaa.gov/products/planetary-k-index',limitation=note,experimental=False,update=job,update_pending=(moment-(job.last_success_at if job and job.last_success_at else retrieved)).total_seconds()>10800)

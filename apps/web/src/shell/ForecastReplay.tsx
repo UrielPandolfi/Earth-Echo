@@ -5,7 +5,7 @@ const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
 interface KpStep {
   valid_start: string;
   valid_end: string;
-  lead_time_hours: number;
+  lead_time_hours: number | null;
   kp: number;
 }
 
