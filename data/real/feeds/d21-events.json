@@ -1,15 +1,27 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-15T14:09:29Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T14%3A09%3A29Z&endtime=2026-11-15T14%3A09%3A29Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "d86078f729de15ada781af4b656efa1e9a9d1664d5fe852929aed7562546839f",
-  "byte_size": 84595,
-  "raw_file": "assets\\d21-events\\d86078f729de15ada781af4b656efa1e9a9d1664d5fe852929aed7562546839f.json",
+  "retrieved_at": "2026-11-15T17:09:52Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T17%3A09%3A52Z&endtime=2026-11-15T17%3A09%3A52Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "69dee463f1978f78c27c1af46aa9de6e73651006aa43e6b753518a06ef2d9240",
+  "byte_size": 83914,
+  "raw_file": "assets\\d21-events\\69dee463f1978f78c27c1af46aa9de6e73651006aa43e6b753518a06ef2d9240.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000tyf4",
+      "longitude": 122.1345,
+      "latitude": 1.7527,
+      "depth_km": 487.384,
+      "magnitude": 5.1,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T15:59:12.040000Z",
+      "time": "2026-11-15T15:41:14Z",
+      "place": "169 km NW of Gorontalo, Indonesia"
+    },
     {
       "id": "us7000tyek",
       "longitude": 126.2,
@@ -18,7 +30,7 @@
       "magnitude": 5.5,
       "magnitude_type": "mb",
       "review_status": "reviewed",
-      "updated_at": "2026-11-15T14:06:16.004000Z",
+      "updated_at": "2026-11-15T15:48:50.137000Z",
       "time": "2026-11-15T13:41:35Z",
       "place": "9 km E of Union, Philippines"
     },
@@ -318,7 +330,7 @@
       "magnitude": 4.6,
       "magnitude_type": "mb",
       "review_status": "reviewed",
-      "updated_at": "2026-11-13T23:26:31.996000Z",
+      "updated_at": "2026-11-15T15:23:35.677000Z",
       "time": "2026-11-13T21:19:55Z",
       "place": "33 km SSW of La Libertad, El Salvador"
     },
@@ -1413,30 +1425,6 @@
       "updated_at": "2026-11-08T20:36:23.040000Z",
       "time": "2026-11-08T20:16:30Z",
       "place": "43 km E of Onagawa Chō, Japan"
-    },
-    {
-      "id": "us7000twyd",
-      "longitude": 128.6755,
-      "latitude": 2.5497,
-      "depth_km": 224.59,
-      "magnitude": 4.6,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T17:04:06.040000Z",
-      "time": "2026-11-08T16:45:12Z",
-      "place": "117 km NE of Tobelo, Indonesia"
-    },
-    {
-      "id": "us7000twyc",
-      "longitude": -36.9451,
-      "latitude": 7.703,
-      "depth_km": 10.0,
-      "magnitude": 4.8,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T17:20:59.040000Z",
-      "time": "2026-11-08T16:33:24Z",
-      "place": "central Mid-Atlantic Ridge"
     }
   ]
 }
