@@ -41,9 +41,12 @@ def create_app() -> FastAPI:
     from earth_echo.ops.refresh import lifespan
     app = FastAPI(title="Earth Echo", version="0.1.0", lifespan=lifespan)
     app.add_middleware(BodyLimitMiddleware, max_bytes=settings.max_body_bytes)
+    import os
+    origin_regex = os.environ.get("EARTH_ECHO_CORS_ORIGIN_REGEX", "").strip() or None
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
+        allow_origin_regex=origin_regex,
         allow_credentials=False,
         allow_methods=["GET", "OPTIONS"],
         allow_headers=["Accept", "Content-Type"],
@@ -59,6 +62,10 @@ def create_app() -> FastAPI:
 
 def _routes() -> APIRouter:
     router = APIRouter()
+
+    @router.get("/")
+    def root() -> dict[str, str]:
+        return {"service": "earth-echo-api", "health": "/health"}
 
     @router.get("/health", response_model=HealthResponse)
     def health() -> HealthResponse:

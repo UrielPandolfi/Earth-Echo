@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: earth-echo-api
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: EARTH_ECHO_ENV
+        value: production
+      - key: EARTH_ECHO_REFRESH_ENABLED
+        value: "0"
+      - key: EARTH_ECHO_ROOT
+        value: /app
+      - key: EARTH_ECHO_CORS_ORIGINS
+        value: https://earth-echo.vercel.app
+      - key: EARTH_ECHO_CORS_ORIGIN_REGEX
+        value: https://.*\.vercel\.app
