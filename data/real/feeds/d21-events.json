@@ -1,15 +1,63 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-14T21:02:12Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-07T21%3A02%3A12Z&endtime=2026-11-14T21%3A02%3A12Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "9846097787b54496b69cff11bdcfc5c4f88f02104cf1c199d16258da1a0a9b1f",
-  "byte_size": 85280,
-  "raw_file": "assets\\d21-events\\9846097787b54496b69cff11bdcfc5c4f88f02104cf1c199d16258da1a0a9b1f.json",
+  "retrieved_at": "2026-11-15T06:07:36Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T06%3A07%3A36Z&endtime=2026-11-15T06%3A07%3A36Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "f5f3cfe73f7bcd31076befe623ed7ae8b0a8660e36847de86e89f61f24ec368b",
+  "byte_size": 85250,
+  "raw_file": "assets\\d21-events\\f5f3cfe73f7bcd31076befe623ed7ae8b0a8660e36847de86e89f61f24ec368b.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000tyca",
+      "longitude": -177.8215,
+      "latitude": -19.5554,
+      "depth_km": 469.881,
+      "magnitude": 5.5,
+      "magnitude_type": "mww",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T05:38:57.871000Z",
+      "time": "2026-11-15T05:15:02Z",
+      "place": "Fiji region"
+    },
+    {
+      "id": "us7000tybx",
+      "longitude": -68.6822,
+      "latitude": -31.3221,
+      "depth_km": 108.94,
+      "magnitude": 4.8,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T04:16:58.040000Z",
+      "time": "2026-11-15T03:59:59Z",
+      "place": "19 km NW of Albardón, Argentina"
+    },
+    {
+      "id": "us7000tyay",
+      "longitude": -99.113,
+      "latitude": 3.7323,
+      "depth_km": 10.0,
+      "magnitude": 4.7,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T23:17:51.040000Z",
+      "time": "2026-11-14T22:23:46Z",
+      "place": "east central Pacific Ocean"
+    },
+    {
+      "id": "us7000tyan",
+      "longitude": 120.443,
+      "latitude": -8.3823,
+      "depth_km": 10.0,
+      "magnitude": 4.5,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T22:25:37.040000Z",
+      "time": "2026-11-14T21:24:20Z",
+      "place": "25 km N of Ruteng, Indonesia"
+    },
     {
       "id": "us7000ty9z",
       "longitude": -63.653,
@@ -177,6 +225,18 @@
       "updated_at": "2026-11-14T02:38:35.040000Z",
       "time": "2026-11-14T02:21:07Z",
       "place": "Fiji region"
+    },
+    {
+      "id": "us7000ty5b",
+      "longitude": 126.6692,
+      "latitude": 7.8529,
+      "depth_km": 10.0,
+      "magnitude": 4.5,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-14T22:42:50.040000Z",
+      "time": "2026-11-13T23:58:23Z",
+      "place": "22 km NE of Kinablangan, Philippines"
     },
     {
       "id": "us7000ty59",
@@ -1389,66 +1449,6 @@
       "updated_at": "2026-11-08T09:52:58.040000Z",
       "time": "2026-11-08T09:23:35Z",
       "place": "137 km E of Miyako, Japan"
-    },
-    {
-      "id": "us7000twvb",
-      "longitude": 130.4721,
-      "latitude": 32.5014,
-      "depth_km": 10.0,
-      "magnitude": 4.5,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T02:39:56.040000Z",
-      "time": "2026-11-08T01:53:16Z",
-      "place": "11 km W of Honmachi, Japan"
-    },
-    {
-      "id": "us7000twus",
-      "longitude": -172.9847,
-      "latitude": -15.6837,
-      "depth_km": 10.0,
-      "magnitude": 5.1,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T00:35:59.475000Z",
-      "time": "2026-11-07T23:27:09Z",
-      "place": "91 km ENE of Hihifo, Tonga"
-    },
-    {
-      "id": "us7000twur",
-      "longitude": 123.6541,
-      "latitude": 6.706,
-      "depth_km": 607.007,
-      "magnitude": 4.9,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-07T23:41:08.040000Z",
-      "time": "2026-11-07T23:25:35Z",
-      "place": "41 km WSW of Gadung, Philippines"
-    },
-    {
-      "id": "us7000twuq",
-      "longitude": -91.4602,
-      "latitude": 13.5083,
-      "depth_km": 34.237,
-      "magnitude": 4.5,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T00:39:44.040000Z",
-      "time": "2026-11-07T23:22:35Z",
-      "place": "77 km SW of La Gomera, Guatemala"
-    },
-    {
-      "id": "us7000twun",
-      "longitude": -36.8221,
-      "latitude": 7.4618,
-      "depth_km": 10.0,
-      "magnitude": 5.8,
-      "magnitude_type": "mww",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T23:22:51.933000Z",
-      "time": "2026-11-07T23:17:05Z",
-      "place": "central Mid-Atlantic Ridge"
     }
   ]
 }
