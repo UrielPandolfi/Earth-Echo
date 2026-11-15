@@ -11,12 +11,18 @@ from earth_echo.contracts.typescript_emit import emit_typescript
 from earth_echo.contracts.types import ApiModel
 from earth_echo.contracts.products import ProductList
 from earth_echo.contracts.operations import RefreshStatus
+from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast
 from earth_echo.contracts.analyses import SSTAnomalyView,AssociationView,TrendView
 from earth_echo.paths import repo_root
 from earth_echo.assistant.reply import AssistantReply,AssistantRequest
 
 
 class ContractBundle(ApiModel):
+    forecast_catalog: ForecastCatalog
+    forecast_field: ForecastField
+    forecast_point: ForecastPoint
+    forecast_highlights: ForecastHighlights
+    planetary_forecast: PlanetaryForecast
     assistant_request: AssistantRequest
     assistant_reply: AssistantReply
     sst_trend_analysis: TrendView

@@ -168,5 +168,7 @@ class ProductList(ApiModel):
     historical_records: int = 0
     imported_indicator_records: int = 0
     calculated_signals: int
+    evaluated_signal_phenomena: int = 0
+    signal_count_definition: str = 'Registros SignalRecord REAL de las consultas por fenómeno. Cero con cero fenómenos evaluados significa consulta de eventos no implementada, no ausencia evaluada de eventos. Campos y destacados de pronósticos se cuentan por separado.'
     catalog_phenomena: int
     products: list[ScientificProduct]

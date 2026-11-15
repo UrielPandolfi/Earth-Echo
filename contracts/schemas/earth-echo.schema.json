@@ -1107,6 +1107,764 @@
       "title": "DescriptiveNote",
       "type": "object"
     },
+    "ForecastCatalog": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "forecasts": {
+          "items": {
+            "$ref": "#/$defs/ForecastDescriptor"
+          },
+          "title": "Forecasts",
+          "type": "array"
+        },
+        "default_d16_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Default D16 Id"
+        },
+        "future_fields": {
+          "title": "Future Fields",
+          "type": "integer"
+        },
+        "current_fields": {
+          "title": "Current Fields",
+          "type": "integer"
+        },
+        "archived_fields": {
+          "title": "Archived Fields",
+          "type": "integer"
+        },
+        "own_experiments": {
+          "title": "Own Experiments",
+          "type": "integer"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "as_of",
+        "forecasts",
+        "default_d16_id",
+        "future_fields",
+        "current_fields",
+        "archived_fields",
+        "own_experiments",
+        "note"
+      ],
+      "title": "ForecastCatalog",
+      "type": "object"
+    },
+    "ForecastCell": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "row": {
+          "minimum": 0,
+          "title": "Row",
+          "type": "integer"
+        },
+        "column": {
+          "minimum": 0,
+          "title": "Column",
+          "type": "integer"
+        },
+        "longitude": {
+          "title": "Longitude",
+          "type": "number"
+        },
+        "latitude": {
+          "title": "Latitude",
+          "type": "number"
+        },
+        "extent": {
+          "$ref": "#/$defs/GeographicExtent"
+        },
+        "geometry": {
+          "$ref": "#/$defs/GeoMultiPolygon"
+        },
+        "support_note": {
+          "title": "Support Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "row",
+        "column",
+        "longitude",
+        "latitude",
+        "extent",
+        "geometry",
+        "support_note"
+      ],
+      "title": "ForecastCell",
+      "type": "object"
+    },
+    "ForecastDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "product_id": {
+          "title": "Product Id",
+          "type": "string"
+        },
+        "source_id": {
+          "pattern": "^D\\d{2}$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "phenomenon_id": {
+          "anyOf": [
+            {
+              "pattern": "^F\\d{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phenomenon Id"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string"
+        },
+        "result_type": {
+          "enum": [
+            "imported_probability",
+            "imported_value",
+            "derived_indicator",
+            "own_experiment"
+          ],
+          "title": "Result Type",
+          "type": "string"
+        },
+        "spatial_support": {
+          "enum": [
+            "field",
+            "published_region",
+            "regional_series",
+            "planetary",
+            "table"
+          ],
+          "title": "Spatial Support",
+          "type": "string"
+        },
+        "queryable": {
+          "title": "Queryable",
+          "type": "boolean"
+        },
+        "availability": {
+          "enum": [
+            "available",
+            "missing_input",
+            "not_implemented"
+          ],
+          "title": "Availability",
+          "type": "string"
+        },
+        "temporal_state": {
+          "enum": [
+            "future",
+            "in_progress",
+            "expired",
+            "unknown"
+          ],
+          "title": "Temporal State",
+          "type": "string"
+        },
+        "variable": {
+          "title": "Variable",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "event_definition": {
+          "title": "Event Definition",
+          "type": "string"
+        },
+        "scientific_threshold": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scientific Threshold"
+        },
+        "reference_period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Period"
+        },
+        "trend_treatment": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trend Treatment"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "adapter_version": {
+          "title": "Adapter Version",
+          "type": "string"
+        },
+        "provider_version": {
+          "title": "Provider Version",
+          "type": "string"
+        },
+        "identity_basis": {
+          "title": "Identity Basis",
+          "type": "string"
+        },
+        "initialized_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Initialized At"
+        },
+        "issued_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issued At"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "processed_at": {
+          "format": "date-time",
+          "title": "Processed At",
+          "type": "string"
+        },
+        "first_seen_at": {
+          "format": "date-time",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "first_seen_basis": {
+          "title": "First Seen Basis",
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        },
+        "temporal_semantics": {
+          "enum": [
+            "monthly_interval",
+            "instant",
+            "accumulation_interval",
+            "published_interval",
+            "three_hour_windows",
+            "unknown"
+          ],
+          "title": "Temporal Semantics",
+          "type": "string"
+        },
+        "coverage": {
+          "title": "Coverage",
+          "type": "string"
+        },
+        "resolution": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution"
+        },
+        "quality_mask": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quality Mask"
+        },
+        "original_url": {
+          "title": "Original Url",
+          "type": "string"
+        },
+        "original_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Original Sha256",
+          "type": "string"
+        },
+        "original_download": {
+          "title": "Original Download",
+          "type": "string"
+        },
+        "metadata_download": {
+          "title": "Metadata Download",
+          "type": "string"
+        },
+        "reference_url": {
+          "title": "Reference Url",
+          "type": "string"
+        },
+        "limitation": {
+          "title": "Limitation",
+          "type": "string"
+        },
+        "experimental": {
+          "title": "Experimental",
+          "type": "boolean"
+        },
+        "validated_for_use": {
+          "const": false,
+          "default": false,
+          "title": "Validated For Use",
+          "type": "boolean"
+        },
+        "skill": {
+          "default": null,
+          "title": "Skill",
+          "type": "null"
+        },
+        "skill_note": {
+          "default": "Habilidad por región/plazo no evaluada en Earth Echo.",
+          "title": "Skill Note",
+          "type": "string"
+        },
+        "update": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RefreshJob"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "update_pending": {
+          "title": "Update Pending",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "source_id",
+        "title",
+        "provider",
+        "result_type",
+        "spatial_support",
+        "queryable",
+        "availability",
+        "temporal_state",
+        "variable",
+        "unit",
+        "event_definition",
+        "method",
+        "adapter_version",
+        "provider_version",
+        "identity_basis",
+        "retrieved_at",
+        "processed_at",
+        "first_seen_at",
+        "first_seen_basis",
+        "temporal_semantics",
+        "coverage",
+        "original_url",
+        "original_sha256",
+        "original_download",
+        "metadata_download",
+        "reference_url",
+        "limitation",
+        "experimental",
+        "update_pending"
+      ],
+      "title": "ForecastDescriptor",
+      "type": "object"
+    },
+    "ForecastField": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "no_coverage",
+            "missing_input",
+            "expired",
+            "not_implemented"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "forecast": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ForecastDescriptor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "grid": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScientificGrid"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "title": "ForecastField",
+      "type": "object"
+    },
+    "ForecastHighlight": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "cell_count": {
+          "exclusiveMinimum": 0,
+          "title": "Cell Count",
+          "type": "integer"
+        },
+        "probability_min": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Probability Min",
+          "type": "number"
+        },
+        "probability_max": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Probability Max",
+          "type": "number"
+        },
+        "representative": {
+          "$ref": "#/$defs/ForecastPoint"
+        }
+      },
+      "required": [
+        "id",
+        "cell_count",
+        "probability_min",
+        "probability_max",
+        "representative"
+      ],
+      "title": "ForecastHighlight",
+      "type": "object"
+    },
+    "ForecastHighlights": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "no_coverage",
+            "missing_input",
+            "expired",
+            "not_implemented"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "forecast_id": {
+          "title": "Forecast Id",
+          "type": "string"
+        },
+        "probability_filter": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Probability Filter",
+          "type": "number"
+        },
+        "rule": {
+          "title": "Rule",
+          "type": "string"
+        },
+        "matching_cells": {
+          "title": "Matching Cells",
+          "type": "integer"
+        },
+        "total_areas": {
+          "title": "Total Areas",
+          "type": "integer"
+        },
+        "returned_areas": {
+          "title": "Returned Areas",
+          "type": "integer"
+        },
+        "limit": {
+          "title": "Limit",
+          "type": "integer"
+        },
+        "areas": {
+          "items": {
+            "$ref": "#/$defs/ForecastHighlight"
+          },
+          "title": "Areas",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "forecast_id",
+        "probability_filter",
+        "rule",
+        "matching_cells",
+        "total_areas",
+        "returned_areas",
+        "limit",
+        "areas"
+      ],
+      "title": "ForecastHighlights",
+      "type": "object"
+    },
+    "ForecastPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "no_coverage",
+            "missing_input",
+            "expired",
+            "not_implemented"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "forecast": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ForecastDescriptor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "requested_longitude": {
+          "title": "Requested Longitude",
+          "type": "number"
+        },
+        "requested_latitude": {
+          "title": "Requested Latitude",
+          "type": "number"
+        },
+        "cell": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ForecastCell"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        },
+        "probability": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Probability"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "uncertainty": {
+          "default": null,
+          "title": "Uncertainty",
+          "type": "null"
+        },
+        "selection_rule": {
+          "title": "Selection Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "requested_longitude",
+        "requested_latitude",
+        "selection_rule"
+      ],
+      "title": "ForecastPoint",
+      "type": "object"
+    },
     "ForecastRecord": {
       "additionalProperties": false,
       "properties": {
@@ -1956,6 +2714,119 @@
       "title": "PhenomenonView",
       "type": "object"
     },
+    "PlanetaryForecast": {
+      "additionalProperties": false,
+      "properties": {
+        "data_mode": {
+          "const": "real",
+          "default": "real",
+          "title": "Data Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "no_coverage",
+            "missing_input",
+            "expired",
+            "not_implemented"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "forecast": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ForecastDescriptor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "windows": {
+          "items": {
+            "$ref": "#/$defs/PlanetaryWindow"
+          },
+          "title": "Windows",
+          "type": "array"
+        },
+        "probability": {
+          "default": null,
+          "title": "Probability",
+          "type": "null"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "windows",
+        "note"
+      ],
+      "title": "PlanetaryForecast",
+      "type": "object"
+    },
+    "PlanetaryWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "valid_from": {
+          "format": "date-time",
+          "title": "Valid From",
+          "type": "string"
+        },
+        "valid_to": {
+          "format": "date-time",
+          "title": "Valid To",
+          "type": "string"
+        },
+        "value": {
+          "maximum": 9,
+          "minimum": 0,
+          "title": "Value",
+          "type": "number"
+        },
+        "provider_type": {
+          "const": "predicted",
+          "default": "predicted",
+          "title": "Provider Type",
+          "type": "string"
+        },
+        "temporal_state": {
+          "enum": [
+            "future",
+            "in_progress",
+            "expired",
+            "unknown"
+          ],
+          "title": "Temporal State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "valid_from",
+        "valid_to",
+        "value",
+        "temporal_state"
+      ],
+      "title": "PlanetaryWindow",
+      "type": "object"
+    },
     "PresentValue": {
       "additionalProperties": false,
       "properties": {
@@ -2079,6 +2950,16 @@
         "calculated_signals": {
           "title": "Calculated Signals",
           "type": "integer"
+        },
+        "evaluated_signal_phenomena": {
+          "default": 0,
+          "title": "Evaluated Signal Phenomena",
+          "type": "integer"
+        },
+        "signal_count_definition": {
+          "default": "Registros SignalRecord REAL de las consultas por fenómeno. Cero con cero fenómenos evaluados significa consulta de eventos no implementada, no ausencia evaluada de eventos. Campos y destacados de pronósticos se cuentan por separado.",
+          "title": "Signal Count Definition",
+          "type": "string"
         },
         "catalog_phenomena": {
           "title": "Catalog Phenomena",
@@ -4740,6 +5621,21 @@
   },
   "additionalProperties": false,
   "properties": {
+    "forecast_catalog": {
+      "$ref": "#/$defs/ForecastCatalog"
+    },
+    "forecast_field": {
+      "$ref": "#/$defs/ForecastField"
+    },
+    "forecast_point": {
+      "$ref": "#/$defs/ForecastPoint"
+    },
+    "forecast_highlights": {
+      "$ref": "#/$defs/ForecastHighlights"
+    },
+    "planetary_forecast": {
+      "$ref": "#/$defs/PlanetaryForecast"
+    },
     "assistant_request": {
       "$ref": "#/$defs/AssistantRequest"
     },
@@ -4796,6 +5692,11 @@
     }
   },
   "required": [
+    "forecast_catalog",
+    "forecast_field",
+    "forecast_point",
+    "forecast_highlights",
+    "planetary_forecast",
     "assistant_request",
     "assistant_reply",
     "sst_trend_analysis",

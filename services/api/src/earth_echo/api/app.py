@@ -52,6 +52,8 @@ def create_app() -> FastAPI:
     app.include_router(_real_routes())
     app.include_router(_analysis_routes())
     app.include_router(_scale_routes())
+    from earth_echo.api.predictions import forecast_routes
+    app.include_router(forecast_routes())
     return app
 
 

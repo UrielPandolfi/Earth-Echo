@@ -178,6 +178,120 @@ export interface DescriptiveNote {
   remainder: string;
 }
 
+export interface ForecastCatalog {
+  data_mode?: "real";
+  as_of: string;
+  forecasts: ForecastDescriptor[];
+  default_d16_id: string | null;
+  future_fields: number;
+  current_fields: number;
+  archived_fields: number;
+  own_experiments: number;
+  note: string;
+}
+
+export interface ForecastCell {
+  id: string;
+  row: number;
+  column: number;
+  longitude: number;
+  latitude: number;
+  extent: GeographicExtent;
+  geometry: GeoMultiPolygon;
+  support_note: string;
+}
+
+export interface ForecastDescriptor {
+  id: string;
+  product_id: string;
+  source_id: string;
+  phenomenon_id?: string | null;
+  title: string;
+  provider: string;
+  result_type: "imported_probability" | "imported_value" | "derived_indicator" | "own_experiment";
+  spatial_support: "field" | "published_region" | "regional_series" | "planetary" | "table";
+  queryable: boolean;
+  availability: "available" | "missing_input" | "not_implemented";
+  temporal_state: "future" | "in_progress" | "expired" | "unknown";
+  variable: string;
+  unit: string;
+  event_definition: string;
+  scientific_threshold?: string | null;
+  reference_period?: string | null;
+  trend_treatment?: string | null;
+  method: string;
+  adapter_version: string;
+  provider_version: string;
+  identity_basis: string;
+  initialized_at?: string | null;
+  issued_at?: string | null;
+  retrieved_at: string;
+  processed_at: string;
+  first_seen_at: string;
+  first_seen_basis: string;
+  valid_from?: string | null;
+  valid_to?: string | null;
+  temporal_semantics: "monthly_interval" | "instant" | "accumulation_interval" | "published_interval" | "three_hour_windows" | "unknown";
+  coverage: string;
+  resolution?: string | null;
+  quality_mask?: string | null;
+  original_url: string;
+  original_sha256: string;
+  original_download: string;
+  metadata_download: string;
+  reference_url: string;
+  limitation: string;
+  experimental: boolean;
+  validated_for_use?: false;
+  skill?: null;
+  skill_note?: string;
+  update?: RefreshJob | null;
+  update_pending: boolean;
+}
+
+export interface ForecastField {
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  forecast?: ForecastDescriptor | null;
+  grid?: ScientificGrid | null;
+}
+
+export interface ForecastHighlight {
+  id: string;
+  cell_count: number;
+  probability_min: number;
+  probability_max: number;
+  representative: ForecastPoint;
+}
+
+export interface ForecastHighlights {
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  forecast_id: string;
+  probability_filter: number;
+  rule: string;
+  matching_cells: number;
+  total_areas: number;
+  returned_areas: number;
+  limit: number;
+  areas: ForecastHighlight[];
+}
+
+export interface ForecastPoint {
+  data_mode?: "real";
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  forecast?: ForecastDescriptor | null;
+  requested_longitude: number;
+  requested_latitude: number;
+  cell?: ForecastCell | null;
+  value?: number | null;
+  probability?: number | null;
+  unit?: string | null;
+  uncertainty?: null;
+  selection_rule: string;
+}
+
 export interface ForecastRecord {
   schema_version: "1.0";
   id: string;
@@ -316,6 +430,24 @@ export interface PhenomenonView {
   capability_status: "specified" | "source_connected" | "historical_ready" | "experimental" | "validated_for_scope";
 }
 
+export interface PlanetaryForecast {
+  data_mode?: "real";
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  forecast?: ForecastDescriptor | null;
+  windows: PlanetaryWindow[];
+  probability?: null;
+  note: string;
+}
+
+export interface PlanetaryWindow {
+  valid_from: string;
+  valid_to: string;
+  value: number;
+  provider_type?: "predicted";
+  temporal_state: "future" | "in_progress" | "expired" | "unknown";
+}
+
 export interface PresentValue {
   status: "present";
   value: number;
@@ -344,6 +476,8 @@ export interface ProductList {
   historical_records?: number;
   imported_indicator_records?: number;
   calculated_signals: number;
+  evaluated_signal_phenomena?: number;
+  signal_count_definition?: string;
   catalog_phenomena: number;
   products: ScientificProduct[];
 }
@@ -727,6 +861,11 @@ export interface VerticalPosition {
 }
 
 export interface ContractBundle {
+  forecast_catalog: ForecastCatalog;
+  forecast_field: ForecastField;
+  forecast_point: ForecastPoint;
+  forecast_highlights: ForecastHighlights;
+  planetary_forecast: PlanetaryForecast;
   assistant_request: AssistantRequest;
   assistant_reply: AssistantReply;
   sst_trend_analysis: TrendView;

@@ -16,7 +16,8 @@ def test_imported_kp_keeps_only_future_predicted_steps() -> None:
     steps = parse_predicted_kp(payload, issued)
     assert steps
     assert all(step["valid_start"] >= "2026-11-14" for step in steps)
-    assert all(step["lead_time_hours"] > 0 for step in steps)
+    assert all(step["lead_time_hours"] is None for step in steps)
+    assert all(step["retrieval_lead_hours"] > 0 for step in steps)
     assert "probability" not in steps[0]
 
 

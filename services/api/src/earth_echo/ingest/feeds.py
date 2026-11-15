@@ -161,9 +161,6 @@ def refresh_kp_forecast(now: datetime | None = None) -> str:
     moment = now or datetime.now(timezone.utc)
     raw = _get(KP_FORECAST_URL)
     rows = parse_predicted_kp(loads_json(raw), moment)
-    for row in rows:
-        row['retrieval_lead_hours'] = row.pop('lead_time_hours')
-        row['lead_time_hours'] = None  # initialization/emission not supplied
     target = forecast_dir() / 'd28-kp-forecast.json'
     payload = {'source_id':'D28', 'product':'noaa-planetary-k-index-forecast', 'product_version':'SWPC-current',
         'retrieved_at':moment.isoformat().replace('+00:00','Z'), 'archived_at':moment.isoformat().replace('+00:00','Z'),
@@ -171,6 +168,8 @@ def refresh_kp_forecast(now: datetime | None = None) -> str:
         'unit':'Kp', 'steps':rows, 'probability':None, 'validated_for_use':False,
         'note':'Solo filas predicted; validez de 3 horas. Índice planetario, sin intensidad local.', **_archive('d28-kp-forecast',raw,moment)}
     old = json.loads(target.read_bytes()) if target.exists() else {}
+    payload['first_seen_at'] = old.get('first_seen_at',old.get('archived_at')) if old.get('checksum_sha256')==payload['checksum_sha256'] else payload['archived_at']
+    payload['note']='Sólo filas predicted con fin de validez posterior a la recuperación, incluidas ventanas en curso. Validez [inicio,fin) de 3h. Emisión e inicialización desconocidas; antelación respecto de recuperación no es lead científico. Índice planetario, sin intensidad local.'
     fields = lambda items:[{k:r[k] for k in ['valid_start','valid_end','kp']} for r in items]
     result = 'unchanged' if fields(old.get('steps',[]))==fields(rows) else 'stored'
     atomic_json(target,payload)

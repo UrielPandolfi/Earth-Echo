@@ -1,5 +1,12 @@
 # Progreso
 
+## Incremento 12A — consulta predictiva normalizada sobre productos retenidos
+
+- D16/F18, variante NMME mensual con tendencia retenida, p90 estacional1991–2020 confirmado en metadatos/original y documentación NOAA PSL. Contratos nuevos conservan tiempos desconocidos null, identidad local estable por contenido/corrida/período/adaptador y primera captura retenida separada de publicación. API catálogo/campo/punto/CSV/destacados/original con versión común; sin descarga por clic o probabilidades recalculadas.
+- Resolución por celda contenedora, máscara original, bordes/empates explícitos, antimeridiano partido y cero válido. Componentes4vecinos, representantes válidos y orden/límite fijos; filtro exploratorio distinto del umbral científico. Estados ausente/sin cobertura/vencido/no implementado diferenciados, fallas conservan el válido. Contador de señales ahora consulta registros REAL y declara cuántos fenómenos fueron evaluados; no identifica celdas con desastres.
+- Fixture NOAA auténtica2,27MB/13rangos y probes nativos h5py/struct: noviembre0,8870967626571655; diciembre0,9435483813285828; enero0,9112903475761414 en−67°,17°; NaN original en−75°,10°. Pruebas enfocadas20API aprobadas, incluidos calendario/reinicio/idempotencia/CSV/API y conservación ante falla; tipos frontend generados y TypeScript aprobado. Recorrido de interfaz en implementación, sin declarar revisión visual completada.
+- SWPC conserva ventanas predicted iniciadas pero sin terminar, emisión/inicialización null y antelación respecto de recuperación separada. IFS conserva su único plazo/variables y unidades, sin detector de desastre. Otros productos permanecen catalogados con su estado temporal real. Detalles en`docs/pronosticos_mapa.md`; referencias originales intactas, experimento SST sin promoción.
+
 ## Estado actual — 15 noviembre 2026, incrementos 11A–11AT
 
 - 33IDs del catálogo con productos científicos reales para alcances explícitos;83productos,54campos (seis calculados), tres productos de indicadores calculados. MVP: anomalía diaria mundial OISST importada/base1971–2000, anomalías SST históricas por referencia congelada (9candidatos/48meses), tendencia estacional v2 con intervalos/sensibilidad y dos asociaciones exploratorias ENSO/SST y AMOC/SST. SEAS5/GloFAS/CAMS/Marine conservan sus alcances propios. No son31detectores ni cobertura mundial de todos los fenómenos. D01 sólo climatología y D17 archivo2022; ramas recientes pendientes.

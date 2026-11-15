@@ -1,0 +1,43 @@
+{
+  "sha256": "f6017c03aaf6f04f834aaecc5c46ba80854df6ea053e813814da896a477dca57",
+  "byte_size": 2273369,
+  "original_sha256": "f179daa2208ed138e096fb6dfa4cf35bebfbcb20245e37f4767d45de984ac653",
+  "probes": [
+    {
+      "lead_index": 1,
+      "latitude": 17.0,
+      "longitude": -67.0,
+      "native_row": 107,
+      "native_column": 293,
+      "value": 0.8870967626571655
+    },
+    {
+      "lead_index": 2,
+      "latitude": 17.0,
+      "longitude": -67.0,
+      "native_row": 107,
+      "native_column": 293,
+      "value": 0.9435483813285828
+    },
+    {
+      "lead_index": 3,
+      "latitude": 17.0,
+      "longitude": -67.0,
+      "native_row": 107,
+      "native_column": 293,
+      "value": 0.9112903475761414
+    },
+    {
+      "lead_index": 1,
+      "latitude": 10.0,
+      "longitude": -75.0,
+      "native_row": 100,
+      "native_column": 285,
+      "value": null
+    }
+  ],
+  "initialized_at": "2026-10-01T00:00:00+00:00",
+  "product_valid_from": "2026-11-01T00:00:00+00:00",
+  "source_url": "https://downloads.psl.noaa.gov/Datasets/marinehw/NMME_prob90_latest.nc",
+  "retrieved_at": "2026-11-15T00:02:22.449483+00:00"
+}
