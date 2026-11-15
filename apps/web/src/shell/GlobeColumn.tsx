@@ -7,6 +7,7 @@ import type { ObservatoryState, Section } from "./observatoryState";
 import { amazoniaFrame, type GeoExtent } from "../globe/geography";
 import { Icon, SymbolMark } from "./icons";
 import type { PlanetaryForecast, ProductTrack,ProductRegion } from '../domain/generated';
+import { SentryNotes, type SentryBoard } from "../forecasts/SentryForecast";
 
 interface GlobeColumnProps {
   state: ObservatoryState;
@@ -30,6 +31,7 @@ interface GlobeColumnProps {
   fieldSelection?: GeographicSelection|null;
   planetaryKp?: { forecast: PlanetaryForecast | null; error: string | null } | null;
   mapNotice?: string | null;
+  sentryBoard?: SentryBoard | null;
 }
 
 const month = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -70,6 +72,7 @@ export function GlobeColumn({
   fieldSelection,
   planetaryKp,
   mapNotice,
+  sentryBoard,
 }: GlobeColumnProps) {
   const [controls, setControls] = useState<GlobeHandle | null>(null);
   const cameraReady = Boolean(controls?.zoomIn && controls.zoomOut);
@@ -108,17 +111,19 @@ export function GlobeColumn({
     }
   }, [controls, frameRequest]);
 
+  const sentry = sentryBoard?.assessments?.status === "available" ? sentryBoard : null;
   return (
-    <section className="stage" aria-label="Globo">
-      {note ? <p className="section-note" role="status">{note}</p> : null}
+    <section className={sentry ? "stage sentry-stage" : "stage"} aria-label={sentry ? "Escena ilustrativa de Sentry" : "Globo"}>
+      {sentry ? <SentryNotes board={sentry} part="top" /> : note ? <p className="section-note" role="status">{note}</p> : null}
       <div className="globe-wrap">
         <GlobeStage createGlobe={createGlobe} onControls={setControls} onSelect={onSelect} />
-        {signalCount === 0 && !planetaryKp && !mapNotice ? (
+        {signalCount === 0 && !planetaryKp && !mapNotice && !sentry ? (
           <p className="empty-map" role="status">
             {emptyText ?? "No hay señales en este instante y con estos filtros. Activá una categoría o volvé a Ahora."}
           </p>
         ) : null}
-        {mapNotice ? <p className="kp-float map-notice" role="status">{mapNotice}</p> : null}
+        {sentry && sentry.selected ? <aside className="asteroid-badge" aria-label="Asteroide ilustrativo"><svg viewBox="0 0 80 64" aria-hidden="true"><path fill="#d5dee6" d="M18 34 28 14l18-4 16 12 6 16-8 14-20 6-16-4z"/><path fill="#8ea0b0" d="M30 22l8 10-6 8 12 4 8-12-6-12z"/></svg><strong>Asteroide seleccionado: {sentry.selected.fullname}</strong><p>Representación ilustrativa, no a escala. La forma no es un modelo verificado de este objeto y no indica su posición real.</p></aside> : null}
+        {!sentry && mapNotice ? <p className="kp-float map-notice" role="status">{mapNotice}</p> : null}
         {planetaryKp ? (
           <aside className="kp-float" aria-label="Kp previsto planetario">
             <h2>Kp previsto</h2>
@@ -138,7 +143,7 @@ export function GlobeColumn({
             )}
           </aside>
         ) : null}
-        <div className="synthesis" aria-live="polite">
+        {!sentry && <div className="synthesis" aria-live="polite">
           <strong>{countLabel ?? `${formatCount(signalCount)} señales`}</strong>
           {groupCount > 0 ? <span>{formatCount(groupCount)} grupos</span> : null}
           <span>·</span>
@@ -148,9 +153,9 @@ export function GlobeColumn({
             <span>{catalogState === "loading" ? "fenómenos…" : "fenómenos no disponibles"}</span>
           )}
           <small>del catálogo</small>
-        </div>
+        </div>}
         <ul className="symbol-legend">
-          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : mapNotice?.startsWith("Región Niño") ? <li><span style={{color:'#e7bf74'}}>▱</span> Niño 3.4 · referencia</li> : mapNotice?.startsWith("Sentry") ? <li>Sin lugar de impacto</li> : mapNotice ? <li><SymbolMark kind="observation" /> Terremoto principal</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
+          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : sentry ? <li>Sin lugar de impacto</li> : mapNotice?.startsWith("Región Niño") ? <li><span style={{color:'#e7bf74'}}>▱</span> Niño 3.4 · referencia</li> : mapNotice ? <li><SymbolMark kind="observation" /> Terremoto principal</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
             <li><SymbolMark kind="forecast"/> Área para explorar · pronóstico</li>
             <li><SymbolMark kind="cluster"/> Agrupación visual de áreas</li>
             <li><span>□</span> Celda seleccionada · soporte de malla</li>
@@ -183,6 +188,7 @@ export function GlobeColumn({
           </button>
         </div>
       </div>
+      {sentry ? <SentryNotes board={sentry} part="bottom" /> : null}
     </section>
   );
 }

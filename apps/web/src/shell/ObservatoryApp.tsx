@@ -29,6 +29,7 @@ import { ProductsPanel, ProductInspector,productKindLabel,productTimeLabel } fro
 import { realMarkersForView } from '../globe/clustering';
 import {useForecastExplorer} from '../forecasts/useForecastExplorer';
 import {ForecastPanel,ForecastInspector,ForecastTime} from '../forecasts/ForecastPanels';
+import {useSentryBoard} from '../forecasts/SentryForecast';
 import {paintForecastField} from '../forecasts/field';
 
 const apiBase = import.meta.env.VITE_API_BASE ?? "/api";
@@ -41,6 +42,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
   const [state, dispatch] = useReducer(reduceObservatory, undefined, initialObservatoryState);
   const forecasting=state.dataMode==='real' && state.section==='pronosticos';
   const forecasts=useForecastExplorer(forecasting);
+  const sentryBoard=useSentryBoard(forecasting && forecasts.selection.mode==='sentry' ? forecasts.sentry : null);
   const selectForecastPosition=useCallback((position:{longitude:number;latitude:number})=>{
     forecasts.selectPosition(position);
     if(!state.inspectorOpen)dispatch({type:'panel',panel:'inspector'});
@@ -419,9 +421,10 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           field={shownField}
           tracks={state.dataMode==='real' && !forecasting ? activeProduct?.tracks : undefined}
           regions={forecasting && forecasts.selection.mode==='enso' && forecasts.enso ? [forecasts.enso.region] : state.dataMode==='real' && !forecasting ? activeProduct?.regions : undefined}
-          mapNotice={forecasting && forecasts.selection.mode==='enso' ? 'Región Niño 3.4: referencia del índice. Las probabilidades no se pintan en el mapa.' : forecasting && forecasts.selection.mode==='oaf' ? 'El punto es el terremoto principal. No hay zona de réplicas dibujada: el radio del modelo no trae unidad.' : forecasting && forecasts.selection.mode==='sentry' ? 'Sentry evalúa objetos conocidos y no publica coordenadas de impacto. Este mapa no las dibuja.' : null}
+          sentryBoard={forecasting && forecasts.selection.mode==='sentry' ? sentryBoard : null}
+          mapNotice={forecasting && forecasts.selection.mode==='enso' ? 'Región Niño 3.4: referencia del índice. Las probabilidades no se pintan en el mapa.' : forecasting && forecasts.selection.mode==='oaf' ? 'El punto es el terremoto principal. No hay zona de réplicas dibujada: el radio del modelo no trae unidad.' : null}
           planetaryKp={forecasting && forecasts.selection.mode==='kp' ? { forecast: forecasts.kp, error: forecasts.kpError } : null}
-          onGeographicSelect={forecasting && forecasts.selection.mode!=='kp' ? selectForecastPosition : undefined}
+          onGeographicSelect={forecasting && (forecasts.selection.mode==='d16' || forecasts.selection.mode==='ifs') ? selectForecastPosition : undefined}
           fieldSelection={forecasting && forecasts.point && forecasts.selection.mode!=='kp' ? {longitude:forecasts.point.requested_longitude,latitude:forecasts.point.requested_latitude,cell:forecasts.point.cell ?? null} : null}
           fieldCredit={
             forecasting ? forecasts.selection.mode==='enso' ? 'NOAA CPC · RONI · Niño 3.4' : forecasts.selection.mode==='oaf' ? 'USGS · pronóstico de réplicas' : forecasts.selection.mode==='sentry' ? 'NASA/JPL CNEOS · Sentry' : `${forecasts.field?.forecast?.provider ?? 'Pronóstico externo'} · ${forecasts.field?.forecast?.variable ?? ''}` : state.dataMode === "real"
@@ -465,7 +468,7 @@ export function ObservatoryApp({ createGlobe }: ObservatoryAppProps) {
           onRealIndex={(index) => dispatch({ type: "real-index", index })}
         />}
       </div>
-        {forecasting ? <ForecastInspector explorer={forecasts} onFocus={()=>{if(forecasts.selection.mode==='oaf' && oafEvent?.longitude!=null && oafEvent.latitude!=null){setFrameRequest({west:oafEvent.longitude-2,east:oafEvent.longitude+2,south:oafEvent.latitude-2,north:oafEvent.latitude+2,crossesAntimeridian:false});return;} const e=forecasts.selection.mode==='enso' ? forecasts.enso?.region.extent : forecasts.point?.cell?.extent;if(e)setFrameRequest({west:e.west,east:e.east,north:e.north,south:e.south,crossesAntimeridian:e.crosses_antimeridian});}}/> : state.section === "historico" ? (
+        {forecasting ? <ForecastInspector explorer={forecasts} sentryBoard={sentryBoard} onFocus={()=>{if(forecasts.selection.mode==='oaf' && oafEvent?.longitude!=null && oafEvent.latitude!=null){setFrameRequest({west:oafEvent.longitude-2,east:oafEvent.longitude+2,south:oafEvent.latitude-2,north:oafEvent.latitude+2,crossesAntimeridian:false});return;} const e=forecasts.selection.mode==='enso' ? forecasts.enso?.region.extent : forecasts.point?.cell?.extent;if(e)setFrameRequest({west:e.west,east:e.east,north:e.north,south:e.south,crossesAntimeridian:e.crosses_antimeridian});}}/> : state.section === "historico" ? (
         <CapabilitiesPanel />
       ) : state.section === "tendencias" ? (
         <TrendPanel

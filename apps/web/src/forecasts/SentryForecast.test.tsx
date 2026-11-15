@@ -35,7 +35,7 @@ describe("Sentry", () => {
     fireEvent.click(screen.getByText("(2011 TO)"));
     expect(screen.getByText(sentrySentence(assessments.objects[0]))).toBeTruthy();
     expect(screen.getByText(scenarioSentence(assessments.objects[0], detail.scenarios[0]))).toBeTruthy();
-    expect(screen.getAllByText(/2\.937e-06 · cerca de 1 en/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/2\.937e-06 · cerca de 1 de cada/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/0 %/)).toBeNull();
   });
 

@@ -734,6 +734,10 @@ Se reutilizó el OAF ya retenido de `us7000txrk`, magnitud 4,5, centro −129,62
 
 Se reutilizó la tabla Sentry ya retenida y se guardaron, en secuencia, los escenarios virtuales (`?all=1`, 47.779 filas) y los objetos retirados. `GET /v1/forecasts/impacts/d29` no llama a JPL. La probabilidad acumulada de `(2010 RF12)` es `0.102637259069` y la de `(2011 TO)` es `2.937e-06`, iguales a sus fichas oficiales. El mapa no dibuja lugares de impacto. Un objeto retirado, `2026 OA3` el 2026-11-11 15:44:45 UTC, no se interpreta como impacto ocurrido.
 
+## Rediseño visual — 2026-11-15
+
+La interfaz comparte una paleta oscura con acento cian, títulos más grandes y tablas con más aire. En F30, REAL → Pronósticos → Asteroides muestra tarjetas del objeto seleccionado, una tabla con lectura “1 de cada N”, una roca ilustrativa junto al globo real y una comparación de tamaño a escala. No se dibuja una órbita ni un lugar de impacto. Verificado con (2010 RF12), 10,26 % y 7,1 m, y con el cambio a (2020 CD3), 2,52 % y 1,5 m.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

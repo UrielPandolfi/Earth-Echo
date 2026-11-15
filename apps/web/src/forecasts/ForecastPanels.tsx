@@ -4,7 +4,7 @@ import type {ForecastExplorer} from './useForecastExplorer';
 import {AnomalyChart} from '../shell/AnomalyChart';
 import {EnsoForecastView} from './EnsoForecast';
 import {AftershockForecastView} from './AftershockForecast';
-import {SentryForecastView} from './SentryForecast';
+import {SentryForecastView, type SentryBoard} from './SentryForecast';
 
 const api=import.meta.env.VITE_API_BASE ?? '/api';
 export const temporalLabel={future:'Futuro',in_progress:'En curso',expired:'Archivado · vencido',unknown:'Validez desconocida'};
@@ -59,7 +59,7 @@ export function ForecastPanel({explorer:x,products,onTechnical,onSelectPosition}
     {x.selection.mode==='kp' && <><p>Kp previsto · índice planetario</p><p className="fine">La serie y las ventanas UTC están en el inspector. No hay coordenadas o intensidades locales.</p>{x.kpError && <p role="status">{x.kpError}</p>}</>}
     {x.selection.mode==='enso' && <><p>El Niño / La Niña · estacional</p><p className="fine">Probabilidades oficiales por trimestre. El recuadro del mapa es Niño 3.4, no un pronóstico para cada lugar.</p>{x.ensoError && <p role="status">{x.ensoError}</p>}</>}
     {x.selection.mode==='oaf' && <><p>Réplicas sísmicas · USGS</p><p className="fine">Solo los eventos para los que el USGS publicó un pronóstico. El punto es el terremoto principal.</p>{x.oafError && <p role="status">{x.oafError}</p>}</>}
-    {x.selection.mode==='sentry' && <><p>Asteroides conocidos · Sentry</p><p className="fine">Probabilidades oficiales de objetos ya evaluados. El mapa no muestra lugares de impacto.</p>{x.sentryError && <p role="status">{x.sentryError}</p>}</>}
+    {x.selection.mode==='sentry' && <article className="info-card"><span>En pocas palabras</span><p>Sentry estudia asteroides conocidos y calcula posibilidades de impacto futuro. No significa que esos impactos vayan a suceder.</p>{x.sentryError && <p role="status">{x.sentryError}</p>}</article>}
     <hr/><p className="hint">{products?.observation_records?.toLocaleString('es') ?? '—'} observaciones · {products?.calculated_indicator_products ?? '—'} productos de indicadores calculados · {x.catalog?.own_experiments ?? '—'} experimento retrospectivo.</p>
     <button className="wide-toggle" type="button" onClick={onTechnical}>Todas las fuentes y productos técnicos</button>
     <details><summary>Otras capacidades y archivos</summary><p className="fine">Metadatos existentes; consulta geográfica aún no adaptada en esta entrega.</p><ul className="forecast-capabilities">{entries.filter(e=>!e.queryable && e.spatial_support!=='planetary').map(e=><li key={e.id}>{e.source_id} · {e.title} · {temporalLabel[e.temporal_state]} · {e.coverage}</li>)}</ul></details>
@@ -76,10 +76,10 @@ function Method({f}:{f:ForecastDescriptor}) {
   return <><h3>Definición y procedencia</h3><p>{f.event_definition}</p>{f.scientific_threshold && <p>{f.scientific_threshold}</p>}<p className="fine">Referencia: {f.reference_period ?? 'No aplica'} · tendencia: {f.trend_treatment==='retained' ? 'retenida' : f.trend_treatment ?? 'No aplica'}.</p><p>{f.coverage}</p><p className="fine">Unidad nativa: {f.native_unit} · mostrada: {f.unit}.</p><p className="fine">{f.sampling}</p><p className="fine">{f.quality_mask}</p><p className="fine">Método: {f.method} · adaptador {f.adapter_version}</p>{f.calculation && <><p className="fine">{f.calculation.applicability} Parámetros: {JSON.stringify(f.calculation.parameters)}. {f.calculation.reference_period}</p>{f.calculation.inputs.map(i=><p key={i.product_id} className="fine">Entrada {i.product_id} · {i.variable} · {i.unit} · SHA {i.checksum_sha256}</p>)}</>}<p className="fine">{f.provider_version}</p><p className="fine">{f.identity_basis}</p><p className="fine">ID local: {f.id}</p><p className="fine">SHA-256 original: {f.original_sha256}</p><p><a href={api+f.original_download}>Descargar original retenido</a></p><p><a href={f.original_url} target="_blank" rel="noreferrer">Producto del proveedor</a> · <a href={f.reference_url} target="_blank" rel="noreferrer">Método y fuente oficial</a></p><p className="fine">{f.skill_note} No se calcularon Brier ni calibración local.</p></>;
 }
 
-export function ForecastInspector({explorer:x,onFocus}:{explorer:ForecastExplorer;onFocus:()=>void}) {
+export function ForecastInspector({explorer:x,onFocus,sentryBoard}:{explorer:ForecastExplorer;onFocus:()=>void;sentryBoard?:SentryBoard}) {
   const [tab,setTab]=useState<'summary'|'data'|'method'>('summary');
   if(x.selection.mode==='sentry'){
-    return <aside className="inspector forecast-inspector" aria-label="Pronóstico seleccionado"><header className="inspector-head"><p className="kicker">◇ EVALUACIÓN ORBITAL · REAL</p><h2>Impactos de asteroides conocidos</h2><p className="region">NASA/JPL CNEOS · Sentry · sin lugar en la Tierra</p></header><div className="inspector-body">{x.sentry ? <SentryForecastView assessments={x.sentry}/> : <p role="status">{x.sentryError ?? 'Consultando la tabla Sentry…'}</p>}</div></aside>;
+    return <aside className="inspector forecast-inspector" aria-label="Pronóstico seleccionado"><header className="inspector-head"><p className="kicker">Evaluación orbital · REAL</p><h2>Impactos de asteroides conocidos</h2><p className="region">NASA/JPL CNEOS · Sentry</p></header><div className="inspector-body">{x.sentry ? <SentryForecastView assessments={x.sentry} board={sentryBoard}/> : <p role="status">{x.sentryError ?? 'Consultando la tabla Sentry…'}</p>}</div></aside>;
   }
   if(x.selection.mode==='oaf'){
     return <aside className="inspector forecast-inspector" aria-label="Pronóstico seleccionado"><header className="inspector-head"><p className="kicker">◇ PRONÓSTICO OFICIAL · REAL</p><h2>Réplicas sísmicas</h2><p className="region">Después de un terremoto con producto OAF</p></header><div className="inspector-body">{x.oaf ? <AftershockForecastView forecasts={x.oaf} eventId={x.selection.eventId} windowLabel={x.selection.oafWindow} magnitude={x.selection.oafMagnitude} onEvent={x.setEvent} onWindow={x.setOafWindow} onMagnitude={x.setOafMagnitude} onFocus={onFocus}/> : <p role="status">{x.oafError ?? 'Consultando el pronóstico USGS…'}</p>}</div></aside>;
