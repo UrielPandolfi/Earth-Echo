@@ -5,10 +5,10 @@ import truststore
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
-def download(url: str, *, max_bytes: int = 8_000_000, headers: dict[str, str] | None = None) -> tuple[bytes, dict[str, str]]:
+def download(url: str, *, max_bytes: int = 8_000_000, headers: dict[str, str] | None = None, timeout: int = 25) -> tuple[bytes, dict[str, str]]:
     for attempt in range(2):
         try:
-            with urlopen(Request(url, headers={'User-Agent': 'EarthEcho/0.2 (scientific subset)', **(headers or {})}), timeout=25, context=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)) as response:
+            with urlopen(Request(url, headers={'User-Agent': 'EarthEcho/0.2 (scientific subset)', **(headers or {})}), timeout=timeout, context=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)) as response:
                 body = response.read(max_bytes + 1)
                 if len(body) > max_bytes:
                     raise ValueError('Provider exceeded bounded download')

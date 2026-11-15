@@ -789,6 +789,76 @@ export interface ScientificProduct {
   verification: Verification;
 }
 
+export interface SentryAssessments {
+  data_mode?: "real";
+  status: "available" | "no_coverage" | "missing_input" | "expired" | "not_implemented";
+  reason?: string | null;
+  signature_version?: string | null;
+  retrieved_at?: string | null;
+  checksum_sha256?: string | null;
+  source_url: string;
+  objects: SentryObject[];
+  removed: SentryObject[];
+  limitation: string;
+  meaning: string;
+  update?: RefreshJob | null;
+  update_pending?: boolean;
+}
+
+export interface SentryObject {
+  designation: string;
+  fullname: string;
+  catalog_id?: string | null;
+  status: "current" | "removed" | "not_listed";
+  cumulative_probability?: number | null;
+  cumulative_probability_text?: string | null;
+  palermo_cumulative?: number | null;
+  palermo_max?: number | null;
+  torino_max?: number | null;
+  diameter_km?: number | null;
+  absolute_magnitude_h?: number | null;
+  v_inf_km_s?: number | null;
+  potential_impacts?: number | null;
+  year_range?: string | null;
+  last_observation?: string | null;
+  removed_at?: string | null;
+}
+
+export interface SentryObjectDetail {
+  designation: string;
+  fullname: string;
+  catalog_id?: string | null;
+  status: "current" | "removed" | "not_listed";
+  cumulative_probability?: number | null;
+  cumulative_probability_text?: string | null;
+  palermo_cumulative?: number | null;
+  palermo_max?: number | null;
+  torino_max?: number | null;
+  diameter_km?: number | null;
+  absolute_magnitude_h?: number | null;
+  v_inf_km_s?: number | null;
+  potential_impacts?: number | null;
+  year_range?: string | null;
+  last_observation?: string | null;
+  removed_at?: string | null;
+  scenarios: SentryScenario[];
+  scenarios_status: "available" | "missing_input";
+  scenarios_reason?: string | null;
+}
+
+export interface SentryScenario {
+  date_text: string;
+  date_utc?: string | null;
+  probability: number;
+  probability_text: string;
+  palermo?: number | null;
+  torino?: number | null;
+  energy_mt?: string | null;
+  method?: string | null;
+  sigma_kind?: string | null;
+  sigma_text?: string | null;
+}
+
 export interface SeriesPoint {
   year: number;
   month: number;
@@ -960,6 +1030,8 @@ export interface ContractBundle {
   planetary_forecast: PlanetaryForecast;
   enso_outlook: EnsoOutlook;
   aftershock_forecasts: AftershockForecasts;
+  sentry_assessments: SentryAssessments;
+  sentry_object: SentryObjectDetail;
   assistant_request: AssistantRequest;
   assistant_reply: AssistantReply;
   sst_trend_analysis: TrendView;

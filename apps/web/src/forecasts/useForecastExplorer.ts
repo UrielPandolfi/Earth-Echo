@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ForecastCatalog,ForecastField,ForecastPoint,ForecastHighlights,PlanetaryForecast,EnsoOutlook,AftershockForecasts } from '../domain/generated';
+import type { ForecastCatalog,ForecastField,ForecastPoint,ForecastHighlights,PlanetaryForecast,EnsoOutlook,AftershockForecasts,SentryAssessments } from '../domain/generated';
 
 const api=import.meta.env.VITE_API_BASE ?? '/api';
 const storageKey='earth-echo-forecast-selection-v1';
 type Position={longitude:number;latitude:number};
-type Selection={d16:string|null;ifs:string|null;position:Position|null;threshold:number;mode:'d16'|'ifs'|'kp'|'enso'|'oaf';season:string|null;eventId:string|null;oafWindow:string|null;oafMagnitude:number|null};
+type Selection={d16:string|null;ifs:string|null;position:Position|null;threshold:number;mode:'d16'|'ifs'|'kp'|'enso'|'oaf'|'sentry';season:string|null;eventId:string|null;oafWindow:string|null;oafMagnitude:number|null};
 function saved():Selection {
   const fallback:Selection={d16:null,ifs:null,position:null,threshold:.7,mode:'d16',season:null,eventId:null,oafWindow:null,oafMagnitude:null};
   try {
     const value=JSON.parse(localStorage.getItem(storageKey) ?? 'null') as Partial<Selection>|null;
     if(!value)return fallback;
     return {...fallback,d16:typeof value.d16==='string' ? value.d16 : null,ifs:typeof value.ifs==='string' ? value.ifs : null,
-      mode:['d16','ifs','kp','enso','oaf'].includes(value.mode ?? '') ? value.mode! : 'd16',
+      mode:['d16','ifs','kp','enso','oaf','sentry'].includes(value.mode ?? '') ? value.mode! : 'd16',
       season:typeof value.season==='string' ? value.season : null,
       eventId:typeof value.eventId==='string' ? value.eventId : null,
       oafWindow:typeof value.oafWindow==='string' ? value.oafWindow : null,
@@ -41,6 +41,8 @@ export function useForecastExplorer(enabled:boolean) {
   const [ensoError,setEnsoError]=useState<string|null>(null);
   const [oaf,setOaf]=useState<AftershockForecasts|null>(null);
   const [oafError,setOafError]=useState<string|null>(null);
+  const [sentry,setSentry]=useState<SentryAssessments|null>(null);
+  const [sentryError,setSentryError]=useState<string|null>(null);
   const revision=useRef(0);
   useEffect(()=>{try{localStorage.setItem(storageKey,JSON.stringify(selection));}catch{/* Private storage may be disabled. */}},[selection]);
   useEffect(()=>{
@@ -125,6 +127,16 @@ export function useForecastExplorer(enabled:boolean) {
     void load();const timer=window.setInterval(()=>void load(),60_000);
     return ()=>{controller.abort();window.clearInterval(timer);};
   },[enabled]);
+  useEffect(()=>{
+    if(!enabled)return;
+    const controller=new AbortController();
+    async function load(){try{
+      const body=await get<SentryAssessments>('/v1/forecasts/impacts/d29',controller.signal);
+      if(!controller.signal.aborted && Array.isArray(body.objects) && Array.isArray(body.removed)){setSentry(body);setSentryError(null);}
+    }catch(e){if(!controller.signal.aborted)setSentryError(e instanceof Error ? e.message : 'Sentry no disponible.');}}
+    void load();const timer=window.setInterval(()=>void load(),60_000);
+    return ()=>{controller.abort();window.clearInterval(timer);};
+  },[enabled]);
   const selectPosition=useCallback((position:Position)=>setSelection(s=>({...s,position})),[]);
   const activeField=field?.forecast?.id===key ? field : null;
   // Match the request identity, not independently normalized floating degrees:
@@ -132,7 +144,7 @@ export function useForecastExplorer(enabled:boolean) {
   // returned canonical longitude is scientific metadata, not a request token.
   const activePoint=point?.key===key && point.result.forecast?.id===key && point.longitude===longitude && point.latitude===latitude ? point.result : null;
   const activeHighlights=highlights?.forecast_id===key && highlights.probability_filter===selection.threshold ? highlights : null;
-  return {selection,catalog,key,field:activeField,point:activePoint,highlights:activeHighlights,kp,enso,oaf,error,pointError,highlightError,kpError,ensoError,oafError,
+  return {selection,catalog,key,field:activeField,point:activePoint,highlights:activeHighlights,kp,enso,oaf,sentry,error,pointError,highlightError,kpError,ensoError,oafError,sentryError,
     selectPosition,setMode:(mode:Selection['mode'])=>setSelection(s=>({...s,mode})),
     setSeason:(season:string)=>setSelection(s=>({...s,season})),
     setEvent:(eventId:string)=>setSelection(s=>({...s,eventId})),

@@ -730,6 +730,10 @@ Se reutilizaron las tablas CPC/RONI ya retenidas (edición 2026-11), sin una ing
 
 Se reutilizó el OAF ya retenido de `us7000txrk`, magnitud 4,5, centro −129,6205 / 44,4539, versión 1794731261591, emitido 2026-11-15T08:17:28Z. `GET /v1/forecasts/aftershocks/d22` y el CSV separan probabilidad de al menos una réplica, mediana del conteo e intervalo p95. En pantalla, 1 Day y M3+ muestran 1,19 % desde 2026-11-15T09:00Z; 1 Year y M5+ muestran 0,173 %. El mapa muestra ese centro y no dibuja el círculo: el radio 10 no trae unidad. Profundidad y hora del origen no están en el `forecast.json` retenido y quedan sin valor. La búsqueda vigente sigue limitada al evento más reciente con producto OAF en 30 días.
 
+## F30 en Pronósticos — 2026-11-15
+
+Se reutilizó la tabla Sentry ya retenida y se guardaron, en secuencia, los escenarios virtuales (`?all=1`, 47.779 filas) y los objetos retirados. `GET /v1/forecasts/impacts/d29` no llama a JPL. La probabilidad acumulada de `(2010 RF12)` es `0.102637259069` y la de `(2011 TO)` es `2.937e-06`, iguales a sus fichas oficiales. El mapa no dibuja lugares de impacto. Un objeto retirado, `2026 OA3` el 2026-11-11 15:44:45 UTC, no se interpreta como impacto ocurrido.
+
 ## Pendientes heredados
 
 1. Credenciales Earthdata para IMERG y SMAP, sin caer a DEMO si fallan.

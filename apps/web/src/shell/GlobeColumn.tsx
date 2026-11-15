@@ -77,8 +77,10 @@ export function GlobeColumn({
     ? "El Kp previsto es planetario. El aviso está en el panel del mapa, no en una región."
     : mapNotice?.startsWith("Región Niño")
       ? "El recuadro marca la región del índice. Las probabilidades están en el inspector, no en cada punto."
-      : mapNotice
-        ? "El punto marca el terremoto principal. Las probabilidades están en el inspector, no en el mapa."
+      : mapNotice?.startsWith("Sentry")
+        ? "Sentry no publica un lugar de impacto. El mapa no muestra puntos ni trayectorias."
+        : mapNotice
+          ? "El punto marca el terremoto principal. Las probabilidades están en el inspector, no en el mapa."
         : state.section === "explorar" ? null : trendNote ?? sectionNote[state.section];
   const planetaryWindows = (planetaryKp?.forecast?.windows ?? []).filter((window) => window.temporal_state !== "expired");
 
@@ -148,7 +150,7 @@ export function GlobeColumn({
           <small>del catálogo</small>
         </div>
         <ul className="symbol-legend">
-          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : mapNotice?.startsWith("Región Niño") ? <li><span style={{color:'#e7bf74'}}>▱</span> Niño 3.4 · referencia</li> : mapNotice ? <li><SymbolMark kind="observation" /> Terremoto principal</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
+          {planetaryKp ? <li><SymbolMark kind="forecast" /> Kp planetario · sin lugar</li> : mapNotice?.startsWith("Región Niño") ? <li><span style={{color:'#e7bf74'}}>▱</span> Niño 3.4 · referencia</li> : mapNotice?.startsWith("Sentry") ? <li>Sin lugar de impacto</li> : mapNotice ? <li><SymbolMark kind="observation" /> Terremoto principal</li> : state.section==='pronosticos' && state.dataMode==='real' ? <>
             <li><SymbolMark kind="forecast"/> Área para explorar · pronóstico</li>
             <li><SymbolMark kind="cluster"/> Agrupación visual de áreas</li>
             <li><span>□</span> Celda seleccionada · soporte de malla</li>

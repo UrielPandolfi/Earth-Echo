@@ -4,6 +4,7 @@ import type {ForecastExplorer} from './useForecastExplorer';
 import {AnomalyChart} from '../shell/AnomalyChart';
 import {EnsoForecastView} from './EnsoForecast';
 import {AftershockForecastView} from './AftershockForecast';
+import {SentryForecastView} from './SentryForecast';
 
 const api=import.meta.env.VITE_API_BASE ?? '/api';
 export const temporalLabel={future:'Futuro',in_progress:'En curso',expired:'Archivado · vencido',unknown:'Validez desconocida'};
@@ -24,10 +25,10 @@ export function ForecastPanel({explorer:x,products,onTechnical,onSelectPosition}
   const future=entries.some(e=>e.source_id==='D16' && e.temporal_state==='future' && e.availability==='available');
   return <aside className="sidebar forecast-sidebar" aria-label="Pronósticos reales"><div className="sidebar-head"><h2>Pronósticos · REAL</h2></div><div className="sidebar-body">
     <p className="hint">Los proveedores calculan los resultados. Earth Echo integra, consulta y explica.</p>
-    <label className="forecast-control">Producto<select aria-label="Producto predictivo" value={x.selection.mode} onChange={e=>x.setMode(e.target.value as 'd16'|'ifs'|'kp'|'enso'|'oaf')}>
-      <option value="d16">◇ Calor marino · mensual</option><option value="ifs">◇ Meteorología · IFS +24 h</option><option value="enso">◇ El Niño / La Niña · estacional</option><option value="oaf">◇ Réplicas sísmicas · USGS</option><option value="kp">◇ Kp · planetario</option>
+    <label className="forecast-control">Producto<select aria-label="Producto predictivo" value={x.selection.mode} onChange={e=>x.setMode(e.target.value as 'd16'|'ifs'|'kp'|'enso'|'oaf'|'sentry')}>
+      <option value="d16">◇ Calor marino · mensual</option><option value="ifs">◇ Meteorología · IFS +24 h</option><option value="enso">◇ El Niño / La Niña · estacional</option><option value="oaf">◇ Réplicas sísmicas · USGS</option><option value="sentry">◇ Asteroides · Sentry</option><option value="kp">◇ Kp · planetario</option>
     </select></label>
-    {x.selection.mode!=='kp' && x.selection.mode!=='enso' && x.selection.mode!=='oaf' && <label className="forecast-control">{x.selection.mode==='d16' ? 'Mes y corrida disponibles' : 'Variable y plazo disponible'}<select aria-label="Período del pronóstico" value={x.key ?? ''} onChange={e=>x.setPeriod(e.target.value)}>
+    {x.selection.mode!=='kp' && x.selection.mode!=='enso' && x.selection.mode!=='oaf' && x.selection.mode!=='sentry' && <label className="forecast-control">{x.selection.mode==='d16' ? 'Mes y corrida disponibles' : 'Variable y plazo disponible'}<select aria-label="Período del pronóstico" value={x.key ?? ''} onChange={e=>x.setPeriod(e.target.value)}>
       {!x.key && <option value="">Sin período disponible</option>}
       {x.key && !choices.some(c=>c.id===x.key) && <option value={x.key}>Selección ya no retenida</option>}
       {choices.map(c=><option value={c.id} key={c.id}>{x.selection.mode==='ifs' ? `${c.title} · ` : ''}{period(c)} · {temporalLabel[c.temporal_state]} · inicio {c.initialized_at?.slice(0,10) ?? 'desconocido'} · {c.id.slice(0,6)}</option>)}
@@ -58,6 +59,7 @@ export function ForecastPanel({explorer:x,products,onTechnical,onSelectPosition}
     {x.selection.mode==='kp' && <><p>Kp previsto · índice planetario</p><p className="fine">La serie y las ventanas UTC están en el inspector. No hay coordenadas o intensidades locales.</p>{x.kpError && <p role="status">{x.kpError}</p>}</>}
     {x.selection.mode==='enso' && <><p>El Niño / La Niña · estacional</p><p className="fine">Probabilidades oficiales por trimestre. El recuadro del mapa es Niño 3.4, no un pronóstico para cada lugar.</p>{x.ensoError && <p role="status">{x.ensoError}</p>}</>}
     {x.selection.mode==='oaf' && <><p>Réplicas sísmicas · USGS</p><p className="fine">Solo los eventos para los que el USGS publicó un pronóstico. El punto es el terremoto principal.</p>{x.oafError && <p role="status">{x.oafError}</p>}</>}
+    {x.selection.mode==='sentry' && <><p>Asteroides conocidos · Sentry</p><p className="fine">Probabilidades oficiales de objetos ya evaluados. El mapa no muestra lugares de impacto.</p>{x.sentryError && <p role="status">{x.sentryError}</p>}</>}
     <hr/><p className="hint">{products?.observation_records?.toLocaleString('es') ?? '—'} observaciones · {products?.calculated_indicator_products ?? '—'} productos de indicadores calculados · {x.catalog?.own_experiments ?? '—'} experimento retrospectivo.</p>
     <button className="wide-toggle" type="button" onClick={onTechnical}>Todas las fuentes y productos técnicos</button>
     <details><summary>Otras capacidades y archivos</summary><p className="fine">Metadatos existentes; consulta geográfica aún no adaptada en esta entrega.</p><ul className="forecast-capabilities">{entries.filter(e=>!e.queryable && e.spatial_support!=='planetary').map(e=><li key={e.id}>{e.source_id} · {e.title} · {temporalLabel[e.temporal_state]} · {e.coverage}</li>)}</ul></details>
@@ -76,6 +78,9 @@ function Method({f}:{f:ForecastDescriptor}) {
 
 export function ForecastInspector({explorer:x,onFocus}:{explorer:ForecastExplorer;onFocus:()=>void}) {
   const [tab,setTab]=useState<'summary'|'data'|'method'>('summary');
+  if(x.selection.mode==='sentry'){
+    return <aside className="inspector forecast-inspector" aria-label="Pronóstico seleccionado"><header className="inspector-head"><p className="kicker">◇ EVALUACIÓN ORBITAL · REAL</p><h2>Impactos de asteroides conocidos</h2><p className="region">NASA/JPL CNEOS · Sentry · sin lugar en la Tierra</p></header><div className="inspector-body">{x.sentry ? <SentryForecastView assessments={x.sentry}/> : <p role="status">{x.sentryError ?? 'Consultando la tabla Sentry…'}</p>}</div></aside>;
+  }
   if(x.selection.mode==='oaf'){
     return <aside className="inspector forecast-inspector" aria-label="Pronóstico seleccionado"><header className="inspector-head"><p className="kicker">◇ PRONÓSTICO OFICIAL · REAL</p><h2>Réplicas sísmicas</h2><p className="region">Después de un terremoto con producto OAF</p></header><div className="inspector-body">{x.oaf ? <AftershockForecastView forecasts={x.oaf} eventId={x.selection.eventId} windowLabel={x.selection.oafWindow} magnitude={x.selection.oafMagnitude} onEvent={x.setEvent} onWindow={x.setOafWindow} onMagnitude={x.setOafMagnitude} onFocus={onFocus}/> : <p role="status">{x.oafError ?? 'Consultando el pronóstico USGS…'}</p>}</div></aside>;
   }
@@ -120,6 +125,7 @@ export function ForecastInspector({explorer:x,onFocus}:{explorer:ForecastExplore
 export function ForecastTime({explorer:x}:{explorer:ForecastExplorer}) {
   if(x.selection.mode==='enso')return <div className="product-time forecast-time" aria-label="Tiempo del pronóstico"><strong>◇ Pronóstico estacional · {x.enso?.edition ?? 'sin edición'}</strong><span>Trimestres superpuestos de tres meses · UTC</span><span className="fine">Emisión horaria no publicada por CPC. Recuperado {x.enso?.retrieved_at ?? 'sin fecha'}.</span></div>;
   if(x.selection.mode==='oaf'){const event=x.oaf?.events?.find(item=>item.event_id===x.selection.eventId) ?? x.oaf?.events?.[0]; return <div className="product-time forecast-time" aria-label="Tiempo del pronóstico"><strong>◇ Réplicas · {event?.event_id ?? 'sin evento'}</strong><span>Emitido {event?.issued_at ?? 'sin fecha'} · UTC</span><span className="fine">La vigencia de cada horizonte está en el inspector. Un horizonte vencido no describe el futuro actual.</span></div>;}
+  if(x.selection.mode==='sentry')return <div className="product-time forecast-time" aria-label="Tiempo del pronóstico"><strong>◇ Sentry · objetos conocidos</strong><span>Tabla recuperada {x.sentry?.retrieved_at ?? 'sin fecha'} · UTC</span><span className="fine">La fecha de un escenario es una posibilidad publicada, no un impacto anunciado.</span></div>;
   const f=x.selection.mode==='kp' ? x.kp?.forecast : x.field?.forecast;
   return <div className="product-time forecast-time" aria-label="Tiempo del pronóstico"><strong>◇ Pronóstico externo · {f ? temporalLabel[f.temporal_state] : 'No disponible'}</strong><span>{f ? period(f) : 'Seleccioná una entrada real'} · UTC</span><span className="fine">Inicialización {f?.initialized_at ? utc(f.initialized_at) : 'no informada'} · emisión {f?.issued_at ? utc(f.issued_at) : 'no informada'}. {f?.temporal_semantics==='monthly_interval' ? 'No se interpola a días.' : ''}</span></div>;
 }

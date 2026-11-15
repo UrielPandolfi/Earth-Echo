@@ -2,8 +2,8 @@
 from typing import Annotated
 from fastapi import APIRouter, Path, Query, HTTPException
 from fastapi.responses import FileResponse, Response
-from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast, EnsoOutlook, AftershockForecasts
-from earth_echo.queries.predictions import forecast_catalog, forecast_field, forecast_point, forecast_highlights, point_csv, retained, planetary_forecast, enso_outlook, enso_csv, aftershock_forecasts, aftershock_csv
+from earth_echo.contracts.predictions import ForecastCatalog, ForecastField, ForecastPoint, ForecastHighlights, PlanetaryForecast, EnsoOutlook, AftershockForecasts, SentryAssessments, SentryObjectDetail
+from earth_echo.queries.predictions import forecast_catalog, forecast_field, forecast_point, forecast_highlights, point_csv, retained, planetary_forecast, enso_outlook, enso_csv, aftershock_forecasts, aftershock_csv, sentry_assessments, sentry_object, sentry_csv
 from earth_echo.storage.products import products_root
 
 Version = Annotated[str,Path(pattern=r'^[0-9a-f]{64}$')]
@@ -79,5 +79,20 @@ def forecast_routes():
     @router.get('/aftershocks/d22.csv')
     def aftershock_export():
         return Response(aftershock_csv(aftershock_forecasts()),media_type='text/csv',headers={'Content-Disposition':'attachment; filename=f28-oaf.csv'})
+
+    @router.get('/impacts/d29',response_model=SentryAssessments)
+    def impacts():
+        return sentry_assessments()
+
+    @router.get('/impacts/d29/object',response_model=SentryObjectDetail)
+    def impact_object(des:Annotated[str,Query(min_length=1,max_length=40)]):
+        return sentry_object(des)
+
+    @router.get('/impacts/d29.csv')
+    def impact_export(des:Annotated[str|None,Query(min_length=1,max_length=40)]=None):
+        result=sentry_assessments()
+        detail=sentry_object(des) if des else None
+        name='f30-sentry-escenarios.csv' if des else 'f30-sentry.csv'
+        return Response(sentry_csv(result,detail),media_type='text/csv',headers={'Content-Disposition':f'attachment; filename={name}'})
 
     return router

@@ -14,7 +14,7 @@ from pathlib import Path
 from earth_echo.contracts.products import ScientificProduct
 from earth_echo.contracts.predictions import (ForecastDescriptor, ForecastCatalog, ForecastField, ForecastPoint,
     ForecastHighlights, ForecastHighlight, PlanetaryForecast, PlanetaryWindow, EnsoOutlook, EnsoPhase, EnsoObservation,
-    AftershockForecasts, AftershockEvent, AftershockWindow, AftershockBin)
+    AftershockForecasts, AftershockEvent, AftershockWindow, AftershockBin, SentryAssessments, SentryObject, SentryObjectDetail, SentryScenario)
 from earth_echo.contracts.products import ProductRegion
 from earth_echo.contracts.geometry import GeoMultiPolygon, GeographicExtent
 from earth_echo.contracts.operations import RefreshStatus
@@ -375,6 +375,120 @@ def aftershock_csv(result: AftershockForecasts) -> str:
         for window in event.windows:
             for item in window.bins:
                 writer.writerow([event.event_id,event.magnitude,event.latitude,event.longitude,event.model_name,event.issued_at.isoformat(),event.product_version,event.retrieved_at.isoformat(),event.checksum_sha256,window.label,window.valid_from.isoformat(),window.valid_to.isoformat(),window.temporal_state,item.magnitude,item.probability,item.median_count,item.p95_minimum,item.p95_maximum,event.original_url])
+    return stream.getvalue()
+
+
+SENTRY_URL = 'https://ssd-api.jpl.nasa.gov/sentry.api'
+SENTRY_LIMITATION = (
+    'Evaluación oficial de NASA/JPL CNEOS Sentry para objetos cercanos a la Tierra ya conocidos. '
+    'No cubre objetos todavía no descubiertos. No estar en la tabla no significa que un impacto sea imposible. '
+    'Una probabilidad pequeña no es un impacto anunciado ni una alerta de emergencia. '
+    'Sentry no publica un lugar de impacto terrestre: el mapa no muestra puntos, trayectorias ni zonas. '
+    'Un acercamiento cercano no es un impacto. Las probabilidades pueden cambiar cuando hay observaciones nuevas.'
+)
+SENTRY_MEANING = (
+    'La probabilidad acumulada es la que Sentry publica para ese objeto dentro del intervalo de años indicado. '
+    'Cada escenario es un impacto virtual posible, con su propia probabilidad y su fecha publicada; no se suman para fabricar otra cifra. '
+    'La escala de Torino es una clasificación de riesgo, no una probabilidad. La de Palermo es una escala técnica logarítmica. '
+    'El diámetro es una estimación, en general a partir del brillo y un albedo supuesto, y puede errar por un factor de alrededor de dos. '
+    'Cuando llegan observaciones nuevas, algunos escenarios desaparecen y el objeto puede salir de la tabla vigente.'
+)
+SENTRY_REMOVAL = (
+    'Sentry retiró este objeto de la tabla vigente. Su documentación asocia ese retiro con la eliminación de los impactos potenciales, en general por observaciones nuevas. '
+    'Earth Echo no asigna otro motivo y no lo interpreta como un impacto ocurrido.'
+)
+_VI_INDEX: dict[str, dict] = {}
+
+
+def _sentry_raw(product, root):
+    return json.loads((root / product.raw_file).read_bytes())
+
+
+def _sentry_object(row, status):
+    from earth_echo.connectors.cneos import optional_int, optional_number, probability_token
+    text = probability = None
+    if status == 'current':
+        text, probability = probability_token(row['ip'])
+    return SentryObject(designation=row['des'], fullname=row.get('fullname') or row['des'], catalog_id=None if not row.get('id') else str(row['id']),
+        status=status, cumulative_probability=probability, cumulative_probability_text=text, palermo_cumulative=optional_number(row.get('ps_cum')),
+        palermo_max=optional_number(row.get('ps_max')), torino_max=optional_int(row.get('ts_max')), diameter_km=optional_number(row.get('diameter')),
+        absolute_magnitude_h=optional_number(row.get('h')), v_inf_km_s=optional_number(row.get('v_inf')), potential_impacts=optional_int(row.get('n_imp')),
+        year_range=None if not row.get('range') else str(row['range']), last_observation=None if not row.get('last_obs') else str(row['last_obs']),
+        removed_at=None if status != 'removed' else str(row.get('removed') or ''))
+
+
+def _scenario_index(product, root):
+    cached = _VI_INDEX.get(product.checksum_sha256)
+    if cached is None:
+        from earth_echo.connectors.cneos import parse_impactors
+        cached = {}
+        for scenario in parse_impactors(_sentry_raw(product, root)):
+            cached.setdefault(scenario.pop('designation'), []).append(scenario)
+        for rows in cached.values():
+            rows.sort(key=lambda item: (-item['probability'], item['date_text']))
+        _VI_INDEX.clear()
+        _VI_INDEX[product.checksum_sha256] = cached
+    return cached
+
+
+def sentry_assessments(now=None, root=None, operations=None):
+    from earth_echo.storage.products import read_product
+    moment = now or clock()
+    active = root or products_root()
+    if operations is None and root is None:
+        operations = _operations()
+    base = dict(source_url=SENTRY_URL, limitation=SENTRY_LIMITATION, meaning=SENTRY_MEANING)
+    summary = read_product('d29-sentry', active)
+    if summary is None:
+        return SentryAssessments(status='missing_input', reason='No hay una tabla Sentry retenida. No se inventaron asteroides ni probabilidades.', objects=[], removed=[], **base)
+    rows = _sentry_raw(summary, active)['data']
+    objects = sorted((_sentry_object(row, 'current') for row in rows), key=lambda item: (-(item.cumulative_probability or 0), item.designation))
+    current = {item.designation for item in objects}
+    removed_product = read_product('d29-sentry-removed', active)
+    removed = []
+    if removed_product is not None:
+        removed = [_sentry_object(row, 'removed') for row in _sentry_raw(removed_product, active)['data'] if row['des'] not in current]
+    job = operations.jobs.get('d29-sentry') if operations else None
+    pending = (moment - (job.last_success_at if job and job.last_success_at else summary.retrieved_at)).total_seconds() > summary.cadence_seconds
+    return SentryAssessments(status='available', signature_version=summary.product_version, retrieved_at=summary.retrieved_at, checksum_sha256=summary.checksum_sha256,
+        objects=objects, removed=removed, update=job, update_pending=pending, **base)
+
+
+def sentry_object(designation: str, root=None):
+    from earth_echo.storage.products import read_product
+    active = root or products_root()
+    assessments = sentry_assessments() if root is None else sentry_assessments(root=active)
+    found = next((item for item in assessments.objects if item.designation == designation), None)
+    removed = next((item for item in assessments.removed if item.designation == designation), None)
+    chosen = found or removed
+    if chosen is None:
+        return SentryObjectDetail(designation=designation, fullname=designation, status='not_listed', scenarios=[], scenarios_status='missing_input',
+            scenarios_reason='Esa designación no está en la tabla vigente ni en la de objetos retirados. No estar en Sentry no significa que un impacto sea imposible.')
+    if chosen.status == 'removed':
+        return SentryObjectDetail(**chosen.model_dump(), scenarios=[], scenarios_status='missing_input', scenarios_reason=SENTRY_REMOVAL)
+    impactors = read_product('d29-sentry-impactors', active)
+    if impactors is None:
+        return SentryObjectDetail(**chosen.model_dump(), scenarios=[], scenarios_status='missing_input',
+            scenarios_reason='Los escenarios individuales no están retenidos. No se inventaron fechas ni probabilidades.')
+    rows = _scenario_index(impactors, active).get(designation, [])
+    scenarios = [SentryScenario(**row) for row in rows]
+    if not scenarios:
+        return SentryObjectDetail(**chosen.model_dump(), scenarios=[], scenarios_status='missing_input',
+            scenarios_reason='La tabla de escenarios retenida no trae filas para este objeto. No se completó con una suma ni con un lugar de impacto.')
+    return SentryObjectDetail(**chosen.model_dump(), scenarios=scenarios, scenarios_status='available')
+
+
+def sentry_csv(result: SentryAssessments, detail: SentryObjectDetail | None = None) -> str:
+    stream = io.StringIO()
+    writer = csv.writer(stream)
+    if detail is not None:
+        writer.writerow(['designation', 'scenario_date', 'scenario_date_utc', 'scenario_probability_text', 'scenario_probability', 'palermo', 'torino', 'energy_mt', 'method', 'cumulative_probability_text', 'source_url'])
+        for scenario in detail.scenarios:
+            writer.writerow([detail.designation, scenario.date_text, scenario.date_utc.isoformat() if scenario.date_utc else None, scenario.probability_text, scenario.probability, scenario.palermo, scenario.torino, scenario.energy_mt, scenario.method, detail.cumulative_probability_text, result.source_url])
+        return stream.getvalue()
+    writer.writerow(['status', 'designation', 'fullname', 'catalog_id', 'cumulative_probability_text', 'cumulative_probability', 'palermo_cumulative', 'palermo_max', 'torino_max', 'diameter_km', 'absolute_magnitude_h', 'v_inf_km_s', 'potential_impacts', 'year_range', 'last_observation', 'removed_at', 'retrieved_at', 'checksum_sha256', 'source_url'])
+    for item in [*result.objects, *result.removed]:
+        writer.writerow([item.status, item.designation, item.fullname, item.catalog_id, item.cumulative_probability_text, item.cumulative_probability, item.palermo_cumulative, item.palermo_max, item.torino_max, item.diameter_km, item.absolute_magnitude_h, item.v_inf_km_s, item.potential_impacts, item.year_range, item.last_observation, item.removed_at, result.retrieved_at.isoformat() if result.retrieved_at else None, result.checksum_sha256, result.source_url])
     return stream.getvalue()
 
 

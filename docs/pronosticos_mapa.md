@@ -73,6 +73,7 @@ Regresión final:244API/60web, contratos y build aprobados.25pruebas API enfocad
 | D07 | Adaptador de campos ya retenidos; un plazo+24h, sin probabilidades de impacto |
 | D28/F29 | Ventanas predicted planetarias de3h, incluidas las iniciadas sin terminar; sin mapa local |
 | D22/F28 | Pronóstico OAF en REAL → Pronósticos. El mapa muestra el centro declarado; el radio 10 no trae unidad y no se dibuja. Un evento reciente, no el catálogo mundial |
+| D29/F30 | Sentry en REAL → Pronósticos. Tabla vigente, escenarios virtuales y objetos retirados. Sin coordenadas de impacto |
 | D09/D10 | Dos celdas regionales por producto, no cobertura mundial descargada |
 | D12/D14 | Catálogo con estado temporal real; pueden estar vencidos, sin adaptador nuevo de esta entrega |
 | RONI | Perspectivas estacionales existentes; no impactos locales |

@@ -231,6 +231,60 @@ class AftershockForecasts(ApiModel):
     update_pending: bool = False
 
 
+class SentryObject(ApiModel):
+    designation: str
+    fullname: str
+    catalog_id: str | None = None
+    status: Literal['current', 'removed', 'not_listed']
+    cumulative_probability: float | None = Field(default=None, ge=0, le=1)
+    cumulative_probability_text: str | None = None
+    palermo_cumulative: float | None = Field(default=None, allow_inf_nan=False)
+    palermo_max: float | None = Field(default=None, allow_inf_nan=False)
+    torino_max: int | None = None
+    diameter_km: float | None = Field(default=None, allow_inf_nan=False)
+    absolute_magnitude_h: float | None = Field(default=None, allow_inf_nan=False)
+    v_inf_km_s: float | None = Field(default=None, allow_inf_nan=False)
+    potential_impacts: int | None = Field(default=None, ge=0)
+    year_range: str | None = None
+    last_observation: str | None = None
+    removed_at: str | None = None
+
+
+class SentryScenario(ApiModel):
+    date_text: str
+    date_utc: UtcDateTime | None = None
+    probability: float = Field(ge=0, le=1)
+    probability_text: str
+    palermo: float | None = Field(default=None, allow_inf_nan=False)
+    torino: int | None = None
+    energy_mt: str | None = None
+    method: str | None = None
+    sigma_kind: str | None = None
+    sigma_text: str | None = None
+
+
+class SentryObjectDetail(SentryObject):
+    scenarios: list[SentryScenario]
+    scenarios_status: Literal['available', 'missing_input']
+    scenarios_reason: str | None = None
+
+
+class SentryAssessments(ApiModel):
+    data_mode: Literal['real'] = 'real'
+    status: ResultStatus
+    reason: str | None = None
+    signature_version: str | None = None
+    retrieved_at: UtcDateTime | None = None
+    checksum_sha256: Sha256 | None = None
+    source_url: str
+    objects: list[SentryObject]
+    removed: list[SentryObject]
+    limitation: str
+    meaning: str
+    update: RefreshJob | None = None
+    update_pending: bool = False
+
+
 class EnsoOutlook(ApiModel):
     data_mode: Literal['real'] = 'real'
     status: ResultStatus
