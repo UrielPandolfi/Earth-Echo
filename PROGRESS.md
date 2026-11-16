@@ -2,7 +2,7 @@
 
 ## Producción — 16 noviembre 2026
 
-La API publicada respondía `missing_input` en El Niño, réplicas y asteroides: el proceso estaba sano, pero los originales no viajaban con el repositorio. `read_product` exige el archivo nombrado por `current.json`, y esas rutas estaban ignoradas (`products/*/assets/`, `shared/`, feeds y varios NetCDF/GRIB). La imagen ahora incluye los 52 originales vigentes, unos 233 MB, más los feeds de sismos y Kp. No se inventaron cifras ni se cambió a demo. La actualización automática sigue apagada en ese servicio porque un archivo descargado ahí se pierde al reiniciar. Para verse como el local hay que volver a publicar el original nuevo.
+La API publicada respondía `missing_input` en El Niño, réplicas y asteroides: el proceso estaba sano, pero los originales no viajaban con el repositorio. `read_product` exige el archivo nombrado por `current.json`, y esas rutas estaban ignoradas (`products/*/assets/`, `shared/`, feeds y varios NetCDF/GRIB). La imagen ahora incluye los 52 originales vigentes, unos 233 MB, más los feeds de sismos y Kp y las corridas anteriores de calor marino e IFS que el selector todavía conserva. No se inventaron cifras ni se cambió a demo. La actualización automática sigue apagada en ese servicio porque un archivo descargado ahí se pierde al reiniciar. Para verse como el local hay que volver a publicar el original nuevo.
 
 ## Incremento 12B — pronósticos consultables desde el globo
 
