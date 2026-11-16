@@ -209,7 +209,7 @@ def planetary_forecast(now=None, operations=None):
     # JSON even for snapshots made by the former start>=retrieval parser.
     from earth_echo.ingest.feeds import feeds_dir
     from earth_echo.connectors.swpc_forecast import parse_predicted_kp
-    raw_path=feeds_dir()/data.get('raw_file','missing')
+    raw_path=feeds_dir()/str(data.get('raw_file','missing')).replace('\\','/')
     if raw_path.is_file():steps=parse_predicted_kp(json.loads(raw_path.read_bytes()),retrieved)
     windows=[PlanetaryWindow(valid_from=s['valid_start'],valid_to=s['valid_end'],value=s['kp'],temporal_state=temporal_state(parse_utc(s['valid_start']),parse_utc(s['valid_end']),moment)) for s in steps]
     windows.sort(key=lambda w:w.valid_from)

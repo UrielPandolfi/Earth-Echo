@@ -47,4 +47,6 @@ data/real/refresh/open-meteo-budget.json
 data/real/products/*/assets/
 data/real/products/shared/
 data/real/feeds/assets/
+# Los originales que nombra el current.json vigente se versionan con git add -f.
+# Así la imagen publicada puede leerlos. Un activo nuevo sigue fuera hasta esa decisión.
 *.local

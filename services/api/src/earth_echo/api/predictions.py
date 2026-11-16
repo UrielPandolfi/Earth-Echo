@@ -60,7 +60,8 @@ def forecast_routes():
         from earth_echo.ingest.feeds import feeds_dir
         path=forecast_dir()/'d28-kp-forecast.json'
         if not path.is_file():raise HTTPException(404,'Sin entrada Kp.')
-        raw=feeds_dir()/'assets'/'d28-kp-forecast'/f'{version}.json' if version else feeds_dir()/json.loads(path.read_bytes()).get('raw_file','missing')
+        stored=str(json.loads(path.read_bytes()).get('raw_file','missing')).replace('\\','/')
+        raw=feeds_dir()/'assets'/'d28-kp-forecast'/f'{version}.json' if version else feeds_dir()/stored
         if not raw.is_file():raise HTTPException(404,'Original Kp no retenido.')
         return FileResponse(raw,filename=raw.name)
 

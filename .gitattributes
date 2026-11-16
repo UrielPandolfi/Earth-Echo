@@ -7,3 +7,10 @@ data/samples/d18-habsos/empty-layer-metadata.xml -text
 data/samples/nasa-access/*-cmr.json -text
 data/samples/nasa-access/*-header.ranges.json -text
 data/samples/integrations/oisst-anomaly-20261113.nc -text
+data/real/products/**/assets/** -text
+data/real/products/shared/** -text
+data/real/feeds/assets/** -text
+data/real/**/*.nc -text
+data/real/**/*.grib2 -text
+data/real/**/*.zip -text
+data/real/**/*.tif -text

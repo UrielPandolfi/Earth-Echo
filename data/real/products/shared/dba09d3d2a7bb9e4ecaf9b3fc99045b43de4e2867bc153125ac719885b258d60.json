@@ -1,0 +1,2204 @@
+{
+  "schema_version": "1.0",
+  "data_mode": "real",
+  "method_id": "ols-monthly-anomaly-block-bootstrap-v1",
+  "method_version": "1",
+  "source_id": "D15",
+  "collection_id": "noaacrwsstDaily",
+  "product_version": "3.1",
+  "variable_id": "V15",
+  "region_id": "caribe-occidental",
+  "region": {
+    "west": -67.5,
+    "south": 16.5,
+    "east": -66.5,
+    "north": 17.5,
+    "crosses_antimeridian": false
+  },
+  "aggregation": "Cada día es el promedio de las celdas válidas ponderado por el coseno de la latitud. Cada mes es el promedio de esos días si hay al menos el 80 % de los días del mes. Un día o un mes ausente queda en null y no se reemplaza por cero.",
+  "reference": {
+    "start": [
+      2014,
+      1
+    ],
+    "end": [
+      2021,
+      12
+    ]
+  },
+  "analysis": {
+    "start": [
+      2014,
+      1
+    ],
+    "end": [
+      2025,
+      12
+    ]
+  },
+  "practical_change_per_year": 0.02,
+  "assets": [
+    {
+      "year": 2014,
+      "month": 1,
+      "sha256": "0944c4b536bc6817f98a7d3aa75fe22e6fadb4462f0a413d2c947ba5edca81b7",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 2,
+      "sha256": "0d03696e285078061efc76cf4799595380668a1ac5b1a4fb6495f4ef8d1fc6a2",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 3,
+      "sha256": "8cdeac0e09e4f55fe12145649dd2724a9a885e1d38ee598091a79fa0a293e3cb",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 4,
+      "sha256": "4cc9dc350beec24f26676ae235bc7c10b354cd1d63574bbb53d29275e09d67f7",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 5,
+      "sha256": "340fa476300cc19a0ad1d14c8a61d9d7427cc9bfcf682f189a38e0f9340f7f21",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 6,
+      "sha256": "c782a17058c6b0dab6481ac490de2eba63015cbdf77326bc5f4fef57b039601a",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 7,
+      "sha256": "14c8d9fe5a16ee6b507a4c232e55e9c52b3263d7c21f00bb34010605ed585319",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 8,
+      "sha256": "653954dd38b08f4a3252ace193d56e8ae82b080d6fc8f127b214c1275e7bd814",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 9,
+      "sha256": "eda33602a5863920413fce0943d0a23e83e934a5ddf12a35804401e36a1f8604",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 10,
+      "sha256": "13da41af52eaaf7b4cd895ef39b99050f815fdccd7fc8fb1e14cf6a8a6e97f90",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 11,
+      "sha256": "a85ae8432c676b04e91066006ae91792d9b1c1a56d46b5de86b6bd984ecc2b5f",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2014,
+      "month": 12,
+      "sha256": "67bd262f4b99ea5003ed49ef36ca7132a4bc0aca1be205f21f64a138f0f76c4e",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 1,
+      "sha256": "830cfd4c0cfac651b9baa7d4ef6c15528b8d7d32e4575708423309373175f45e",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 2,
+      "sha256": "524f65be479d6031ddcf50f811f45ad1f33813266d3219fed4abe2a560386fbb",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 3,
+      "sha256": "02d61cd6492082e3d04da59e11960f1987106272188d1847a1acffff9e61a1ba",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 4,
+      "sha256": "d29ba9481324a1b697d59236bd2e32789942b5bd28aed8d8d9e90545240fb5e1",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 5,
+      "sha256": "fc397162dc3f88c9622355063b2bacbd1d21e4cb7e743cbbfc022cb4f4df251f",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 6,
+      "sha256": "d294a9143725d19382ad2d700dee50f42a0de0fedbd08490f0c4a729ebe4ec42",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 7,
+      "sha256": "5af5c608e6c7ef2307a1d104917ff4a90ba480f4b859b2e40206a4af8fa840fd",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 8,
+      "sha256": "ca0676f39cb4dc5ffb24a7e88aeb98f71e760f12337eba7353094f8d2a84e08c",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 9,
+      "sha256": "c45f62a574ca5f492fa74a14e7643bd324ef58523190111fcb1588dae487777c",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 10,
+      "sha256": "bcca41bd95a73af41924aa0cf678dab5194340bdf74f770905db5ef0ea93c4d5",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 11,
+      "sha256": "462b03bda61639072730f424128ee1774b6da2bf859023c9ffdcd295f642a4c9",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2015,
+      "month": 12,
+      "sha256": "95af842017b5309c9e995a50e3e4173ac040bec385357ca3cb57b6b28fbe5fdf",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 1,
+      "sha256": "4f22134ead8e9baa8442e1d7cae1b3259188f8cf7772a2cf7b4aeb130647a64c",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 2,
+      "sha256": "6f5ac48675e324432b78849abd14a25f1ac33b76f3364444ade7a023e8411d86",
+      "bytes": 113520,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 3,
+      "sha256": "6f159eaa08b0a57547b72505849c6ed13806a417f2e92ff406a523e8788303e4",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 4,
+      "sha256": "730f8452880665ac2f3173240bff9153fad4bcab0d524e0faab06dae3d4073a0",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 5,
+      "sha256": "ef5dc10e18511f2201d632ac141140562c79055d9dcb4783c50554e7de486db4",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 6,
+      "sha256": "712528a8cb16fd6700e626abfbedaefbaf51a899727d0cfcfd03c5215dc80c6f",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 7,
+      "sha256": "67a2550d0fb58bf11382351a9d8cd8f03ab9fca93b33318a5242f12ad2e7acc0",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 8,
+      "sha256": "3f275e59f6407ac0945f39670688f09ba493e3a090eeb99561db97e8976fbb1f",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 9,
+      "sha256": "68517345d01fcfbe58b0059f343d93b8a0120570b560b92839fa346a9663da5b",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 10,
+      "sha256": "2de1783c29febedff9115aaed4f7a7291abeb03b0f602e60f5023e1c2a28b714",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 11,
+      "sha256": "6b013dd6c9af197266d08a297c3bbf355906fcb30a4e5e4394075741e5b4162c",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2016,
+      "month": 12,
+      "sha256": "b3b0a55f66ec92c8122082f448ca79b035f586275af7bd06b947c2e7d7708db1",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 1,
+      "sha256": "ff018b987c8a342c8730f760a8df58107a57d9bf0dfa1aa2e773b0a585effc2d",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 2,
+      "sha256": "eb07b11eb1621a463ec393cfd03901e0babbb07af89760597e9fa18bfef164bb",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 3,
+      "sha256": "ee2f81a80d5ce7be68701b997b5a34e8bba309cb9c9788d114b3f863bdb02dab",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 4,
+      "sha256": "564499388249bec1e0c98091728e2d74858cfbc5fad03b7c966495436a7afc4f",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 5,
+      "sha256": "70a732885d9767c14060e933e9a3c6669e7c3ca1eca31d1ae88bfc0890551dbc",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 6,
+      "sha256": "77e9f74b1a6195720ca13706b5b54e692b96a1bf491ec016fa4a35dc905c0cd1",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 7,
+      "sha256": "3bb0394b902f3d4795a21557c396eda151a6957c919ab90bc5cb8e89f910c0ca",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 8,
+      "sha256": "e9e4137d1d706cfd4da564a43a7bf248802366011ed5731587bb29226c574cbc",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 9,
+      "sha256": "0dbaf7a0770aea44c029d8a2a50c80bcd8eab85a2a318dd11891916b46906e02",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 10,
+      "sha256": "377c09f23ee80d69c7cfbdc883b94884b4e94e81a3d8fbc5c0a1eaf795b35159",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 11,
+      "sha256": "e64f333e3feaeb915c244e959da5b905c0492fe9ead63bdd7a32bdc88244430f",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2017,
+      "month": 12,
+      "sha256": "3d6a12cd51fc730623ea477841dd91a1b753e86aedbb375344438f86102ca31a",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 1,
+      "sha256": "73ae8d356bb75413b5084633a0ba9e83e1b25a278d8b4b106f4892fbcc4ee405",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 2,
+      "sha256": "99276dda1fe4059db2d84d71fa95b151ab84a0a15f04c953e13c163b720264bf",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 3,
+      "sha256": "9f3fa1ccae691fabbc4a01dd7de3638e96254939971de70e35f6c3b11f9806a3",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 4,
+      "sha256": "3bebbe01629d9efeb1c7eefb0d3896d8869257ec1163cff76c88f48c358662ca",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 5,
+      "sha256": "2449a77c5c9b1f2156979d4356161cdc056175f9333dfb3077e35ff989abc8c2",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 6,
+      "sha256": "6cc1d49d31802edbf9297c9cdd5b08c804d4f19cab173260a439a3d2523b3fc0",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 7,
+      "sha256": "55ff455728570689963a0a455e225905c3b66cf74eedbdfa61074de20a49ea3f",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 8,
+      "sha256": "3f45419ce73bf93086d35b46f5db1835f8faad9c14becad032fabf866c951b1c",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 9,
+      "sha256": "5a2a11a9c22e4d6955e3eeb13858262ad73fcecedc8459d08fdaed5bc616e47b",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 10,
+      "sha256": "3954599d2aa7caaea2dbe3199cad50b6fbc56facab0e9cc22f3301f858c64ea7",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 11,
+      "sha256": "199857405b739101bda7b50e1a24beac4b2ab0b04da34b575cf97e199f340ba3",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2018,
+      "month": 12,
+      "sha256": "19a77e998259264e1845c324d62229e9cc007926386a991100f77ae51a034e3d",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 1,
+      "sha256": "7a52c39498f794028468340aaf017ab26944d41dd967be99c32c25fe552eaf96",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 2,
+      "sha256": "6f496b1048c129aacb535d8a1c4cc6cc8d5b66729f1989149edf49a3a733e1b8",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 3,
+      "sha256": "1f4e60b3677919af1da110019a785b9c18e0a2ecd1f43e5fc2661c2deffa4b83",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 4,
+      "sha256": "37a2cb559cd697f0165dec9cc7176a1ad83219f1e6893ac9c192585dae012ad1",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 5,
+      "sha256": "3040382b15c5a7cee3390bf740ab6345058f7ebb65b950b8583a8dfa36f9cc80",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 6,
+      "sha256": "c4be16d9715ef1faf0cb98e25c2f724135ef6bc4bdddd6ef5e24ecd9f6d71c7d",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 7,
+      "sha256": "58dbea7a9aed178dede76465aa90bead9cd2d15b59dcee6bd775a99a75e977dc",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 8,
+      "sha256": "610cc07455a0e48ed8e337b99955cf67151bac21a7c55542acf219f56c1dcb69",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 9,
+      "sha256": "fed9a3df8693962bceffd91d28529f5c6cf63f5e61ca211ebed8b48ab16e72d7",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 10,
+      "sha256": "6767b8da19632650720aea55ec81e47a9722609b6efc1f80fee0a31621ff1afb",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 11,
+      "sha256": "d47a5d93cdf4db1a2f017cac29e1f9506c870fc706fdd141e089f232dd31b152",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2019,
+      "month": 12,
+      "sha256": "b36b07481009864a37dad3fd9a786523d237497c55ec9003b80cd673bee35882",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 1,
+      "sha256": "1f244a344a4b5938c32db60c4267cfb2934e475e3478ae54615f3a0cbe7aaeaf",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 2,
+      "sha256": "87655867996a28a55126a662cff5c1c8cd2e64d0768b1fea89fc74984bdc0992",
+      "bytes": 113520,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 3,
+      "sha256": "780449b1139517905077d645b8004375b1f0a65e01313fae495722971056ba0e",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 4,
+      "sha256": "e3bba23447429f3538fe248b119056d2421ed0a7586e6db3f6e6f87462a1d494",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 5,
+      "sha256": "3d60357070f81eac8e37951cf17b17befb416ce55c8ef1ecdaf5a064b8e6a17f",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 6,
+      "sha256": "6f8089994c0802753449b3e0234b8e1f093c30ed770e3bc580c6b056dec7a00d",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 7,
+      "sha256": "b49b516b264167f247cb980227ed671f296447325f0d36ff8b179e66b643ee0a",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 8,
+      "sha256": "ec695e3850268efebd365d383698ef195122c0fbf1122b08236222ea35d905a1",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 9,
+      "sha256": "250dcec0559d716acb99f0e0ff45f1600ccc7ee2f6c9dab72da9af181c7bf718",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 10,
+      "sha256": "b521b8776f8d6770bc8a32f7339631c17b20cb9b6458159bb5818070aa698768",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 11,
+      "sha256": "ab429246dff63e421eecc172efac9b49e8cee9c026c8168b3f8d81be3f0dbab0",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2020,
+      "month": 12,
+      "sha256": "2ae87918c12e52825db432ce02f59bdb9927b05305bdbaca7a833dadd516d970",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 1,
+      "sha256": "9e00e68d70eabc4ac3dc0326cd6455006dd52410ad78c60a99140a2992288d67",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 2,
+      "sha256": "1be0b6f53d6e6eb072bf516825e9f3c7edaaedcf0701baeb66271e5c928d0eb4",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 3,
+      "sha256": "9ee0c9832d7b13dc2f718a361dd52b6767bf348278b76f5e5f656c32a8afd4ab",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 4,
+      "sha256": "1270b004d5e36441e000ee882cb4a63a60c4f6ff31e477a2085b33c291266ebc",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 5,
+      "sha256": "4ac0fe923eae2f2de8a80a4c84f3c25342e17e02f534f2a8683dfec4ec81d789",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 6,
+      "sha256": "63eef611b37662b1ac39c6b5d02836c0150f6eca96a0fdf7eef00e6f77df6a28",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 7,
+      "sha256": "6d573558f17644ad57af4918475df6f7ccbffcec86aabcecfde496857ccecf5d",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 8,
+      "sha256": "3e1bf97ce993c06f664b5db14d3c472eed002897497b50736cf880ef72525f53",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 9,
+      "sha256": "144abc76884c7ef447fce413cd5a65477d761e1870354c607cd90e09f6e45845",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 10,
+      "sha256": "fb036f07e7c7b29fdcf712e913b1df1814071f559bf9194587d0c4e6c9f94652",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 11,
+      "sha256": "a3ac352e60bc841baa30eecf923b46bb8bbb2aa814ec942f175823b8f828c544",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2021,
+      "month": 12,
+      "sha256": "acc097c00a069c95dbe5a31ee3121137850b4b9b228b4ec22bd69b05418b30df",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 1,
+      "sha256": "6d99639eb2226e93d1fb2fdb281cf0fcfd620b398fa9ca9a0877d39c81b04944",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 2,
+      "sha256": "0e71239ec87d44c26a1bc792b4d423c117e652e43ab6c16287a8221198705bc0",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 3,
+      "sha256": "cad2c3b3a491f2bd41642e94b44f21bee71b9f3b74a1314d94bc4f93d508faae",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 4,
+      "sha256": "4c89a33770b45d3082830a25b886023ee39ccbd1ed3499ffa4cfed486159168b",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 5,
+      "sha256": "380c4362839eb5e19aeb52f96f1e72d4e86d8dd0cc34324d77e3829d23203478",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 6,
+      "sha256": "cb34dd12ee70346c7a710e2b0b10749e8bd6c6f6c65d8d436784d9360957e7ae",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 7,
+      "sha256": "c1f106c7a6d01e3473002d3837bd0b2ec83ee1d5eecc4e6048ece2e51c940243",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 8,
+      "sha256": "c4e555f02dae8c5b3dfc9331c0c9a823b9cc3b4a45af213c1bf7d49c72380cf8",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 9,
+      "sha256": "ce91387975f2ee2e916206c3ef88f0066470196f357293228141c556abd0e6da",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 10,
+      "sha256": "ba90bb1c134c2c01a2ac73167527614827ffb9cc3e2560d7fae4fd8b246b0dc1",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 11,
+      "sha256": "c42d0680906c5f6d81c6741248a4cff7dcf792b6c0c99829d98fbcdcd701200d",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2022,
+      "month": 12,
+      "sha256": "f8282264ab55edbe7bbaf3e67995047d3ccb350c4ea5f0a0aa3501ec7cef7e88",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 1,
+      "sha256": "c617b014fec3de04042bb937ed5c8b97ff1515b3435bc1cc7096fb507430bbb6",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 2,
+      "sha256": "73adcc08dc4ffedcd67bbc9fa0e3c06720ccfda702bc73634a4b27fc457ade64",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 3,
+      "sha256": "7b2d4b100042cc42d0dba69d1e96e663390b017c46fce770a219f325cd277b6d",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 4,
+      "sha256": "f39133ec6a16d6927acec35d13dbf64785d0f7842a29e672b9cc7041d98aaab7",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 5,
+      "sha256": "aa2cea6f200bc4e14a3b04293c4a9003f579420d08810b771eadbaaef5323458",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 6,
+      "sha256": "3d6a1d9d267d665f6392703a74dba317ec845e62ecd5d0ad87e91eb47c6ca3c0",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 7,
+      "sha256": "bc1b30d2847bac9e09ea77895f629b5611e6b0e522224ed0682ac3d2dd078432",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 8,
+      "sha256": "bde9aac8ba352d009122a47c97e94f77f1f49437e6a9e4453ad50e7399246c1e",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 9,
+      "sha256": "238a076c9cff227ea8fb13af4ef7d6a7a34a64e6622296223ccd153c1ab7e0e5",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 10,
+      "sha256": "2c2283155daf72b0f95ed4c07abca9309c1d679072ff94a3658e9ebeca4d8765",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 11,
+      "sha256": "6b6253562040906e7c166fd015e066506cb9a39f203b1ae1e0dea4966868d72b",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2023,
+      "month": 12,
+      "sha256": "8440e566a8b4891326604ce70ebf5009e60925ec8538fd0e8b40153aae23f3eb",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "sha256": "0d9365a7f51285ac9860b4a1136c845a793e55ce5d7568082302bb2560469f22",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "sha256": "557bf760cb8cc549228ce3cc05e74e2739fd205e988c96144c2ffd4154ade9e3",
+      "bytes": 113520,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "sha256": "1cfefe80e8ec79385e3dfab0cd494dd500f20a5e4a33e707849930e751075c66",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "sha256": "fcfe3bf08bd9f3b0cbf0ea11240bb92a44ed9c61083110e9866f989a7cac9127",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "sha256": "406f369278fad4fe3a42769c41848813f9c4a8ecc1ed61b982ef4aed1b6c8ee5",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "sha256": "2ea3759631472c8409a0e89939af029c1902318a771263a0b541f853033be6b7",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "sha256": "ed3ed61d052713dccaef1917345c1c3e485f29ad2d6beb00483a1f64d47780d2",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "sha256": "440682bb08b4c50e11e1943a176a5b79a1bb258ee9198051164e4a77e5903f19",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "sha256": "7e17801cd6a757196a6f36f097e80245a83b015ada8e24f4942fe5869515eaca",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "sha256": "ab7fee7e6d1b6501998405de1ca1329ac2ad1c7a5d02c848a0dbf1655d4a4c6c",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "sha256": "e2334915c4459e75810043cb61805146bbe52268d5bfd23c6eea9c89599459bc",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "sha256": "74846e0abc04af6e0f96c9b8cf7ab9b8da627c1d81aec8b4f3ee743d00873116",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "sha256": "79f89948533cbb56a522e5d078a8a6c770fac8630e4d1421eb79935477718c22",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "sha256": "46e98d16ee3300a6dfaa444833fcd33879c57baf7d079a27f52e441ae7a2c754",
+      "bytes": 109984,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "sha256": "c23afb09d44fc0b3a50f2ebf0f8af766e3a1877f9aa37e2884315b64f5af8578",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "sha256": "21d86d471cd5b331916f8154060f870a8f783f55cdd0cc1090d1741a298f6128",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "sha256": "ba0d1c2c100c27aebfa04e1ca69e0e2093e7eec4fe51296817470e1c9c543d62",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "sha256": "1e70a52eb2c541d6abd098da6f7c20ef74a8e72a0639b12d2987fd10f9f2f339",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "sha256": "4d82d2da8330105d3601233f1368b7e6654fe136203d476d32ce230c9e512a63",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "sha256": "ce75bf1470a83b862bd69738d9bb25ade0da1843fa7f98b2a5376d0900b138a7",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "sha256": "b5f5e42423a4191d4e3f6ff12ccde03d937f70dd30d303348473b68c87121281",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "sha256": "f7500f218e29840373f2a46498e2e23087a144b31d9c07175bbc6ff48cdbc34f",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "sha256": "0a66ae100d2cee91f5bbaa06935ee800805f9c2ef5cdfc85b7a03740b0f2b5a9",
+      "bytes": 117056,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "sha256": "6fcbdd6563fc32ea1034a9edf5797c145ea563c2cf5dbefd9f00d4adc32c9c9e",
+      "bytes": 120592,
+      "collection_id": "noaacrwsstDaily",
+      "product_version": "3.1"
+    }
+  ],
+  "months": [
+    {
+      "year": 2014,
+      "month": 1,
+      "value": 26.8884,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2014,
+      "month": 2,
+      "value": 26.5054,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2014,
+      "month": 3,
+      "value": 26.6952,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2014,
+      "month": 4,
+      "value": 27.037,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2014,
+      "month": 5,
+      "value": 27.5139,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2014,
+      "month": 6,
+      "value": 27.64,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2014,
+      "month": 7,
+      "value": 28.0471,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2014,
+      "month": 8,
+      "value": 28.4727,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2014,
+      "month": 9,
+      "value": 28.9081,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2014,
+      "month": 10,
+      "value": 29.26,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2014,
+      "month": 11,
+      "value": 28.8508,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2014,
+      "month": 12,
+      "value": 27.8134,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 1,
+      "value": 27.0488,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 2,
+      "value": 27.0388,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2015,
+      "month": 3,
+      "value": 26.7635,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 4,
+      "value": 26.8423,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2015,
+      "month": 5,
+      "value": 27.3542,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 6,
+      "value": 27.6687,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2015,
+      "month": 7,
+      "value": 27.7801,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 8,
+      "value": 28.5314,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 9,
+      "value": 29.2345,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2015,
+      "month": 10,
+      "value": 29.4313,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2015,
+      "month": 11,
+      "value": 28.7931,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2015,
+      "month": 12,
+      "value": 27.8404,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 1,
+      "value": 27.2266,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 2,
+      "value": 26.9275,
+      "present_days": 29,
+      "expected_days": 29
+    },
+    {
+      "year": 2016,
+      "month": 3,
+      "value": 26.9357,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 4,
+      "value": 27.4033,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2016,
+      "month": 5,
+      "value": 27.9852,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 6,
+      "value": 28.2793,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2016,
+      "month": 7,
+      "value": 28.5345,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 8,
+      "value": 29.0547,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 9,
+      "value": 29.385,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2016,
+      "month": 10,
+      "value": 29.1433,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2016,
+      "month": 11,
+      "value": 28.9998,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2016,
+      "month": 12,
+      "value": 28.2338,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 1,
+      "value": 27.1865,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 2,
+      "value": 26.8337,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2017,
+      "month": 3,
+      "value": 26.699,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 4,
+      "value": 27.272,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2017,
+      "month": 5,
+      "value": 27.6283,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 6,
+      "value": 28.1931,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2017,
+      "month": 7,
+      "value": 28.5416,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 8,
+      "value": 29.1017,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 9,
+      "value": 29.4459,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2017,
+      "month": 10,
+      "value": 29.0592,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2017,
+      "month": 11,
+      "value": 28.7325,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2017,
+      "month": 12,
+      "value": 28.1751,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 1,
+      "value": 27.2581,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 2,
+      "value": 26.5153,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2018,
+      "month": 3,
+      "value": 26.515,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 4,
+      "value": 27.0654,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2018,
+      "month": 5,
+      "value": 27.3486,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 6,
+      "value": 27.7871,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2018,
+      "month": 7,
+      "value": 27.9607,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 8,
+      "value": 28.4429,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 9,
+      "value": 28.8883,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2018,
+      "month": 10,
+      "value": 28.8289,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2018,
+      "month": 11,
+      "value": 28.427,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2018,
+      "month": 12,
+      "value": 27.6491,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 1,
+      "value": 26.8082,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 2,
+      "value": 26.5194,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2019,
+      "month": 3,
+      "value": 26.4601,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 4,
+      "value": 26.8523,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2019,
+      "month": 5,
+      "value": 27.3044,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 6,
+      "value": 27.9982,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2019,
+      "month": 7,
+      "value": 28.3297,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 8,
+      "value": 29.0417,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 9,
+      "value": 29.6038,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2019,
+      "month": 10,
+      "value": 29.5458,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2019,
+      "month": 11,
+      "value": 29.0125,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2019,
+      "month": 12,
+      "value": 28.3831,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 1,
+      "value": 27.5359,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 2,
+      "value": 27.0866,
+      "present_days": 29,
+      "expected_days": 29
+    },
+    {
+      "year": 2020,
+      "month": 3,
+      "value": 26.9827,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 4,
+      "value": 27.5272,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2020,
+      "month": 5,
+      "value": 27.9635,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 6,
+      "value": 28.6786,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2020,
+      "month": 7,
+      "value": 29.0125,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 8,
+      "value": 29.2061,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 9,
+      "value": 29.5972,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2020,
+      "month": 10,
+      "value": 29.3412,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2020,
+      "month": 11,
+      "value": 28.5802,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2020,
+      "month": 12,
+      "value": 27.909,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 1,
+      "value": 27.1499,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 2,
+      "value": 26.715,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2021,
+      "month": 3,
+      "value": 26.6009,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 4,
+      "value": 26.8915,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2021,
+      "month": 5,
+      "value": 27.5072,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 6,
+      "value": 27.8499,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2021,
+      "month": 7,
+      "value": 28.2879,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 8,
+      "value": 28.8999,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 9,
+      "value": 29.5627,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2021,
+      "month": 10,
+      "value": 29.556,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2021,
+      "month": 11,
+      "value": 28.8804,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2021,
+      "month": 12,
+      "value": 27.9882,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 1,
+      "value": 27.1072,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 2,
+      "value": 26.7938,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2022,
+      "month": 3,
+      "value": 26.689,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 4,
+      "value": 26.8092,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2022,
+      "month": 5,
+      "value": 27.4708,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 6,
+      "value": 28.2627,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2022,
+      "month": 7,
+      "value": 28.4064,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 8,
+      "value": 28.8936,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 9,
+      "value": 29.5309,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2022,
+      "month": 10,
+      "value": 29.1603,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2022,
+      "month": 11,
+      "value": 28.4024,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2022,
+      "month": 12,
+      "value": 27.486,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 1,
+      "value": 26.8091,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 2,
+      "value": 26.3307,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2023,
+      "month": 3,
+      "value": 26.4144,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 4,
+      "value": 27.0525,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2023,
+      "month": 5,
+      "value": 28.2789,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 6,
+      "value": 29.0131,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2023,
+      "month": 7,
+      "value": 29.0739,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 8,
+      "value": 29.642,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 9,
+      "value": 30.2316,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2023,
+      "month": 10,
+      "value": 30.3901,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2023,
+      "month": 11,
+      "value": 29.2668,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2023,
+      "month": 12,
+      "value": 28.3828,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 1,
+      "value": 27.7354,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 2,
+      "value": 27.3768,
+      "present_days": 29,
+      "expected_days": 29
+    },
+    {
+      "year": 2024,
+      "month": 3,
+      "value": 27.5094,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 4,
+      "value": 28.0812,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2024,
+      "month": 5,
+      "value": 29.0463,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 6,
+      "value": 29.5771,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2024,
+      "month": 7,
+      "value": 29.4217,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 8,
+      "value": 29.8247,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 9,
+      "value": 30.2643,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2024,
+      "month": 10,
+      "value": 30.4777,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2024,
+      "month": 11,
+      "value": 29.6757,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2024,
+      "month": 12,
+      "value": 28.8153,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 1,
+      "value": 27.9485,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 2,
+      "value": 27.2883,
+      "present_days": 28,
+      "expected_days": 28
+    },
+    {
+      "year": 2025,
+      "month": 3,
+      "value": 27.4673,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 4,
+      "value": 27.5716,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2025,
+      "month": 5,
+      "value": 28.2773,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 6,
+      "value": 28.2661,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2025,
+      "month": 7,
+      "value": 28.5984,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 8,
+      "value": 29.4557,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 9,
+      "value": 29.9625,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2025,
+      "month": 10,
+      "value": 29.9197,
+      "present_days": 31,
+      "expected_days": 31
+    },
+    {
+      "year": 2025,
+      "month": 11,
+      "value": 28.9626,
+      "present_days": 30,
+      "expected_days": 30
+    },
+    {
+      "year": 2025,
+      "month": 12,
+      "value": 28.0296,
+      "present_days": 31,
+      "expected_days": 31
+    }
+  ]
+}

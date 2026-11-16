@@ -1,5 +1,9 @@
 # Progreso
 
+## Producción — 16 noviembre 2026
+
+La API publicada respondía `missing_input` en El Niño, réplicas y asteroides: el proceso estaba sano, pero los originales no viajaban con el repositorio. `read_product` exige el archivo nombrado por `current.json`, y esas rutas estaban ignoradas (`products/*/assets/`, `shared/`, feeds y varios NetCDF/GRIB). La imagen ahora incluye los 52 originales vigentes, unos 233 MB, más los feeds de sismos y Kp. No se inventaron cifras ni se cambió a demo. La actualización automática sigue apagada en ese servicio porque un archivo descargado ahí se pierde al reiniciar. Para verse como el local hay que volver a publicar el original nuevo.
+
 ## Incremento 12B — pronósticos consultables desde el globo
 
 - Acceso REAL/Pronósticos independiente de Tendencias. D16 muestra campo oceánico1°/probabilidad0–100% con máscara transparente, período/corrida reales, selección inicial del primer mes completo futuro, filtro exploratorio y hasta20representantes trazables de componentes4vecinos. Clic de Cesium sobre el elipsoide consulta coordenadas/celda científica; espacio no genera consulta. Contorno/marcador de selección, conservación de posición al cambiar mes, cancelación/descarte de respuestas antiguas y persistencia local de selección; cámara sólo encuadra por acción explícita. Soporte del borde mundial corregido en el adaptador, original intacto.

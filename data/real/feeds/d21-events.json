@@ -1,15 +1,51 @@
 {
   "source_id": "D21",
-  "retrieved_at": "2026-11-15T18:12:03Z",
-  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-08T18%3A12%3A03Z&endtime=2026-11-15T18%3A12%3A03Z&minmagnitude=4.5&limit=500&orderby=time",
-  "checksum_sha256": "a6caf887fe193d90c71809b296d37d08d2c793af90f2e9e6e5901af4cd415097",
-  "byte_size": 84617,
-  "raw_file": "assets\\d21-events\\a6caf887fe193d90c71809b296d37d08d2c793af90f2e9e6e5901af4cd415097.json",
+  "retrieved_at": "2026-11-16T02:24:34Z",
+  "query": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2026-11-09T02%3A24%3A34Z&endtime=2026-11-16T02%3A24%3A34Z&minmagnitude=4.5&limit=500&orderby=time",
+  "checksum_sha256": "21123cdb7f778b55a26e18fae0de8c120ffa43747fc19887ba14bd35d6b24aa1",
+  "byte_size": 84622,
+  "raw_file": "assets/d21-events/21123cdb7f778b55a26e18fae0de8c120ffa43747fc19887ba14bd35d6b24aa1.json",
   "product_version": "provider-current-schema-v1",
   "verification": "Raw provider JSON retained; normalized count/IDs and values tested independently.",
   "geometry_kind": "points",
   "note": "Sismos observados de consulta acotada; umbral y ventana en query. No son pronósticos de réplicas. Magnitud y revisión conservadas.",
   "events": [
+    {
+      "id": "us7000tygk",
+      "longitude": 160.494,
+      "latitude": 52.4937,
+      "depth_km": 10.0,
+      "magnitude": 4.8,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T23:02:53.040000Z",
+      "time": "2026-11-15T22:38:19Z",
+      "place": "141 km ESE of Petropavlovsk-Kamchatsky, Russia"
+    },
+    {
+      "id": "us7000tyga",
+      "longitude": 70.9205,
+      "latitude": 36.4657,
+      "depth_km": 191.363,
+      "magnitude": 4.9,
+      "magnitude_type": "mww",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T22:16:18.040000Z",
+      "time": "2026-11-15T21:37:21Z",
+      "place": "44 km S of Jurm, Afghanistan"
+    },
+    {
+      "id": "us7000tyg6",
+      "longitude": 128.7523,
+      "latitude": -5.9449,
+      "depth_km": 305.989,
+      "magnitude": 5.0,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T21:09:03.040000Z",
+      "time": "2026-11-15T20:51:56Z",
+      "place": "256 km SSE of Ambon, Indonesia"
+    },
     {
       "id": "us7000tyfh",
       "longitude": 70.9503,
@@ -35,6 +71,18 @@
       "place": "169 km NW of Gorontalo, Indonesia"
     },
     {
+      "id": "us7000tyes",
+      "longitude": 126.3512,
+      "latitude": 9.6916,
+      "depth_km": 10.0,
+      "magnitude": 4.6,
+      "magnitude_type": "mb",
+      "review_status": "reviewed",
+      "updated_at": "2026-11-15T19:37:59.040000Z",
+      "time": "2026-11-15T14:17:52Z",
+      "place": "27 km ESE of Union, Philippines"
+    },
+    {
       "id": "us7000tyek",
       "longitude": 126.2,
       "latitude": 9.7595,
@@ -42,7 +90,7 @@
       "magnitude": 5.5,
       "magnitude_type": "mb",
       "review_status": "reviewed",
-      "updated_at": "2026-11-15T15:48:50.137000Z",
+      "updated_at": "2026-11-15T23:19:59.141000Z",
       "time": "2026-11-15T13:41:35Z",
       "place": "9 km E of Union, Philippines"
     },
@@ -1389,54 +1437,6 @@
       "updated_at": "2026-11-13T21:48:31.187000Z",
       "time": "2026-11-09T03:34:59Z",
       "place": "30 km WSW of Lata, Solomon Islands"
-    },
-    {
-      "id": "us7000tx0x",
-      "longitude": -176.9956,
-      "latitude": -25.1858,
-      "depth_km": 136.311,
-      "magnitude": 4.9,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-09T02:41:32.040000Z",
-      "time": "2026-11-09T02:21:57Z",
-      "place": "south of the Fiji Islands"
-    },
-    {
-      "id": "us7000tx0f",
-      "longitude": 179.2119,
-      "latitude": -23.6774,
-      "depth_km": 535.494,
-      "magnitude": 5.1,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-09T04:38:23.040000Z",
-      "time": "2026-11-09T00:46:59Z",
-      "place": "south of the Fiji Islands"
-    },
-    {
-      "id": "us7000twzn",
-      "longitude": 151.4884,
-      "latitude": -5.0941,
-      "depth_km": 120.843,
-      "magnitude": 4.7,
-      "magnitude_type": "mb",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-09T03:26:50.040000Z",
-      "time": "2026-11-08T22:30:10Z",
-      "place": "119 km SW of Kokopo, Papua New Guinea"
-    },
-    {
-      "id": "us7000twz2",
-      "longitude": 141.937,
-      "latitude": 38.3782,
-      "depth_km": 55.699,
-      "magnitude": 4.5,
-      "magnitude_type": "mwr",
-      "review_status": "reviewed",
-      "updated_at": "2026-11-08T20:36:23.040000Z",
-      "time": "2026-11-08T20:16:30Z",
-      "place": "43 km E of Onagawa Chō, Japan"
     }
   ]
 }

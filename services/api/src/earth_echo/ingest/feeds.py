@@ -151,7 +151,7 @@ def _archive(name: str, raw: bytes, moment: datetime) -> dict:
         target.write_bytes(raw)
     for old in sorted(folder.glob('*.json'), key=lambda p:p.stat().st_mtime, reverse=True)[4:]:
         old.unlink()
-    return {'checksum_sha256': checksum, 'byte_size': len(raw), 'raw_file': str(target.relative_to(feeds_dir())),
+    return {'checksum_sha256': checksum, 'byte_size': len(raw), 'raw_file': target.relative_to(feeds_dir()).as_posix(),
             'product_version': 'provider-current-schema-v1', 'verification': 'Raw provider JSON retained; normalized count/IDs and values tested independently.'}
 
 def refresh_kp_forecast(now: datetime | None = None) -> str:
